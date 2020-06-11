@@ -7,6 +7,7 @@ export const initialAuthState = {
 	name: localStorage.getItem('name')?localStorage.getItem('name'):'',
 	email:localStorage.getItem('email')?localStorage.getItem('email'):'',
 	phone:localStorage.getItem('phone')?localStorage.getItem('phone'):'',
+	country_id:localStorage.getItem('country_id')?localStorage.getItem('country_id'):'',
 	status:localStorage.getItem('status')?localStorage.getItem('status'):'',
 	timezone:localStorage.getItem('timezone')?localStorage.getItem('timezone'):'',
 	role:localStorage.getItem('role')?localStorage.getItem('role'):'',  
@@ -25,6 +26,7 @@ export const authReducer = (state, action) => {
 				localStorage.setItem("email",data.email);
 				localStorage.setItem("phone", data.phone);
 				localStorage.setItem("role", data.role);
+				localStorage.setItem("country_id",data.country_id)
 			return {
 				user_id:data.id,
 				isLoggedIn: true,
@@ -35,6 +37,7 @@ export const authReducer = (state, action) => {
 				phone:data.phone,
 				status:data.status,
 				timezone:data.timezone, 
+				country_id:data.country_id,
 				role:data.role,  				
 				error: ''
 			};
@@ -49,6 +52,7 @@ export const authReducer = (state, action) => {
 				phone:'',
 				status:'',
 				timezone:'', 
+				country_id:'', 
 				role:'', 
 				error: action.payload.error
 			};
@@ -63,6 +67,7 @@ export const authReducer = (state, action) => {
 				phone:'',
 				status:'',
 				timezone:'', 
+				country_id:'', 
 				role:'', 
 				error: ''
 			};

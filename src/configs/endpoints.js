@@ -12,4 +12,19 @@ export const endpoint_user_profile_details = {
   url: `${api}/user/`,
   method: 'GET',
   headers: headers   
+};  
+
+//timezone list
+export const endpoint_timezones = {
+  url: `${api}/timezones`,
+  method: 'GET',
+  headers: headers   
 };   
+
+//country list
+export const endpoint_countries = {
+  url: `${api}/countries`,
+  method: 'GET',
+  headers: headers   
+};  
+

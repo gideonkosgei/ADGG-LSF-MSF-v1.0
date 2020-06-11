@@ -28,17 +28,25 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const GeneralSettings = props => {
-  const { profile, className, ...rest } = props;
+  const { profile,timezones,countries,country_unit, className, ...rest } = props;
 
   const classes = useStyles();
   const [openSnackbar, setOpenSnackbar] = useState(false);
+  console.log(country_unit);
 
-
+  const [units, setUnits] = useState({
+    unit1: country_unit.unit1_name,
+    unit2: country_unit.unit2_name,
+    unit3: country_unit.unit3_name,
+    unit4: country_unit.unit4_name
+  });
+ 
   const [values, setValues] = useState({
     name: profile.name,
     username: profile.username,
     email: profile.email,
     phone: profile.phone,
+    country_id: profile.country_id,
     timezone: profile.timezone,
     role: profile.role,
     level: profile.level,
@@ -48,6 +56,7 @@ const GeneralSettings = props => {
     village: profile.village,
     organization: profile.organization,
     client: profile.client
+    
   });
 
   const handleChange = event => {
@@ -158,15 +167,15 @@ const GeneralSettings = props => {
                 select
                 // eslint-disable-next-line react/jsx-sort-props
                 SelectProps={{ native: true }}
-                value={values.state}
+                value={values.timezone}
                 variant="outlined"
               >
-                {states.map(state => (
+                {timezones.map(timezone => (
                   <option
-                    key={state}
-                    value={state}
+                    key={timezone.name}
+                    value={timezone.name}
                   >
-                    {state}
+                    {timezone.name}
                   </option>
                 ))}
               </TextField>
@@ -187,12 +196,12 @@ const GeneralSettings = props => {
                 value={values.state}
                 variant="outlined"
               >
-                {states.map(state => (
+                {countries.map(country => (
                   <option
-                    key={state}
-                    value={state}
+                    key={country.id}
+                    value={country.name}
                   >
-                    {state}
+                    {country.name}
                   </option>
                 ))}
               </TextField>
@@ -206,8 +215,8 @@ const GeneralSettings = props => {
             >
               <TextField
                 fullWidth
-                label="Region"               
-                name="region"
+                label={units.unit1}              
+                name={units.unit1} 
                 onChange={handleChange}
                 select
                 SelectProps={{ native: true }}
@@ -232,8 +241,8 @@ const GeneralSettings = props => {
             >
               <TextField
                 fullWidth
-                label="District"                
-                name="district"
+                label={units.unit2}                
+                name={units.unit2} 
                 onChange={handleChange}
                 select
                 SelectProps={{ native: true }}
@@ -258,8 +267,8 @@ const GeneralSettings = props => {
             >
               <TextField
                 fullWidth
-                label=" Ward"
-                name="ward"               
+                label={units.unit3} 
+                name={units.unit3}              
                 onChange={handleChange}
                 select
                 SelectProps={{ native: true }}
@@ -283,8 +292,8 @@ const GeneralSettings = props => {
             >
               <TextField
                 fullWidth
-                label="Village"
-                name="village"               
+                label={units.unit4} 
+                name={units.unit4}               
                 onChange={handleChange}
                 select
                 SelectProps={{ native: true }}

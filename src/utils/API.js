@@ -34,9 +34,61 @@ export const getProfileDetails =  function (config,user_id) {
         resolve(res.data);
     })
     .catch(err => reject(err));
-});
-       
+});       
 }
+
+
+// user timezones 
+export const getTimezones =  function (config) {   
+  const options = {
+    url: `${config.url}`,
+    method: config.method,
+    headers: config.headers    
+  }  
+  return new Promise((resolve, reject) => {
+    axios(options)
+    .then(res => {        
+        resolve(res.data);
+    })
+    .catch(err => reject(err));
+});       
+}
+
+
+// user countries
+export const getCountries =  function (config) {   
+  const options = {
+    url: `${config.url}`,
+    method: config.method,
+    headers: config.headers    
+  }  
+  return new Promise((resolve, reject) => {
+    axios(options)
+    .then(res => {        
+        resolve(res.data);
+    })
+    .catch(err => reject(err));
+});       
+}
+
+
+// country by id
+export const getCountryById =  function (config,id) {   
+  const options = {
+    url: `${config.url}/${id}`,
+    method: config.method,
+    headers: config.headers    
+  }  
+ 
+  return new Promise((resolve, reject) => {
+    axios(options)
+    .then(res => {             
+        resolve(res.data);
+    })
+    .catch(err => reject(err));
+});       
+}
+
 
 
 
