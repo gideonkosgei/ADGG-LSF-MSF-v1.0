@@ -6,20 +6,20 @@ import { Grid } from '@material-ui/core';
 import { ProfileDetails, GeneralSettings } from './components';
 import authContext from '../../../../contexts/AuthContext';
 import {endpoint_user_profile_details,endpoint_timezones,endpoint_countries} from '../../../../configs/endpoints';
-import {getProfileDetails,getTimezones,getCountries,getCountryById}   from '../../../../utils/API';
+import {getProfileDetails,getTimezones,getCountries}   from '../../../../utils/API';
 
 const useStyles = makeStyles(() => ({
   root: {}
 }));
 const General = props => {
   const { className, ...rest } = props;
-  const [ { user_id,country_id }  ] = useContext(authContext);  
+  const [ { user_id }  ] = useContext(authContext);  
 
   const classes = useStyles();
   const [profile, setProfile] = useState(null);
   const [timezones, setTimezones] = useState(null);
   const [countries, setCountries] = useState(null);
-  const [country, setCountry] = useState(null);
+
 
 
   useEffect(() => {
@@ -56,24 +56,10 @@ const General = props => {
     };
     fetchCountries();
 
-    //fetch countries
-   // const _country_id = isNaN(country_id)? 10:country_id;
-    //console.log(`country unit ${_country_id}`);
-
-
-    const fetchCountry = () => {     
-      getCountryById(endpoint_countries,isNaN(country_id)? 11:country_id)
-      .then(response => {       
-        if (mounted) {
-          setCountry(response.payload[0]);
-        }
-      });
-    };
-    fetchCountry(country_id);   
     return () => {
       mounted = false;
     };
-  }, [user_id,country_id]);
+  }, [user_id]);
 
   if (!profile) {
     return null;
@@ -106,7 +92,7 @@ const General = props => {
         xl={9}
         xs={12}
       >
-        <GeneralSettings profile={profile}  timezones = {timezones} countries ={countries} country_unit={country}/>
+        <GeneralSettings profile={profile}  timezones = {timezones} countries ={countries}/>
       </Grid>
     </Grid>
   );

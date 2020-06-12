@@ -2,18 +2,7 @@ import React, { useState } from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
-import {
-  Button,
-  Card,
-  CardActions,
-  CardContent,
-  CardHeader,
-  Grid,
-  Divider, 
-  TextField,
-  colors
-} from '@material-ui/core';
-
+import {Button, Card,CardActions, CardContent, CardHeader, Grid,Divider, TextField,colors } from '@material-ui/core';
 import SuccessSnackbar from '../SuccessSnackbar';
 
 const useStyles = makeStyles(theme => ({
@@ -28,19 +17,11 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const GeneralSettings = props => {
-  const { profile,timezones,countries,country_unit, className, ...rest } = props;
+  const { profile,timezones,countries, className, ...rest } = props;
 
   const classes = useStyles();
   const [openSnackbar, setOpenSnackbar] = useState(false);
-  console.log(country_unit);
-
-  const [units, setUnits] = useState({
-    unit1: country_unit.unit1_name,
-    unit2: country_unit.unit2_name,
-    unit3: country_unit.unit3_name,
-    unit4: country_unit.unit4_name
-  });
- 
+  
   const [values, setValues] = useState({
     name: profile.name,
     username: profile.username,
@@ -59,15 +40,38 @@ const GeneralSettings = props => {
     
   });
 
+
+let getUnits = countries.find(country => country.id === parseInt(values.country_id)||11 );  
+  const [units, setUnits] = useState({
+    unit1: getUnits.unit1_name,
+    unit2: getUnits.unit2_name,
+    unit3: getUnits.unit3_name,
+    unit4: getUnits.unit4_name
+  });
+
   const handleChange = event => {
     event.persist();
     setValues({
       ...values,
-      [event.target.name]:
-        event.target.type === 'checkbox'
-          ? event.target.checked
-          : event.target.value
+      [event.target.name]:event.target.type === 'checkbox' ? event.target.checked: event.target.value  
+          
     });
+  };
+
+  const handleChangeCountry = event => {
+    event.persist();
+    setValues({
+      ...values  
+    });   
+    let getUnits = countries.find(country => country.id === parseInt(event.target.value));
+    setUnits({
+      unit1: getUnits.unit1_name,
+      unit2: getUnits.unit2_name,
+      unit3: getUnits.unit3_name,
+      unit4: getUnits.unit4_name
+    }      
+    );
+    
   };
 
   const handleSubmit = event => {
@@ -189,7 +193,7 @@ const GeneralSettings = props => {
                 fullWidth
                 label="Select Country"
                 name="country"
-                onChange={handleChange}              
+                onChange={handleChangeCountry}              
                 select
                 // eslint-disable-next-line react/jsx-sort-props
                 SelectProps={{ native: true }}
@@ -199,7 +203,7 @@ const GeneralSettings = props => {
                 {countries.map(country => (
                   <option
                     key={country.id}
-                    value={country.name}
+                    value={country.id}
                   >
                     {country.name}
                   </option>
