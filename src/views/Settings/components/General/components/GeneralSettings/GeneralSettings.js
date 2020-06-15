@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import {Button, Card,CardActions, CardContent, CardHeader, Grid,Divider, TextField,colors } from '@material-ui/core';
 import SuccessSnackbar from '../SuccessSnackbar';
+import {endpoint_counties} from '../../../../../../configs/endpoints';
+import {getCounties,getSubCounties,getWards,getVillages}   from '../../../../../../utils/API';
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -17,7 +19,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const GeneralSettings = props => {
-  const { profile,timezones,countries, className, ...rest } = props;
+  const { profile,timezones,countries, className, ...rest } = props; 
 
   const classes = useStyles();
   const [openSnackbar, setOpenSnackbar] = useState(false);
@@ -40,14 +42,84 @@ const GeneralSettings = props => {
     
   });
 
+  let getUnits = countries.find(country => country.id === parseInt(values.country_id)||11 ); 
 
-let getUnits = countries.find(country => country.id === parseInt(values.country_id)||11 );  
   const [units, setUnits] = useState({
     unit1: getUnits.unit1_name,
     unit2: getUnits.unit2_name,
     unit3: getUnits.unit3_name,
     unit4: getUnits.unit4_name
   });
+
+  const [counties, setCounties] = useState(null);  
+  const [sub_counties, setSubCounties] = useState(null); 
+  const [wards, setWards] = useState(null);
+  const [villages, setVillages] = useState(null);
+
+  useEffect(() => {
+    let mounted = true; 
+   //fetch counties using country filter
+   async function fetchCounties (country_id) {     
+    await getCounties(endpoint_counties,country_id)
+    .then(response => {       
+      if (mounted) {
+        setCounties(response.payload);
+      }
+    });
+  };
+  fetchCounties(10);
+
+  //fetch sub-counties using country filter
+  async function fetchSubCounties (country_id,county_id) {     
+    await getSubCounties(endpoint_counties,country_id,county_id)
+    .then(response => {       
+      if (mounted) {
+        setSubCounties(response.payload);
+      }
+    });
+  };
+  fetchSubCounties(10,10);
+
+   //fetch wards using country filter
+   async function fetchWards (country_id,county_id,sub_county_id) {     
+    await getWards(endpoint_counties,country_id,county_id,sub_county_id)
+    .then(response => {       
+      if (mounted) {
+        setWards(response.payload);
+      }
+    });
+  };
+  fetchWards(10,10,60);
+
+   //fetch wards using country filter
+   async function fetchVillages (country_id,county_id,sub_county_id,ward_id) {     
+    await getVillages(endpoint_counties,country_id,county_id,sub_county_id,ward_id)
+    .then(response => {       
+      if (mounted) {
+        setVillages(response.payload);
+      }
+    });
+  };
+  fetchVillages(10,10,60,1061);
+
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
+  if (!counties) {
+    return null;
+  }
+
+  if (!sub_counties) {
+    return null;  }
+
+  if (!wards) {
+    return null;  }
+
+  if (!villages) {
+    return null;  }  
+
 
   const handleChange = event => {
     event.persist();
@@ -227,12 +299,12 @@ let getUnits = countries.find(country => country.id === parseInt(values.country_
                 value={values.region}
                 variant="outlined"
               >
-                {states.map(state => (
+                {counties.map(county => (
                   <option
-                    key={state}
-                    value={state}
+                    key={county.county_id}
+                    value={county.county_id}
                   >
-                    {state}
+                    {county.county_name}
                   </option>
                 ))}
               </TextField>
@@ -253,12 +325,12 @@ let getUnits = countries.find(country => country.id === parseInt(values.country_
                 value={values.district}
                 variant="outlined"
               >
-                 {states.map(state => (
+                {sub_counties.map(sub_county => (
                   <option
-                    key={state}
-                    value={state}
+                    key={sub_county.sub_county_id}
+                    value={sub_county.sub_county_id}
                   >
-                    {state}
+                    {sub_county.sub_county_name}
                   </option>
                 ))}
               </TextField>
@@ -279,12 +351,12 @@ let getUnits = countries.find(country => country.id === parseInt(values.country_
                 value={values.ward}
                 variant="outlined"
               >
-                {states.map(state => (
+                {wards.map(ward => (
                   <option
-                    key={state}
-                    value={state}
+                    key={ward.ward_id}
+                    value={ward.ward_id}
                   >
-                    {state}
+                    {ward.ward_name}
                   </option>
                 ))}
               </TextField>
@@ -304,12 +376,12 @@ let getUnits = countries.find(country => country.id === parseInt(values.country_
                 value={values.village}
                 variant="outlined"
               >
-                {states.map(state => (
+                {villages.map(village => (
                   <option
-                    key={state}
-                    value={state}
+                    key={village.village_id}
+                    value={village.village_id}
                   >
-                    {state}
+                    {village.village_name}
                   </option>
                 ))}
               </TextField>

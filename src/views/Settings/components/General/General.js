@@ -20,13 +20,11 @@ const General = props => {
   const [timezones, setTimezones] = useState(null);
   const [countries, setCountries] = useState(null);
 
-
-
   useEffect(() => {
     let mounted = true;
-
-    const fetchProfile = () => {     
-      getProfileDetails(endpoint_user_profile_details,user_id)
+    //fetch user profiles
+    async function fetchProfile(){     
+     await  getProfileDetails(endpoint_user_profile_details,user_id)
       .then(response => {       
         if (mounted) {
           setProfile(response.payload[0]);
@@ -34,9 +32,9 @@ const General = props => {
       });
     };
     fetchProfile(user_id);
-
-    const fetchTimezones = () => {     
-      getTimezones(endpoint_timezones)
+    //fetch timezones
+    async function fetchTimezones (){     
+      await getTimezones(endpoint_timezones)
       .then(response => {       
         if (mounted) {
           setTimezones(response.payload);
@@ -46,8 +44,8 @@ const General = props => {
     fetchTimezones();
     
     //fetch countries
-    const fetchCountries = () => {     
-      getCountries(endpoint_countries)
+    async function fetchCountries(){     
+      await getCountries(endpoint_countries)
       .then(response => {       
         if (mounted) {
           setCountries(response.payload);
@@ -61,11 +59,17 @@ const General = props => {
     };
   }, [user_id]);
 
+
+
   if (!profile) {
     return null;
   }
 
   if (!timezones) {
+    return null;
+  }
+
+  if (!countries) {
     return null;
   }
 

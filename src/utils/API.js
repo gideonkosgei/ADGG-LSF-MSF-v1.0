@@ -71,6 +71,77 @@ export const getCountries =  function (config) {
 });       
 }
 
+// get counties
+export const getCounties =  function (config,country_id) {   
+  const options = {
+    url:`${config.url}${country_id}`,
+    method: config.method,
+    headers: config.headers    
+  }  
+  return new Promise((resolve, reject) => {
+    axios(options)
+    .then(res => {        
+        resolve(res.data);
+    })
+    .catch(err => reject(err));
+});       
+}
+
+
+// get sub counties
+export const getSubCounties =  function (config,country_id,county_id) {   
+  const options = {
+    url:`${config.url}${country_id}/county/${county_id}`,  
+    method: config.method,
+    headers: config.headers    
+  }  
+  return new Promise((resolve, reject) => {
+    axios(options)
+    .then(res => {        
+        resolve(res.data);
+    })
+    .catch(err => reject(err));
+});       
+}
+
+
+// get wards
+export const getWards =  function (config,country_id,county_id,sub_county_id) {   
+  const options = {
+    url:`${config.url}${country_id}/county/${county_id}/sub-county/${sub_county_id}`,  
+    method: config.method,
+    headers: config.headers    
+  }  
+  return new Promise((resolve, reject) => {
+    axios(options)
+    .then(res => {        
+        resolve(res.data);
+    })
+    .catch(err => reject(err));
+});       
+}
+
+
+// get villages
+export const getVillages =  function (config,country_id,county_id,sub_county_id,ward_id) {   
+  const options = {
+    url:`${config.url}${country_id}/county/${county_id}/sub-county/${sub_county_id}/ward/${ward_id}`,  
+    method: config.method,
+    headers: config.headers    
+  }  
+  return new Promise((resolve, reject) => {
+    axios(options)
+    .then(res => {        
+        resolve(res.data);
+    })
+    .catch(err => reject(err));
+});       
+}
+
+
+
+
+
 
 
 
