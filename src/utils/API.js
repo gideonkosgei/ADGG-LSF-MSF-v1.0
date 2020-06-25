@@ -138,6 +138,40 @@ export const getVillages =  function (config,country_id,county_id,sub_county_id,
 });       
 }
 
+// get clients
+export const getClients =  function (config,organisation_id) {   
+  const options = {
+    url:`${config.url}${organisation_id}`,
+    method: config.method,
+    headers: config.headers  
+  }  
+  return new Promise((resolve, reject) => {
+    axios(options)
+    .then(res => {  
+           
+        resolve(res.data);
+    })
+    .catch(err => reject(err));
+});       
+}
+
+// get farm details
+export const getFarmDetails =  function (config,farm_id) {   
+  const options = {
+    url:`${config.url}${farm_id}`,
+    method: config.method,
+    headers: config.headers  
+  }   
+  return new Promise((resolve, reject) => {
+    axios(options)
+    .then(res => {            
+        resolve(res.data);
+    })
+    .catch(err => reject(err));
+});       
+}
+
+
 
 
 

@@ -122,9 +122,19 @@ const routes = [
         component: lazy(() => import('views/CustomerManagementList'))
       },
       {
+        path: '/management/clients',
+        exact: true,
+        component: lazy(() => import('views/Clients'))
+      },
+      {
         path: '/management/customers/:id',
         exact: true,
         component: lazy(() => import('views/CustomerManagementDetails'))
+      },
+      {
+        path: '/management/farms/:id/:tab',
+        exact: true,
+        component: lazy(() => import('views/Farms'))
       },
       {
         path: '/management/customers/:id/:tab',

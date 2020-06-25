@@ -2,7 +2,7 @@
 /* eslint-disable react/display-name */
 //import React from 'react';
 //import { colors } from '@material-ui/core';
-//import BarChartIcon from '@material-ui/icons/BarChart';
+import BarChartIcon from '@material-ui/icons/BarChart';
 //import CalendarTodayIcon from '@material-ui/icons/CalendarToday';
 //import ChatIcon from '@material-ui/icons/ChatOutlined';
 //import CodeIcon from '@material-ui/icons/Code';
@@ -20,6 +20,7 @@ import HomeIcon from '@material-ui/icons/HomeOutlined';
 import SettingsIcon from '@material-ui/icons/SettingsOutlined';
 //import ViewModuleIcon from '@material-ui/icons/ViewModule';
 //import { Label } from 'components';
+
 
 export default [
   {
@@ -43,16 +44,25 @@ export default [
             href: '/dashboards/analytics'
           }
         ]
-      },
+      },*/
       {
         title: 'Management',
         href: '/management',
         icon: BarChartIcon,
         children: [
           {
+            title: 'Clients',
+            href: '/management/clients'
+          },
+          {
+            title: 'Farm Details',
+            href: '/management/farms/1/summary'
+          },
+          {
             title: 'Customers',
             href: '/management/customers'
           },
+         
           {
             title: 'Customer Details',
             href: '/management/customers/1/summary'
@@ -74,7 +84,7 @@ export default [
             href: '/management/orders/1'
           }
         ]
-      },
+      },/*
       {
         title: 'Social Feed',
         href: '/social-feed',

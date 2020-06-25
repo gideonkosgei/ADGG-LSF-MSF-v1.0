@@ -35,5 +35,19 @@ export const endpoint_counties = {
   headers: headers   
 };  
 
+//clients
+export const endpoint_clients = {
+  url: `${api}/clients/`,
+  method: 'GET',
+  headers: headers   
+};  
+
+//farm Details
+export const endpoint_farm_details = {
+  url: `${api}/farm/`,
+  method: 'GET',
+  headers: headers   
+};  
+
 
 

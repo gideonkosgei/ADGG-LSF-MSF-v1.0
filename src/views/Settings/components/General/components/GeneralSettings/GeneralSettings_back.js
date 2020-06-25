@@ -38,10 +38,13 @@ const GeneralSettings = props => {
     ward: parseInt(profile.ward) || 11024,
     village: parseInt(profile.village) || 11468,
     organization: profile.organization,
-    client: profile.client  
+    client: profile.client
+    
   });
 
-  let getUnits = countries.find(country => country.id === parseInt(values.country_id)||11 ); 
+
+  let getUnits = countries.find(country => country.id === parseInt(values.country)); 
+
 
   const [units, setUnits] = useState({
     unit1: getUnits.unit1_name,
@@ -49,100 +52,109 @@ const GeneralSettings = props => {
     unit3: getUnits.unit3_name,
     unit4: getUnits.unit4_name
   });
+ 
 
   const [counties, setCounties] = useState(null);  
   const [sub_counties, setSubCounties] = useState(null); 
   const [wards, setWards] = useState(null);
   const [villages, setVillages] = useState(null);
 
+ 
+  //sub-counties hook to update sub_county state
+  const subCountiesHook = async (country_id,county_id) => {     
+    await getSubCounties(endpoint_counties,country_id,county_id)
+    .then(response => { 
+      console.log(response.payload);
+        setSubCounties(response.payload);
+    });
+  };
+
+   //ward hook to update ward state
+  const wardHook = async (country_id,county_id,sub_county_id) => {     
+    await getWards(endpoint_counties,country_id,county_id,sub_county_id)
+    .then(response => {   
+        setWards(response.payload);     
+    });
+  }
+
+  const villageHook = async (country_id,county_id,sub_county_id,ward_id)=> {     
+    await getVillages(endpoint_counties,country_id,county_id,sub_county_id,ward_id)
+    .then(response => {  
+        setVillages(response.payload);      
+    });
+  };
+ 
   useEffect(() => {
     let mounted = true; 
-   //fetch counties using country filter
-   async function fetchCounties (country_id) {     
+  // invoke counties hook
+  (async (country_id) => {   
     await getCounties(endpoint_counties,country_id)
     .then(response => {       
       if (mounted) {
         setCounties(response.payload);
       }
     });
-  };
-  fetchCounties(10);
+  }) (values.country); 
 
-  //fetch sub-counties using country filter
-  async function fetchSubCounties (country_id,county_id) {     
-    await getSubCounties(endpoint_counties,country_id,county_id)
-    .then(response => {       
-      if (mounted) {
-        setSubCounties(response.payload);
-      }
-    });
-  };
-  fetchSubCounties(10,10);
-
-   //fetch wards using country filter
-   async function fetchWards (country_id,county_id,sub_county_id) {     
-    await getWards(endpoint_counties,country_id,county_id,sub_county_id)
-    .then(response => {       
-      if (mounted) {
-        setWards(response.payload);
-      }
-    });
-  };
-  fetchWards(10,10,60);
-
-   //fetch wards using country filter
-   async function fetchVillages (country_id,county_id,sub_county_id,ward_id) {     
-    await getVillages(endpoint_counties,country_id,county_id,sub_county_id,ward_id)
-    .then(response => {       
-      if (mounted) {
-        setVillages(response.payload);
-      }
-    });
-  };
-  fetchVillages(10,10,60,1061);
-
+  //invoke hooks
+  subCountiesHook(values.country,values.region);
+  wardHook(values.country,values.region,values.district);
+  villageHook(values.country,values.region,values.district,values.ward);
+  
     return () => {
       mounted = false;
     };
-  }, []);
+  }, [values.country,values.region,values.district,values.ward]);
 
-  if (!counties) {
+  if (!counties || !sub_counties || !wards || !villages) {
     return null;
   }
-
-  if (!sub_counties) {
-    return null;  }
-
-  if (!wards) {
-    return null;  }
-
-  if (!villages) {
-    return null;  }  
-
 
   const handleChange = event => {
     event.persist();
     setValues({
-      ...values,
-      [event.target.name]:event.target.type === 'checkbox' ? event.target.checked: event.target.value  
-          
+      ...values         
     });
   };
 
   const handleChangeCountry = event => {
-    event.persist();
+    event.persist();   
     setValues({
-      ...values  
-    });   
-    let getUnits = countries.find(country => country.id === parseInt(event.target.value));
+      ...values,
+      [event.target.name]: event.target.value
+    }); 
+
+    let getUnits = countries.find(country => country.id === parseInt(event.target.value));   
     setUnits({
       unit1: getUnits.unit1_name,
       unit2: getUnits.unit2_name,
       unit3: getUnits.unit3_name,
       unit4: getUnits.unit4_name
-    }      
-    );
+    });  
     
+    //subCountiesHook(values.country,values.region);
+    //wardHook(values.country,values.region,values.district);
+    //villageHook(values.country,values.region,values.district,values.ward);
+  
+  };
+
+ 
+  const handleChangeRegion = event => {  
+    event.persist();
+    setValues({
+      ...values,
+       [event.target.name]: event.target.value
+    });   
+    subCountiesHook(values.country,event.target.value);
+  };
+
+  const handleChangeWard = event => {   
+    event.persist();
+    setValues({
+      ...values,
+      [event.target.name]: event.target.value
+    });  
+    wardHook(values.country,values.region,event.target.value);
   };
 
   const handleSubmit = event => {
@@ -153,8 +165,6 @@ const GeneralSettings = props => {
   const handleSnackbarClose = () => {
     setOpenSnackbar(false);
   };
-
-
 
   return (
     <Card
@@ -264,11 +274,11 @@ const GeneralSettings = props => {
                 fullWidth
                 label="Select Country"
                 name="country"
-                onChange={handleChangeCountry}              
+                onChange={handleChange}              
                 select
                 // eslint-disable-next-line react/jsx-sort-props
                 SelectProps={{ native: true }}
-                value={values.state}
+                value={values.country}
                 variant="outlined"
               >
                 {countries.map(country => (
@@ -291,7 +301,7 @@ const GeneralSettings = props => {
               <TextField
                 fullWidth
                 label={units.unit1}              
-                name={units.unit1} 
+                name={units.unit1}                 
                 onChange={handleChange}
                 select
                 SelectProps={{ native: true }}

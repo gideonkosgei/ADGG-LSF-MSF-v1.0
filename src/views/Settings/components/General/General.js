@@ -32,13 +32,12 @@ const General = props => {
       });
     };
     fetchProfile(user_id);
+    
     //fetch timezones
     async function fetchTimezones (){     
       await getTimezones(endpoint_timezones)
-      .then(response => {       
-        if (mounted) {
+      .then(response => { 
           setTimezones(response.payload);
-        }
       });
     };
     fetchTimezones();
@@ -46,10 +45,8 @@ const General = props => {
     //fetch countries
     async function fetchCountries(){     
       await getCountries(endpoint_countries)
-      .then(response => {       
-        if (mounted) {
+      .then(response => { 
           setCountries(response.payload);
-        }
       });
     };
     fetchCountries();
@@ -61,17 +58,10 @@ const General = props => {
 
 
 
-  if (!profile) {
+  if (!profile || !timezones || !countries) {
     return null;
   }
 
-  if (!timezones) {
-    return null;
-  }
-
-  if (!countries) {
-    return null;
-  }
 
   return (
     <Grid
