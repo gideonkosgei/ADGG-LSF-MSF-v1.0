@@ -1,7 +1,7 @@
 import React, { useState, useEffect,useContext } from 'react';
 import { makeStyles } from '@material-ui/styles';
 import { Page } from 'components';
-import { Header, Results } from './components';
+import { Results } from './components';
 import {endpoint_animal_org} from '../../configs/endpoints';
 import {getAnimalsOrg}   from '../../utils/API';
 import authContext from '../../contexts/AuthContext';
@@ -57,8 +57,7 @@ const AnimalList = props => {
     <Page
       className={classes.root}
       title="Animals List"
-    >
-      <Header />     
+    >         
       {animals && (
         <Results
           className={classes.results}

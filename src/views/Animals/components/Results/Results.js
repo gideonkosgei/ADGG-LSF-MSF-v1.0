@@ -3,11 +3,15 @@ import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import { makeStyles } from '@material-ui/styles';
-import {  Card,CardActions,CardContent,CardHeader, Divider} from '@material-ui/core';
+import {  Card,CardActions,CardContent,CardHeader, Divider,Link} from '@material-ui/core';
 import MUIDataTable from "mui-datatables";
 import {MuiThemeProvider } from '@material-ui/core/styles';
 import EditOutlinedIcon from '@material-ui/icons/EditOutlined';
 import OpenInNewIcon from '@material-ui/icons/OpenInNew';
+import CustomToolbar from "./CustomToolbar";
+import { Link as RouterLink } from 'react-router-dom';
+
+
 
 
 const useStyles = makeStyles(theme => ({
@@ -58,7 +62,13 @@ const Results = props => {
         empty: true,      
         customBodyRender: (value, tableMeta, updateValue) => {
           return (
-            <OpenInNewIcon  onClick={() => window.alert(`Clicked "Edit" for row ${tableMeta.rowIndex}`)}/>
+            <Link
+              component={RouterLink}
+              to="/errors/error-404/"
+            >
+                <OpenInNewIcon/>
+           </Link>
+            
           );
         }
       }
@@ -70,7 +80,12 @@ const Results = props => {
       empty:true,    
       customBodyRender: (value, tableMeta, updateValue) => {
         return (
-          <EditOutlinedIcon  onClick={() => window.alert(`Clicked "Edit" for row ${tableMeta.rowIndex}`)}/>
+          <Link
+              component={RouterLink}
+              to="/errors/error-404/"
+          >
+            <EditOutlinedIcon/>
+          </Link>
           
         );
       }
@@ -79,7 +94,8 @@ const Results = props => {
     
   ];
 
-  const data = animals;     
+  const data = animals;  
+
      const options = {       
        filter: true,
        rowsPerPage: 5,       
@@ -93,7 +109,12 @@ const Results = props => {
           padding: "none" ,         
           size: "small",
         };
-      },    
+      }, 
+      customToolbar: () => {
+        return (
+          <CustomToolbar />
+        );
+      }   
       
      };
 
