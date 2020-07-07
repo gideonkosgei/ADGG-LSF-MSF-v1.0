@@ -2,19 +2,7 @@ import React, { useState } from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
-import {
-  Modal,
-  Card,
-  CardContent,
-  CardActions,
-  Grid,
-  Typography,
-  TextField,
-  Switch,
-  Button,
-  colors
-} from '@material-ui/core';
-
+import { Modal,Card,CardContent, CardActions, Grid,Typography,TextField,Button, colors} from '@material-ui/core';
 const useStyles = makeStyles(theme => ({
   root: {
     position: 'absolute',
@@ -34,6 +22,9 @@ const useStyles = makeStyles(theme => ({
   actions: {
     justifyContent: 'flex-end'
   },
+  details: {
+    color: 'green'
+  },
   saveButton: {
     color: theme.palette.white,
     backgroundColor: colors.green[600],
@@ -44,12 +35,10 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const LocationInfoEdit = props => {
-  const { open, onClose, customer, className, ...rest } = props;
-
+  const { open, onClose, farmDetails, className, ...rest } = props;
   const classes = useStyles();
-
   const [formState, setFormState] = useState({
-    ...customer
+    ...farmDetails
   });
 
   if (!open) {
@@ -83,7 +72,7 @@ const LocationInfoEdit = props => {
               gutterBottom
               variant="h3"
             >
-              Edit Customer
+              Edit Address & Location Info -<span className={classes.details}> {farmDetails.farm_name} #{farmDetails.farm_id}</span>
             </Typography>
             <Grid
               className={classes.container}
@@ -97,66 +86,25 @@ const LocationInfoEdit = props => {
               >
                 <TextField
                   fullWidth
-                  label="Email address"
-                  name="email"
-                  onChange={handleFieldChange}
-                  value={formState.email}
-                  variant="outlined"
-                />
-              </Grid>
-              <Grid
-                item
-                md={6}
-                xs={12}
-              >
-                <TextField
-                  fullWidth
-                  label="Full name"
-                  name="name"
-                  onChange={handleFieldChange}
-                  value={formState.name}
-                  variant="outlined"
-                />
-              </Grid>
-              <Grid
-                item
-                md={6}
-                xs={12}
-              >
-                <TextField
-                  fullWidth
-                  label="Phone number"
-                  name="phone"
-                  onChange={handleFieldChange}
-                  value={formState.phone}
-                  variant="outlined"
-                />
-              </Grid>
-              <Grid
-                item
-                md={6}
-                xs={12}
-              >
-                <TextField
-                  fullWidth
-                  label="State/Region"
-                  name="state"
-                  onChange={handleFieldChange}
-                  value={formState.state}
-                  variant="outlined"
-                />
-              </Grid>
-              <Grid
-                item
-                md={6}
-                xs={12}
-              >
-                <TextField
-                  fullWidth
                   label="Country"
                   name="country"
                   onChange={handleFieldChange}
-                  value={formState.country}
+                  value={formState.country} 
+                  variant="outlined"
+
+                />
+              </Grid>
+              <Grid
+                item
+                md={6}
+                xs={12}
+              >
+                <TextField
+                  fullWidth
+                  label="Region"
+                  name="name"
+                  onChange={handleFieldChange}
+                  value = {formState.region_name}
                   variant="outlined"
                 />
               </Grid>
@@ -167,10 +115,52 @@ const LocationInfoEdit = props => {
               >
                 <TextField
                   fullWidth
-                  label="Address 1"
+                  label="District"
+                  name="phone"
+                  onChange={handleFieldChange}
+                  value = {formState.district_name}
+                  variant="outlined"
+                />
+              </Grid>
+              <Grid
+                item
+                md={6}
+                xs={12}
+              >
+                <TextField
+                  fullWidth
+                  label="Ward"
+                  name="state"
+                  onChange={handleFieldChange}
+                  value = {formState.ward_name}
+                  variant="outlined"
+                />
+              </Grid>
+              <Grid
+                item
+                md={6}
+                xs={12}
+              >
+                <TextField
+                  fullWidth
+                  label="Village"
+                  name="country"
+                  onChange={handleFieldChange}
+                  value = {formState.village_name}
+                  variant="outlined"
+                />
+              </Grid>
+              <Grid
+                item
+                md={6}
+                xs={12}
+              >
+                <TextField
+                  fullWidth
+                  label="Langitude"
                   name="address1"
                   onChange={handleFieldChange}
-                  value={formState.address1}
+                  value= {formState.longitude}                
                   variant="outlined"
                 />
               </Grid>
@@ -181,51 +171,13 @@ const LocationInfoEdit = props => {
               >
                 <TextField
                   fullWidth
-                  label="Address 2"
-                  name="address2"
+                  label="Map Address"
+                  name="address1"
                   onChange={handleFieldChange}
-                  value={formState.address2}
+                  value= {formState.map_address}                
                   variant="outlined"
                 />
-              </Grid>
-              <Grid item />
-              <Grid
-                item
-                md={6}
-                xs={12}
-              >
-                <Typography variant="h5">Email Verified</Typography>
-                <Typography variant="body2">
-                  Disabling this will automatically send the user a verification
-                  email
-                </Typography>
-                <Switch
-                  checked={formState.verified}
-                  color="secondary"
-                  edge="start"
-                  name="verified"
-                  onChange={handleFieldChange}
-                  value={formState.verified}
-                />
-              </Grid>
-              <Grid
-                item
-                md={6}
-                xs={12}
-              >
-                <Typography variant="h5">Discounted Prices</Typography>
-                <Typography variant="body2">
-                  This will give the user discountedprices for all products
-                </Typography>
-                <Switch
-                  checked={formState.discountedPrices}
-                  color="secondary"
-                  edge="start"
-                  name="discountedPrices"
-                  onChange={handleFieldChange}
-                  value={formState.discountedPrices}
-                />
-              </Grid>
+              </Grid>    
             </Grid>
           </CardContent>
           <CardActions className={classes.actions}>
@@ -262,5 +214,4 @@ LocationInfoEdit.defaultProps = {
   open: false,
   onClose: () => {}
 };
-
 export default LocationInfoEdit;

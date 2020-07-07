@@ -16,7 +16,6 @@ const routes = [
   {
     path: '/',
     exact: true,
-    //component: () => <Redirect to="/presentation" />
     component: () => <Redirect to="/auth/login" />
   },
   {
@@ -125,6 +124,16 @@ const routes = [
         path: '/management/clients',
         exact: true,
         component: lazy(() => import('views/Clients'))
+      },
+      {
+        path: '/management/animals',
+        exact: true,
+        component: lazy(() => import('views/Animals'))
+      },
+      {
+        path: '/management/animals/:id',
+        exact: true,
+        component: lazy(() => import('views/Animals'))
       },
       {
         path: '/management/customers/:id',

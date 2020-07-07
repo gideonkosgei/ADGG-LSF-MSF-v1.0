@@ -53,8 +53,7 @@ const useStyles = makeStyles(theme => ({
 const LoginForm = props => {
   const { className, ...rest } = props;
   const classes = useStyles();
-  const router = useRouter(); 
-
+  const router = useRouter();
   const [load, setLoad] = useState(false);
 
   const [formState, setformState] = useState({
@@ -110,7 +109,7 @@ const LoginForm = props => {
     const username = formState.values.email;
     const passport = formState.values.password;
     authenticate(endpoint_user_authentication,username,passport)  
-      .then((userData) => {       
+      .then((userData) => {             
         if(userData.status ===200){         
             dispatch({
               type: 'LOGIN',
@@ -147,8 +146,7 @@ const LoginForm = props => {
 
  
   return (
-    <Fragment> 
-       {/*console.log(load)*/} 
+    <Fragment>       
 			{isLoggedIn ? (
 				<Redirect to="/overview" />       
 			) : (

@@ -5,13 +5,11 @@ export const initialAuthState = {
 	user_id: localStorage.getItem('user_id')?localStorage.getItem('user_id'):0,
 	username: localStorage.getItem('username')?localStorage.getItem('username'):'',
 	name: localStorage.getItem('name')?localStorage.getItem('name'):'',
-	email:localStorage.getItem('email')?localStorage.getItem('email'):'',
-	phone:localStorage.getItem('phone')?localStorage.getItem('phone'):'',
-	country_id:localStorage.getItem('country_id')?localStorage.getItem('country_id'):'',
+	email:localStorage.getItem('email')?localStorage.getItem('email'):'',	
 	status:localStorage.getItem('status')?localStorage.getItem('status'):'',
-	timezone:localStorage.getItem('timezone')?localStorage.getItem('timezone'):'',
 	role:localStorage.getItem('role')?localStorage.getItem('role'):'',  
-	error: localStorage.getItem('error')?localStorage.getItem('error'):''
+	error: localStorage.getItem('error')?localStorage.getItem('error'):'',
+	organization_id: localStorage.getItem('organization_id')?localStorage.getItem('organization_id'):''
 	
 };
 export const authReducer = (state, action) => {	
@@ -23,22 +21,20 @@ export const authReducer = (state, action) => {
 				localStorage.setItem("isLoading",true);
 				localStorage.setItem("username", data.username);
 				localStorage.setItem("name", data.name);
-				localStorage.setItem("email",data.email);
-				localStorage.setItem("phone", data.phone);
+				localStorage.setItem("email",data.email);			
 				localStorage.setItem("role", data.role);
-				localStorage.setItem("country_id",data.country_id)
+				localStorage.setItem("organization_id", data.org_id);
+			
 			return {
 				user_id:data.id,
 				isLoggedIn: true,
 				isLoading:true,
 				username: data.username,
 				name:data.name,
-				email:data.email,
-				phone:data.phone,
+				email:data.email,				
 				status:data.status,
-				timezone:data.timezone, 
-				country_id:data.country_id,
-				role:data.role,  				
+				role:data.role,  
+				organization_id:data.org_id,  				
 				error: ''
 			};
 		case 'LOGIN_ERROR':
@@ -48,12 +44,10 @@ export const authReducer = (state, action) => {
 				isLoading:true,
 				username: '',				
 				name:'',
-				email:'',
-				phone:'',
-				status:'',
-				timezone:'', 
-				country_id:'', 
+				email:'',				
+				status:'',				
 				role:'', 
+				organization_id:'',
 				error: action.payload.error
 			};
 		case 'LOGOUT':
@@ -63,12 +57,10 @@ export const authReducer = (state, action) => {
 				user_id:0,
 				username: '',				
 				name:'',
-				email:'',
-				phone:'',
-				status:'',
-				timezone:'', 
-				country_id:'', 
+				email:'',			
+				status:'',				
 				role:'', 
+				organization_id:'',
 				error: ''
 			};
 		default:

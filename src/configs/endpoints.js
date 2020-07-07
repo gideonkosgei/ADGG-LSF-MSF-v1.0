@@ -49,5 +49,18 @@ export const endpoint_farm_details = {
   headers: headers   
 };  
 
+//farm Details
+export const endpoint_animal_statistics = {
+  url: `${api}/animalStats/`,
+  method: 'GET',
+  headers: headers   
+};  
+
+//get all animals belonging to an organization
+export const endpoint_animal_org = {
+  url: `${api}/animals/org/`,
+  method: 'GET',
+  headers: headers   
+};  
 
 

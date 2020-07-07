@@ -37,8 +37,7 @@ const Overview = () => {
       title="Overview"
     >
       <Header />
-      <Statistics className={classes.statistics} />
-   
+      <Statistics className={classes.statistics} />  
      
      
     </Page>

@@ -14,7 +14,7 @@ export const authenticate =  function (config,username,password) {
   }
 
   return new Promise((resolve, reject) => {
-    axios(options).then(res => {        
+    axios(options).then(res => {           
         resolve(res.data);
     }).catch(err => reject(err));
 });
@@ -170,6 +170,40 @@ export const getFarmDetails =  function (config,farm_id) {
     .catch(err => reject(err));
 });       
 }
+
+// get animal overview statistics
+export const getAnimalStats =  function (config,organisation_id) {   
+  const options = {
+    url:`${config.url}${organisation_id}`,
+    method: config.method,
+    headers: config.headers  
+  }  
+  return new Promise((resolve, reject) => {
+    axios(options)
+    .then(res => {          
+        resolve(res.data);
+    })
+    .catch(err => reject(err));
+});       
+}
+
+
+// get all animals that belong to an organization
+export const getAnimalsOrg =  function (config,organisation_id) {   
+  const options = {
+    url:`${config.url}${organisation_id}`,
+    method: config.method,
+    headers: config.headers  
+  }  
+  return new Promise((resolve, reject) => {
+    axios(options)
+    .then(res => {          
+        resolve(res.data);
+    })
+    .catch(err => reject(err));
+});       
+}
+
 
 
 

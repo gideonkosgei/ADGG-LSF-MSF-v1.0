@@ -13,8 +13,7 @@ const useStyles = makeStyles(() => ({
 }));
 const General = props => {
   const { className, ...rest } = props;
-  const [ { user_id }  ] = useContext(authContext);  
-
+  const [ { user_id }  ] = useContext(authContext); 
   const classes = useStyles();
   const [profile, setProfile] = useState(null);
   const [timezones, setTimezones] = useState(null);

@@ -1,27 +1,12 @@
-import React, { useState } from 'react';
-import { Link as RouterLink } from 'react-router-dom';
+import React from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import { makeStyles } from '@material-ui/styles';
-import { 
-  Card,
-  CardActions,
-  CardContent,
-  CardHeader,  
-  Divider,
-  Button,
-  Link,
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TablePagination,
-  TableRow,
-  Typography
-} from '@material-ui/core';
-
-import { ReviewStars, GenericMoreButton } from 'components';
+import {  Card,CardActions,CardContent,CardHeader, Divider} from '@material-ui/core';
+import {GenericMoreButton } from 'components';
+import MUIDataTable from "mui-datatables";
+import {MuiThemeProvider } from '@material-ui/core/styles';
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -48,34 +33,46 @@ const useStyles = makeStyles(theme => ({
 
 const Results = props => {
   const { className,clients, ...rest } = props;
-  const classes = useStyles();
-  console.log(clients);
- 
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
- 
+  const classes = useStyles(); 
 
-  const handleChangePage = (event, page) => {
-    setPage(page);
-  };
-
-  const handleChangeRowsPerPage = event => {
-    setRowsPerPage(event.target.value);
-  };
+  const columns = [
+    { name: "org_id", label: "org_id", options: {filter: false,sort: true,display:false}}, 
+    { name: "Client_Country",label: "Country",options: {filter: true,sort: true,}},
+    { name: "Client_CountyRegion",label: "Region",options: {filter: true,sort: false,}},
+    { name: "Client_Description",label: "Description",options: {filter: false,sort: true,}},
+    { name: "Client_emailAddress",label: "Email",options: {filter: false,sort: true,}},
+    { name: "Client_ID",label: "ID",options: {filter: false,sort: true,display:false}},
+    { name: "Client_migrationId",label: "Migration ID",options: {filter: false,sort: true,display:false}},
+    {name: "Client_Name",label: "Name",options: {filter: false,sort: true,}},
+    { name: "Client_odkFormUuid",label: "ODK ID",options: {filter: true,sort: false,display:false}},
+    { name: "Client_phone1",label: "Phone 1",options: {filter: true,sort: false,}},
+    { name: "Client_phone2",label: "Phone 2",options: {filter: true,sort: false,}},
+    { name: "Client_postalAddress",label: "Address",options: {filter: false,sort: true, display:true}},
+    { name: "Client_Remarks",label: "Remarks",options: {filter: true,sort: false,display:true}}, 
+    { name: "Client_TownCity",label: "Town/City",options: {filter: true,sort: false,}}, 
+    { name: "Client_contactPerson",label: "Contact Person",options: {filter: false,sort: true, display:false}}     
+  ];
+  const data = clients;     
+     const options = {       
+       filter: true,
+       rowsPerPage: 5,      
+       filterType: 'checkbox',// //filterType: 'dropdown',
+       rowsPerPageOptions :[5,10,20,50,100],
+       responsive: 'stacked', //   responsive: 'scrollMaxHeight',                
+       rowHover: true,       
+       setTableProps: () => {
+        return {
+          padding: "none" ,         
+          size: "small", // material ui v4 only
+        };
+      } 
+     };
 
   return (
     <div
       {...rest}
       className={clsx(classes.root, className)}
     >
-      <Typography
-        color="textSecondary"
-        gutterBottom
-        variant="body2"
-      >
-        {clients.length} Records found. Page {page + 1} of{' '}
-        {Math.ceil(clients.length / rowsPerPage)}
-      </Typography>
       <Card>
         <CardHeader
           action={<GenericMoreButton />}
@@ -85,79 +82,18 @@ const Results = props => {
         <CardContent className={classes.content}>
           <PerfectScrollbar>
             <div className={classes.inner}>
-              <Table>
-                <TableHead>
-                  <TableRow>                    
-                    <TableCell>Name</TableCell>
-                    <TableCell>Location</TableCell>
-                    <TableCell>Money spent</TableCell>
-                    <TableCell>Type</TableCell>
-                    <TableCell>Projects held</TableCell>
-                    <TableCell>Reviews</TableCell>
-                    <TableCell align="right">Actions</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {clients.slice(0, rowsPerPage).map(customer => (
-                    <TableRow
-                      hover
-                      key={customer.id}
-                    
-                    >
-                      
-                      <TableCell>
-                        <div className={classes.nameCell}>                          
-                          <div>
-                            <Link
-                              color="inherit"
-                              component={RouterLink}
-                              to="/management/clients/1"
-                              variant="h6"
-                            >
-                              {customer.name}
-                            </Link>
-                            
-                          </div>
-                        </div>
-                      </TableCell>
-                      <TableCell>{customer.location}</TableCell>
-                      <TableCell>
-                        {customer.currency}
-                        {customer.spent}
-                      </TableCell>
-                      <TableCell>{customer.type}</TableCell>
-                      <TableCell>{customer.projects}</TableCell>
-                      <TableCell>
-                        <ReviewStars value={customer.rating} />
-                      </TableCell>
-                      <TableCell align="right">
-                        <Button
-                          color="primary"
-                          component={RouterLink}
-                          size="small"
-                          to="/management/clients/1"
-                          variant="outlined"
-                        >
-                          View
-                        </Button>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
+            <MuiThemeProvider>                
+              <MUIDataTable
+               // title={"Animal List"}
+                data={data}
+                columns={columns}
+                options={options}
+              />
+            </MuiThemeProvider>
             </div>
           </PerfectScrollbar>
         </CardContent>
-        <CardActions className={classes.actions}>
-          <TablePagination
-            component="div"
-            count={clients.length}
-            onChangePage={handleChangePage}
-            onChangeRowsPerPage={handleChangeRowsPerPage}
-            page={page}
-            rowsPerPage={rowsPerPage}
-            rowsPerPageOptions={[5, 10, 25]}
-          />
+        <CardActions className={classes.actions}>          
         </CardActions>
       </Card>
      

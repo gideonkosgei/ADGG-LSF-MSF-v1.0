@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/styles';
-import { Page, SearchBar } from 'components';
+import { Page } from 'components';
 import { Header, Results } from './components';
 import {endpoint_clients} from '../../configs/endpoints';
 import {getClients}   from '../../utils/API';
-
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -25,8 +24,9 @@ const ClientList = () => {
     (async  (endpoint,id) => {     
         await  getClients(endpoint,id)
         .then(response => {       
-          if (mounted) {
-            setClients(response.payload[0]);
+          if (mounted) {   
+            console.log(response.payload);        
+            setClients(response.payload);
           }
         });
       })(endpoint_clients,organization_id); 
@@ -39,21 +39,12 @@ const ClientList = () => {
     return null;
   }
 
-
-
-  const handleFilter = () => {};
-  const handleSearch = () => {};
-
   return (
     <Page
       className={classes.root}
       title="Clients List"
     >
-      <Header />
-      <SearchBar
-        onFilter={handleFilter}
-        onSearch={handleSearch}
-      />
+      <Header />     
       {clients && (
         <Results
           className={classes.results}

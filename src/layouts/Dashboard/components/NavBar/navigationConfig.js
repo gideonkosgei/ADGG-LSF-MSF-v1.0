@@ -55,6 +55,10 @@ export default [
             href: '/management/clients'
           },
           {
+            title: 'Animals',
+            href: '/management/animals'
+          },
+          {
             title: 'Farm Details',
             href: '/management/farms/1/summary'
           },
