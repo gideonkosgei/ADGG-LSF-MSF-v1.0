@@ -11,9 +11,6 @@ import OpenInNewIcon from '@material-ui/icons/OpenInNew';
 import CustomToolbar from "./CustomToolbar";
 import { Link as RouterLink } from 'react-router-dom';
 
-
-
-
 const useStyles = makeStyles(theme => ({
   root: {},
   content: {
@@ -64,7 +61,7 @@ const Results = props => {
           return (
             <Link
               component={RouterLink}
-              to="/errors/error-404/"
+              to="/management/animals-add/"
             >
                 <OpenInNewIcon/>
            </Link>
@@ -82,7 +79,7 @@ const Results = props => {
         return (
           <Link
               component={RouterLink}
-              to="/errors/error-404/"
+              to="/management/animals-add/"
           >
             <EditOutlinedIcon/>
           </Link>

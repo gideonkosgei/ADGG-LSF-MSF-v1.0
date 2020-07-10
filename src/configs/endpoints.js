@@ -63,4 +63,11 @@ export const endpoint_animal_org = {
   headers: headers   
 };  
 
+//get lookup to populate combo boxes
+export const endpoint_lookup = {
+  url: `${api}/lookup/`,
+  method: 'GET',
+  headers: headers   
+}; 
+
 

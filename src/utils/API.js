@@ -204,6 +204,23 @@ export const getAnimalsOrg =  function (config,organisation_id) {
 });       
 }
 
+// get lookup values
+export const getLookups =  function (config,id) {   
+  const options = {
+    url:`${config.url}'${id}'`,
+    method: config.method,
+    headers: config.headers  
+  }  
+ 
+  return new Promise((resolve, reject) => {
+    axios(options)
+    .then(res => {          
+        resolve(res.data);
+    })
+    .catch(err => reject(err));
+});       
+}
+
 
 
 
