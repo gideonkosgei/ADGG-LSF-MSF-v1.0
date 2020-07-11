@@ -1,10 +1,14 @@
-import React, { useState,useEffect } from 'react';
+import React, { useState,useEffect,useContext } from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
-import {Button, Card,CardActions, CardContent, CardHeader, Grid,Divider, TextField,colors } from '@material-ui/core';
-import {getLookups}   from '../../../../utils/API';
-import {endpoint_lookup} from '../../../../configs/endpoints';
+import {Button, Card,CardActions, CardContent, CardHeader, Grid,Divider, TextField,colors,IconButton } from '@material-ui/core';
+import {getLookups,getHerds}   from '../../../../utils/API';
+import {endpoint_lookup,endpoint_herd} from '../../../../configs/endpoints';
+import authContext from '../../../../contexts/AuthContext';
+import InputAdornment from '@material-ui/core/InputAdornment';
+import SettingsApplicationsIcon from '@material-ui/icons/SettingsApplications';
+import SearchIcon from '@material-ui/icons/Search';
 
 
 const useStyles = makeStyles(theme => ({
@@ -20,8 +24,8 @@ const useStyles = makeStyles(theme => ({
 
 const AnimalDetails = props => {
   const {className, ...rest } = props; 
-
   const classes = useStyles();
+  const [ { organization_id }  ] = useContext(authContext);
   
   const [values, setValues] = useState({ });  
   const [animal_types, setAnimalTypes] = useState([]);
@@ -30,13 +34,16 @@ const AnimalDetails = props => {
   const [gender, setGender] = useState([]);
   const [colors, setColors] = useState([]);
   const [sire_types, setSireTypes] = useState([]);
+  const [herds, setHerds] = useState([]);
 
   useEffect(() => {   
-    let mounted = true;
+    let mounted_lookup = true;
+    let mounted_herds = true;
+
     (async  (endpoint,id) => {     
         await  getLookups(endpoint,id)
         .then(response => {       
-          if (mounted) { 
+          if (mounted_lookup) { 
             const data = response.payload[0];            
             let lookup_main_breeds = [];
             let lookup_breed_composition = [];  
@@ -81,11 +88,25 @@ const AnimalDetails = props => {
             
           }
         });
-      })(endpoint_lookup,'8,14,62,3,83,13');      
+      })(endpoint_lookup,'8,14,62,3,83,13');
+
+      (async  (endpoint,id) => {     
+        await  getHerds(endpoint,id)
+        .then(response => {       
+          if (mounted_herds) { 
+            const data = response.payload;
+            setHerds(data);
+            console.log(data);      
+          }
+        });
+      })(endpoint_herd,organization_id);
+      
+      
     return () => {
-      mounted = false;
+      mounted_lookup = false;
+      mounted_herds  = false
     };
-  }, []); 
+  }, [organization_id]); 
 
   if (!animal_types || !main_breeds || !breed_composition || !gender || !colors || !sire_types) {
     return null;
@@ -146,9 +167,9 @@ const AnimalDetails = props => {
             //value={values.timezone}
             variant="outlined"
           >
+            <option value=""></option>
             {animal_types.map(types => (
-                  <option
-                    key={types.id}
+                  <option                    
                     value={types.id}
                   >
                     {types.value}
@@ -175,6 +196,20 @@ const AnimalDetails = props => {
                 required
                 //value={values.name}
                 variant="outlined"
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end"  >
+                      <IconButton  
+                        edge="end"
+                        variant="outlined"
+                        color="inherit"
+                      >
+                           <SettingsApplicationsIcon /> 
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
+                
               />
             </Grid>
             <Grid
@@ -195,33 +230,7 @@ const AnimalDetails = props => {
               />
             </Grid>
 
-            
-            <Grid
-              item
-              md={3}
-              xs={12}
-            >
-              <TextField
-                fullWidth
-                InputLabelProps={{
-                  shrink: true,
-                }}
-                margin = 'dense'
-                label="Farm"
-                name="farm"
-                onChange={handleChange} 
-                required              
-                select
-                // eslint-disable-next-line react/jsx-sort-props
-                SelectProps={{ native: true }}
-                //value={values.timezone}
-                variant="outlined"
-              >
-              
-              </TextField>
-            </Grid>
-
-            <Grid
+          <Grid
               item
               md={3}
               xs={12}
@@ -242,6 +251,16 @@ const AnimalDetails = props => {
                 //value={values.timezone}
                 variant="outlined"
               >
+                 <option value=""></option>
+                {herds.map( herd => (
+                    <option                      
+                      value={herd.id}
+                    >
+                      {herd.name}
+                    </option>
+                  ))
+                }    
+              
               
               </TextField>
             </Grid>
@@ -287,9 +306,9 @@ const AnimalDetails = props => {
                 //value={values.timezone}
                 variant="outlined"
               >
+                <option value=""></option>
                 {gender.map( sex => (
-                    <option
-                      key={sex.id}
+                    <option                      
                       value={sex.id}
                     >
                       {sex.value}
@@ -318,10 +337,10 @@ const AnimalDetails = props => {
                 SelectProps={{ native: true }}
                 //value={values.timezone}
                 variant="outlined"
-              >   
+              > 
+                <option value=""></option>  
                 {colors.map( color => (
-                    <option
-                      key={color.id}
+                    <option                      
                       value={color.id}
                     >
                       {color.value}
@@ -351,10 +370,10 @@ const AnimalDetails = props => {
                 SelectProps={{ native: true }}
                 //value={values.timezone}
                 variant="outlined"
-              >  
+              > 
+                <option value=""></option> 
                 {main_breeds.map( main_breed => (
-                    <option
-                      key={main_breed.id}
+                    <option                    
                       value={main_breed.id}
                     >
                       {main_breed.value}
@@ -382,10 +401,10 @@ const AnimalDetails = props => {
                 SelectProps={{ native: true }}
                 //value={values.timezone}
                 variant="outlined"
-              >      
+              > 
+                <option value=""></option>    
                 {main_breeds.map( main_breed => (
-                      <option
-                        key={main_breed.id}
+                      <option                        
                         value={main_breed.id}
                       >
                         {main_breed.value}
@@ -413,10 +432,10 @@ const AnimalDetails = props => {
                 SelectProps={{ native: true }}
                 //value={values.timezone}
                 variant="outlined"
-              >  
+              > 
+                <option value=""></option>  
                 {breed_composition.map( breed_comp => (
-                      <option
-                        key={breed_comp.id}
+                      <option                        
                         value={breed_comp.id}
                       >
                         {breed_comp.value}
@@ -464,10 +483,10 @@ const AnimalDetails = props => {
                 SelectProps={{ native: true }}
                 //value={values.timezone}
                 variant="outlined"
-              >    
+              > 
+                <option value=""></option> 
                 {sire_types.map(sire_type => (
-                    <option
-                      key={sire_type.id}
+                    <option                      
                       value={sire_type.id}
                     >
                       {sire_type.value}
@@ -490,7 +509,20 @@ const AnimalDetails = props => {
                 label="Sire"
                 name="sire_tag_id"
                 onChange={handleChange}
-                variant="outlined"              
+                variant="outlined" 
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end"  >
+                      <IconButton  
+                        edge="end"
+                        variant="outlined"
+                        color="inherit"
+                      >
+                           <SearchIcon /> 
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}             
               />
             </Grid>
             <Grid
@@ -507,7 +539,20 @@ const AnimalDetails = props => {
                 label="Dam"
                 name="dam_tag_id"                
                 onChange={handleChange}
-                variant="outlined"              
+                variant="outlined"  
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end"  >
+                      <IconButton  
+                        edge="end"
+                        variant="outlined"
+                        color="inherit"
+                      >
+                           <SearchIcon/> 
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}            
               />
             </Grid>
 
@@ -522,11 +567,10 @@ const AnimalDetails = props => {
             type="submit"
             variant="contained"
           >
-            Save Changes
+            Save Details
           </Button>
         </CardActions>
-      </form>
-    
+      </form>    
     </Card>
   );
 };

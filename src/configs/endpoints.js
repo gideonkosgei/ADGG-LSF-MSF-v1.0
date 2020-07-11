@@ -70,4 +70,11 @@ export const endpoint_lookup = {
   headers: headers   
 }; 
 
+//get lookup to populate combo boxes
+export const endpoint_herd = {
+  url: `${api}/herds/org/`,
+  method: 'GET',
+  headers: headers   
+};
+
 
