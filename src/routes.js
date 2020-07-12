@@ -159,18 +159,64 @@ const routes = [
         path: '/management/milking/',
         exact: true,
         component: lazy(() => import('views/Animals/components/Milking'))
+      },     
+      {
+        path: '/management/analytics/',
+        exact: true,
+        component: lazy(() => import('views/Animals/components/Analytics'))
       },
+      {
+        path: '/management/calender/',
+        exact: true,
+        component: lazy(() => import('views/Animals/components/Calender'))
+      },
+      {
+        path: '/management/exits/',
+        exact: true,
+        component: lazy(() => import('views/Animals/components/Exits'))
+      },
+      {
+        path: '/management/health/',
+        exact: true,
+        component: lazy(() => import('views/Animals/components/Health'))
+      },
+      {
+        path: '/management/notifications/',
+        exact: true,
+        component: lazy(() => import('views/Animals/components/Notifications'))
+      },
+      {
+        path: '/management/pd/',
+        exact: true,
+        component: lazy(() => import('views/Animals/components/PD'))
+      },
+      {
+        path: '/management/pedigree/',
+        exact: true,
+        component: lazy(() => import('views/Animals/components/Pedigree'))
+      },
+      {
+        path: '/management/sync/',
+        exact: true,
+        component: lazy(() => import('views/Animals/components/Sync'))
+      },
+      {
+        path: '/management/weight/',
+        exact: true,
+        component: lazy(() => import('views/Animals/components/Weight'))
+      }, 
+      {
+        path: '/management/logs/',
+        exact: true,
+        component: lazy(() => import('views/Animals/components/Logs'))
+      },
+     
       {
         path: '/management/animals-actions/:id',
         exact: true,
         component: lazy(() => import('views/Animals/components/AnimalActions'))
-      },   
-      //to be remover >> header  
-      {
-        path: '/management/header',
-        exact: true,
-        component: lazy(() => import('views/Animals/components/Header'))
-      },  
+      }, 
+     
       {
         path: '/management/customers/:id',
         exact: true,

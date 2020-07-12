@@ -137,7 +137,7 @@ const AnimalDetails = props => {
       className={clsx(classes.root, className)}
     >
       <form onSubmit={handleSubmit}>
-        <CardHeader title="New Registration " />
+        <CardHeader title="Calving" />
         <Divider />
         <CardContent>
           <Grid

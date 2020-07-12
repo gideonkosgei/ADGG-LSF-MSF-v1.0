@@ -2,7 +2,7 @@ import React from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
-import {Card, CardContent,Tooltip,IconButton } from '@material-ui/core';
+import {Card, CardContent,Tooltip,IconButton,Link } from '@material-ui/core';
 import ExitToAppRoundedIcon from '@material-ui/icons/ExitToAppRounded';
 import SpeedRoundedIcon from '@material-ui/icons/SpeedRounded';
 import LocalHospitalRoundedIcon from '@material-ui/icons/LocalHospitalRounded';
@@ -17,6 +17,7 @@ import LinkIcon from '@material-ui/icons/Link';
 import PetsIcon from '@material-ui/icons/Pets';
 import ColorizeIcon from '@material-ui/icons/Colorize';
 import OpacityIcon from '@material-ui/icons/Opacity';
+import { Link as RouterLink } from 'react-router-dom';
 
 const useStyles = makeStyles(theme => ({
   root: {}, 
@@ -31,85 +32,114 @@ const Header = props => {
         <CardContent> 
           <Tooltip  title="Animal Details">              
             <IconButton aria-label="details" size="large" >
-              <PetsIcon /> 
+              <Link component = {RouterLink} to="/management/details/">
+                <PetsIcon /> 
+              </Link> 
             </IconButton> 
-          </Tooltip> 
+          </Tooltip>
               
           <Tooltip  title="Milking">              
             <IconButton aria-label="milking" size="large" >
-              <OpacityIcon /> 
+              <Link component = {RouterLink} to="/management/milking/">
+                <OpacityIcon /> 
+              </Link>
             </IconButton> 
           </Tooltip>
 
           <Tooltip  title="Health Events">              
             <IconButton aria-label="delete" size="large" >
-              <LocalHospitalRoundedIcon /> 
+              <Link component = {RouterLink} to="/management/health/">
+                <LocalHospitalRoundedIcon /> 
+              </Link>
             </IconButton> 
           </Tooltip>
 
           <Tooltip  title="Pregnancy Diagnosis">              
             <IconButton aria-label="pd" size="large" >
-              <PregnantWomanRoundedIcon /> 
+              <Link component = {RouterLink} to="/management/pd/">
+                <PregnantWomanRoundedIcon /> 
+              </Link>
             </IconButton> 
           </Tooltip>
 
           <Tooltip  title="calving">              
             <IconButton aria-label="calving" size="large" >
-              <ChildCareRoundedIcon /> 
+              <Link component = {RouterLink} to="/management/calving/">
+                <ChildCareRoundedIcon /> 
+              </Link>
             </IconButton> 
           </Tooltip>
 
           <Tooltip  title="Inseminations">              
             <IconButton aria-label="insemination" size="large" >
-              <ColorizeIcon /> 
+              <Link component = {RouterLink} to="/management/insemination/">
+               <ColorizeIcon /> 
+              </Link>
             </IconButton> 
           </Tooltip>
           
           <Tooltip  title="Synchronization Events">              
             <IconButton aria-label="delete" size="large" >
-              <SyncRoundedIcon /> 
+              <Link component = {RouterLink} to="/management/sync/">
+               <SyncRoundedIcon /> 
+              </Link>
             </IconButton> 
           </Tooltip>              
 
           <Tooltip  title="Exits">              
             <IconButton aria-label="delete" size="large" >
-              <ExitToAppRoundedIcon /> 
+              <Link component = {RouterLink} to="/management/exits/">
+                <ExitToAppRoundedIcon /> 
+              </Link>              
             </IconButton> 
           </Tooltip> 
 
           <Tooltip  title="Weights & Growth">              
             <IconButton aria-label="delete" size="large" >
-              <SpeedRoundedIcon /> 
+              <Link component = {RouterLink} to="/management/weight/">
+                <SpeedRoundedIcon /> 
+              </Link>
             </IconButton> 
           </Tooltip>
               
           <Tooltip  title="Calender Events">              
             <IconButton aria-label="delete" size="large" >
-              <DateRangeRoundedIcon /> 
+              <Link component = {RouterLink} to="/management/calender/">
+                <DateRangeRoundedIcon /> 
+              </Link>
+              
             </IconButton> 
           </Tooltip>
 
           <Tooltip  title="Pedigree">              
             <IconButton aria-label="pedigree" size="large" >
-              <LinkIcon /> 
+              <Link component = {RouterLink} to="/management/pedigree/">
+                <LinkIcon /> 
+              </Link>
             </IconButton> 
           </Tooltip>
 
           <Tooltip  title="Notifications">              
             <IconButton aria-label="notifications" size="large" >
-              <NotificationsActiveRoundedIcon /> 
+              <Link component = {RouterLink} to="/management/notifications/">
+                <NotificationsActiveRoundedIcon /> 
+              </Link>
             </IconButton> 
           </Tooltip>
 
           <Tooltip  title="Logs">              
             <IconButton aria-label="logs" size="large" >
-              <FormatListBulletedRoundedIcon /> 
+              <Link component = {RouterLink} to="/management/logs/">
+                <FormatListBulletedRoundedIcon /> 
+              </Link>
             </IconButton> 
           </Tooltip>
 
           <Tooltip  title="Analytics">              
             <IconButton aria-label="analytics" size="large" >
-              <TrendingUpRoundedIcon /> 
+              <Link component = {RouterLink} to="/management/analytics/">
+                <TrendingUpRoundedIcon /> 
+              </Link>
             </IconButton> 
           </Tooltip>           
         </CardContent> 

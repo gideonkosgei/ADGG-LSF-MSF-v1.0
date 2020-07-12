@@ -61,10 +61,10 @@ const Results = props => {
           return (
             <Link
               component={RouterLink}
-              to="/management/animals-actions/xx"
+              to="/management/details"
             >
                 <OpenInNewIcon/>
-           </Link>
+            </Link>
             
           );
         }
