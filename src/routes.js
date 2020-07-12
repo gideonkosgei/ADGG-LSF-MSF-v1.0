@@ -141,10 +141,36 @@ const routes = [
         component: lazy(() => import('views/Animals/components/AnimalDetails'))
       },
       {
+        path: '/management/details/',
+        exact: true,
+        component: lazy(() => import('views/Animals/components/Details'))
+      },
+      {
+        path: '/management/calving/',
+        exact: true,
+        component: lazy(() => import('views/Animals/components/Calving'))
+      },
+      {
+        path: '/management/insemination/',
+        exact: true,
+        component: lazy(() => import('views/Animals/components/Insemination'))
+      },
+      {
+        path: '/management/milking/',
+        exact: true,
+        component: lazy(() => import('views/Animals/components/Milking'))
+      },
+      {
         path: '/management/animals-actions/:id',
         exact: true,
         component: lazy(() => import('views/Animals/components/AnimalActions'))
-      },      
+      },   
+      //to be remover >> header  
+      {
+        path: '/management/header',
+        exact: true,
+        component: lazy(() => import('views/Animals/components/Header'))
+      },  
       {
         path: '/management/customers/:id',
         exact: true,
