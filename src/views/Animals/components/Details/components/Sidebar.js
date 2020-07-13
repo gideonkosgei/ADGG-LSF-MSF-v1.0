@@ -6,11 +6,11 @@ import {Card, CardContent,Tooltip,IconButton,Link } from '@material-ui/core';
 import PrintIcon from '@material-ui/icons/Print';
 import DeleteIcon from '@material-ui/icons/Delete';
 import VisibilityIcon from '@material-ui/icons/Visibility';
-import MenuIcon from '@material-ui/icons/Menu';
 import GetAppIcon from '@material-ui/icons/GetApp'
 import EditIcon from '@material-ui/icons/Edit';
 import AddIcon from '@material-ui/icons/Add';
 import { Link as RouterLink } from 'react-router-dom';
+import HomeIcon from '@material-ui/icons/Home';
 
 
 const useStyles = makeStyles(theme => ({
@@ -22,16 +22,16 @@ const Sidebar = props => {
   return (  
     <Card {...rest} className={clsx(classes.root, className)}  >
       <CardContent>                 
-      <Tooltip  title="Menu">              
-          <IconButton aria-label="menu" size="small" >
-            <Link component = {RouterLink} to="/management/milking/">
-              <MenuIcon /> 
+      <Tooltip  title="Home">              
+          <IconButton aria-label="home" size="small" >
+            <Link component = {RouterLink} to="/management/details/">
+              <HomeIcon /> 
             </Link>
           </IconButton> 
         </Tooltip>
         <Tooltip  title="view">              
           <IconButton aria-label="view" size="small" >
-            <Link component = {RouterLink} to="/management/milking/">
+            <Link component = {RouterLink} to="/management/details/">
               <VisibilityIcon /> 
             </Link>
           </IconButton> 
