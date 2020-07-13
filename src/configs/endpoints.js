@@ -61,7 +61,14 @@ export const endpoint_animal_org = {
   url: `${api}/animals/org/`,
   method: 'GET',
   headers: headers   
-};  
+}; 
+
+//get all animal by id
+export const endpoint_animal = {
+  url: `${api}/animals/`,
+  method: 'GET',
+  headers: headers   
+};
 
 //get lookup to populate combo boxes
 export const endpoint_lookup = {

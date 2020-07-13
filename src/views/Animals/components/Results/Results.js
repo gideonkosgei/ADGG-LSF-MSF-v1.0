@@ -38,14 +38,15 @@ const Results = props => {
   const { className,animals,caption, ...rest } = props;
   const classes = useStyles(); 
 
-  const columns = [     
+  const columns = [
+    { name: "animal_id",label: "id",options: {filter: false,sort: false,display:false}},     
     { name: "tag_id",label: "Tag",options: {filter: false,sort: true,display:true}},
     { name: "animal_name",label: "Name",options: {filter: false,sort: true,display:true}},   
     { name: "herd_name",label: "Herd",options: {filter: true,sort: true,}},
     { name: "org_id",label: "org_id",options: {filter: false,sort: true,display:false}},
     { name: "sex_id",label: "sex_id",options: {filter: false,sort: true,display:false}},
     { name: "sex",label: "Sex",options: {filter: true,sort: true,display:true}},    
-    {name: "farm_id",label: "farm_id",options: {filter: false,sort: true,display:false}},    
+    { name: "farm_id",label: "farm_id",options: {filter: false,sort: true,display:false}},    
     { name: "animalType",label: "Type",options: {filter: true,sort: true, display:true}},
     { name: "registration_date",label: "Reg Date",options: {filter: false,sort: true, display:true,hint:'Registration Date'}} ,
     { name: "dateofBirth",label: "DOB",options: {filter: false,sort: true, display:true}} ,  
@@ -57,11 +58,11 @@ const Results = props => {
         filter: false,
         sort: false,
         empty: true,      
-        customBodyRender: (value, tableMeta, updateValue) => {
-          return (
+        customBodyRender: (value, tableMeta, updateValue) => {         
+          return (           
             <Link
               component={RouterLink}
-              to="/management/details/"
+              to ={`/management/details/view/${tableMeta.rowData[0]}`}
             >
                 <OpenInNewIcon/>
             </Link>
@@ -79,7 +80,7 @@ const Results = props => {
         return (
           <Link
               component={RouterLink}
-              to="/management/animals-add/"
+              to = {`/management/details/edit/${tableMeta.rowData[0]}`}
           >
             <EditOutlinedIcon/>
           </Link>

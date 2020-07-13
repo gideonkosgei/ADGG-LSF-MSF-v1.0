@@ -141,12 +141,12 @@ const routes = [
         component: lazy(() => import('views/Animals/components/AnimalDetails'))
       },
       {
-        path: '/management/details',
+        path: '/management/details/view/:id',
         exact: true,
         component: lazy(() => import('views/Animals/components/Details'))
       },     
       {
-        path: '/management/details/edit',
+        path: '/management/details/edit/:id',
         exact: true,
         component: lazy(() => import('views/Animals/components/Details/components/edit'))
       },

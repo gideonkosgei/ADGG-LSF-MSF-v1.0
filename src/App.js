@@ -21,8 +21,7 @@ import { Provider } from './contexts/AuthContext';
 import { authReducer, initialAuthState } from './reducers/authReducer';
 const history = createBrowserHistory();
 const App = () => {
-  const useAuthState = useReducer(authReducer, initialAuthState);
-  //const isAuthenticated = useAuthState[0].isLoggedIn;  
+  const useAuthState = useReducer(authReducer, initialAuthState);   
   const isAuthenticated = isNaN(localStorage.getItem('isLoggedIn'),false);   
   return (       
     <Provider value={useAuthState}>    

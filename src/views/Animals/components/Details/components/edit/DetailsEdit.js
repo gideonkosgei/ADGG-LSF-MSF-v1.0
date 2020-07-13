@@ -3,8 +3,8 @@ import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import {Card, CardContent, CardHeader, Grid,Divider, TextField,colors,IconButton } from '@material-ui/core';
-import {getLookups,getHerds}   from '../../../../../../utils/API';
-import {endpoint_lookup,endpoint_herd} from '../../../../../../configs/endpoints';
+import {getLookups,getHerds,getAnimal}   from '../../../../../../utils/API';
+import {endpoint_lookup,endpoint_herd,endpoint_animal} from '../../../../../../configs/endpoints';
 import authContext from '../../../../../../contexts/AuthContext';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import SettingsApplicationsIcon from '@material-ui/icons/SettingsApplications';
@@ -23,7 +23,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const DetailsEdit = props => {
-  const {className, ...rest } = props; 
+  const {className,animal_id, ...rest } = props; 
   const classes = useStyles();
   const [ { organization_id }  ] = useContext(authContext);
   
@@ -39,6 +39,7 @@ const DetailsEdit = props => {
   useEffect(() => {   
     let mounted_lookup = true;
     let mounted_herds = true;
+    let mounted_animal_details = true;
 
     (async  (endpoint,id) => {     
         await  getLookups(endpoint,id)
@@ -90,25 +91,39 @@ const DetailsEdit = props => {
         });
       })(endpoint_lookup,'8,14,62,3,83,13');
 
-      (async  (endpoint,id) => {     
+      (async  (endpoint,id) => {
         await  getHerds(endpoint,id)
-        .then(response => {       
+        .then(response => { 
           if (mounted_herds) { 
             const data = response.payload;
-            setHerds(data);
-            console.log(data);      
+           
+            setHerds(data);                 
           }
         });
       })(endpoint_herd,organization_id);
+
+     
+      (async  (endpoint,id) => {             
+        await  getAnimal(endpoint,id)
+        .then(response => {       
+          if (mounted_animal_details) { 
+            const data = response.payload[0]; 
+            console.log(data)  ;
+                  
+            setValues(data);                 
+          }
+        });
+      })(endpoint_animal,340206);
       
       
     return () => {
       mounted_lookup = false;
       mounted_herds  = false
+      mounted_animal_details = false;
     };
   }, [organization_id]); 
 
-  if (!animal_types || !main_breeds || !breed_composition || !gender || !colors || !sire_types) {
+  if (!animal_types || !main_breeds || !breed_composition || !gender || !colors || !sire_types || !values) {
     return null;
   }
 
@@ -171,7 +186,7 @@ const DetailsEdit = props => {
                 select
                 // eslint-disable-next-line react/jsx-sort-props
                 SelectProps={{ native: true }}
-                //value={values.timezone}
+                defaultValue={values.animalType}
                 variant="outlined"
               >
                 <option value=""></option>
@@ -200,22 +215,8 @@ const DetailsEdit = props => {
                     name="tag_id"
                     onChange={handleChange}
                     required
-                    //value={values.name}
-                    variant="outlined"
-                    InputProps={{
-                      endAdornment: (
-                        <InputAdornment position="end"  >
-                          <IconButton  
-                            edge="end"
-                            variant="outlined"
-                            color="inherit"
-                          >
-                              <SettingsApplicationsIcon /> 
-                          </IconButton>
-                        </InputAdornment>
-                      ),
-                    }}
-                    
+                    value={values.tag_id}
+                    variant="outlined" 
                   />
                 </Grid>
                 <Grid
@@ -232,7 +233,8 @@ const DetailsEdit = props => {
                     label="Animal Name"
                     name="username"
                     onChange={handleChange}
-                    variant="outlined"              
+                    variant="outlined" 
+                    value={values.animal_name}             
                   />
                 </Grid>
                 <Grid
@@ -253,7 +255,7 @@ const DetailsEdit = props => {
                     select
                     // eslint-disable-next-line react/jsx-sort-props
                     SelectProps={{ native: true }}
-                    //value={values.timezone}
+                    defaultValue={values.herd_name}
                     variant="outlined"
                   >
                     <option value=""></option>
@@ -286,6 +288,7 @@ const DetailsEdit = props => {
                     defaultValue = {new Date()}
                     onChange={handleChange}
                     variant="outlined" 
+                    value={values.dateofBirth} 
                                 
                   />
                 </Grid>
@@ -395,37 +398,6 @@ const DetailsEdit = props => {
                       shrink: true,
                     }}
                     margin = 'dense'
-                    label="Breed Other"
-                    name="breed_other"
-                    onChange={handleChange}               
-                    select
-                    // eslint-disable-next-line react/jsx-sort-props
-                    SelectProps={{ native: true }}
-                    //value={values.timezone}
-                    variant="outlined"
-                  > 
-                    <option value=""></option>    
-                    {main_breeds.map( main_breed => (
-                          <option                        
-                            value={main_breed.id}
-                          >
-                            {main_breed.value}
-                          </option>
-                        ))
-                      }            
-                  </TextField>
-                </Grid>
-                <Grid
-                  item
-                  md={3}
-                  xs={12}
-                >
-                  <TextField
-                    fullWidth
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-                    margin = 'dense'
                     label="Breed Composition"
                     name="breed_composition"
                     onChange={handleChange}               
@@ -462,7 +434,8 @@ const DetailsEdit = props => {
                     multiline
                     rowsMax={4}                
                     onChange={handleChange}
-                    variant="outlined"              
+                    variant="outlined"
+                    value={values.breedCompositiondetails}              
                   />
                 </Grid>
                 <Grid
@@ -511,6 +484,7 @@ const DetailsEdit = props => {
                     name="sire_tag_id"
                     onChange={handleChange}
                     variant="outlined" 
+                    value = {values.sire_tag_id}  
                     InputProps={{
                       endAdornment: (
                         <InputAdornment position="end"  >
@@ -541,6 +515,7 @@ const DetailsEdit = props => {
                 name="dam_tag_id"                
                 onChange={handleChange}
                 variant="outlined"  
+                value = {values.dam_tag_id}  
                 InputProps={{
                   endAdornment: (
                     <InputAdornment position="end"  >

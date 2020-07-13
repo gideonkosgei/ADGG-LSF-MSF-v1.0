@@ -17,28 +17,28 @@ const useStyles = makeStyles(theme => ({
   root: {}, 
 }));
 const Sidebar = props => {
-  const {className, ...rest } = props; 
+  const {className,animal_id, ...rest } = props; 
   const classes = useStyles();
   return (  
     <Card {...rest} className={clsx(classes.root, className)}  >
       <CardContent>                 
       <Tooltip  title="Home">              
           <IconButton aria-label="home" size="small" >
-            <Link component = {RouterLink} to="/management/details/">
+            <Link component = {RouterLink} to={`/management/details/view/${animal_id}`}>
               <HomeIcon /> 
             </Link>
           </IconButton> 
         </Tooltip>
         <Tooltip  title="view">              
           <IconButton aria-label="view" size="small" >
-            <Link component = {RouterLink} to="/management/details/">
+            <Link component = {RouterLink} to = {`/management/details/view/${animal_id}`}>
               <VisibilityIcon /> 
             </Link>
           </IconButton> 
         </Tooltip>
         <Tooltip  title="Edit">              
           <IconButton aria-label="Edit" size="small" >
-            <Link component = {RouterLink} to="/management/details/edit/">
+            <Link component = {RouterLink} to={`/management/details/edit/${animal_id}`}>
               <EditIcon /> 
             </Link>
           </IconButton> 
