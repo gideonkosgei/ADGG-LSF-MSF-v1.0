@@ -1,11 +1,12 @@
 import React from 'react';
-import { Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
-import { Card,CardActions, CardContent, CardHeader, colors } from '@material-ui/core';
+import { Card,CardContent, colors } from '@material-ui/core';
 
 import { Page } from 'components';
-import { EditView, Header} from './components';
+import {Header} from '../index';
+import {default as DetailsEdit} from './DetailsEdit';
+
 const useStyles = makeStyles(theme => ({
   root: {},
   inner: {
@@ -22,7 +23,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const AnimalEditView = props => { 
+const Edit = props => { 
   const classes = useStyles();
  
   return (
@@ -34,7 +35,7 @@ const AnimalEditView = props => {
         <CardContent>
             <Header />
             <br/>
-            <EditView/>
+            <DetailsEdit/>
         </CardContent>
     </Card>
      
@@ -42,9 +43,9 @@ const AnimalEditView = props => {
   );
 };
 
-AnimalEditView.propTypes = {
+Edit.propTypes = {
   history: PropTypes.object.isRequired,
   match: PropTypes.object.isRequired
 };
 
-export default AnimalEditView;
+export default Edit;

@@ -141,9 +141,14 @@ const routes = [
         component: lazy(() => import('views/Animals/components/AnimalDetails'))
       },
       {
-        path: '/management/details/',
+        path: '/management/details',
         exact: true,
         component: lazy(() => import('views/Animals/components/Details'))
+      },     
+      {
+        path: '/management/details/edit',
+        exact: true,
+        component: lazy(() => import('views/Animals/components/Details/components/edit'))
       },
       {
         path: '/management/calving/',
@@ -210,12 +215,6 @@ const routes = [
         exact: true,
         component: lazy(() => import('views/Animals/components/Logs'))
       },
-     
-      {
-        path: '/management/animals-actions/:id',
-        exact: true,
-        component: lazy(() => import('views/Animals/components/AnimalActions'))
-      }, 
      
       {
         path: '/management/customers/:id',
