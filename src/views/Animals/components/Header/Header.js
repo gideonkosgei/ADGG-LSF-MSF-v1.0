@@ -25,6 +25,7 @@ const useStyles = makeStyles(theme => ({
 const Header = props => {
   const {className, ...rest } = props; 
   const classes = useStyles();
+  const animal_id  = localStorage.getItem('animal_id');
   return (    
     <Card
       {...rest}
@@ -32,7 +33,7 @@ const Header = props => {
         <CardContent> 
           <Tooltip  title="Animal Details">              
             <IconButton aria-label="details" size="large" >
-              <Link component = {RouterLink} to="/management/details/view/xx">
+              <Link component = {RouterLink} to = {`/management/details/view/${animal_id}`}>
                 <PetsIcon /> 
               </Link> 
             </IconButton> 
@@ -96,7 +97,7 @@ const Header = props => {
 
           <Tooltip  title="Weights & Growth">              
             <IconButton aria-label="delete" size="large" >
-              <Link component = {RouterLink} to="/management/weight/">
+              <Link component = {RouterLink} to = {`/management/weight/view/${animal_id}`}>
                 <SpeedRoundedIcon /> 
               </Link>
             </IconButton> 

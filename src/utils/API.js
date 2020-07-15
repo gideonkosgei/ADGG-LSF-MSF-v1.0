@@ -254,6 +254,61 @@ export const getHerds =  function (config,id) {
 });       
 }
 
+// get weight & growth Deatials
+export const getWeights =  function (config,id) {   
+  const options = {
+    url:`${config.url}'${id}'`,
+    method: config.method,
+    headers: config.headers  
+  }  
+ 
+  return new Promise((resolve, reject) => {
+    axios(options)
+    .then(res => {          
+        resolve(res.data);
+    })
+    .catch(err => reject(err));
+  });       
+}
+
+// add bew weight event
+export const postWeight =  function (config,id,values) {  
+  let {body_length,body_score,field_agent_id,heart_girth,weight,weight_date} = values;
+  body_length = (typeof body_length === 'undefined')? '0':body_length;
+  body_score = (typeof body_score === 'undefined')? '0':body_score;
+  field_agent_id = (typeof field_agent_id === 'undefined')? '0':field_agent_id;
+  heart_girth = (typeof heart_girth === 'undefined')? '0':heart_girth;
+  weight = (typeof weight === 'undefined')? '0':weight;
+  weight_date = (typeof weight_date === 'undefined')? '':weight_date;
+ 
+  const body = {
+    "animal_id": 13560,
+    "body_length": body_length,
+    "heart_girth": heart_girth,
+    "weight" : weight,
+    "body_score": body_score,
+    "data_collection_date": weight_date,
+    "field_agent_id": field_agent_id,
+    "created_by": "652536"
+  };
+
+ 
+
+  const options = {
+    url:`${config.url}`,
+    method: config.method,
+    headers: config.headers,
+    data: body  
+  }    
+  return new Promise((resolve, reject) => {
+    axios(options)
+    .then(res => {           
+        resolve(res.data);
+    })    
+    .catch(err => reject(err));
+  });       
+}
+
 
 
 

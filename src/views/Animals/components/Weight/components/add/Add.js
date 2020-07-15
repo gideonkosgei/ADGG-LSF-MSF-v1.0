@@ -2,11 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import { Card,CardContent, colors } from '@material-ui/core';
+
 import { Page } from 'components';
 import {Header} from '../index';
-import {default as DetailsView} from './DetailsView';
-
-
+import {default as DetailsAdd} from './DetailsAdd';
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -26,9 +25,6 @@ const useStyles = makeStyles(theme => ({
 
 const Edit = props => { 
   const classes = useStyles();
-  const animal_id = parseInt(props.match.params.id); 
-  localStorage.setItem('animal_id', animal_id);
-  
  
   return (
     <Page
@@ -39,7 +35,7 @@ const Edit = props => {
         <CardContent>
             <Header />
             <br/>
-            <DetailsView/>
+            <DetailsAdd/>
         </CardContent>
     </Card>
      

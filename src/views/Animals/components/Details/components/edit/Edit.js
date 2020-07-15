@@ -25,6 +25,8 @@ const useStyles = makeStyles(theme => ({
 
 const Edit = props => { 
   const classes = useStyles();
+  console.log(props.match.params.id);
+  localStorage.setItem('animal_id', parseInt(props.match.params.id)); 
  
   return (
     <Page

@@ -84,4 +84,17 @@ export const endpoint_herd = {
   headers: headers   
 };
 
+//get weight & Growth Details for Specific Animal
+export const endpoint_weight = {
+  url: `${api}/events/weight/animal/`,
+  method: 'GET',
+  headers: headers   
+};
+
+//post new weight event
+export const endpoint_weight_add = {
+  url: `${api}/events/weight`,
+  method: 'POST',
+  headers: headers   
+};
 

@@ -7,7 +7,6 @@ import {getLookups,getHerds,getAnimal}   from '../../../../../../utils/API';
 import {endpoint_lookup,endpoint_herd,endpoint_animal} from '../../../../../../configs/endpoints';
 import authContext from '../../../../../../contexts/AuthContext';
 import InputAdornment from '@material-ui/core/InputAdornment';
-import SettingsApplicationsIcon from '@material-ui/icons/SettingsApplications';
 import SearchIcon from '@material-ui/icons/Search';
 import {Sidebar} from '../index';
 
@@ -23,7 +22,8 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const DetailsEdit = props => {
-  const {className,animal_id, ...rest } = props; 
+  const {className, ...rest } = props; 
+  const animal_id  = localStorage.getItem('animal_id');
   const classes = useStyles();
   const [ { organization_id }  ] = useContext(authContext);
   
@@ -34,7 +34,7 @@ const DetailsEdit = props => {
   const [gender, setGender] = useState([]);
   const [colors, setColors] = useState([]);
   const [sire_types, setSireTypes] = useState([]);
-  const [herds, setHerds] = useState([]);
+  const [herds, setHerds] = useState([]); 
 
   useEffect(() => {   
     let mounted_lookup = true;
@@ -108,12 +108,10 @@ const DetailsEdit = props => {
         .then(response => {       
           if (mounted_animal_details) { 
             const data = response.payload[0]; 
-            console.log(data)  ;
-                  
             setValues(data);                 
           }
         });
-      })(endpoint_animal,340206);
+      })(endpoint_animal,animal_id);
       
       
     return () => {
@@ -544,6 +542,7 @@ const DetailsEdit = props => {
 
 DetailsEdit.propTypes = {
   className: PropTypes.string,
+  match: PropTypes.object.isRequired
   //profile: PropTypes.object.isRequired
 };
 

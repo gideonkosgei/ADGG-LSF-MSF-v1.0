@@ -206,10 +206,15 @@ const routes = [
         component: lazy(() => import('views/Animals/components/Sync'))
       },
       {
-        path: '/management/weight/',
+        path: '/management/weight/view/:id',
         exact: true,
-        component: lazy(() => import('views/Animals/components/Weight'))
+        component: lazy(() => import('views/Animals/components/Weight'))        
       }, 
+      {
+        path: '/management/weight/add/:id',
+        exact: true,
+        component: lazy(() => import('views/Animals/components/Weight/components/add'))          
+      },
       {
         path: '/management/logs/',
         exact: true,
