@@ -24,9 +24,10 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const DetailsView = props => {
-  const {className,animal_id, ...rest } = props; 
+  const {className, ...rest } = props; 
   const classes = useStyles();  
   const [values, setValues] = useState([]);
+  const animal_id  = localStorage.getItem('animal_id');
 
   useEffect(() => {     
     let mounted = true;
@@ -37,7 +38,7 @@ const DetailsView = props => {
             setValues(response.payload);                 
           }
         });
-      })(endpoint_weight,13560);
+      })(endpoint_weight,animal_id);
       
     return () => {
       mounted = false;
@@ -51,13 +52,15 @@ const DetailsView = props => {
 
   const columns = [
     { name: "Event_ID",label: "Event ID",options: {filter: false,sort: true,display:true}},    
-    { name: "weight_Date",label: "Weight Date",options: {filter: false,sort: true,display:true}},   
-    { name: "event_date",label: "Event Date",options: {filter: true,sort: true,display:false}},
+    { name: "weight_Date",label: "Weight Date",options: {filter: false,sort: true,display:true}},
     { name: "body_length",label: "Body Length",options: {filter: false,sort: true,display:true}},
     { name: "heart_girth",label: "Heart Girth",options: {filter: true,sort: true, display:true}},
     { name: "weight_kg",label: "Weight(kg)",options: {filter: true,sort: true, display:true}},
     { name: "body_score",label: "Body Score",options: {filter: false,sort: true,display:true}},
-    { name: "field_agent_id",label: "Field Agent",options: {filter: true,sort: true,display:true}} 
+    { name: "field_agent_id",label: "Field Agent",options: {filter: true,sort: true,display:true}},
+    { name: "event_date",label: "Date Created",options: {filter: true,sort: true,display:true}},
+    { name: "created_by",label: "Created By",options: {filter: true,sort: true,display:true}}
+    
   ];
 
   

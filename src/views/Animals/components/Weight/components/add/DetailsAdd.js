@@ -7,10 +7,8 @@ import {getLookups,postWeight}   from '../../../../../../utils/API';
 import {endpoint_lookup,endpoint_weight_add} from '../../../../../../configs/endpoints';
 import authContext from '../../../../../../contexts/AuthContext';
 import {Sidebar} from '../index';
-import SuccessSnackbar from '../../../../../../components/SuccessSnackbar'
-import ErrorSnackbar from '../../../../../../components/ErrorSnackbar'
-
-
+import SuccessSnackbar from '../../../../../../components/SuccessSnackbar';
+import ErrorSnackbar from '../../../../../../components/ErrorSnackbar';
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -24,13 +22,15 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const DetailsEdit = props => {
-  const {className,animal_id, ...rest } = props; 
+  const {className, ...rest } = props; 
   const [openSnackbarSuccess, setopenSnackbarSuccess] = useState(false);
   const [openSnackbarError, setopenSnackbarError] = useState(false);
-
+  const [ {user_id} ] = useContext(authContext);
   const classes = useStyles();
   const [values, setValues] = useState({ });  
   const [body_scores, setBodyScores] = useState([]);
+  const animal_id  = localStorage.getItem('animal_id');
+  
  
 
   useEffect(() => {   
@@ -74,15 +74,14 @@ const DetailsEdit = props => {
   const handleSubmit = event => {
     event.preventDefault();
     (async  (endpoint,id) => {     
-      await  postWeight(endpoint,id,values)
-      .then(response => {  
+      await  postWeight(endpoint,animal_id,values,user_id)
+      .then(() => {  
         setopenSnackbarSuccess(true); 
         setValues({});
-      }).catch(e => {        
-        console.log('error occured');
+      }).catch(() => {
         setopenSnackbarError(true); 
       });
-    })(endpoint_weight_add,'71',values);    
+    })(endpoint_weight_add,animal_id,values,user_id);    
   };
 
   const handleSnackbarSuccessClose = () => {
@@ -129,8 +128,7 @@ const DetailsEdit = props => {
                       margin = 'dense'
                       label="Weight Date"
                       type="date"
-                      name="weight_date"
-                      defaultValue = {new Date()}
+                      name="weight_date"                      
                       onChange={handleChange}
                       variant="outlined"                      
                                   

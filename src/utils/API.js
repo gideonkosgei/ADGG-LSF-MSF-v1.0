@@ -1,3 +1,4 @@
+import moment from 'moment';
 const axios = require('axios');
 
 // user Authentication  
@@ -272,27 +273,26 @@ export const getWeights =  function (config,id) {
 }
 
 // add bew weight event
-export const postWeight =  function (config,id,values) {  
+export const postWeight =  function (config,animal_id,values,user_id) {  
   let {body_length,body_score,field_agent_id,heart_girth,weight,weight_date} = values;
-  body_length = (typeof body_length === 'undefined')? '0':body_length;
-  body_score = (typeof body_score === 'undefined')? '0':body_score;
-  field_agent_id = (typeof field_agent_id === 'undefined')? '0':field_agent_id;
-  heart_girth = (typeof heart_girth === 'undefined')? '0':heart_girth;
-  weight = (typeof weight === 'undefined')? '0':weight;
-  weight_date = (typeof weight_date === 'undefined')? '':weight_date;
+  body_length = (typeof body_length === 'undefined')? '0':body_length.replace('','0');  
+  body_score = (typeof body_score === 'undefined')? '0':body_score.replace('','0');
+  field_agent_id = (typeof field_agent_id === 'undefined')? '0':field_agent_id.replace('','0');
+  heart_girth = (typeof heart_girth === 'undefined')? '0':heart_girth.replace('','0');
+  weight = (typeof weight === 'undefined')? '0':weight.replace('','0');
+  weight_date = (typeof weight_date === 'undefined')? moment(new Date()).format('YYYY-MM-DD'):weight_date;  
  
   const body = {
-    "animal_id": 13560,
+    "animal_id": animal_id,
     "body_length": body_length,
     "heart_girth": heart_girth,
     "weight" : weight,
     "body_score": body_score,
     "data_collection_date": weight_date,
     "field_agent_id": field_agent_id,
-    "created_by": "652536"
+    "created_by": user_id
   };
 
- 
 
   const options = {
     url:`${config.url}`,

@@ -43,8 +43,8 @@ const Sidebar = props => {
           </IconButton> 
         </Tooltip>
         <Tooltip  title="graph">              
-          <IconButton aria-label="graph" size="small" >
-            <Link component = {RouterLink} to={`/management/weight/add/${animal_id}`}>
+          <IconButton aria-label="graph" size="small" >          
+            <Link component = {RouterLink} to={`/management/weight/charts/${animal_id}`}>
               <BarChartIcon /> 
             </Link>
           </IconButton> 

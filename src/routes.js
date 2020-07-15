@@ -211,6 +211,11 @@ const routes = [
         component: lazy(() => import('views/Animals/components/Weight'))        
       }, 
       {
+        path: '/management/weight/charts/:id',
+        exact: true,
+        component: lazy(() => import('views/Animals/components/Weight/components/charts'))        
+      }, 
+      {
         path: '/management/weight/add/:id',
         exact: true,
         component: lazy(() => import('views/Animals/components/Weight/components/add'))          
