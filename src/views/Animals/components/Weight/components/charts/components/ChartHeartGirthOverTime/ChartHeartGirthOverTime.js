@@ -28,7 +28,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const ChartHeartGirthOverTime = props => {
-  const { className, ...rest } = props;
+  const { className,heart_girth, ...rest } = props;
 
   const classes = useStyles();
 
@@ -42,21 +42,8 @@ const ChartHeartGirthOverTime = props => {
       labels: []
     },
     thisYear: {
-      data: [10, 5, 11, 20, 13, 28, 18, 4, 13, 12, 13, 5],
-      labels: [
-        'Jan',
-        'Feb',
-        'Mar',
-        'Apr',
-        'May',
-        'Jun',
-        'Jul',
-        'Aug',
-        'Sep',
-        'Oct',
-        'Nov',
-        'Dec'
-      ]
+      data: heart_girth,
+      labels: ['Jan','Feb','Mar', 'Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']    
     }
   };
 

@@ -310,6 +310,32 @@ export const postWeight =  function (config,animal_id,values,user_id) {
 }
 
 
+// add bew weight event
+export const getWeightSummaries =  function (config,animal_id,year) {  
+
+  const body = {
+    "animal_id": animal_id,
+    "year": year    
+  };
+
+  const options = {
+    url:`${config.url}`,
+    method: config.method,
+    headers: config.headers,
+    data: body  
+  }    
+  return new Promise((resolve, reject) => {
+    axios(options)
+    .then(res => {           
+        resolve(res.data);
+    })    
+    .catch(err => reject(err));
+  });       
+}
+
+
+
+
 
 
 

@@ -1,19 +1,14 @@
-import React, { useState,useEffect,useContext } from 'react';
+import React, { useState,useEffect} from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
-import {Card, CardContent, CardHeader, Grid,Divider, TextField,colors,Button,CardActions } from '@material-ui/core';
-import {getLookups,postWeight}   from '../../../../../../../utils/API';
-import {endpoint_lookup,endpoint_weight_add} from '../../../../../../../configs/endpoints';
-import authContext from '../../../../../../../contexts/AuthContext';
+import {Card, CardContent, CardHeader, Grid,Divider,colors} from '@material-ui/core';
+import {getWeightSummaries}   from '../../../../../../../utils/API';
+import {endpoint_weight_summary} from '../../../../../../../configs/endpoints';
 import {Sidebar} from '../../index';
 import {default as ChartBodyWeightOverTime} from './ChartBodyWeightOverTime';
 import {default as ChartBodyLengthOverTime} from './ChartBodyLengthOverTime';
 import {default as ChartHeartGirthOverTime} from './ChartHeartGirthOverTime';
-
-
-import SuccessSnackbar from '../../../../../../../components/SuccessSnackbar';
-import ErrorSnackbar from '../../../../../../../components/ErrorSnackbar';
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -27,82 +22,62 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const ChartDetails = props => {
-  const {className, ...rest } = props; 
-  const [openSnackbarSuccess, setopenSnackbarSuccess] = useState(false);
-  const [openSnackbarError, setopenSnackbarError] = useState(false);
-  const [ {user_id} ] = useContext(authContext);
-  const classes = useStyles();
-  const [values, setValues] = useState({ });  
-  const [body_scores, setBodyScores] = useState([]);
+  const {className, ...rest } = props;   
+  const classes = useStyles();   
+  const [weightSummary, setWeightSummary] = useState([]);
+  const [lengthSummary, setLengthSummary] = useState([]);
+  const [girthSummary, setGirthSummary] = useState([]);
   const animal_id  = localStorage.getItem('animal_id');
-  
+  const year = new Date().getFullYear();
  
-
   useEffect(() => {   
-    let mounted_lookup = true;
-    (async  (endpoint,id) => {     
-        await  getLookups(endpoint,id)
+    let mounted = true;
+    (async  (endpoint,id,year) => {     
+        await  getWeightSummaries(endpoint,id,year)
         .then(response => {       
-          if (mounted_lookup) { 
-            const data = response.payload[0];            
-            let lookup_body_scores = [];
-            for (let i = 0; i< data.length; i++){              
-              //Body Score
-              if(data[i].list_type_id === 71){                
-                lookup_body_scores.push(data[i]);
+          if (mounted) { 
+            const data = response.payload[0];                        
+            let body_weight = [];
+            let body_length = [];
+            let heart_girth = [];
+
+            for (let i = 0; i< data.length; i++){ 
+              if(data[i].categ === 'heart_girth'){                
+                heart_girth.push(data[i]);
               } 
-            }             
-            setBodyScores(lookup_body_scores);
+              if(data[i].categ === 'body_length'){                
+                body_length.push(data[i]);
+              } 
+              if(data[i].categ === 'weight_kg'){                
+                body_weight.push(data[i]);
+              }
+            }           
+            const heart_girth_summary = [heart_girth[0].Jan,heart_girth[0].Feb,heart_girth[0].Mar,heart_girth[0].Apr,heart_girth[0].May,heart_girth[0].Jun,heart_girth[0].Jul,heart_girth[0].Aug,heart_girth[0].Sep,heart_girth[0].Oct,heart_girth[0].Nov,heart_girth[0].Dec]
+            const body_length_summary = [body_length[0].Jan,body_length[0].Feb,body_length[0].Mar,body_length[0].Apr,body_length[0].May,body_length[0].Jun,body_length[0].Jul,body_length[0].Aug,body_length[0].Sep,body_length[0].Oct,body_length[0].Nov,body_length[0].Dec]
+            const body_weight_summary = [body_weight[0].Jan,body_weight[0].Feb,body_weight[0].Mar,body_weight[0].Apr,body_weight[0].May,body_weight[0].Jun,body_weight[0].Jul,body_weight[0].Aug,body_weight[0].Sep,body_weight[0].Oct,body_weight[0].Nov,body_weight[0].Dec]
+            
+            setWeightSummary(body_weight_summary);
+            setLengthSummary(body_length_summary);
+            setGirthSummary(heart_girth_summary);
+
           }
         });
-      })(endpoint_lookup,'71');
+      })(endpoint_weight_summary,animal_id,year);
 
     return () => {
-      mounted_lookup = false;     
+      mounted = false;     
     };
   }, []); 
 
-  if (!body_scores) {
+  if (!weightSummary || !lengthSummary || !girthSummary) {
     return null;
   }
-
-    const handleChange = event => {
-    event.persist();
-    setValues({
-      ...values,
-      [event.target.name]:event.target.type === 'checkbox' ? event.target.checked: event.target.value  
-          
-    });
-  };
-
-
-  const handleSubmit = event => {
-    event.preventDefault();
-    (async  (endpoint,id) => {     
-      await  postWeight(endpoint,animal_id,values,user_id)
-      .then(() => {  
-        setopenSnackbarSuccess(true); 
-        setValues({});
-      }).catch(() => {
-        setopenSnackbarError(true); 
-      });
-    })(endpoint_weight_add,animal_id,values,user_id);    
-  };
-
-  const handleSnackbarSuccessClose = () => {
-    setopenSnackbarSuccess(false);
-  };
-
-  const handleSnackbarErrorClose = () => {
-    setopenSnackbarError(false);
-  };
 
   return (
     <Card
       {...rest}
       className={clsx(classes.root, className)}
-    >
-      
+    >      
         <CardHeader title="Weight & Growth Performance Charts" />
         <Divider />
         <CardContent> 
@@ -115,13 +90,13 @@ const ChartDetails = props => {
 
             <Grid container spacing={1} justify="center">
               <Grid item  xs={12} >  
-                <ChartBodyWeightOverTime/>
+                <ChartBodyWeightOverTime body_weight = {weightSummary}/>
               </Grid>
               <Grid item  xs={12} >  
-                <ChartBodyLengthOverTime/>
+                <ChartBodyLengthOverTime body_length = {lengthSummary}/>
               </Grid>
               <Grid item  xs={12} >  
-                <ChartHeartGirthOverTime/>
+                <ChartHeartGirthOverTime heart_girth = {girthSummary}/>
               </Grid>  
             </Grid> 
 

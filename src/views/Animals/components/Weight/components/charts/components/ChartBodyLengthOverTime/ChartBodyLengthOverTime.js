@@ -28,7 +28,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const ChartBodyLengthOverTime = props => {
-  const { className, ...rest } = props;
+  const { className,body_length, ...rest } = props;
 
   const classes = useStyles();
 
@@ -42,21 +42,8 @@ const ChartBodyLengthOverTime = props => {
       labels: []
     },
     thisYear: {
-      data: [10, 5, 11, 20, 13, 28, 18, 4, 13, 12, 13, 5],
-      labels: [
-        'Jan',
-        'Feb',
-        'Mar',
-        'Apr',
-        'May',
-        'Jun',
-        'Jul',
-        'Aug',
-        'Sep',
-        'Oct',
-        'Nov',
-        'Dec'
-      ]
+      data: body_length,
+      labels: ['Jan','Feb','Mar', 'Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'] 
     }
   };
 

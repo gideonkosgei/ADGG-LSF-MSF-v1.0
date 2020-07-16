@@ -98,3 +98,10 @@ export const endpoint_weight_add = {
   headers: headers   
 };
 
+//get weight summaries for charts
+export const endpoint_weight_summary = {
+  url: `${api}/events/weight/charts`,
+  method: 'POST',
+  headers: headers   
+};
+
