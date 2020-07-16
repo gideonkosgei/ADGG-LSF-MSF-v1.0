@@ -41,21 +41,28 @@ const ChartDetails = props => {
             let body_length = [];
             let heart_girth = [];
 
-            for (let i = 0; i< data.length; i++){ 
-              if(data[i].categ === 'heart_girth'){                
-                heart_girth.push(data[i]);
+            let heart_girth_summary = [];
+            let body_length_summary = [];
+            let body_weight_summary = [];
+
+            if (data.length > 0 ){
+              for (let i = 0; i< data.length; i++){ 
+                if(data[i].categ === 'heart_girth'){                
+                  heart_girth.push(data[i]);
+                } 
+                if(data[i].categ === 'body_length'){                
+                  body_length.push(data[i]);
+                } 
+                if(data[i].categ === 'weight_kg'){                
+                  body_weight.push(data[i]);
+                }
               } 
-              if(data[i].categ === 'body_length'){                
-                body_length.push(data[i]);
-              } 
-              if(data[i].categ === 'weight_kg'){                
-                body_weight.push(data[i]);
-              }
-            }           
-            const heart_girth_summary = [heart_girth[0].Jan,heart_girth[0].Feb,heart_girth[0].Mar,heart_girth[0].Apr,heart_girth[0].May,heart_girth[0].Jun,heart_girth[0].Jul,heart_girth[0].Aug,heart_girth[0].Sep,heart_girth[0].Oct,heart_girth[0].Nov,heart_girth[0].Dec]
-            const body_length_summary = [body_length[0].Jan,body_length[0].Feb,body_length[0].Mar,body_length[0].Apr,body_length[0].May,body_length[0].Jun,body_length[0].Jul,body_length[0].Aug,body_length[0].Sep,body_length[0].Oct,body_length[0].Nov,body_length[0].Dec]
-            const body_weight_summary = [body_weight[0].Jan,body_weight[0].Feb,body_weight[0].Mar,body_weight[0].Apr,body_weight[0].May,body_weight[0].Jun,body_weight[0].Jul,body_weight[0].Aug,body_weight[0].Sep,body_weight[0].Oct,body_weight[0].Nov,body_weight[0].Dec]
+
+              heart_girth_summary = [heart_girth[0].Jan,heart_girth[0].Feb,heart_girth[0].Mar,heart_girth[0].Apr,heart_girth[0].May,heart_girth[0].Jun,heart_girth[0].Jul,heart_girth[0].Aug,heart_girth[0].Sep,heart_girth[0].Oct,heart_girth[0].Nov,heart_girth[0].Dec];
+              body_length_summary = [body_length[0].Jan,body_length[0].Feb,body_length[0].Mar,body_length[0].Apr,body_length[0].May,body_length[0].Jun,body_length[0].Jul,body_length[0].Aug,body_length[0].Sep,body_length[0].Oct,body_length[0].Nov,body_length[0].Dec];
+              body_weight_summary = [body_weight[0].Jan,body_weight[0].Feb,body_weight[0].Mar,body_weight[0].Apr,body_weight[0].May,body_weight[0].Jun,body_weight[0].Jul,body_weight[0].Aug,body_weight[0].Sep,body_weight[0].Oct,body_weight[0].Nov,body_weight[0].Dec];
             
+            } 
             setWeightSummary(body_weight_summary);
             setLengthSummary(body_length_summary);
             setGirthSummary(heart_girth_summary);

@@ -78,7 +78,8 @@ const DetailsEdit = props => {
       .then(() => {  
         setopenSnackbarSuccess(true); 
         setValues({});
-        window.location.reload();
+        //window.location.reload();
+        document.forms["event"].reset();
       }).catch(() => {
         setopenSnackbarError(true); 
       });
@@ -108,7 +109,7 @@ const DetailsEdit = props => {
          </Grid> 
           <Grid item xs={11}>
             <Card> 
-            <form onSubmit={handleSubmit}>
+            <form id ='event' onSubmit={handleSubmit} >
               <CardContent>        
               <Grid
                 container
