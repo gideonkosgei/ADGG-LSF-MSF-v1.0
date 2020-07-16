@@ -78,6 +78,7 @@ const DetailsEdit = props => {
       .then(() => {  
         setopenSnackbarSuccess(true); 
         setValues({});
+        window.location.reload();
       }).catch(() => {
         setopenSnackbarError(true); 
       });
