@@ -191,7 +191,7 @@ const routes = [
         component: lazy(() => import('views/Animals/components/Notifications'))
       },
       {
-        path: '/management/pd/',
+        path: '/management/pd/view/:id',
         exact: true,
         component: lazy(() => import('views/Animals/components/PD'))
       },

@@ -105,3 +105,10 @@ export const endpoint_weight_summary = {
   headers: headers   
 };
 
+//get PD data for a specific animal
+export const endpoint_pd = {
+  url: `${api}/events/pd/animal/`,
+  method: 'GET',
+  headers: headers   
+};
+

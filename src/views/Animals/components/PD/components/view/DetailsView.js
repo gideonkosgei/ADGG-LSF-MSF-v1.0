@@ -2,14 +2,15 @@ import React, { useState,useEffect,useContext } from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
-import {Card, CardContent, CardHeader, Grid,Divider, TextField,colors } from '@material-ui/core';
-import {getWeights}   from '../../../../../../utils/API';
-import {endpoint_weight} from '../../../../../../configs/endpoints';
+import {Card, CardContent, CardHeader, Grid,Divider,colors } from '@material-ui/core';
+import {getPD}   from '../../../../../../utils/API';
+import {endpoint_pd} from '../../../../../../configs/endpoints';
 import {Sidebar} from '../index';
 import MUIDataTable from "mui-datatables";
 import {MuiThemeProvider } from '@material-ui/core/styles';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import CustomToolbar from "../CustomToolbar";
+
 
 
 const useStyles = makeStyles(theme => ({
@@ -32,13 +33,13 @@ const DetailsView = props => {
   useEffect(() => {     
     let mounted = true;
       (async  (endpoint,id) => {     
-        await  getWeights(endpoint,id)
-        .then(response => {               
+        await  getPD(endpoint,id)
+        .then(response => {                        
           if (mounted) {            
-            setValues(response.payload);                 
+            setValues(response.payload[0]);                 
           }
         });
-      })(endpoint_weight,animal_id);
+      })(endpoint_pd,17330);
       
     return () => {
       mounted = false;
@@ -49,18 +50,17 @@ const DetailsView = props => {
   if (!values) {
     return null;
   }
-  
-
+ 
   const columns = [
-    { name: "Event_ID",label: "Event ID",options: {filter: false,sort: true,display:true}},    
-    { name: "weight_Date",label: "Weight Date",options: {filter: false,sort: true,display:true}},
-    { name: "body_length",label: "Body Length",options: {filter: false,sort: true,display:true}},
-    { name: "heart_girth",label: "Heart Girth",options: {filter: true,sort: true, display:true}},
-    { name: "weight_kg",label: "Weight(kg)",options: {filter: true,sort: true, display:true}},
-    { name: "body_score",label: "Body Score",options: {filter: false,sort: true,display:true}},
-    { name: "field_agent_id",label: "Field Agent",options: {filter: true,sort: true,display:true}},
-    { name: "event_date",label: "Date Created",options: {filter: true,sort: true,display:true}},
-    { name: "created_by",label: "Created By",options: {filter: true,sort: true,display:true}}
+    { name: "examination_date",label: "Date Examined",options: {filter: false,sort: true,display:true}},
+    //{ name: "time_examined",label: "Time Examined",options: {filter: true,sort: true, display:true}},
+    { name: "pd_method",label: "Method",options: {filter: false,sort: true,display:true}},
+    { name: "pd_result",label: "Results",options: {filter: true,sort: true, display:true}},
+    { name: "pd_stage",label: "Stage",options: {filter: false,sort: true,display:true}},
+    { name: "body_condition_score",label: "Body Condition",options: {filter: true,sort: true,display:true}},
+    { name: "cost",label: "cost",options: {filter: true,sort: true,display:true}},     
+    { name: "date_created",label: "Date Created",options: {filter: true,sort: true,display:true}}, 
+    //{ name: "created_by",label: "Created By",options: {filter: true,sort: true,display:true}}
     
   ];
 
@@ -92,7 +92,7 @@ const DetailsView = props => {
       {...rest}
       className={clsx(classes.root, className)}
     >
-        <CardHeader title="Weight & Growth Details" />
+        <CardHeader title="Pregnancy Diagnosis Details" />
         <Divider />
         <CardContent> 
           <Grid container spacing={1} justify="center">            
@@ -115,8 +115,6 @@ const DetailsView = props => {
                       </MuiThemeProvider>
                     </div>
                   </PerfectScrollbar> 
-                
-
                 </CardContent>
               </Card> 
           </Grid>

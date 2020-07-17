@@ -57,7 +57,7 @@ const Header = props => {
 
           <Tooltip  title="Pregnancy Diagnosis">              
             <IconButton aria-label="pd" size="large" >
-              <Link component = {RouterLink} to="/management/pd/">
+              <Link component = {RouterLink} to = {`/management/pd/view/${animal_id}`}>              
                 <PregnantWomanRoundedIcon /> 
               </Link>
             </IconButton> 
