@@ -112,3 +112,10 @@ export const endpoint_pd = {
   headers: headers   
 };
 
+//post new weight event
+export const endpoint_pd_add = {
+  url: `${api}/events/pd`,
+  method: 'POST',
+  headers: headers   
+};
+

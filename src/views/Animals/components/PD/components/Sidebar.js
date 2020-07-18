@@ -30,21 +30,21 @@ const Sidebar = props => {
         </Tooltip>
         <Tooltip  title="view">              
           <IconButton aria-label="view" size="small" >
-            <Link component = {RouterLink} to = {`/management/weight/view/${animal_id}`}>
+            <Link component = {RouterLink} to = {`/management/pd/view/${animal_id}`}>
               <VisibilityIcon /> 
             </Link>
           </IconButton> 
         </Tooltip>         
         <Tooltip  title="Add New">              
           <IconButton aria-label="add" size="small" >
-            <Link component = {RouterLink} to={`/management/weight/add/${animal_id}`}>
+            <Link component = {RouterLink} to={`/management/pd/add/${animal_id}`}>
               <AddIcon /> 
             </Link>
           </IconButton> 
         </Tooltip>
         <Tooltip  title="graph">              
           <IconButton aria-label="graph" size="small" >          
-            <Link component = {RouterLink} to={`/management/weight/charts/${animal_id}`}>
+            <Link component = {RouterLink} to={`/management/pd/charts/${animal_id}`}>
               <BarChartIcon /> 
             </Link>
           </IconButton> 

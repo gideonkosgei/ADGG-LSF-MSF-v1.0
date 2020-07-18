@@ -74,7 +74,7 @@ const ChartDetails = props => {
     return () => {
       mounted = false;     
     };
-  }, []); 
+  }, [animal_id,year]); 
 
   if (!weightSummary || !lengthSummary || !girthSummary) {
     return null;

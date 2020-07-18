@@ -73,8 +73,8 @@ const DetailsEdit = props => {
 
   const handleSubmit = event => {
     event.preventDefault();
-    (async  (endpoint,id) => {     
-      await  postWeight(endpoint,animal_id,values,user_id)
+    (async  (endpoint,id,values,user_id) => {     
+      await  postWeight(endpoint,id,values,user_id)
       .then(() => {  
         setopenSnackbarSuccess(true); 
         setValues({});
