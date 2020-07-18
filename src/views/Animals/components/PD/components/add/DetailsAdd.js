@@ -32,10 +32,9 @@ const DetailsEdit = props => {
   const [body_scores, setBodyScores] = useState([]);
   const [pd_methods, setPdMethods] = useState([]);
   const [pd_stages, setPdStages] = useState([]);
-  const [pd_results, sePdResults] = useState([]);
-  const animal_id  = localStorage.getItem('animal_id');
+  const [pd_results, setPdResults] = useState([]);
   
- 
+  const animal_id  = localStorage.getItem('animal_id');
 
   useEffect(() => {   
     let mounted_lookup = true;
@@ -73,7 +72,7 @@ const DetailsEdit = props => {
                    
             setBodyScores(lookup_body_scores);
             setPdMethods(lookup_pd_methods);
-            sePdResults(lookup_pd_results);
+            setPdResults(lookup_pd_results);
             setPdStages(lookup_pd_stages);            
           }
         });
@@ -215,7 +214,7 @@ const DetailsEdit = props => {
                     label="PD Method"
                     name="pd_method"
                     onChange={handleChange}
-                    //required
+                    required
                     default = ""                              
                     select
                     // eslint-disable-next-line react/jsx-sort-props
@@ -247,7 +246,7 @@ const DetailsEdit = props => {
                       label="PD Result"
                       name="pd_results"
                       onChange={handleChange}
-                      //required
+                      required
                       default = ""                              
                       select
                       // eslint-disable-next-line react/jsx-sort-props
@@ -271,16 +270,14 @@ const DetailsEdit = props => {
                     xs={12}
                   >
                   <TextField
-                    fullWidth
+                    fullWidth                    
                     InputLabelProps={{
-                      shrink: true,
-                    }}
+                      shrink: true                      
+                    }}                                       
                     margin = 'dense'
                     label="PD Stage"
                     name="pd_stage"
-                    onChange={handleChange}
-                    //required
-                    default = ""                              
+                    onChange={handleChange}                                                
                     select
                     // eslint-disable-next-line react/jsx-sort-props
                     SelectProps={{ native: true }}                    

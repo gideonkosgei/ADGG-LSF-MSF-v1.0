@@ -383,7 +383,7 @@ export const postPd =  function (config,animal_id,values,user_id) {
     headers: config.headers,
     data: body  
   }; 
-  console.log(config); 
+ 
  
   return new Promise((resolve, reject) => {
     axios(options)
