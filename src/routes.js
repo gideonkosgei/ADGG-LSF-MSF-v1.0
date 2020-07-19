@@ -205,11 +205,21 @@ const routes = [
         exact: true,
         component: lazy(() => import('views/Animals/components/Pedigree'))
       },
+
       {
-        path: '/management/sync/',
+        path: '/management/sync/view/:id',
         exact: true,
         component: lazy(() => import('views/Animals/components/Sync'))
       },
+      {
+        path: '/management/sync/add/:id',
+        exact: true,
+        component: lazy(() => import('views/Animals/components/Sync/components/add'))          
+      },
+      
+
+
+
       {
         path: '/management/weight/view/:id',
         exact: true,

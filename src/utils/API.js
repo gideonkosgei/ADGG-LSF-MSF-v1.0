@@ -332,7 +332,7 @@ export const getWeightSummaries =  function (config,animal_id,year) {
   });       
 }
 
-// get weight & growth Deatials
+// get PD events 
 export const getPD =  function (config,id) {   
   const options = {
     url:`${config.url}'${id}'`,
@@ -385,6 +385,78 @@ export const postPd =  function (config,animal_id,values,user_id) {
   }; 
  
  
+  return new Promise((resolve, reject) => {
+    axios(options)
+    .then(res => {           
+        resolve(res.data);
+    })    
+    .catch(err => reject(err));
+  });       
+}
+
+// get sync events 
+export const getSync =  function (config,id) {   
+  const options = {
+    url:`${config.url}'${id}'`,
+    method: config.method,
+    headers: config.headers  
+  }  
+ 
+  return new Promise((resolve, reject) => {
+    axios(options)
+    .then(res => {          
+        resolve(res.data);
+    })
+    .catch(err => reject(err));
+  });       
+}
+
+
+// add new sync event
+export const postSync =  function (config,animal_id,values,user_id) { 
+
+  let {animal_parity,cost,field_agent_id,hormone_source,hormone_type,other_hormone_source,other_hormone_type,sync_number,sync_date,sync_other_person,sync_person,sync_person_phone,sync_time} = values;
+  
+  animal_parity = (typeof animal_parity === 'undefined')? '0':animal_parity.replace('','0');  
+  cost = (typeof cost === 'undefined')? '0':cost.replace('','0');
+  field_agent_id = (typeof field_agent_id === 'undefined')? '0':field_agent_id.replace('','0');
+  hormone_source = (typeof hormone_source === 'undefined')? '0':hormone_source.replace('','0');
+  hormone_type = (typeof hormone_type === 'undefined')? '0':hormone_type.replace('','0');
+  other_hormone_source = (typeof other_hormone_source === 'undefined')? '0':other_hormone_source.replace('','0');
+  other_hormone_type = (typeof other_hormone_type === 'undefined')? '0':other_hormone_type.replace('','0');
+  sync_number = (typeof sync_number === 'undefined')? '0':sync_number.replace('','0');
+  sync_other_person = (typeof sync_other_person === 'undefined')? '0':sync_other_person.replace('','0');
+  sync_person = (typeof sync_person === 'undefined')? '0':sync_person.replace('','0');
+  sync_person_phone = (typeof sync_person_phone === 'undefined')? '0':sync_person_phone.replace('','0');
+  sync_date = (typeof sync_date === 'undefined')? moment(new Date()).format('YYYY-MM-DD'):sync_date; 
+  sync_time = (typeof sync_time === 'undefined')? moment(new Date()).format('HH:mm:ss'):sync_time; 
+
+  const body = {
+      "animal_id": animal_id,
+      "sync_date": sync_date,
+      "sync_time": sync_time,
+      "sync_number" : sync_number,
+      "animal_parity": animal_parity,
+      "hormone_type": hormone_type,
+      "other_hormone_type": other_hormone_type,
+      "hormone_source": hormone_source,
+      "other_hormone_source": other_hormone_source,
+      "sync_cost": cost,
+      "sync_person": sync_person,
+      "sync_other_person": sync_other_person,
+      "sync_person_phone": sync_person_phone,
+      "field_agent_id": field_agent_id,
+      "created_by": user_id
+  };
+  
+ 
+  const options = {
+    url:`${config.url}`,
+    method: config.method,
+    headers: config.headers,
+    data: body  
+  }; 
+
   return new Promise((resolve, reject) => {
     axios(options)
     .then(res => {           

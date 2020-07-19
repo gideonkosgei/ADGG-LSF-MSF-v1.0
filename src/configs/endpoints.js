@@ -119,3 +119,17 @@ export const endpoint_pd_add = {
   headers: headers   
 };
 
+//get sync data for a specific animal
+export const endpoint_sync = {
+  url: `${api}/events/sync/animal/`,
+  method: 'GET',
+  headers: headers   
+};
+
+//post sync event
+export const endpoint_sync_add = {
+  url: `${api}/events/sync`,
+  method: 'POST',
+  headers: headers   
+};
+

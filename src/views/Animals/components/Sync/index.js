@@ -1,1 +1,1 @@
-export { default } from './AnimalEditView';
+export { default } from './components/view';

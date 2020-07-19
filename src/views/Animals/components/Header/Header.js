@@ -81,7 +81,7 @@ const Header = props => {
           
           <Tooltip  title="Synchronization Events">              
             <IconButton aria-label="delete" size="large" >
-              <Link component = {RouterLink} to="/management/sync/">
+              <Link component = {RouterLink} to = {`/management/sync/view/${animal_id}`}>
                <SyncRoundedIcon /> 
               </Link>
             </IconButton> 
