@@ -154,12 +154,7 @@ const routes = [
         path: '/management/calving/',
         exact: true,
         component: lazy(() => import('views/Animals/components/Calving'))
-      },
-      {
-        path: '/management/insemination/',
-        exact: true,
-        component: lazy(() => import('views/Animals/components/Insemination'))
-      },
+      },      
       {
         path: '/management/milking/',
         exact: true,
@@ -199,6 +194,16 @@ const routes = [
         path: '/management/pd/add/:id',
         exact: true,
         component: lazy(() => import('views/Animals/components/PD/components/add'))          
+      },
+      {
+        path: '/management/insemination/view/:id',
+        exact: true,
+        component: lazy(() => import('views/Animals/components/Insemination'))
+      },
+      {
+        path: '/management/insemination/add/:id',
+        exact: true,
+        component: lazy(() => import('views/Animals/components/Insemination/components/add'))
       },
       {
         path: '/management/pedigree/',
