@@ -486,6 +486,67 @@ export const getInsemination =  function (config,id) {
 
 
 
+// add new insemination event
+export const postInsemination =  function (config,animal_id,values,user_id) { 
+
+  let {ai_type,body_condition_score,breed_composition,breed_of_bull,cost,cow_weight,field_agent_id,origin_country_bull,other_Semen_source,other_breed_of_bull,semen_batch,service_date,source_of_semen,straw_id,straw_semen_type} = values;
+    
+  ai_type = (typeof ai_type === 'undefined')? '0':ai_type.replace('','0');  
+  body_condition_score = (typeof body_condition_score === 'undefined')? '0':body_condition_score.replace('','0');
+  field_agent_id = (typeof field_agent_id === 'undefined')? '0':field_agent_id.replace('','0');
+  straw_semen_type = (typeof straw_semen_type === 'undefined')? '0':straw_semen_type.replace('','0');
+  straw_id = (typeof straw_id === 'undefined')? '':straw_id;
+  source_of_semen = (typeof source_of_semen === 'undefined')? '0':source_of_semen.replace('','0');
+  semen_batch = (typeof semen_batch === 'undefined')? '':semen_batch;
+  other_breed_of_bull = (typeof other_breed_of_bull === 'undefined')? '0':other_breed_of_bull.replace('','0');
+  other_Semen_source = (typeof other_Semen_source === 'undefined')? '0':other_Semen_source.replace('','0');
+  origin_country_bull = (typeof origin_country_bull === 'undefined')? '':origin_country_bull;
+  cow_weight = (typeof cow_weight === 'undefined')? '0':cow_weight.replace('','0');
+  breed_composition = (typeof breed_composition === 'undefined')? '0':breed_composition.replace('','0');
+  cost = (typeof cost === 'undefined')? '0':cost.replace('','0');
+  breed_of_bull = (typeof breed_of_bull === 'undefined')? '0':breed_of_bull.replace('','0');
+  service_date = (typeof service_date === 'undefined')? moment(new Date()).format('YYYY-MM-DD'):service_date; 
+  
+
+  const body = {
+      "animal_id": animal_id,
+      "ai_date": service_date,
+      "straw_semen_type": straw_semen_type,
+      "type_of_ai" : ai_type,
+      "straw_id": straw_id,
+      "country_of_origin": origin_country_bull,
+      "body_condition_score": body_condition_score,
+      "breed_composition_bull": breed_composition,
+      "ai_cost": cost,
+      "cow_weight": cow_weight,
+      "semen_batch": semen_batch,
+      "semen_source": source_of_semen,
+      "semen_source_other": other_Semen_source,
+      "breed_of_bull": breed_of_bull,
+      "breed_of_bull_other": other_breed_of_bull, 
+      "field_agent_id": field_agent_id,
+      "created_by": user_id
+  };
+ 
+  const options = {
+    url:`${config.url}`,
+    method: config.method,
+    headers: config.headers,
+    data: body  
+  }; 
+
+  return new Promise((resolve, reject) => {
+    axios(options)
+    .then(res => {           
+        resolve(res.data);
+    })    
+    .catch(err => reject(err));
+  });       
+}
+
+
+
+
 
 
 

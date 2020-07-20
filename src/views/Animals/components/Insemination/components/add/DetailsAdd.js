@@ -3,8 +3,8 @@ import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import {Card, CardContent, CardHeader, Grid,Divider, TextField,colors,Button,CardActions } from '@material-ui/core';
-import {getLookups,postSync}   from '../../../../../../utils/API';
-import {endpoint_lookup,endpoint_sync_add} from '../../../../../../configs/endpoints';
+import {getLookups,postInsemination}   from '../../../../../../utils/API';
+import {endpoint_lookup,endpoint_insemination_add} from '../../../../../../configs/endpoints';
 import authContext from '../../../../../../contexts/AuthContext';
 import {Sidebar} from '../index';
 import SuccessSnackbar from '../../../../../../components/SuccessSnackbar';
@@ -29,10 +29,12 @@ const DetailsEdit = props => {
   const classes = useStyles();
 
   const [values, setValues] = useState({ });
-  const [hormone_sources, setHormoneSources] = useState([]);
-  const [sync_numbers, setSyncNumbers] = useState([]);
-  const [hormone_types, setHormoneTypes] = useState([]);
-  const [sync_person, setSyncPerson] = useState([]);
+  const [body_scores, setBodyScores] = useState([]);
+  const [breed_compositions, setBreedCompositions] = useState([]);
+  const [semen_sources, setSemenSources] = useState([]);
+  const [bull_breeds, setBullBreeds] = useState([]);
+  const [semen_types, setSemenTypes] = useState([]);
+  const [ai_types, setAiTypes] = useState([]);
   
   const animal_id  = localStorage.getItem('animal_id');
 
@@ -42,47 +44,64 @@ const DetailsEdit = props => {
         await  getLookups(endpoint,id)
         .then(response => {       
           if (mounted_lookup) { 
+
             const data = response.payload[0];                        
-            let lookup_sync_number = [];
-            let lookup_hormone_type = [];
-            let lookup_sync_person = [];
-            let lookup_hormone_source = [];
+            let lookup_body_scores = [];
+            let lookup_breed_compositions = [];
+            let lookup_semen_sources = [];
+            let lookup_semen_types = [];
+            let lookup_ai_types = [];
+            let lookup_breed = [];         
 
             for (let i = 0; i< data.length; i++){              
-              //sync numbers
-              if(data[i].list_type_id === 75){                
-                lookup_sync_number.push(data[i]);
+              // body condition scores
+              if(data[i].list_type_id === 71){                
+                lookup_body_scores.push(data[i]);
               } 
 
-              //hormone type
-              if(data[i].list_type_id === 76){                
-                lookup_hormone_type.push(data[i]);
+              //breed compositions
+              if(data[i].list_type_id === 14){                
+                lookup_breed_compositions.push(data[i]);
               }  
-              //sync person
-              if(data[i].list_type_id === 77){                
-                lookup_sync_person.push(data[i]);
+
+              //semen sources
+              if(data[i].list_type_id === 74){                
+                lookup_semen_sources.push(data[i]);
               } 
 
-              //hormone sources
-              if(data[i].list_type_id === 74){                
-                lookup_hormone_source.push(data[i]);
-              }               
+              //semen types
+              if(data[i].list_type_id === 73){                
+                lookup_semen_types.push(data[i]);
+              } 
+
+              //ai Types
+              if(data[i].list_type_id === 72){                
+                lookup_ai_types.push(data[i]);
+              } 
+              
+              //bull breeds
+              if(data[i].list_type_id === 8){                
+                lookup_breed.push(data[i]);
+              }  
             }  
-                   
-            setSyncNumbers(lookup_sync_number);
-            setHormoneTypes(lookup_hormone_type);
-            setSyncPerson(lookup_sync_person);
-            setHormoneSources(lookup_hormone_source);            
+
+            setBodyScores(lookup_body_scores);
+            setBreedCompositions(lookup_breed_compositions);
+            setSemenSources(lookup_semen_sources);
+            setBullBreeds(lookup_breed);
+            setSemenTypes(lookup_semen_types);
+            setAiTypes(lookup_ai_types);
           }
         });
-      })(endpoint_lookup,'74,75,76,77');
+      })(endpoint_lookup,'8,14,71,72,73,74');
       
     return () => {
       mounted_lookup = false;     
     };
-  }, []);  
+  }, []);   
 
-  if (!hormone_sources || !sync_numbers || !hormone_types ||!sync_person) {
+
+  if (!breed_compositions || !body_scores || !semen_sources ||!bull_breeds || !semen_types || !ai_types) {
     return null;
   }
 
@@ -99,15 +118,15 @@ const DetailsEdit = props => {
   const handleSubmit = event => {
     event.preventDefault();
     (async  (endpoint,id,values,user_id) => {     
-      await  postSync(endpoint,id,values,user_id)
+      await  postInsemination(endpoint,id,values,user_id)
       .then(() => {  
         setopenSnackbarSuccess(true); 
         setValues({});        
         document.forms["event"].reset();
-      }).catch(() => {        
+      }).catch(() => {
         setopenSnackbarError(true); 
       });
-    })(endpoint_sync_add,animal_id,values,user_id);    
+    })(endpoint_insemination_add,animal_id,values,user_id);    
   };
   
   
@@ -125,7 +144,7 @@ const DetailsEdit = props => {
       className={clsx(classes.root, className)}
     >
       
-        <CardHeader title="New Synchronization Details" />
+        <CardHeader title="New Insemination Details" />
         <Divider />
         <CardContent> 
           <Grid container spacing={1} justify="center">            
@@ -152,33 +171,13 @@ const DetailsEdit = props => {
                       }}
                       required
                       margin = 'dense'
-                      label = "Sync Date"
+                      label = "AI Service Date"
                       type = "date"
-                      name = "sync_date"                      
+                      name = "service_date"                      
                       onChange = {handleChange}
                       variant = "outlined"
                     />
-                  </Grid>
-                  <Grid
-                    item
-                    md={3}
-                    xs={12}
-                  >
-                    <TextField
-                      fullWidth
-                      InputLabelProps={{
-                        shrink: true,
-                      }}
-                      required
-                      margin = 'dense'
-                      label="Sync Time"
-                      type="time"
-                      name="sync_time"                      
-                      onChange={handleChange}
-                      variant="outlined"                      
-                                  
-                    />
-                  </Grid>                 
+                  </Grid>                  
                   <Grid
                     item
                     md={3}
@@ -190,8 +189,8 @@ const DetailsEdit = props => {
                       shrink: true,
                     }}
                     margin = 'dense'
-                    label="Sync Number"
-                    name="sync_number"
+                    label="AI Type"
+                    name="ai_type"
                     onChange={handleChange}
                     required
                     default = ""                              
@@ -201,48 +200,54 @@ const DetailsEdit = props => {
                     variant="outlined"
                   >
                     <option value=""></option>
-                    {sync_numbers.map(number => (
+                    {ai_types.map(ai_type => (
                           <option                    
-                            value={number.id}
+                            value={ai_type.id}
                           >
-                            {number.value}
+                            {ai_type.value}
                           </option>
                         ))
                     }           
                   </TextField>
                 </Grid>
-                  <Grid
-                      item
-                      md={3}
-                      xs={12}
-                    >
-                    <TextField
-                      fullWidth
-                      InputLabelProps={{
-                        shrink: true,
-                      }}
-                      margin = 'dense'
-                      label="Hormone Type"
-                      name="hormone_type"
-                      onChange={handleChange}
-                      required
-                      default = ""                              
-                      select
-                      // eslint-disable-next-line react/jsx-sort-props
-                      SelectProps={{ native: true }}                    
-                      variant="outlined"
-                    >
-                      <option value=""></option>
-                      {hormone_types.map(type => (
-                            <option                    
-                              value={type.id}
-                            >
-                              {type.value}
-                            </option>
-                          ))
-                      }           
-                    </TextField>
-                  </Grid>
+
+                <Grid
+                    item
+                    md={3}
+                    xs={12}
+                  >
+                  <TextField
+                    fullWidth
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                    margin = 'dense'
+                    label="Semen Batch"
+                    name="semen_batch"                
+                    onChange={handleChange}
+                    variant="outlined"  
+                    
+                />
+              </Grid>
+
+                <Grid
+                    item
+                    md={3}
+                    xs={12}
+                  >
+                  <TextField
+                    fullWidth
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                    margin = 'dense'
+                    label="Straw ID"
+                    name="straw_id"                
+                    onChange={handleChange}
+                    variant="outlined"  
+                    
+                />
+              </Grid>                  
                   <Grid
                       item
                       md={3}
@@ -254,8 +259,8 @@ const DetailsEdit = props => {
                         shrink: true                      
                       }}                                       
                       margin = 'dense'
-                      label="Hormone Source"
-                      name="hormone_source"
+                      label="Straw Semen Type"
+                      name="straw_semen_type"
                       onChange={handleChange}                                                
                       select
                       // eslint-disable-next-line react/jsx-sort-props
@@ -263,11 +268,11 @@ const DetailsEdit = props => {
                       variant="outlined"
                     >
                       <option value=""></option>
-                      {hormone_sources.map(source => (
+                      {semen_types.map(semen_type => (
                             <option                    
-                              value={source.id}
+                              value={semen_type.id}
                             >
-                              {source.value}
+                              {semen_type.value}
                             </option>
                           ))
                       }           
@@ -284,8 +289,8 @@ const DetailsEdit = props => {
                         shrink: true,
                       }}
                       margin = 'dense'
-                      label="Other Hormone Type"
-                      name="other_hormone_type"
+                      label="Semen Source"
+                      name="source_of_semen"
                       onChange={handleChange}                     
                       default = ""                              
                       select
@@ -294,16 +299,17 @@ const DetailsEdit = props => {
                       variant="outlined"
                     >
                       <option value=""></option>
-                      {hormone_types.map(type => (
+                      {semen_sources.map(semen_source => (
                             <option                    
-                              value={type.id}
+                              value={semen_source.id}
                             >
-                              {type.value}
+                              {semen_source.value}
                             </option>
                           ))
                       }           
                     </TextField>
                   </Grid>
+
                   <Grid
                       item
                       md={3}
@@ -315,8 +321,8 @@ const DetailsEdit = props => {
                         shrink: true                      
                       }}                                       
                       margin = 'dense'
-                      label="Other Hormone Source"
-                      name="other_hormone_source"
+                      label="Other Semen Source"
+                      name="other_Semen_source"
                       onChange={handleChange}                                                
                       select
                       // eslint-disable-next-line react/jsx-sort-props
@@ -324,34 +330,17 @@ const DetailsEdit = props => {
                       variant="outlined"
                     >
                       <option value=""></option>
-                      {hormone_sources.map(source => (
+                      {semen_sources.map(semen_source => (
                             <option                    
-                              value={source.id}
+                              value={semen_source.id}
                             >
-                              {source.value}
+                              {semen_source.value}
                             </option>
                           ))
                       }           
                     </TextField>
                   </Grid>
-                  <Grid
-                      item
-                      md={3}
-                      xs={12}
-                    >
-                    <TextField
-                      fullWidth
-                      InputLabelProps={{
-                        shrink: true,
-                      }}
-                      margin = 'dense'
-                      label="Animal Parity"
-                      name="animal_parity"                
-                      onChange={handleChange}
-                      variant="outlined"  
-                      
-                  />
-                </Grid>
+                  
                   <Grid
                     item
                     md={3}
@@ -363,8 +352,8 @@ const DetailsEdit = props => {
                       shrink: true,
                     }}
                     margin = 'dense'
-                    label="Hormone Admin"
-                    name="sync_person"
+                    label="Bull Breed"
+                    name="breed_of_bull"
                     onChange={handleChange}
                     //required
                     default = ""                              
@@ -374,16 +363,81 @@ const DetailsEdit = props => {
                     variant="outlined"
                   >
                     <option value=""></option>
-                    {sync_person.map(person => (
+                    {bull_breeds.map(bull_breed => (
                           <option                    
-                            value={person.id}
+                            value={bull_breed.id}
                           >
-                            {person.value}
+                            {bull_breed.value}
                           </option>
                         ))
                     }           
                   </TextField>
                   </Grid> 
+                  <Grid
+                    item
+                    md={3}
+                    xs={12}
+                  >
+                   <TextField
+                    fullWidth
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                    margin = 'dense'
+                    label="Other Bull Breed"
+                    name="other_breed_of_bull"
+                    onChange={handleChange}
+                    //required
+                    default = ""                              
+                    select
+                    // eslint-disable-next-line react/jsx-sort-props
+                    SelectProps={{ native: true }}                    
+                    variant="outlined"
+                  >
+                    <option value=""></option>
+                    {bull_breeds.map(bull_breed => (
+                          <option                    
+                            value={bull_breed.id}
+                          >
+                            {bull_breed.value}
+                          </option>
+                        ))
+                    }           
+                  </TextField>
+                  </Grid> 
+                  <Grid
+                    item
+                    md={3}
+                    xs={12}
+                  >
+                   <TextField
+                    fullWidth
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                    margin = 'dense'
+                    label="Bull Breed Composition"
+                    name="breed_composition"
+                    onChange={handleChange}
+                    //required
+                    default = ""                              
+                    select
+                    // eslint-disable-next-line react/jsx-sort-props
+                    SelectProps={{ native: true }}                    
+                    variant="outlined"
+                  >
+                    <option value=""></option>
+                    {breed_compositions.map(breed_composition => (
+                          <option                    
+                            value={breed_composition.id}
+                          >
+                            {breed_composition.value}
+                          </option>
+                        ))
+                    }           
+                  </TextField>
+                  </Grid>
+                 
                   <Grid
                     item
                     md={3}
@@ -395,8 +449,8 @@ const DetailsEdit = props => {
                       shrink: true,
                     }}
                     margin = 'dense'
-                    label="Hormone Admin Mobile No"
-                    name="sync_person_phone"                
+                    label="Bull Origin Country"
+                    name="origin_country_bull"                
                     onChange={handleChange}
                     variant="outlined"  
                     
@@ -413,8 +467,8 @@ const DetailsEdit = props => {
                           shrink: true,
                         }}
                         margin = 'dense'
-                        label="Other Hormone Admin"
-                        name="sync_other_person"
+                        label="Cow Body Condition"
+                        name="body_condition_score"
                         onChange={handleChange}
                         //required
                         default = ""                              
@@ -424,11 +478,11 @@ const DetailsEdit = props => {
                         variant="outlined"
                       >
                         <option value=""></option>
-                        {sync_person.map(person => (
+                        {body_scores.map(body_score => (
                               <option                    
-                                value={person.id}
+                                value={body_score.id}
                               >
-                                {person.value}
+                                {body_score.value}
                               </option>
                             ))
                         }           
@@ -453,6 +507,26 @@ const DetailsEdit = props => {
                     variant="outlined"                                                 
                   />
                 </Grid>
+                  
+                <Grid
+                    item
+                    md={3}
+                    xs={12}
+                  >
+                  <TextField
+                    fullWidth
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                    margin = 'dense'
+                    label="Cow weight(kg)"
+                    name="cow_weight"                
+                    onChange={handleChange}
+                    variant="outlined"  
+                    type="number"
+                />
+              </Grid>
+
                   <Grid
                     item
                     md={3}

@@ -133,3 +133,17 @@ export const endpoint_sync_add = {
   headers: headers   
 };
 
+//get insemination data for a specific animal
+export const endpoint_insemination = {
+  url: `${api}/events/insemination/animal/`,
+  method: 'GET',
+  headers: headers   
+};
+
+//post sync event
+export const endpoint_insemination_add = {
+  url: `${api}/events/insemination`,
+  method: 'POST',
+  headers: headers   
+};
+

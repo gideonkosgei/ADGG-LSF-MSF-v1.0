@@ -37,7 +37,7 @@ const DetailsView = props => {
             setValues(response.payload[0]);                 
           }
         });
-      })(endpoint_insemination,104349); 
+      })(endpoint_insemination,animal_id); 
       
     return () => {
       mounted = false;
@@ -49,16 +49,14 @@ const DetailsView = props => {
     return null;
   }
 
-  console.log(values);
-  
-
-  const columns = [
+    const columns = [
     { name: "ai_date",label: "AI Date",options: {filter: false,sort: true,display:true}},    
     { name: "type_of_ai",label: "AI Type",options: {filter: false,sort: true,display:true}},
+    { name: "semen_batch",label: "Batch",options: {filter: false,sort: true,display:true}},    
     { name: "straw_id_scan_sire_code",label: "Straw ID",options: {filter: true,sort: true, display:true}},
     { name: "source_of_semen",label: "Semen Source",options: {filter: false,sort: true,display:true}},
     { name: "straw_semen_type",label: "Semen Type",options: {filter: true,sort: true,display:true}},
-    { name: "country_of_sire_bull_origin",label: "Bull Origin",options: {filter: true,sort: true,display:true}},
+    //{ name: "country_of_sire_bull_origin",label: "Bull Origin",options: {filter: true,sort: true,display:true}},
     { name: "breed_of_the_bull",label: "Bull Breed",options: {filter: true,sort: true,display:true}},     
     { name: "breed_composition_of_bull",label: "Breed Comp.",options: {filter: true,sort: true,display:true}},
     { name: "ai_cost",label: "AI Cost",options: {filter: true,sort: true,display:true}}
