@@ -206,6 +206,17 @@ const routes = [
         component: lazy(() => import('views/Animals/components/Insemination/components/add'))
       },
       {
+        path: '/management/health/view/:id',
+        exact: true,
+        component: lazy(() => import('views/Animals/components/Health'))
+      },
+      {
+        path: '/management/health/add/:id',
+        exact: true,
+        component: lazy(() => import('views/Animals/components/Health/components/add'))
+      },
+      
+      {
         path: '/management/pedigree/',
         exact: true,
         component: lazy(() => import('views/Animals/components/Pedigree'))
