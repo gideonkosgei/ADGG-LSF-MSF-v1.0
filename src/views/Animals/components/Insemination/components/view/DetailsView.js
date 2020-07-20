@@ -3,8 +3,8 @@ import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import {Card, CardContent, CardHeader, Grid,Divider,colors } from '@material-ui/core';
-import {getSync}   from '../../../../../../utils/API';
-import {endpoint_sync} from '../../../../../../configs/endpoints';
+import {getInsemination}   from '../../../../../../utils/API';
+import {endpoint_insemination} from '../../../../../../configs/endpoints';
 import {Sidebar} from '../index';
 import MUIDataTable from "mui-datatables";
 import {MuiThemeProvider } from '@material-ui/core/styles';
@@ -31,13 +31,13 @@ const DetailsView = props => {
   useEffect(() => {     
     let mounted = true;
       (async  (endpoint,id) => {     
-        await  getSync(endpoint,id)
+        await  getInsemination(endpoint,id)
         .then(response => {                        
           if (mounted) {            
             setValues(response.payload[0]);                 
           }
         });
-      })(endpoint_sync,animal_id); 
+      })(endpoint_insemination,104349); 
       
     return () => {
       mounted = false;
@@ -48,18 +48,22 @@ const DetailsView = props => {
   if (!values) {
     return null;
   }
+
+  console.log(values);
   
 
   const columns = [
-    { name: "sync_date",label: "Sync Date",options: {filter: false,sort: true,display:true}},    
-    { name: "sync_number",label: "Sync Number",options: {filter: false,sort: true,display:true}},
-    { name: "hormone_type",label: "Hormone",options: {filter: true,sort: true, display:true}},
-    { name: "hormone_source",label: "H. Source",options: {filter: false,sort: true,display:true}},
-    { name: "animal_parity",label: "Parity",options: {filter: true,sort: true,display:true}},
-    { name: "sync_person",label: "H. Admin",options: {filter: true,sort: true,display:true}},
-    { name: "sync_cost",label: "Cost",options: {filter: true,sort: true,display:true}},     
-    { name: "sync_person_phone",label: "A. Contacts",options: {filter: true,sort: true,display:true}}
+    { name: "ai_date",label: "AI Date",options: {filter: false,sort: true,display:true}},    
+    { name: "type_of_ai",label: "AI Type",options: {filter: false,sort: true,display:true}},
+    { name: "straw_id_scan_sire_code",label: "Straw ID",options: {filter: true,sort: true, display:true}},
+    { name: "source_of_semen",label: "Semen Source",options: {filter: false,sort: true,display:true}},
+    { name: "straw_semen_type",label: "Semen Type",options: {filter: true,sort: true,display:true}},
+    { name: "country_of_sire_bull_origin",label: "Bull Origin",options: {filter: true,sort: true,display:true}},
+    { name: "breed_of_the_bull",label: "Bull Breed",options: {filter: true,sort: true,display:true}},     
+    { name: "breed_composition_of_bull",label: "Breed Comp.",options: {filter: true,sort: true,display:true}},
+    { name: "ai_cost",label: "AI Cost",options: {filter: true,sort: true,display:true}}
   ];
+  
 
   
   const options = {       
@@ -88,7 +92,7 @@ const DetailsView = props => {
       {...rest}
       className={clsx(classes.root, className)}
     >
-        <CardHeader title="Synchronization Details" />
+        <CardHeader title="Insemination Details" />
         <Divider />
         <CardContent> 
           <Grid container spacing={1} justify="center">            

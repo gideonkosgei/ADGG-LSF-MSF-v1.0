@@ -466,6 +466,23 @@ export const postSync =  function (config,animal_id,values,user_id) {
   });       
 }
 
+// get Insemination events 
+export const getInsemination =  function (config,id) {   
+  const options = {
+    url:`${config.url}'${id}'`,
+    method: config.method,
+    headers: config.headers  
+  }  
+ 
+  return new Promise((resolve, reject) => {
+    axios(options)
+    .then(res => {          
+        resolve(res.data);
+    })
+    .catch(err => reject(err));
+  });       
+}
+
 
 
 
