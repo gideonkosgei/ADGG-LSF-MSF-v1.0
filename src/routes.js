@@ -169,12 +169,7 @@ const routes = [
         path: '/management/calender/',
         exact: true,
         component: lazy(() => import('views/Animals/components/Calender'))
-      },
-      {
-        path: '/management/exits/',
-        exact: true,
-        component: lazy(() => import('views/Animals/components/Exits'))
-      },
+      }, 
       {
         path: '/management/health/',
         exact: true,
@@ -205,6 +200,18 @@ const routes = [
         exact: true,
         component: lazy(() => import('views/Animals/components/Insemination/components/add'))
       },
+
+      {
+        path: '/management/exit/view/:id',
+        exact: true,
+        component: lazy(() => import('views/Animals/components/Exits'))
+      },
+      {
+        path: '/management/exit/add/:id',
+        exact: true,
+        component: lazy(() => import('views/Animals/components/Exits/components/add'))
+      },
+
       {
         path: '/management/health/view/:id',
         exact: true,

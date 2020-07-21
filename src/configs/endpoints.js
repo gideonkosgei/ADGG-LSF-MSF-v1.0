@@ -140,9 +140,23 @@ export const endpoint_insemination = {
   headers: headers   
 };
 
-//post sync event
+//post insemination event
 export const endpoint_insemination_add = {
   url: `${api}/events/insemination`,
+  method: 'POST',
+  headers: headers   
+};
+
+//get exit/disposal data for a specific animal
+export const endpoint_exit = {
+  url: `${api}/events/exit/animal/`,
+  method: 'GET',
+  headers: headers   
+};
+
+//post exit event
+export const endpoint_exit_add = {
+  url: `${api}/events/exit`,
   method: 'POST',
   headers: headers   
 };

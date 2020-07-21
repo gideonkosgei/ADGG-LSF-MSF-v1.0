@@ -544,6 +544,24 @@ export const postInsemination =  function (config,animal_id,values,user_id) {
   });       
 }
 
+//exit & disposal event
+
+// get Exit events 
+export const getExit =  function (config,id) {   
+  const options = {
+    url:`${config.url}'${id}'`,
+    method: config.method,
+    headers: config.headers  
+  }  
+ 
+  return new Promise((resolve, reject) => {
+    axios(options)
+    .then(res => {          
+        resolve(res.data);
+    })
+    .catch(err => reject(err));
+  });       
+}
 
 
 
