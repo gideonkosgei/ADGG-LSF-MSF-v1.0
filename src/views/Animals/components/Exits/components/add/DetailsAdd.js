@@ -3,8 +3,8 @@ import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import {Card, CardContent, CardHeader, Grid,Divider, TextField,colors,Button,CardActions } from '@material-ui/core';
-import {getLookups,postInsemination}   from '../../../../../../utils/API';
-import {endpoint_lookup,endpoint_insemination_add} from '../../../../../../configs/endpoints';
+import {getLookups,postExit}   from '../../../../../../utils/API';
+import {endpoint_lookup,endpoint_exit_add} from '../../../../../../configs/endpoints';
 import authContext from '../../../../../../contexts/AuthContext';
 import {Sidebar} from '../index';
 import SuccessSnackbar from '../../../../../../components/SuccessSnackbar';
@@ -29,12 +29,7 @@ const DetailsEdit = props => {
   const classes = useStyles();
 
   const [values, setValues] = useState({ });
-  const [body_scores, setBodyScores] = useState([]);
-  const [breed_compositions, setBreedCompositions] = useState([]);
-  const [semen_sources, setSemenSources] = useState([]);
-  const [bull_breeds, setBullBreeds] = useState([]);
-  const [semen_types, setSemenTypes] = useState([]);
-  const [ai_types, setAiTypes] = useState([]);
+  const [exitTypes, setExitTypes] = useState([]);  
   
   const animal_id  = localStorage.getItem('animal_id');
 
@@ -46,54 +41,18 @@ const DetailsEdit = props => {
           if (mounted_lookup) { 
 
             const data = response.payload[0];                        
-            let lookup_body_scores = [];
-            let lookup_breed_compositions = [];
-            let lookup_semen_sources = [];
-            let lookup_semen_types = [];
-            let lookup_ai_types = [];
-            let lookup_breed = [];         
+            let lookup_exit_types = [];                    
 
-            for (let i = 0; i< data.length; i++){              
-              // body condition scores
-              if(data[i].list_type_id === 71){                
-                lookup_body_scores.push(data[i]);
-              } 
-
-              //breed compositions
-              if(data[i].list_type_id === 14){                
-                lookup_breed_compositions.push(data[i]);
-              }  
-
-              //semen sources
-              if(data[i].list_type_id === 74){                
-                lookup_semen_sources.push(data[i]);
-              } 
-
-              //semen types
-              if(data[i].list_type_id === 73){                
-                lookup_semen_types.push(data[i]);
-              } 
-
-              //ai Types
-              if(data[i].list_type_id === 72){                
-                lookup_ai_types.push(data[i]);
-              } 
-              
-              //bull breeds
-              if(data[i].list_type_id === 8){                
-                lookup_breed.push(data[i]);
+            for (let i = 0; i< data.length; i++){
+              // exit types
+              if(data[i].list_type_id === 82){                
+                lookup_exit_types.push(data[i]);
               }  
             }  
-
-            setBodyScores(lookup_body_scores);
-            setBreedCompositions(lookup_breed_compositions);
-            setSemenSources(lookup_semen_sources);
-            setBullBreeds(lookup_breed);
-            setSemenTypes(lookup_semen_types);
-            setAiTypes(lookup_ai_types);
+            setExitTypes(lookup_exit_types);           
           }
         });
-      })(endpoint_lookup,'8,14,71,72,73,74');
+      })(endpoint_lookup,'82');
       
     return () => {
       mounted_lookup = false;     
@@ -101,7 +60,7 @@ const DetailsEdit = props => {
   }, []);   
 
 
-  if (!breed_compositions || !body_scores || !semen_sources ||!bull_breeds || !semen_types || !ai_types) {
+  if (!exitTypes) {
     return null;
   }
 
@@ -118,7 +77,7 @@ const DetailsEdit = props => {
   const handleSubmit = event => {
     event.preventDefault();
     (async  (endpoint,id,values,user_id) => {     
-      await  postInsemination(endpoint,id,values,user_id)
+      await  postExit(endpoint,id,values,user_id)
       .then(() => {  
         setopenSnackbarSuccess(true); 
         setValues({});        
@@ -126,7 +85,7 @@ const DetailsEdit = props => {
       }).catch(() => {
         setopenSnackbarError(true); 
       });
-    })(endpoint_insemination_add,animal_id,values,user_id);    
+    })(endpoint_exit_add,animal_id,values,user_id);    
   };
   
   
@@ -144,7 +103,7 @@ const DetailsEdit = props => {
       className={clsx(classes.root, className)}
     >
       
-        <CardHeader title="New Insemination Details" />
+        <CardHeader title="New Exit/Disposal Details" />
         <Divider />
         <CardContent> 
           <Grid container spacing={1} justify="center">            
@@ -171,9 +130,9 @@ const DetailsEdit = props => {
                       }}
                       required
                       margin = 'dense'
-                      label = "AI Service Date"
+                      label = "Exit / Disposal Date"
                       type = "date"
-                      name = "service_date"                      
+                      name = "exit_date"                      
                       onChange = {handleChange}
                       variant = "outlined"
                     />
@@ -189,8 +148,8 @@ const DetailsEdit = props => {
                       shrink: true,
                     }}
                     margin = 'dense'
-                    label="AI Type"
-                    name="ai_type"
+                    label="Exit / Disposal Reason"
+                    name="disposal_reason"
                     onChange={handleChange}
                     required
                     default = ""                              
@@ -200,11 +159,11 @@ const DetailsEdit = props => {
                     variant="outlined"
                   >
                     <option value=""></option>
-                    {ai_types.map(ai_type => (
+                    {exitTypes.map(exitType => (
                           <option                    
-                            value={ai_type.id}
+                            value={exitType.id}
                           >
-                            {ai_type.value}
+                            {exitType.value}
                           </option>
                         ))
                     }           
@@ -222,8 +181,8 @@ const DetailsEdit = props => {
                       shrink: true,
                     }}
                     margin = 'dense'
-                    label="Semen Batch"
-                    name="semen_batch"                
+                    label="Other Exit Reason"
+                    name="disposal_reason_other"                
                     onChange={handleChange}
                     variant="outlined"  
                     
@@ -241,254 +200,16 @@ const DetailsEdit = props => {
                       shrink: true,
                     }}
                     margin = 'dense'
-                    label="Straw ID"
-                    name="straw_id"                
+                    label="Disposal Amount"
+                    type = 'number'
+                    name="disposal_amount"                
                     onChange={handleChange}
                     variant="outlined"  
                     
                 />
-              </Grid>                  
-                  <Grid
-                      item
-                      md={3}
-                      xs={12}
-                    >
-                    <TextField
-                      fullWidth                    
-                      InputLabelProps={{
-                        shrink: true                      
-                      }}                                       
-                      margin = 'dense'
-                      label="Straw Semen Type"
-                      name="straw_semen_type"
-                      onChange={handleChange}                                                
-                      select
-                      // eslint-disable-next-line react/jsx-sort-props
-                      SelectProps={{ native: true }}                    
-                      variant="outlined"
-                    >
-                      <option value=""></option>
-                      {semen_types.map(semen_type => (
-                            <option                    
-                              value={semen_type.id}
-                            >
-                              {semen_type.value}
-                            </option>
-                          ))
-                      }           
-                    </TextField>
-                  </Grid>
-                  <Grid
-                      item
-                      md={3}
-                      xs={12}
-                    >
-                    <TextField
-                      fullWidth
-                      InputLabelProps={{
-                        shrink: true,
-                      }}
-                      margin = 'dense'
-                      label="Semen Source"
-                      name="source_of_semen"
-                      onChange={handleChange}                     
-                      default = ""                              
-                      select
-                      // eslint-disable-next-line react/jsx-sort-props
-                      SelectProps={{ native: true }}                    
-                      variant="outlined"
-                    >
-                      <option value=""></option>
-                      {semen_sources.map(semen_source => (
-                            <option                    
-                              value={semen_source.id}
-                            >
-                              {semen_source.value}
-                            </option>
-                          ))
-                      }           
-                    </TextField>
-                  </Grid>
+              </Grid> 
 
-                  <Grid
-                      item
-                      md={3}
-                      xs={12}
-                    >
-                    <TextField
-                      fullWidth                    
-                      InputLabelProps={{
-                        shrink: true                      
-                      }}                                       
-                      margin = 'dense'
-                      label="Other Semen Source"
-                      name="other_Semen_source"
-                      onChange={handleChange}                                                
-                      select
-                      // eslint-disable-next-line react/jsx-sort-props
-                      SelectProps={{ native: true }}                    
-                      variant="outlined"
-                    >
-                      <option value=""></option>
-                      {semen_sources.map(semen_source => (
-                            <option                    
-                              value={semen_source.id}
-                            >
-                              {semen_source.value}
-                            </option>
-                          ))
-                      }           
-                    </TextField>
-                  </Grid>
-                  
-                  <Grid
-                    item
-                    md={3}
-                    xs={12}
-                  >
-                   <TextField
-                    fullWidth
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-                    margin = 'dense'
-                    label="Bull Breed"
-                    name="breed_of_bull"
-                    onChange={handleChange}
-                    //required
-                    default = ""                              
-                    select
-                    // eslint-disable-next-line react/jsx-sort-props
-                    SelectProps={{ native: true }}                    
-                    variant="outlined"
-                  >
-                    <option value=""></option>
-                    {bull_breeds.map(bull_breed => (
-                          <option                    
-                            value={bull_breed.id}
-                          >
-                            {bull_breed.value}
-                          </option>
-                        ))
-                    }           
-                  </TextField>
-                  </Grid> 
-                  <Grid
-                    item
-                    md={3}
-                    xs={12}
-                  >
-                   <TextField
-                    fullWidth
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-                    margin = 'dense'
-                    label="Other Bull Breed"
-                    name="other_breed_of_bull"
-                    onChange={handleChange}
-                    //required
-                    default = ""                              
-                    select
-                    // eslint-disable-next-line react/jsx-sort-props
-                    SelectProps={{ native: true }}                    
-                    variant="outlined"
-                  >
-                    <option value=""></option>
-                    {bull_breeds.map(bull_breed => (
-                          <option                    
-                            value={bull_breed.id}
-                          >
-                            {bull_breed.value}
-                          </option>
-                        ))
-                    }           
-                  </TextField>
-                  </Grid> 
-                  <Grid
-                    item
-                    md={3}
-                    xs={12}
-                  >
-                   <TextField
-                    fullWidth
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-                    margin = 'dense'
-                    label="Bull Breed Composition"
-                    name="breed_composition"
-                    onChange={handleChange}
-                    //required
-                    default = ""                              
-                    select
-                    // eslint-disable-next-line react/jsx-sort-props
-                    SelectProps={{ native: true }}                    
-                    variant="outlined"
-                  >
-                    <option value=""></option>
-                    {breed_compositions.map(breed_composition => (
-                          <option                    
-                            value={breed_composition.id}
-                          >
-                            {breed_composition.value}
-                          </option>
-                        ))
-                    }           
-                  </TextField>
-                  </Grid>
-                 
-                  <Grid
-                    item
-                    md={3}
-                    xs={12}
-                  >
-                  <TextField
-                    fullWidth
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-                    margin = 'dense'
-                    label="Bull Origin Country"
-                    name="origin_country_bull"                
-                    onChange={handleChange}
-                    variant="outlined"  
-                    
-                />
-              </Grid>
-                  <Grid
-                        item
-                        md={3}
-                        xs={12}
-                      >
-                      <TextField
-                        fullWidth
-                        InputLabelProps={{
-                          shrink: true,
-                        }}
-                        margin = 'dense'
-                        label="Cow Body Condition"
-                        name="body_condition_score"
-                        onChange={handleChange}
-                        //required
-                        default = ""                              
-                        select
-                        // eslint-disable-next-line react/jsx-sort-props
-                        SelectProps={{ native: true }}                    
-                        variant="outlined"
-                      >
-                        <option value=""></option>
-                        {body_scores.map(body_score => (
-                              <option                    
-                                value={body_score.id}
-                              >
-                                {body_score.value}
-                              </option>
-                            ))
-                        }           
-                      </TextField>
-                      </Grid> 
-                  <Grid
+               <Grid
                   item
                   md={3}
                   xs={12}
@@ -500,14 +221,125 @@ const DetailsEdit = props => {
                     }}
                     //required
                     margin = 'dense'
-                    label="Sync Cost"
-                    name="cost"                                   
-                    onChange={handleChange}
-                    type="number"
+                    label="New Farmer Name"
+                    name="new_farmer_name"                                   
+                    onChange={handleChange}                   
                     variant="outlined"                                                 
                   />
                 </Grid>
-                  
+
+                <Grid
+                  item
+                  md={3}
+                  xs={12}
+                  >
+                  <TextField
+                    fullWidth
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                    //required
+                    margin = 'dense'
+                    label="New Farmer Phone No"
+                    name="new_farmer_phone_no"                                   
+                    onChange={handleChange}                   
+                    variant="outlined"                                                 
+                  />
+                </Grid>
+
+                <Grid
+                  item
+                  md={3}
+                  xs={12}
+                  >
+                  <TextField
+                    fullWidth
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                    //required
+                    margin = 'dense'
+                    label="New Breeder Name"
+                    name="new_breeder_name"                                   
+                    onChange={handleChange}                   
+                    variant="outlined"                                                 
+                  />
+                </Grid>
+
+                <Grid
+                  item
+                  md={3}
+                  xs={12}
+                  >
+                  <TextField
+                    fullWidth
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                    //required
+                    margin = 'dense'
+                    label="New Breeder Phone No"
+                    name="new_breeder_phone_no"                                   
+                    onChange={handleChange}                   
+                    variant="outlined"                                                 
+                  />
+                </Grid>
+
+                <Grid
+                  item
+                  md={3}
+                  xs={12}
+                  >
+                  <TextField
+                    fullWidth
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                    //required
+                    margin = 'dense'
+                    label="New Country"
+                    name="new_country"                                   
+                    onChange={handleChange}                   
+                    variant="outlined"                                                 
+                  />
+                </Grid>
+                <Grid
+                  item
+                  md={3}
+                  xs={12}
+                  >
+                  <TextField
+                    fullWidth
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                    //required
+                    margin = 'dense'
+                    label="New Region"
+                    name="new_region"                                   
+                    onChange={handleChange}                   
+                    variant="outlined"                                                 
+                  />
+                </Grid>
+                <Grid
+                  item
+                  md={3}
+                  xs={12}
+                  >
+                  <TextField
+                    fullWidth
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                    //required
+                    margin = 'dense'
+                    label="New District"
+                    name="new_district"                                   
+                    onChange={handleChange}                   
+                    variant="outlined"                                                 
+                  />
+                </Grid>                
+              
                 <Grid
                     item
                     md={3}
@@ -519,11 +351,11 @@ const DetailsEdit = props => {
                       shrink: true,
                     }}
                     margin = 'dense'
-                    label="Cow weight(kg)"
-                    name="cow_weight"                
+                    label="New Village"
+                    name="new_village"                
                     onChange={handleChange}
                     variant="outlined"  
-                    type="number"
+                   
                 />
               </Grid>
 

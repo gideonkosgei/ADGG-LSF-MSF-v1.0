@@ -49,14 +49,11 @@ const DetailsView = props => {
     return null;
   }
 
-  console.log(values);
-
     const columns = [
     { name: "event_id",label: "Event ID",options: {filter: false,sort: true,display:true}},    
     { name: "disposal_date",label: "Exit Date",options: {filter: false,sort: true,display:true}},
     { name: "disposal_reason",label: "Exit Reason",options: {filter: false,sort: true,display:true}},    
-    { name: "disposal_reason_other",label: "Other Exit Reason",options: {filter: true,sort: true, display:true}},
-    { name: "source_of_semen",label: "Semen Source",options: {filter: false,sort: true,display:true}},
+    { name: "disposal_reason_other",label: "Other Exit Reason",options: {filter: true,sort: true, display:true}},    
     { name: "disposal_amount",label: "Disposal Amount",options: {filter: true,sort: true,display:true}},    
     { name: "created_by",label: "Created By",options: {filter: true,sort: true,display:true}},     
     { name: "date_created",label: "Date Created",options: {filter: true,sort: true,display:true}}    
@@ -89,7 +86,7 @@ const DetailsView = props => {
       {...rest}
       className={clsx(classes.root, className)}
     >
-        <CardHeader title="Exit Details" />
+        <CardHeader title="Exit/Disposal Details" />
         <Divider />
         <CardContent> 
           <Grid container spacing={1} justify="center">            
