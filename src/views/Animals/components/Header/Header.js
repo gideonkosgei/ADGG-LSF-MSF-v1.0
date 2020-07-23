@@ -65,7 +65,7 @@ const Header = props => {
 
           <Tooltip  title="calving">              
             <IconButton aria-label="calving" size="large" >
-              <Link component = {RouterLink} to="/management/calving/">
+              <Link component = {RouterLink} to = {`/management/calving/view/${animal_id}`}> 
                 <ChildCareRoundedIcon /> 
               </Link>
             </IconButton> 

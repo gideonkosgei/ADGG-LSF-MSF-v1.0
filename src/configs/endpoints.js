@@ -161,3 +161,18 @@ export const endpoint_exit_add = {
   headers: headers   
 };
 
+
+//get calving data for a specific animal
+export const endpoint_calving = {
+  url: `${api}/events/calving/animal/`,
+  method: 'GET',
+  headers: headers   
+};
+
+//post calving event
+export const endpoint_calving_add = {
+  url: `${api}/events/calving`,
+  method: 'POST',
+  headers: headers   
+};
+
