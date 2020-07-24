@@ -37,7 +37,7 @@ const DetailsView = props => {
             setValues(response.payload[0]);                 
           }
         });
-      })(endpoint_calving,186390); 
+      })(endpoint_calving,animal_id); 
       
     return () => {
       mounted = false;

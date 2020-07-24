@@ -3,8 +3,8 @@ import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import {Card, CardContent, CardHeader, Grid,Divider, TextField,colors,Button,CardActions } from '@material-ui/core';
-import {getLookups,postInsemination}   from '../../../../../../utils/API';
-import {endpoint_lookup,endpoint_insemination_add} from '../../../../../../configs/endpoints';
+import {getLookups,postCalving}   from '../../../../../../utils/API';
+import {endpoint_lookup,endpoint_calving_add} from '../../../../../../configs/endpoints';
 import authContext from '../../../../../../contexts/AuthContext';
 import {Sidebar} from '../index';
 import SuccessSnackbar from '../../../../../../components/SuccessSnackbar';
@@ -152,7 +152,7 @@ const DetailsEdit = props => {
   const handleSubmit = event => {
     event.preventDefault();
     (async  (endpoint,id,values,user_id) => {     
-      await  postInsemination(endpoint,id,values,user_id)
+      await  postCalving(endpoint,id,values,user_id)
       .then(() => {  
         setopenSnackbarSuccess(true); 
         setValues({});        
@@ -160,7 +160,7 @@ const DetailsEdit = props => {
       }).catch(() => {
         setopenSnackbarError(true); 
       });
-    })(endpoint_insemination_add,animal_id,values,user_id);    
+    })(endpoint_calving_add,animal_id,values,user_id);    
   };
   
   
@@ -244,6 +244,7 @@ const DetailsEdit = props => {
                       shrink: true,
                     }}
                     margin = 'dense'
+                    required
                     label="Lactation Number"
                     name="lactation_number"                
                     onChange={handleChange}
@@ -348,7 +349,7 @@ const DetailsEdit = props => {
                     }}
                     margin = 'dense'
                     label="Calving Type"
-                    name="calving_type"
+                    name="types_calving"
                     onChange={handleChange}
                     required
                     default = ""                              
@@ -401,7 +402,8 @@ const DetailsEdit = props => {
                       margin = 'dense'
                       label="Ease Of Calving"
                       name="ease_of_calving"
-                      onChange={handleChange}                                                
+                      onChange={handleChange}  
+                      required                                              
                       select
                       // eslint-disable-next-line react/jsx-sort-props
                       SelectProps={{ native: true }}                    
@@ -453,6 +455,7 @@ const DetailsEdit = props => {
                       name="calving_status"
                       onChange={handleChange}                                                
                       select
+                      required
                       // eslint-disable-next-line react/jsx-sort-props
                       SelectProps={{ native: true }}                    
                       variant="outlined"
@@ -481,6 +484,7 @@ const DetailsEdit = props => {
                       margin = 'dense'
                       label="Use Of Calf"
                       name="use_of_calf"
+                      required
                       onChange={handleChange}                                                
                       select
                       // eslint-disable-next-line react/jsx-sort-props
@@ -534,7 +538,8 @@ const DetailsEdit = props => {
                       margin = 'dense'
                       label="Calf Body Condition"
                       name="calf_body_condition_score"
-                      onChange={handleChange}                                                
+                      onChange={handleChange}    
+                      required                                            
                       select
                       // eslint-disable-next-line react/jsx-sort-props
                       SelectProps={{ native: true }}                    
@@ -568,6 +573,7 @@ const DetailsEdit = props => {
                       onChange={handleChange}                     
                       default = ""                              
                       select
+                      required
                       // eslint-disable-next-line react/jsx-sort-props
                       SelectProps={{ native: true }}                    
                       variant="outlined"
@@ -597,6 +603,7 @@ const DetailsEdit = props => {
                       margin = 'dense'
                       label="Calf Deformities"
                       name="calf_deformities"
+                      required
                       onChange={handleChange}                                                
                       select
                       // eslint-disable-next-line react/jsx-sort-props
@@ -645,9 +652,9 @@ const DetailsEdit = props => {
                     }}
                     margin = 'dense'
                     label="Calf Gender"
-                    name="calf_sex"
+                    name="calf_gender"
                     onChange={handleChange}
-                    //required
+                    required
                     default = ""                              
                     select
                     // eslint-disable-next-line react/jsx-sort-props
