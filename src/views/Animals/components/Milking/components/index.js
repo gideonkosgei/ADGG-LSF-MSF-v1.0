@@ -1,2 +1,2 @@
-export { default  as EditView} from './EditView';
 export { default  as Header} from '../../Header';
+export { default  as Sidebar} from './Sidebar';

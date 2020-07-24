@@ -23,28 +23,28 @@ const Sidebar = props => {
       <CardContent>                 
       <Tooltip  title="Home">              
           <IconButton aria-label="home" size="small" >
-            <Link component = {RouterLink} to={`/management/calving/view/${animal_id}`}>
+            <Link component = {RouterLink} to={`/management/milking/view/${animal_id}`}>
               <HomeIcon /> 
             </Link>
           </IconButton> 
         </Tooltip>
         <Tooltip  title="view">              
           <IconButton aria-label="view" size="small" >
-            <Link component = {RouterLink} to = {`/management/calving/view/${animal_id}`}>
+            <Link component = {RouterLink} to = {`/management/milking/view/${animal_id}`}>
               <VisibilityIcon /> 
             </Link>
           </IconButton> 
         </Tooltip>         
         <Tooltip  title="Add New">              
           <IconButton aria-label="add" size="small" >
-            <Link component = {RouterLink} to={`/management/calving/add/${animal_id}`}>
+            <Link component = {RouterLink} to={`/management/milking/add/${animal_id}`}>
               <AddIcon /> 
             </Link>
           </IconButton> 
         </Tooltip>
         <Tooltip  title="graph">              
           <IconButton aria-label="graph" size="small" >          
-            <Link component = {RouterLink} to={`/management/calving/charts/${animal_id}`}>
+            <Link component = {RouterLink} to={`/management/milking/charts/${animal_id}`}>
               <BarChartIcon /> 
             </Link>
           </IconButton> 

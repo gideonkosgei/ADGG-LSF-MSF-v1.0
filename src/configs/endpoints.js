@@ -176,3 +176,10 @@ export const endpoint_calving_add = {
   headers: headers   
 };
 
+//get milking data for a specific animal
+export const endpoint_milking = {
+  url: `${api}/events/milking/animal/`,
+  method: 'GET',
+  headers: headers   
+};
+
