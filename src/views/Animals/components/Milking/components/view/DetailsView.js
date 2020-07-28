@@ -48,7 +48,7 @@ const DetailsView = props => {
   if (!values) {
     return null;
   }  
-  
+
     const columns = [
     { name: "milk_date",label: "Milk Date",options: {filter: false,sort: true,display:true}}, 
     { name: "lactation_id",label: "Lactation ID",options: {filter: false,sort: true,display:true}}, 
@@ -87,7 +87,7 @@ const DetailsView = props => {
       {...rest}
       className={clsx(classes.root, className)}
     >
-        <CardHeader title="Calving Details" />
+        <CardHeader title="Milking Records" />
         <Divider />
         <CardContent> 
           <Grid container spacing={1} justify="center">            

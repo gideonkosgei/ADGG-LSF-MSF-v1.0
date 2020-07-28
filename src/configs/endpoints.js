@@ -183,3 +183,10 @@ export const endpoint_milking = {
   headers: headers   
 };
 
+//post milking event
+export const endpoint_milking_add = {
+  url: `${api}/events/milking`,
+  method: 'POST',
+  headers: headers   
+};
+

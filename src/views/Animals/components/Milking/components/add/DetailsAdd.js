@@ -3,8 +3,8 @@ import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import {Card, CardContent, CardHeader, Grid,Divider, TextField,colors,Button,CardActions } from '@material-ui/core';
-import {getLookups,postCalving}   from '../../../../../../utils/API';
-import {endpoint_lookup,endpoint_calving_add} from '../../../../../../configs/endpoints';
+import {getLookups,postMilking}   from '../../../../../../utils/API';
+import {endpoint_lookup,endpoint_milking_add} from '../../../../../../configs/endpoints';
 import authContext from '../../../../../../contexts/AuthContext';
 import {Sidebar} from '../index';
 import SuccessSnackbar from '../../../../../../components/SuccessSnackbar';
@@ -29,21 +29,7 @@ const DetailsEdit = props => {
   const classes = useStyles();
 
   const [values, setValues] = useState({ });
-  const [body_scores, setBodyScores] = useState([]);
-  const [colors, setColors] = useState([]);
-  const [deformaties, setDeformaties] = useState([]);
-  const [genders, setGenders] = useState([]); 
-
-
-  const [birth_types, setBirthTypes] = useState([]);
-  const [calving_methods, setCalvingMethods] = useState([]);
-  const [calving_types, setCalvingTypes] = useState([]);
-
-  const [calving_ease, setCalvingEase] = useState([]);
-  const [calving_status, setCalvingStatus] = useState([]);
-  const [uses_of_calf, setCalfUses] = useState([]); 
-  
-  
+  const [sample_types, setSampleTypes] = useState([]);  
   const animal_id  = localStorage.getItem('animal_id');
 
   useEffect(() => {   
@@ -54,79 +40,19 @@ const DetailsEdit = props => {
           if (mounted_lookup) { 
 
             const data = response.payload[0];
-            let lookup_colors = [];
-            let lookup_deformaties = [];
-            let lookup_genders = [];
-            let lookup_birth_types = [];
-            let lookup_calving_methods = [];
-            let lookup_calving_type = [];
-            let lookup_ease_of_calving = [];
-            let lookup_calving_status = [];
-            let lookup_use_of_calf = [];
-            let lookup_body_scores = [];          
-
-
+            let lookup_sample_types = [];
             for (let i = 0; i< data.length; i++){ 
-              //birth Types
-              if(data[i].list_type_id === 20){                
-                lookup_birth_types.push(data[i]);
-              } 
-              //calving Methods
-              if(data[i].list_type_id === 15){                
-                lookup_calving_methods.push(data[i]);
-              } 
-              //Birth Types
-              if(data[i].list_type_id === 16){                
-                lookup_calving_type.push(data[i]);
-              } 
-
-              //Ease of Calving
-              if(data[i].list_type_id === 19){                
-                lookup_ease_of_calving.push(data[i]);
-              } 
-              //Calving Status
-              if(data[i].list_type_id === 22){                
-                lookup_calving_status.push(data[i]);
-              } 
-              //Use of calf
-              if(data[i].list_type_id === 21){                
-                lookup_use_of_calf.push(data[i]);
-              }     
-              if(data[i].list_type_id === 71){                
-                lookup_body_scores.push(data[i]);
-              }   
-               //colors
-               if(data[i].list_type_id === 83){                
-                lookup_colors.push(data[i]);
-              }  
-
-              //deformaties
-              if(data[i].list_type_id === 11){                
-                lookup_deformaties.push(data[i]);
-              } 
-
-              //genders
-              if(data[i].list_type_id === 3){                
-                lookup_genders.push(data[i]);
-              }    
-            
+              //Sample Types
+              if(data[i].list_type_id === 70){                
+                lookup_sample_types.push(data[i]);
+              }             
             }  
 
-            setBodyScores(lookup_body_scores);
-            setColors(lookup_colors);
-            setDeformaties(lookup_deformaties);
-            setGenders(lookup_genders);           
-            setBirthTypes(lookup_birth_types);
-            setCalvingMethods(lookup_calving_methods);
-            setCalvingTypes(lookup_calving_type); 
-            setCalvingEase(lookup_ease_of_calving); 
-            setCalvingStatus(lookup_calving_status); 
-            setCalfUses(lookup_use_of_calf);         
-            
+            setSampleTypes(lookup_sample_types);
             
           }
         });
-      })(endpoint_lookup,'20,15,16,19,22,21,71,83,11,3');
+      })(endpoint_lookup,'70');
       
     return () => {
       mounted_lookup = false;     
@@ -134,7 +60,7 @@ const DetailsEdit = props => {
   }, []);  
     
     
-  if (!colors  || !deformaties ||!genders || !birth_types|| !calving_methods|| !calving_types || !calving_ease || !calving_status || !uses_of_calf || !body_scores) {
+  if (!sample_types) {
     return null;
 
   }
@@ -148,11 +74,10 @@ const DetailsEdit = props => {
     });
   };
 
-
   const handleSubmit = event => {
     event.preventDefault();
     (async  (endpoint,id,values,user_id) => {     
-      await  postCalving(endpoint,id,values,user_id)
+      await  postMilking(endpoint,id,values,user_id)
       .then(() => {  
         setopenSnackbarSuccess(true); 
         setValues({});        
@@ -160,7 +85,7 @@ const DetailsEdit = props => {
       }).catch(() => {
         setopenSnackbarError(true); 
       });
-    })(endpoint_calving_add,animal_id,values,user_id);    
+    })(endpoint_milking_add,animal_id,values,user_id);    
   };
   
   
@@ -178,7 +103,7 @@ const DetailsEdit = props => {
       className={clsx(classes.root, className)}
     >
       
-        <CardHeader title="New Calving Details" />
+        <CardHeader title="New Milking Record" />
         <Divider />
         <CardContent> 
           <Grid container spacing={1} justify="center">            
@@ -192,7 +117,7 @@ const DetailsEdit = props => {
               <Grid
                 container
                 spacing={4}
-              >
+              >  
                   <Grid
                       item
                       md={3}
@@ -205,15 +130,15 @@ const DetailsEdit = props => {
                       }}
                       required
                       margin = 'dense'
-                      label = "Calving Date"
+                      label = "Milk Date"
                       type = "date"
-                      name = "calving_date"                      
+                      name = "milk_date"                      
                       onChange = {handleChange}
                       variant = "outlined"
                     />
                   </Grid>                  
                   
-                
+             
               <Grid
                     item
                     md={3}
@@ -225,13 +150,117 @@ const DetailsEdit = props => {
                       shrink: true,
                     }}
                     margin = 'dense'
-                    label="Calf Tag ID"
-                    name="calf_tag_id"                
+                    label="Lactation ID"
+                    name="lactation_id"              
+                    onChange={handleChange}
+                    variant="outlined" 
+                    required                    
+                />
+              </Grid>
+              
+              
+              <Grid
+                    item
+                    md={3}
+                    xs={12}
+                  >
+                  <TextField
+                    fullWidth
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                    margin = 'dense'                    
+                    label="Lactation Number"
+                    name="lactation_number"                
                     onChange={handleChange}
                     variant="outlined"  
                     
                 />
               </Grid>
+            
+              <Grid
+                    item
+                    md={3}
+                    xs={12}
+                  >
+                  <TextField
+                    fullWidth
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                    margin = 'dense'
+                    label="Test Day No"
+                    name="testday_no"                
+                    onChange={handleChange}
+                    variant="outlined"
+                    type = "number"                       
+                    
+                />
+              </Grid>
+             
+                       
+              <Grid
+                    item
+                    md={3}
+                    xs={12}
+                  >
+                  <TextField
+                    fullWidth
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                    margin = 'dense'
+                    label="Days in Milk"
+                    name="days_in_milk"                
+                    onChange={handleChange}
+                    variant="outlined"
+                    type = "number"                       
+                    
+                />
+              </Grid>
+
+             
+              <Grid
+                    item
+                    md={3}
+                    xs={12}
+                  >
+                  <TextField
+                    fullWidth
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                    margin = 'dense'
+                    label="Milk AM (ltrs)"
+                    name="milk_am_litres"                
+                    onChange={handleChange}
+                    variant="outlined"
+                    type = "number"                       
+                    
+                />
+              </Grid>
+
+           
+              <Grid
+                    item
+                    md={3}
+                    xs={12}
+                  >
+                  <TextField
+                    fullWidth
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                    margin = 'dense'
+                    label="Milk mid-day (ltrs)"
+                    name="milk_mid_day"                
+                    onChange={handleChange}
+                    variant="outlined"
+                    type = "number"                       
+                    
+                />
+              </Grid>
+
               
               <Grid
                     item
@@ -244,65 +273,16 @@ const DetailsEdit = props => {
                       shrink: true,
                     }}
                     margin = 'dense'
-                    required
-                    label="Lactation Number"
-                    name="lactation_number"                
+                    label="Milk PM (ltrs)"
+                    name="milk_pm_litres"                
                     onChange={handleChange}
-                    variant="outlined"  
-                    
-                />
-              </Grid>
-              <Grid
-                    item
-                    md={3}
-                    xs={12}
-                  >
-                  <TextField
-                    fullWidth
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-                    margin = 'dense'
-                    label="Calf Name"
-                    name="calf_name"                
-                    onChange={handleChange}
-                    variant="outlined"  
-                    
-                />
-              </Grid>
-                
-              <Grid
-                    item
-                    md={3}
-                    xs={12}
-                  >
-                  <TextField
-                    fullWidth
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-                    margin = 'dense'
-                    label="Calving Birth Type"
-                    name="calving_birth_type"
-                    onChange={handleChange}
-                    required
-                    default = ""                              
-                    select
-                    // eslint-disable-next-line react/jsx-sort-props
-                    SelectProps={{ native: true }}                    
                     variant="outlined"
-                  >
-                    <option value=""></option>
-                    {birth_types.map(birth_type => (
-                          <option                    
-                            value={birth_type.id}
-                          >
-                            {birth_type.value}
-                          </option>
-                        ))
-                    }           
-                  </TextField>
-                </Grid> 
+                    type = "number"                       
+                    
+                />
+              </Grid>
+
+           
 
               <Grid
                     item
@@ -315,10 +295,9 @@ const DetailsEdit = props => {
                       shrink: true,
                     }}
                     margin = 'dense'
-                    label="Calving Method"
-                    name="calving_method"
-                    onChange={handleChange}
-                    required
+                    label="Milk Sample Type"
+                    name="milk_sample_type"
+                    onChange={handleChange}                   
                     default = ""                              
                     select
                     // eslint-disable-next-line react/jsx-sort-props
@@ -326,50 +305,17 @@ const DetailsEdit = props => {
                     variant="outlined"
                   >
                     <option value=""></option>
-                    {calving_methods.map(calving_method => (
+                    {sample_types.map(sample_type => (
                           <option                    
-                            value={calving_method.id}
+                            value={sample_type.id}
                           >
-                            {calving_method.value}
+                            {sample_type.value}
                           </option>
                         ))
                     }           
                   </TextField>
                 </Grid> 
 
-               <Grid
-                    item
-                    md={3}
-                    xs={12}
-                  >
-                  <TextField
-                    fullWidth
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-                    margin = 'dense'
-                    label="Calving Type"
-                    name="types_calving"
-                    onChange={handleChange}
-                    required
-                    default = ""                              
-                    select
-                    // eslint-disable-next-line react/jsx-sort-props
-                    SelectProps={{ native: true }}                    
-                    variant="outlined"
-                  >
-                    <option value=""></option>
-                    {calving_types.map(calving_type => (
-                          <option                    
-                            value={calving_type.id}
-                          >
-                            {calving_type.value}
-                          </option>
-                        ))
-                    }           
-                  </TextField>
-                </Grid>
-                
                 <Grid
                     item
                     md={3}
@@ -381,46 +327,98 @@ const DetailsEdit = props => {
                       shrink: true,
                     }}
                     margin = 'dense'
-                    label="Calving Type Other"
-                    name="calving_type_other"                
+                    label="Milking Notes"
+                    name="milking_notes"                
                     onChange={handleChange}
-                    variant="outlined"  
+                    variant="outlined" 
+                    rowsMax={4} 
+                    multiline                                              
                     
                 />
               </Grid>
+            
+
+              <Grid
+                    item
+                    md={3}
+                    xs={12}
+                  >
+                  <TextField
+                    fullWidth
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                    margin = 'dense'
+                    label="Milk Quality"
+                    name="milk_quality"                
+                    onChange={handleChange}
+                    variant="outlined"                                          
+                    
+                />
+              </Grid>
+                 
+              <Grid
+                    item
+                    md={3}
+                    xs={12}
+                  >
+                  <TextField
+                    fullWidth
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                    margin = 'dense'
+                    label="Milk Weight(kg)"
+                    name="milk_Weight"                
+                    onChange={handleChange}
+                    variant="outlined"  
+                    type = "number"                                       
+                    
+                />
+              </Grid>              
+
+              <Grid
+                    item
+                    md={3}
+                    xs={12}
+                  >
+                  <TextField
+                    fullWidth
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                    margin = 'dense'
+                    label="Milk Butter Fat"
+                    name="milk_butter_fat"                
+                    onChange={handleChange}
+                    variant="outlined" 
+                    type = "number"                                          
+                    
+                />
+              </Grid>
+                   
+              
               
               <Grid
-                      item
-                      md={3}
-                      xs={12}
-                    >
-                    <TextField
-                      fullWidth                    
-                      InputLabelProps={{
-                        shrink: true                      
-                      }}                                       
-                      margin = 'dense'
-                      label="Ease Of Calving"
-                      name="ease_of_calving"
-                      onChange={handleChange}  
-                      required                                              
-                      select
-                      // eslint-disable-next-line react/jsx-sort-props
-                      SelectProps={{ native: true }}                    
-                      variant="outlined"
-                    >
-                      <option value=""></option>
-                      {calving_ease.map(ease => (
-                            <option                    
-                              value={ease.id}
-                            >
-                              {ease.value}
-                            </option>
-                          ))
-                      }           
-                    </TextField>
-                  </Grid>
-
+                    item
+                    md={3}
+                    xs={12}
+                  >
+                  <TextField
+                    fullWidth
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                    margin = 'dense'
+                    label="Milk Lactose"
+                    name="milk_lactose"                
+                    onChange={handleChange}
+                    variant="outlined" 
+                    type = "number"                                          
+                    
+                />
+              </Grid>
+  
               <Grid
                     item
                     md={3}
@@ -432,263 +430,15 @@ const DetailsEdit = props => {
                       shrink: true,
                     }}
                     margin = 'dense'
-                    label="Ease Of Calving Other"
-                    name="ease_of_calving_other"                
-                    onChange={handleChange}
-                    variant="outlined"  
-                    
-                />
-              </Grid>
-
-              <Grid
-                      item
-                      md={3}
-                      xs={12}
-                    >
-                    <TextField
-                      fullWidth                    
-                      InputLabelProps={{
-                        shrink: true                      
-                      }}                                       
-                      margin = 'dense'
-                      label="Calving Status"
-                      name="calving_status"
-                      onChange={handleChange}                                                
-                      select
-                      required
-                      // eslint-disable-next-line react/jsx-sort-props
-                      SelectProps={{ native: true }}                    
-                      variant="outlined"
-                    >
-                      <option value=""></option>
-                      {calving_status.map(status => (
-                            <option                    
-                              value={status.id}
-                            >
-                              {status.value}
-                            </option>
-                          ))
-                      }           
-                    </TextField>
-                  </Grid>
-                  <Grid
-                      item
-                      md={3}
-                      xs={12}
-                    >
-                    <TextField
-                      fullWidth                    
-                      InputLabelProps={{
-                        shrink: true                      
-                      }}                                       
-                      margin = 'dense'
-                      label="Use Of Calf"
-                      name="use_of_calf"
-                      required
-                      onChange={handleChange}                                                
-                      select
-                      // eslint-disable-next-line react/jsx-sort-props
-                      SelectProps={{ native: true }}                    
-                      variant="outlined"
-                    >
-                      <option value=""></option>
-                      {uses_of_calf.map(use => (
-                            <option                    
-                              value={use.id}
-                            >
-                              {use.value}
-                            </option>
-                          ))
-                      }           
-                    </TextField>
-                  </Grid>
-
-                  <Grid
-                    item
-                    md={3}
-                    xs={12}
-                  >
-                  <TextField
-                    fullWidth
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-                    margin = 'dense'
-                    label="Other Use of Calf"
-                    name="use_of_calf_other"                
-                    onChange={handleChange}
-                    variant="outlined"  
-                    
-                />
-              </Grid>
-                  
-                 
-                         
-
-                 <Grid
-                      item
-                      md={3}
-                      xs={12}
-                    >
-                    <TextField
-                      fullWidth                    
-                      InputLabelProps={{
-                        shrink: true                      
-                      }}                                       
-                      margin = 'dense'
-                      label="Calf Body Condition"
-                      name="calf_body_condition_score"
-                      onChange={handleChange}    
-                      required                                            
-                      select
-                      // eslint-disable-next-line react/jsx-sort-props
-                      SelectProps={{ native: true }}                    
-                      variant="outlined"
-                    >
-                      <option value=""></option>
-                      {body_scores.map(body_score => (
-                            <option                    
-                              value={body_score.id}
-                            >
-                              {body_score.value}
-                            </option>
-                          ))
-                      }           
-                    </TextField>
-                  </Grid>
-                 
-                  <Grid
-                      item
-                      md={3}
-                      xs={12}
-                    >
-                    <TextField
-                      fullWidth
-                      InputLabelProps={{
-                        shrink: true,
-                      }}
-                      margin = 'dense'
-                      label="Calf Color"
-                      name="calf_color"
-                      onChange={handleChange}                     
-                      default = ""                              
-                      select
-                      required
-                      // eslint-disable-next-line react/jsx-sort-props
-                      SelectProps={{ native: true }}                    
-                      variant="outlined"
-                    >
-                      <option value=""></option>
-                      {colors.map(color => (
-                            <option                    
-                              value={color.id}
-                            >
-                              {color.value}
-                            </option>
-                          ))
-                      }           
-                    </TextField>
-                  </Grid>
-
-                  <Grid
-                      item
-                      md={3}
-                      xs={12}
-                    >
-                    <TextField
-                      fullWidth                    
-                      InputLabelProps={{
-                        shrink: true                      
-                      }}                                       
-                      margin = 'dense'
-                      label="Calf Deformities"
-                      name="calf_deformities"
-                      required
-                      onChange={handleChange}                                                
-                      select
-                      // eslint-disable-next-line react/jsx-sort-props
-                      SelectProps={{ native: true }}                    
-                      variant="outlined"
-                    >
-                      <option value=""></option>
-                      {deformaties.map(deformaty => (
-                            <option                    
-                              value={deformaty.id}
-                            >
-                              {deformaty.value}
-                            </option>
-                          ))
-                      }           
-                    </TextField>
-                  </Grid>
-                  <Grid
-                    item
-                    md={3}
-                    xs={12}
-                  >
-                  <TextField
-                    fullWidth
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-                    margin = 'dense'
-                    label="Other Calf Deformaties"
-                    name="other_calf_deformities"                
-                    onChange={handleChange}
-                    variant="outlined"  
-                    
-                />
-              </Grid>
-                  
-                  <Grid
-                    item
-                    md={3}
-                    xs={12}
-                  >
-                   <TextField
-                    fullWidth
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-                    margin = 'dense'
-                    label="Calf Gender"
-                    name="calf_gender"
-                    onChange={handleChange}
-                    required
-                    default = ""                              
-                    select
-                    // eslint-disable-next-line react/jsx-sort-props
-                    SelectProps={{ native: true }}                    
-                    variant="outlined"
-                  >
-                    <option value=""></option>
-                    {genders.map(gender => (
-                          <option                    
-                            value={gender.id}
-                          >
-                            {gender.value}
-                          </option>
-                        ))
-                    }           
-                  </TextField>
-                  </Grid> 
-                  <Grid
-                    item
-                    md={3}
-                    xs={12}
-                  >
-                  <TextField
-                    fullWidth
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-                    margin = 'dense'
-                    label="Calf Weight(kg)"
-                    name="Calf_weight"                
+                    label="Milk Protein"
+                    name="milk_protein"                
                     onChange={handleChange}
                     variant="outlined"
+                    type = "number"                                           
+                    
                 />
-              </Grid> 
+              </Grid>
+
 
               <Grid
                     item
@@ -701,13 +451,36 @@ const DetailsEdit = props => {
                       shrink: true,
                     }}
                     margin = 'dense'
-                    label="Calf Heart Girth(cm)"
-                    name="calf_heart_girth"                
+                    label="Milk Urea"
+                    name="milk_urea"                
                     onChange={handleChange}
-                    variant="outlined"  
+                    variant="outlined"   
+                    type = "number"                                        
                     
                 />
-              </Grid>                
+              </Grid>
+  
+              <Grid
+                    item
+                    md={3}
+                    xs={12}
+                  >
+                  <TextField
+                    fullWidth
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                    margin = 'dense'
+                    label="Milk Somatic Cell Count"
+                    name="milk_somatic_cell_count"                
+                    onChange={handleChange}
+                    variant="outlined" 
+                    type = "number"                                          
+                    
+                />
+              </Grid>   
+
+ 
                   <Grid
                     item
                     md={3}
@@ -726,7 +499,7 @@ const DetailsEdit = props => {
                     
                 />
               </Grid>
-            
+                  
               </Grid>
           </CardContent>
           <Divider />
