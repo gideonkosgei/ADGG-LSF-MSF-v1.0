@@ -190,3 +190,17 @@ export const endpoint_milking_add = {
   headers: headers   
 };
 
+//get health data for a specific animal
+export const endpoint_health = {
+  url: `${api}/events/health/animal/`,
+  method: 'GET',
+  headers: headers   
+};
+
+//post health event
+export const endpoint_health_add = {
+  url: `${api}/events/health`,
+  method: 'POST',
+  headers: headers   
+};
+

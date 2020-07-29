@@ -62,7 +62,6 @@ const DetailsEdit = props => {
     
   if (!sample_types) {
     return null;
-
   }
 
     const handleChange = event => {

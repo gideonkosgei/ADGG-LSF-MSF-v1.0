@@ -796,6 +796,70 @@ export const postMilking =  function (config,animal_id,values,user_id) {
     })    
     .catch(err => reject(err));
   });       
+};
+
+
+// get Health events 
+export const getHealth =  function (config,id) {   
+  const options = {
+    url:`${config.url}'${id}'`,
+    method: config.method,
+    headers: config.headers  
+  }  
+ 
+  return new Promise((resolve, reject) => {
+    axios(options)
+    .then(res => {          
+        resolve(res.data);
+    })
+    .catch(err => reject(err));
+  });       
+};
+
+
+// add new Health event
+export const postHealth =  function (config,animal_id,values,user_id) {   
+  
+  let {drug_cost,field_agent_id,health_category,health_date,health_provider,health_type,other_health_type} = values;    
+    
+    drug_cost = (typeof drug_cost === 'undefined')? '0':drug_cost.replace('','0');  
+    health_category = (typeof health_category === 'undefined')?'':health_category;
+    field_agent_id = (typeof field_agent_id === 'undefined')? '0':field_agent_id.replace('','0');
+    health_provider = (typeof health_provider === 'undefined')? '0':health_provider.replace('','0');
+    health_type = (typeof health_type === 'undefined')?'':health_type.replace('','0');;
+    other_health_type = (typeof other_health_type === 'undefined')? '0':other_health_type;  
+    health_date = (typeof health_date === 'undefined')? moment(new Date()).format('YYYY-MM-DD'):health_date; 
+
+ 
+  const body = {
+    "animal_id": animal_id,
+    "health_date": health_date,
+    "health_category": health_category,
+    "health_provider" : health_provider,
+    "health_type": health_type,
+    "other_health_type": other_health_type,      
+    "field_agent_id": field_agent_id,
+    "created_by": user_id,
+    "drug_cost":drug_cost
+  };
+
+  
+  const options = {
+    url:`${config.url}`,
+    method: config.method,
+    headers: config.headers,
+    data: body  
+  }; 
+
+  console.log(options);
+
+  return new Promise((resolve, reject) => {
+    axios(options)
+    .then(res => {           
+        resolve(res.data);
+    })
+    .catch(err => reject(err));
+  });       
 }
 
 
