@@ -34,6 +34,8 @@ const AnimalDetails = props => {
   const [colors, setColors] = useState([]);
   const [sire_types, setSireTypes] = useState([]);
   const [herds, setHerds] = useState([]);
+  const [entryTypes, setEntryTypes] = useState([]);
+  const [deformaties, setDeformaties] = useState([]);
 
   useEffect(() => {   
     let mounted_lookup = true;
@@ -49,7 +51,10 @@ const AnimalDetails = props => {
             let lookup_animal_types = []; 
             let lookup_gender = []; 
             let lookup_colors = [];
-            let lookup_sire_types = [];             
+            let lookup_sire_types = [];  
+            let lookup_deformaties = []; 
+            let lookup_entry_types = []; 
+
             for (let i = 0; i< data.length; i++){              
               //main breeds
               if(data[i].list_type_id === 8){                
@@ -74,6 +79,14 @@ const AnimalDetails = props => {
               //Sire Types
               if(data[i].list_type_id === 13){                
                 lookup_sire_types.push(data[i]);
+              }  
+              //deformaties
+              if(data[i].list_type_id === 11){                
+                lookup_deformaties.push(data[i]);
+              }  
+              //Entry types
+              if(data[i].list_type_id === 69){                
+                lookup_entry_types.push(data[i]);
               }            
               
             }  
@@ -83,11 +96,13 @@ const AnimalDetails = props => {
             setGender(lookup_gender);
             setColors(lookup_colors);
             setSireTypes(lookup_sire_types);
+            setEntryTypes(lookup_entry_types);
+            setDeformaties(lookup_deformaties);
             
             
           }
         });
-      })(endpoint_lookup,'8,14,62,3,83,13');
+      })(endpoint_lookup,'8,14,62,3,83,13,11,69');
 
       (async  (endpoint,id) => {     
         await  getHerds(endpoint,id)
@@ -107,7 +122,7 @@ const AnimalDetails = props => {
     };
   }, [organization_id]); 
 
-  if (!animal_types || !main_breeds || !breed_composition || !gender || !colors || !sire_types) {
+  if (!animal_types || !main_breeds || !breed_composition || !gender || !colors || !sire_types || !entryTypes || !deformaties) {
     return null;
   }
 
@@ -137,16 +152,93 @@ const AnimalDetails = props => {
       className={clsx(classes.root, className)}
     >
       <form onSubmit={handleSubmit}>
-        <CardHeader title="New Registration " />
+        <CardHeader title="New Animal Registration " />
         <Divider />
         <CardContent>
           <Grid
             container
             spacing={4}
           >
+
+            <Grid
+              item
+              md={2}
+              xs={12}
+            >
+              <TextField
+                fullWidth
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                margin = 'dense'
+                label="Registration Date"
+                type="date"
+                name="registration_date"
+                defaultValue = {new Date()}
+                onChange={handleChange}
+                variant="outlined" 
+                             
+              />
+            </Grid>
+
+             <Grid
+              item
+              md={2}
+              xs={12}
+            >
+              <TextField
+                fullWidth
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                margin = 'dense'
+                label="Entry Date"
+                type="date"
+                name="entry_date"
+                defaultValue = {new Date()}
+                onChange={handleChange}
+                variant="outlined" 
+                             
+              />
+            </Grid>    
+
+             <Grid
+          item
+          md={2}
+          xs={12}
+        >
+          <TextField
+            fullWidth
+            InputLabelProps={{
+              shrink: true,
+            }}
+            margin = 'dense'
+            label="Entry Type"
+            name="entry_type"
+            onChange={handleChange}
+            default = "" 
+            required              
+            select
+            // eslint-disable-next-line react/jsx-sort-props
+            SelectProps={{ native: true }}
+            //value={values.timezone}
+            variant="outlined"
+          >
+            <option value=""></option>
+            {entryTypes.map(types => (
+                  <option                    
+                    value={types.id}
+                  >
+                    {types.value}
+                  </option>
+                ))
+            }           
+          </TextField>
+        </Grid>
+   
         <Grid
           item
-          md={3}
+          md={2}
           xs={12}
         >
           <TextField
@@ -178,9 +270,47 @@ const AnimalDetails = props => {
           </TextField>
         </Grid>
 
+            
             <Grid
               item
-              md={3}
+              md={2}
+              xs={12}
+            >
+              <TextField
+                fullWidth
+                InputLabelProps={{
+                  shrink: true,
+                }}    
+                margin = 'dense'           
+                label="Tag Prefix "
+                name="tag_prefix"
+                onChange={handleChange}
+                variant="outlined"
+              />
+            </Grid>
+            
+            <Grid
+              item
+              md={2}
+              xs={12}
+            >
+              <TextField
+                fullWidth
+                InputLabelProps={{
+                  shrink: true,
+                }}    
+                margin = 'dense'           
+                label="Tag Sequence "
+                name="tag_sequence"
+                onChange={handleChange}                                
+                variant="outlined"  
+              />
+            </Grid>
+            
+            
+            <Grid
+              item
+              md={2}
               xs={12}
             >
               <TextField
@@ -211,9 +341,48 @@ const AnimalDetails = props => {
                 
               />
             </Grid>
+
+             
             <Grid
               item
-              md={3}
+              md={2}
+              xs={12}
+            >
+              <TextField
+                fullWidth
+                InputLabelProps={{
+                  shrink: true,
+                }}    
+                margin = 'dense'           
+                label="Origin Country "
+                name="country_of_origin"
+                onChange={handleChange}
+                variant="outlined"
+              />
+            </Grid>
+
+            <Grid
+              item
+              md={2}
+              xs={12}
+            >
+              <TextField
+                fullWidth
+                InputLabelProps={{
+                  shrink: true,
+                }}    
+                margin = 'dense'           
+                label="Purchase Cost"
+                name="purchase_cost"
+                onChange={handleChange}
+                variant="outlined"
+              />
+            </Grid>
+            
+            
+            <Grid
+              item
+              md={2}
               xs={12}
             >
               <TextField
@@ -223,7 +392,7 @@ const AnimalDetails = props => {
                 }}
                 margin = 'dense'
                 label="Animal Name"
-                name="username"
+                name="animal_name"
                 onChange={handleChange}
                 variant="outlined"              
               />
@@ -231,7 +400,7 @@ const AnimalDetails = props => {
 
           <Grid
               item
-              md={3}
+              md={2}
               xs={12}
             >
               <TextField
@@ -266,7 +435,7 @@ const AnimalDetails = props => {
 
             <Grid
               item
-              md={3}
+              md={2}
               xs={12}
             >
               <TextField
@@ -286,7 +455,7 @@ const AnimalDetails = props => {
             </Grid>
             <Grid
               item
-              md={3}
+              md={2}
               xs={12}
             >
               <TextField
@@ -319,7 +488,7 @@ const AnimalDetails = props => {
             </Grid>
             <Grid
               item
-              md={3}
+              md={2}
               xs={12}
             >
               <TextField
@@ -349,10 +518,29 @@ const AnimalDetails = props => {
               </TextField>
             </Grid>
 
+            <Grid
+              item
+              md={2}
+              xs={12}
+            >
+              <TextField
+                fullWidth
+                InputLabelProps={{
+                  shrink: true,
+                }}    
+                margin = 'dense'           
+                label="Color Other"
+                name="color_other"
+                onChange={handleChange}
+                variant="outlined"
+              />
+            </Grid>
+            
+
 
             <Grid
               item
-              md={3}
+              md={2}
               xs={12}
             >
               <TextField
@@ -366,8 +554,7 @@ const AnimalDetails = props => {
                 onChange={handleChange}               
                 select
                 // eslint-disable-next-line react/jsx-sort-props
-                SelectProps={{ native: true }}
-                //value={values.timezone}
+                SelectProps={{ native: true }}                
                 variant="outlined"
               > 
                 <option value=""></option> 
@@ -383,7 +570,24 @@ const AnimalDetails = props => {
             </Grid>
             <Grid
               item
-              md={3}
+              md={2}
+              xs={12}
+            >
+              <TextField
+                fullWidth
+                InputLabelProps={{
+                  shrink: true,
+                }}    
+                margin = 'dense'           
+                label="Main Breed Other"
+                name="Main_breed_other"
+                onChange={handleChange}
+                variant="outlined"
+              />
+            </Grid>
+            <Grid
+              item
+              md={2}
               xs={12}
             >
               <TextField
@@ -392,29 +596,47 @@ const AnimalDetails = props => {
                   shrink: true,
                 }}
                 margin = 'dense'
-                label="Breed Other"
-                name="breed_other"
+                label="Secondary Breed"
+                name="secondary_breed"
                 onChange={handleChange}               
                 select
                 // eslint-disable-next-line react/jsx-sort-props
-                SelectProps={{ native: true }}
-                //value={values.timezone}
+                SelectProps={{ native: true }}                
                 variant="outlined"
               > 
-                <option value=""></option>    
+                <option value=""></option> 
                 {main_breeds.map( main_breed => (
-                      <option                        
-                        value={main_breed.id}
-                      >
-                        {main_breed.value}
-                      </option>
-                    ))
-                  }            
+                    <option                    
+                      value={main_breed.id}
+                    >
+                      {main_breed.value}
+                    </option>
+                  ))
+                }              
               </TextField>
             </Grid>
+            
             <Grid
               item
-              md={3}
+              md={2}
+              xs={12}
+            >
+              <TextField
+                fullWidth
+                InputLabelProps={{
+                  shrink: true,
+                }}    
+                margin = 'dense'           
+                label="Sec Breed Other"
+                name="secondary_breed_other"
+                onChange={handleChange}
+                variant="outlined"
+              />
+            </Grid>
+            
+            <Grid
+              item
+              md={2}
               xs={12}
             >
               <TextField
@@ -446,7 +668,7 @@ const AnimalDetails = props => {
 
             <Grid
               item
-              md={3}
+              md={4}
               xs={12}
             >
               <TextField
@@ -463,9 +685,46 @@ const AnimalDetails = props => {
                 variant="outlined"              
               />
             </Grid>
+
             <Grid
               item
-              md={3}
+              md={2}
+              xs={12}
+            >
+              <TextField
+                fullWidth
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                margin = 'dense'
+                label="Deformaties"
+                name="deformaties"
+                onChange={handleChange}               
+                select
+                // eslint-disable-next-line react/jsx-sort-props
+                SelectProps={{ native: true }}
+                //value={values.timezone}
+                variant="outlined"
+              > 
+                <option value=""></option>  
+                {deformaties.map( deformaty => (
+                      <option                        
+                        value={deformaty.id}
+                      >
+                        {deformaty.value}
+                      </option>
+                    ))
+                }
+              </TextField>
+            </Grid>
+
+
+
+
+
+            <Grid
+              item
+              md={2}
               xs={12}
             >
               <TextField
@@ -496,7 +755,7 @@ const AnimalDetails = props => {
             </Grid>
             <Grid
               item
-              md={3}
+              md={2}
               xs={12}
             >
               <TextField
@@ -526,7 +785,7 @@ const AnimalDetails = props => {
             </Grid>
             <Grid
               item
-              md={3}
+              md={2}
               xs={12}
             >
               <TextField
@@ -555,7 +814,63 @@ const AnimalDetails = props => {
               />
             </Grid>
 
-        
+            <Grid
+              item
+              md={2}
+              xs={12}
+            >
+              <TextField
+                fullWidth
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                margin = 'dense'
+                label="Hair Sample ID"
+                name="hair_sample_id"                
+                onChange={handleChange}
+                variant="outlined" 
+                           
+              />
+            </Grid>
+
+            <Grid
+              item
+              md={2}
+              xs={12}
+            >
+              <TextField
+                fullWidth
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                margin = 'dense'
+                label="Herd Book Info"
+                name="herd_book_info"                
+                onChange={handleChange}
+                variant="outlined"                            
+              />
+            </Grid>
+
+            <Grid
+              item
+              md={4}
+              xs={12}
+            >
+              <TextField
+                fullWidth
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                margin = 'dense'
+                label="Notes"
+                name="notes"
+                multiline
+                rowsMax={4}                
+                onChange={handleChange}
+                variant="outlined"              
+              />
+            </Grid>
+
             
           </Grid>
         </CardContent>
