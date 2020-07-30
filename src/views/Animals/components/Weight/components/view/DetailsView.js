@@ -1,8 +1,8 @@
-import React, { useState,useEffect,useContext } from 'react';
+import React, { useState,useEffect } from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
-import {Card, CardContent, CardHeader, Grid,Divider, TextField,colors } from '@material-ui/core';
+import {Card, CardContent, CardHeader, Grid,Divider,colors } from '@material-ui/core';
 import {getWeights}   from '../../../../../../utils/API';
 import {endpoint_weight} from '../../../../../../configs/endpoints';
 import {Sidebar} from '../index';

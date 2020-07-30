@@ -7,13 +7,13 @@ import ExitToAppRoundedIcon from '@material-ui/icons/ExitToAppRounded';
 import SpeedRoundedIcon from '@material-ui/icons/SpeedRounded';
 import LocalHospitalRoundedIcon from '@material-ui/icons/LocalHospitalRounded';
 import SyncRoundedIcon from '@material-ui/icons/SyncRounded';
-import DateRangeRoundedIcon from '@material-ui/icons/DateRangeRounded';
-import NotificationsActiveRoundedIcon from '@material-ui/icons/NotificationsActiveRounded';
-import FormatListBulletedRoundedIcon from '@material-ui/icons/FormatListBulletedRounded';
-import TrendingUpRoundedIcon from '@material-ui/icons/TrendingUpRounded';
+//import DateRangeRoundedIcon from '@material-ui/icons/DateRangeRounded';
+//import NotificationsActiveRoundedIcon from '@material-ui/icons/NotificationsActiveRounded';
+//import FormatListBulletedRoundedIcon from '@material-ui/icons/FormatListBulletedRounded';
+//import TrendingUpRoundedIcon from '@material-ui/icons/TrendingUpRounded';
 import PregnantWomanRoundedIcon from '@material-ui/icons/PregnantWomanRounded';
 import ChildCareRoundedIcon from '@material-ui/icons/ChildCareRounded';
-import LinkIcon from '@material-ui/icons/Link';
+//import LinkIcon from '@material-ui/icons/Link';
 import PetsIcon from '@material-ui/icons/Pets';
 import ColorizeIcon from '@material-ui/icons/Colorize';
 import OpacityIcon from '@material-ui/icons/Opacity';
@@ -102,7 +102,7 @@ const Header = props => {
               </Link>
             </IconButton> 
           </Tooltip>
-              
+         {     /*
           <Tooltip  title="Calender Events">              
             <IconButton aria-label="delete" size="large" >
               <Link component = {RouterLink} to="/management/calender/">
@@ -142,7 +142,8 @@ const Header = props => {
                 <TrendingUpRoundedIcon /> 
               </Link>
             </IconButton> 
-          </Tooltip>           
+          </Tooltip>  
+         */}         
         </CardContent> 
     </Card>
   );

@@ -151,26 +151,26 @@ const routes = [
         component: lazy(() => import('views/Animals/components/Details/components/edit'))
       },      
           
-      {
+     /* {
         path: '/management/analytics/',
         exact: true,
         component: lazy(() => import('views/Animals/components/Analytics'))
-      },
-      {
+      },*/
+      /*{
         path: '/management/calender/',
         exact: true,
         component: lazy(() => import('views/Animals/components/Calender'))
-      }, 
+      },*/ 
       {
         path: '/management/health/',
         exact: true,
         component: lazy(() => import('views/Animals/components/Health'))
       },
-      {
+     /* {
         path: '/management/notifications/',
         exact: true,
         component: lazy(() => import('views/Animals/components/Notifications'))
-      },
+      },*/
       {
         path: '/management/pd/view/:id',
         exact: true,
@@ -214,11 +214,11 @@ const routes = [
         component: lazy(() => import('views/Animals/components/Health/components/add'))
       },
       
-      {
+      /*{
         path: '/management/pedigree/',
         exact: true,
         component: lazy(() => import('views/Animals/components/Pedigree'))
-      },
+      },*/
 
       {
         path: '/management/sync/view/:id',
@@ -269,11 +269,11 @@ const routes = [
         exact: true,
         component: lazy(() => import('views/Animals/components/Weight/components/add'))          
       },
-      {
+      /*{
         path: '/management/logs/',
         exact: true,
         component: lazy(() => import('views/Animals/components/Logs'))
-      },
+      },*/
      
       {
         path: '/management/customers/:id',

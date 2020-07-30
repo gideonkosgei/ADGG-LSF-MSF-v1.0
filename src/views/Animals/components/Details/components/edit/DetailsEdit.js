@@ -119,7 +119,7 @@ const DetailsEdit = props => {
       mounted_herds  = false
       mounted_animal_details = false;
     };
-  }, [organization_id]); 
+  }, [organization_id,animal_id]); 
 
   if (!animal_types || !main_breeds || !breed_composition || !gender || !colors || !sire_types || !values) {
     return null;
