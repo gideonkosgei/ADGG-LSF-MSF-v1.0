@@ -204,3 +204,10 @@ export const endpoint_health_add = {
   headers: headers   
 };
 
+//New animal Registration
+export const endpoint_animal_add = {
+  url: `${api}/animal`,
+  method: 'POST',
+  headers: headers   
+};
+

@@ -3,12 +3,14 @@ import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import {Button, Card,CardActions, CardContent, CardHeader, Grid,Divider, TextField,colors,IconButton } from '@material-ui/core';
-import {getLookups,getHerds}   from '../../../../utils/API';
-import {endpoint_lookup,endpoint_herd} from '../../../../configs/endpoints';
+import {getLookups,getHerds,postAnimalRegistration}   from '../../../../utils/API';
+import {endpoint_lookup,endpoint_herd,endpoint_animal_add} from '../../../../configs/endpoints';
 import authContext from '../../../../contexts/AuthContext';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import SettingsApplicationsIcon from '@material-ui/icons/SettingsApplications';
 import SearchIcon from '@material-ui/icons/Search';
+import SuccessSnackbar from '../../../../components/SuccessSnackbar';
+import ErrorSnackbar from '../../../../components/ErrorSnackbar';    
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -23,8 +25,11 @@ const useStyles = makeStyles(theme => ({
 
 const AnimalDetails = props => {
   const {className, ...rest } = props; 
+  const [openSnackbarSuccess, setopenSnackbarSuccess] = useState(false);
+  const [openSnackbarError, setopenSnackbarError] = useState(false);
   const classes = useStyles();
-  const [ { organization_id }  ] = useContext(authContext);
+  const [ {organization_id}  ] = useContext(authContext);
+  const [ {user_id} ] = useContext(authContext);
   
   const [values, setValues] = useState({ });  
   const [animal_types, setAnimalTypes] = useState([]);
@@ -108,8 +113,7 @@ const AnimalDetails = props => {
         await  getHerds(endpoint,id)
         .then(response => {       
           if (mounted_herds) { 
-            const data = response.payload;
-            console.log(data);
+            const data = response.payload;           
             setHerds(data);               
           }
         });
@@ -136,22 +140,35 @@ const AnimalDetails = props => {
     });
   };
 
+  const handleSnackbarSuccessClose = () => {
+    setopenSnackbarSuccess(false);
+  };
 
-  const handleSubmit = event => {
-    event.preventDefault();
-    //setOpenSnackbar(true);
+  const handleSnackbarErrorClose = () => {
+    setopenSnackbarError(false);
   };
 
 
-
-
+  const handleSubmit = event => {
+    event.preventDefault();
+    (async  (endpoint,org_id,values,user_id) => {     
+      await  postAnimalRegistration(endpoint,org_id,values,user_id)
+      .then(() => {  
+        setopenSnackbarSuccess(true); 
+        setValues({});        
+        document.forms["new_reg"].reset();
+      }).catch(() => {
+        setopenSnackbarError(true); 
+      });
+    })(endpoint_animal_add,organization_id,values,user_id);    
+  };
 
   return (
     <Card
       {...rest}
       className={clsx(classes.root, className)}
     >
-      <form onSubmit={handleSubmit}>
+      <form id ='new_reg' onSubmit={handleSubmit}>
         <CardHeader title="New Animal Registration " />
         <Divider />
         <CardContent>
@@ -177,6 +194,7 @@ const AnimalDetails = props => {
                 defaultValue = {new Date()}
                 onChange={handleChange}
                 variant="outlined" 
+                required
                              
               />
             </Grid>
@@ -198,6 +216,7 @@ const AnimalDetails = props => {
                 defaultValue = {new Date()}
                 onChange={handleChange}
                 variant="outlined" 
+                required
                              
               />
             </Grid>    
@@ -376,6 +395,7 @@ const AnimalDetails = props => {
                 name="purchase_cost"
                 onChange={handleChange}
                 variant="outlined"
+                type = "number"
               />
             </Grid>
             
@@ -410,9 +430,8 @@ const AnimalDetails = props => {
                 }}
                 margin = 'dense'
                 label="Herd"
-                name="Herd"
-                onChange={handleChange} 
-                required              
+                name="herd_id"
+                onChange={handleChange}                              
                 select
                 // eslint-disable-next-line react/jsx-sort-props
                 SelectProps={{ native: true }}
@@ -450,6 +469,7 @@ const AnimalDetails = props => {
                 defaultValue = {new Date()}
                 onChange={handleChange}
                 variant="outlined" 
+                required
                              
               />
             </Grid>
@@ -580,7 +600,7 @@ const AnimalDetails = props => {
                 }}    
                 margin = 'dense'           
                 label="Main Breed Other"
-                name="Main_breed_other"
+                name="main_breed_other"
                 onChange={handleChange}
                 variant="outlined"
               />
@@ -765,9 +785,10 @@ const AnimalDetails = props => {
                 }}
                 margin = 'dense'
                 label="Sire"
-                name="sire_tag_id"
+                name="sire_id"
                 onChange={handleChange}
                 variant="outlined" 
+                type = "number"  
                 InputProps={{
                   endAdornment: (
                     <InputAdornment position="end"  >
@@ -795,9 +816,10 @@ const AnimalDetails = props => {
                 }}
                 margin = 'dense'
                 label="Dam"
-                name="dam_tag_id"                
+                name="dam_id"                
                 onChange={handleChange}
-                variant="outlined"  
+                variant="outlined"
+                type = "number"  
                 InputProps={{
                   endAdornment: (
                     <InputAdornment position="end"  >
@@ -829,6 +851,7 @@ const AnimalDetails = props => {
                 name="hair_sample_id"                
                 onChange={handleChange}
                 variant="outlined" 
+                type = "number"
                            
               />
             </Grid>
@@ -845,7 +868,7 @@ const AnimalDetails = props => {
                 }}
                 margin = 'dense'
                 label="Herd Book Info"
-                name="herd_book_info"                
+                name="herd_book_number"                
                 onChange={handleChange}
                 variant="outlined"                            
               />
@@ -884,7 +907,15 @@ const AnimalDetails = props => {
             Save Details
           </Button>
         </CardActions>
-      </form>    
+      </form> 
+      <SuccessSnackbar
+          onClose={handleSnackbarSuccessClose}
+          open={openSnackbarSuccess}
+        />
+        <ErrorSnackbar
+          onClose={handleSnackbarErrorClose}
+          open={openSnackbarError}
+        />   
     </Card>
   );
 };

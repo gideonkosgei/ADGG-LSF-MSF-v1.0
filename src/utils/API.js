@@ -818,8 +818,7 @@ export const getHealth =  function (config,id) {
 
 
 // add new Health event
-export const postHealth =  function (config,animal_id,values,user_id) {   
-  
+export const postHealth =  function (config,animal_id,values,user_id) {
   let {drug_cost,field_agent_id,health_category,health_date,health_provider,health_type,other_health_type} = values;    
     
     drug_cost = (typeof drug_cost === 'undefined')? '0':drug_cost.replace('','0');  
@@ -850,9 +849,103 @@ export const postHealth =  function (config,animal_id,values,user_id) {
     headers: config.headers,
     data: body  
   }; 
+  return new Promise((resolve, reject) => {
+    axios(options)
+    .then(res => {           
+        resolve(res.data);
+    })
+    .catch(err => reject(err));
+  });       
+};
 
-  console.log(options);
+// new animal registration
+export const postAnimalRegistration =  function (config,org_id,values,user_id) { 
+     
+    const farm_id = null;
+    let {
+      herd_id,main_breed_other,animal_name,animal_type,
+      breed_composition,breed_composition_details,color,
+      color_other,country_of_origin,deformaties,
+      dob,entry_date,entry_type,hair_sample_id,herd_book_number,
+      main_breed,notes,purchase_cost,registration_date, 
+      secondary_breed, secondary_breed_other,sex,sire_id,dam_id,
+      sire_type,tag_prefix,tag_sequence,tag_id
+    } = values;
 
+    herd_id = (typeof herd_id === 'undefined')? null:herd_id.replace(' ',null);
+    main_breed_other =  (typeof main_breed_other === 'undefined')?'':main_breed_other;
+    animal_name =  (typeof animal_name === 'undefined')? '':animal_name; 
+    animal_type =  (typeof animal_type === 'undefined')? null:animal_type.replace(' ',null); 
+    breed_composition =  (typeof breed_composition === 'undefined')? null:breed_composition.replace(' ',null); 
+    breed_composition_details =  (typeof breed_composition_details === 'undefined')? '':breed_composition_details; 
+    color =  (typeof color === 'undefined')? null:color.replace(' ',null);
+    color_other =  (typeof color_other === 'undefined')? '':color_other;
+    country_of_origin =  (typeof country_of_origin === 'undefined')? '':country_of_origin;    
+    deformaties =  (typeof deformaties === 'undefined')? null:deformaties.replace(' ',null); 
+    dob =  (typeof dob === 'undefined')? moment(new Date()).format('YYYY-MM-DD'):dob;
+    entry_date =  (typeof entry_date === 'undefined')? moment(new Date()).format('YYYY-MM-DD'):entry_date; 
+    entry_type =  (typeof entry_type === 'undefined')? null:entry_type.replace(' ',null);
+    hair_sample_id =  (typeof hair_sample_id === 'undefined')? null:hair_sample_id.replace(' ',null);
+    herd_book_number =  (typeof herd_book_number === 'undefined')? '':herd_book_number;  
+    main_breed =  (typeof main_breed === 'undefined')? null:main_breed.replace(' ',null);
+    main_breed_other =  (typeof main_breed_other === 'undefined')? '':main_breed_other;    
+    notes =  (typeof notes === 'undefined')? '':notes;
+    purchase_cost =  (typeof purchase_cost === 'undefined')? '0':purchase_cost.replace(' ','0');
+    registration_date =  (typeof registration_date === 'undefined')? moment(new Date()).format('YYYY-MM-DD'):registration_date;
+    secondary_breed =  (typeof secondary_breed === 'undefined')? null:secondary_breed.replace(' ',null);
+    secondary_breed_other =  (typeof secondary_breed_other === 'undefined')? ' ':secondary_breed_other;
+    sex =  (typeof sex === 'undefined')? null:sex.replace(' ',null);
+    sire_id =  (typeof sire_id === 'undefined')? null:sire_id.replace(' ',null);
+    dam_id =  (typeof dam_id === 'undefined')? null:dam_id.replace(' ',null);
+    sire_type =  (typeof sire_type === 'undefined')? null:sire_type.replace(' ',null);
+    tag_id =  (typeof tag_id === 'undefined')? '':tag_id;
+    tag_prefix =  (typeof tag_prefix === 'undefined')? '':tag_prefix;
+    tag_sequence =  (typeof tag_sequence === 'undefined')? '':tag_sequence;
+
+    
+    const body = {
+      "created_by": user_id,
+      "animal_type": animal_type,
+      "birthdate": dob,
+      "name": animal_name ,
+      "breed_composition": breed_composition ,
+      "hair_sample_id": hair_sample_id ,
+      "main_breed": main_breed ,
+      "reg_date": registration_date ,
+      "sex" :sex,
+      "tag_id" : tag_id,
+      "breed_combination" :"",
+      "notes" : notes,
+      "tag_prefix" :tag_prefix,
+      "tag_sequence" :tag_sequence,
+      "breed_composition_details" :breed_composition_details,
+      "color" : color,
+      "color_other" :color_other,
+      "country_of_origin" :country_of_origin,
+      "deformities" :deformaties,
+      "entry_date" :entry_date,
+      "entry_type" :entry_type,
+      "herd_book_number" :herd_book_number,
+      "main_breed_other" :main_breed_other,
+      "purchase_cost" :purchase_cost,
+      "secondary_breed" :secondary_breed,
+      "secondary_breed_other" :secondary_breed_other,
+      "sire_type" :sire_type,
+      "sire_id" :sire_id,
+      "dam_id" :dam_id,
+      "herd_id" :herd_id,
+      "org_id" :org_id,
+      "farm_id" :farm_id    
+    };
+  
+  const options = {
+    url:`${config.url}`,
+    method: config.method,
+    headers: config.headers,
+    data: body  
+  };
+
+  
   return new Promise((resolve, reject) => {
     axios(options)
     .then(res => {           
@@ -861,6 +954,7 @@ export const postHealth =  function (config,animal_id,values,user_id) {
     .catch(err => reject(err));
   });       
 }
+
 
 
 
