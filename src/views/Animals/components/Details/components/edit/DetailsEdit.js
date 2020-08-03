@@ -2,13 +2,10 @@ import React, { useState,useEffect,useContext } from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
-import {Button, Card,CardActions, CardContent, CardHeader, Grid,Divider, TextField,colors,Box,IconButton,Switch ,Typography} from '@material-ui/core';
-import {getLookups,getHerds,postAnimalRegistration,getAnimal}   from '../../../../../../utils/API';
-import {endpoint_lookup,endpoint_herd,endpoint_animal_add,endpoint_animal} from '../../../../../../configs/endpoints';
+import {Button, Card,CardActions, CardContent, CardHeader, Grid,Divider, TextField,colors,Box,Switch ,Typography} from '@material-ui/core';
+import {getLookups,getHerds,putAnimalDetails,getAnimal}   from '../../../../../../utils/API';
+import {endpoint_lookup,endpoint_herd,endpoint_animal_update,endpoint_animal} from '../../../../../../configs/endpoints';
 import authContext from '../../../../../../contexts/AuthContext';
-import InputAdornment from '@material-ui/core/InputAdornment';
-import SettingsApplicationsIcon from '@material-ui/icons/SettingsApplications';
-import SearchIcon from '@material-ui/icons/Search';
 import SuccessSnackbar from '../../../../../../components/SuccessSnackbar';   
 import ErrorSnackbar from '../../../../../../components/ErrorSnackbar';  
 
@@ -44,7 +41,7 @@ const DetailsEdit = props => {
   const [sire_types, setSireTypes] = useState([]);
   const [herds, setHerds] = useState([]);
   const [entryTypes, setEntryTypes] = useState([]);
-  const [deformaties, setDeformaties] = useState([]);
+  const [deformaties_, setDeformaties] = useState([]);
   const [readOnly, setReadOnly] = useState(true);
   const animal_id  = localStorage.getItem('animal_id');
 
@@ -132,8 +129,7 @@ const DetailsEdit = props => {
         .then(response => {       
           if (mounted_animal_details) { 
             const data = response.payload[0][0];             
-            setValues(data);  
-            console.log(data);               
+            setValues(data);                         
           }
         });
       })(endpoint_animal,animal_id);
@@ -146,7 +142,7 @@ const DetailsEdit = props => {
     };
   }, [organization_id,animal_id]); 
 
-  if (!values || !animal_types || !main_breeds || !breed_composition || !gender || !colors || !sire_types || !entryTypes || !deformaties) {
+  if (!values || !animal_types || !main_breeds || !breed_composition || !gender || !colors || !sire_types || !entryTypes || !deformaties_) {
     return null;
   }
 
@@ -179,19 +175,19 @@ const DetailsEdit = props => {
 
   const handleSubmit = event => {
     event.preventDefault();
-    (async  (endpoint,org_id,values,user_id) => {     
-      await  postAnimalRegistration(endpoint,org_id,values,user_id)
+    (async  (endpoint,org_id,values,user_id,animal_id) => {     
+      await  putAnimalDetails(endpoint,org_id,values,user_id,animal_id)
       .then(() => {  
         setopenSnackbarSuccess(true); 
-        setValues({});        
-        document.forms["new_reg"].reset();
       }).catch(() => {
         setopenSnackbarError(true); 
       });
-    })(endpoint_animal_add,organization_id,values,user_id);    
+    })(endpoint_animal_update,organization_id,values,user_id,animal_id);    
   };
 
+  console.log(values);
 
+ 
 
   return (
     <Card
@@ -849,12 +845,6 @@ const DetailsEdit = props => {
                 InputLabelProps={{
                   shrink: true,
                 }}
-
-                inputProps={{
-                  readOnly: Boolean(readOnly),
-                  disabled: Boolean(readOnly)                
-                }}
-
                 margin = 'dense'
                 label="Deformaties"
                 name="deformaties"
@@ -862,24 +852,26 @@ const DetailsEdit = props => {
                 select
                 // eslint-disable-next-line react/jsx-sort-props
                 SelectProps={{ native: true }}
+
+                inputProps={{
+                  readOnly: Boolean(readOnly),
+                  disabled: Boolean(readOnly)                
+                }}
+
                 value = {values.deformities} 
                 variant="outlined"
               > 
-                <option value=""></option>  
-                {deformaties.map( deformaty => (
-                      <option                        
-                        value={deformaty.id}
-                      >
-                        {deformaty.value}
-                      </option>
-                    ))
-                }
+                <option value=""></option> 
+                {deformaties_.map(deformaty => (
+                    <option                      
+                      value={deformaty.id}
+                    >
+                      {deformaty.value}
+                    </option>
+                  ))
+                }               
               </TextField>
             </Grid>
-
-
-
-
 
             <Grid
               item
@@ -964,7 +956,8 @@ const DetailsEdit = props => {
                 name="dam_id"                
                 onChange={handleChange}
                 variant="outlined"
-                type = "number"                          
+                type = "number" 
+                value = {values.dam_id}                         
               />
             </Grid>
 
@@ -1053,15 +1046,18 @@ const DetailsEdit = props => {
           </Grid>
         </CardContent>
         <Divider />
-        <CardActions>
-          <Box flexGrow={1}>          
-            <Button
-              className={classes.saveButton}
-              type="submit"
-              variant="contained"
-            >
-              Save Details
-            </Button>
+        <CardActions>        
+          <Box flexGrow={1}>
+            {readOnly ? null :                        
+              <Button
+                className={classes.saveButton}
+                type="submit"
+                variant="contained"
+                hidden = "true"                               
+              >
+                Save Changes
+              </Button>              
+            }                             
           </Box> 
           <Box> 
               <Typography variant="h6">{ readOnly? "Enable Form" : "Disable Form"} </Typography> 

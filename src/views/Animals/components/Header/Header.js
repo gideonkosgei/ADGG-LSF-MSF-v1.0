@@ -33,7 +33,7 @@ const Header = props => {
         <CardContent> 
           <Tooltip  title="Animal Details">              
             <IconButton aria-label="details" size="large" >
-              <Link component = {RouterLink} to = {`/management/details/view/${animal_id}`}>
+              <Link component = {RouterLink} to = {`/management/details/edit/${animal_id}`}>
                 <PetsIcon /> 
               </Link> 
             </IconButton> 

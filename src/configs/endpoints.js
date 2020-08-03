@@ -211,3 +211,10 @@ export const endpoint_animal_add = {
   headers: headers   
 };
 
+//Update Animal Details
+export const endpoint_animal_update = {
+  url: `${api}/animal/`,
+  method: 'PUT',
+  headers: headers   
+};
+

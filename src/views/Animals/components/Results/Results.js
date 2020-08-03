@@ -6,7 +6,6 @@ import { makeStyles } from '@material-ui/styles';
 import {  Card,CardActions,CardContent,CardHeader, Divider,Link} from '@material-ui/core';
 import MUIDataTable from "mui-datatables";
 import {MuiThemeProvider } from '@material-ui/core/styles';
-import EditOutlinedIcon from '@material-ui/icons/EditOutlined';
 import OpenInNewIcon from '@material-ui/icons/OpenInNew';
 import CustomToolbar from "./CustomToolbar";
 import { Link as RouterLink } from 'react-router-dom';
@@ -53,24 +52,7 @@ const Results = props => {
     { name: "main_breed",label: "Breed",options: {filter: true,sort: true, display:true}},  
     { name: "breedComposition",label: "Breed Comp",options: {filter: false,sort: false, display:true, hint:'Breed Composition'}},
     
-    { name: "",
-      options: {
-        filter: false,
-        sort: false,
-        empty: true,      
-        customBodyRender: (value, tableMeta, updateValue) => {         
-          return (           
-            <Link
-              component={RouterLink}
-              to ={`/management/details/view/${tableMeta.rowData[0]}`}
-            >
-                <OpenInNewIcon/>
-            </Link>
-            
-          );
-        }
-      }
-    }, 
+     
     { name: "",
       options: {
       filter: false,
@@ -82,7 +64,7 @@ const Results = props => {
               component={RouterLink}
               to = {`/management/details/edit/${tableMeta.rowData[0]}`}
           >
-            <EditOutlinedIcon/>
+            <OpenInNewIcon/>
           </Link>
           
         );
