@@ -65,7 +65,7 @@ export const endpoint_animal_org = {
 
 //get all animal by id
 export const endpoint_animal = {
-  url: `${api}/animals/`,
+  url: `${api}/animal/`,
   method: 'GET',
   headers: headers   
 };

@@ -24,10 +24,8 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const Edit = props => { 
-  const classes = useStyles();
-  console.log(props.match.params.id);
-  localStorage.setItem('animal_id', parseInt(props.match.params.id)); 
- 
+  const classes = useStyles(); 
+  localStorage.setItem('animal_id', parseInt(props.match.params.id));  
   return (
     <Page
       className={classes.root}
@@ -39,8 +37,7 @@ const Edit = props => {
             <br/>
             <DetailsEdit/>
         </CardContent>
-    </Card>
-     
+    </Card>     
    </Page>
   );
 };
