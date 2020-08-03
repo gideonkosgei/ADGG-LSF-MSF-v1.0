@@ -2,12 +2,14 @@ import React, { useState,useEffect,useContext } from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
-import {Button, Card,CardActions, CardContent, CardHeader, Grid,Divider, TextField,colors,Box,Switch ,Typography} from '@material-ui/core';
+import {Button, Card,CardActions, CardContent, CardHeader,Tooltip, Grid,Divider, TextField,colors,Box,Switch ,Typography} from '@material-ui/core';
 import {getLookups,getHerds,putAnimalDetails,getAnimal}   from '../../../../../../utils/API';
 import {endpoint_lookup,endpoint_herd,endpoint_animal_update,endpoint_animal} from '../../../../../../configs/endpoints';
 import authContext from '../../../../../../contexts/AuthContext';
 import SuccessSnackbar from '../../../../../../components/SuccessSnackbar';   
-import ErrorSnackbar from '../../../../../../components/ErrorSnackbar';  
+import ErrorSnackbar from '../../../../../../components/ErrorSnackbar';
+import {AnimalDetailsMetaData}  from '../../../Modal';
+import OpenInNewIcon from '@material-ui/icons/OpenInNew';
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -44,6 +46,7 @@ const DetailsEdit = props => {
   const [deformaties_, setDeformaties] = useState([]);
   const [readOnly, setReadOnly] = useState(true);
   const animal_id  = localStorage.getItem('animal_id');
+  const [openMetadata, setMetadata] = useState(false); 
 
 
   useEffect(() => {   
@@ -185,8 +188,14 @@ const DetailsEdit = props => {
     })(endpoint_animal_update,organization_id,values,user_id,animal_id);    
   };
 
-  console.log(values);
+  const handleMetadataOpen = () => {
+    setMetadata(true);
+  };
 
+  const handleMetadataClose = () => {
+    setMetadata(false);
+  };
+  
  
 
   return (
@@ -1059,6 +1068,14 @@ const DetailsEdit = props => {
               </Button>              
             }                             
           </Box> 
+          <Box>
+            <Tooltip  title="view Metadata">
+              <Button onClick={handleMetadataOpen}>
+                <OpenInNewIcon className={classes.buttonIcon} />                
+              </Button>
+            </Tooltip> 
+              
+          </Box>  
           <Box> 
               <Typography variant="h6">{ readOnly? "Enable Form" : "Disable Form"} </Typography> 
           </Box> 
@@ -1081,6 +1098,11 @@ const DetailsEdit = props => {
           onClose={handleSnackbarErrorClose}
           open={openSnackbarError}
         />   
+        <AnimalDetailsMetaData
+                animalDetails={values}
+                onClose={handleMetadataClose}
+                open={openMetadata}
+        />
     </Card>
   );
 };
