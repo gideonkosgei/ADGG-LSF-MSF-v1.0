@@ -121,7 +121,7 @@ const DetailsEdit = props => {
         await  getHerds(endpoint,id)
         .then(response => {       
           if (mounted_herds) { 
-            const data = response.payload;           
+            const data = response.payload; 
             setHerds(data);               
           }
         });

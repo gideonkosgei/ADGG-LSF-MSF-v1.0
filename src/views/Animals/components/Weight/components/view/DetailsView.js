@@ -35,7 +35,7 @@ const DetailsView = props => {
         await  getWeights(endpoint,id)
         .then(response => {               
           if (mounted) {            
-            setValues(response.payload);                 
+            setValues(response.payload[0]);                 
           }
         });
       })(endpoint_weight,animal_id);
