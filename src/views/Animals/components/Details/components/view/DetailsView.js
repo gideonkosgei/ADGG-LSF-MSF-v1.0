@@ -53,7 +53,7 @@ const DetailsView = props => {
       {...rest}
       className={clsx(classes.root, className)}
     >
-        <CardHeader title="View Animal Details" />
+        <CardHeader title={`View Animal Details #${animal_id}`} />
         <Divider />
         <CardContent> 
           <Grid container spacing={1} justify="center">            

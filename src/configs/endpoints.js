@@ -91,6 +91,21 @@ export const endpoint_weight = {
   headers: headers   
 };
 
+//get specific weight & Growth Details : filtered by event ID
+export const endpoint_weight_specific = {
+  url: `${api}/events/weight/`,
+  method: 'GET',
+  headers: headers   
+};
+
+//Update weight & growth details
+export const endpoint_weight_update = {
+  url: `${api}/events/weight/`,
+  method: 'PUT',
+  headers: headers   
+};
+
+
 //post new weight event
 export const endpoint_weight_add = {
   url: `${api}/events/weight`,

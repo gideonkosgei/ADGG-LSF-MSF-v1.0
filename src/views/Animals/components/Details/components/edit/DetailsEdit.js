@@ -43,7 +43,7 @@ const DetailsEdit = props => {
   const [sire_types, setSireTypes] = useState([]);
   const [herds, setHerds] = useState([]);
   const [entryTypes, setEntryTypes] = useState([]);
-  const [deformaties_, setDeformaties] = useState([]);
+  const [deformaties, setDeformaties] = useState([]);
   const [readOnly, setReadOnly] = useState(true);
   const animal_id  = localStorage.getItem('animal_id');
   const [openMetadata, setMetadata] = useState(false); 
@@ -145,7 +145,7 @@ const DetailsEdit = props => {
     };
   }, [organization_id,animal_id]); 
 
-  if (!values || !animal_types || !main_breeds || !breed_composition || !gender || !colors || !sire_types || !entryTypes || !deformaties_) {
+  if (!values || !animal_types || !main_breeds || !breed_composition || !gender || !colors || !sire_types || !entryTypes || !deformaties) {
     return null;
   }
 
@@ -205,7 +205,7 @@ const DetailsEdit = props => {
     >
 
       <form id ='new_reg' onSubmit={handleSubmit}>      
-        <CardHeader title = {readOnly? "View Animal Details" : "Edit Animal Details"} />
+        <CardHeader title = {readOnly? `View Animal Details  #${animal_id}` : `Edit Animal Details  #${animal_id}`} />
         <Divider />
         <CardContent>
           <Grid container spacing={4} >   
@@ -861,7 +861,6 @@ const DetailsEdit = props => {
                 select
                 // eslint-disable-next-line react/jsx-sort-props
                 SelectProps={{ native: true }}
-
                 inputProps={{
                   readOnly: Boolean(readOnly),
                   disabled: Boolean(readOnly)                
@@ -871,7 +870,7 @@ const DetailsEdit = props => {
                 variant="outlined"
               > 
                 <option value=""></option> 
-                {deformaties_.map(deformaty => (
+                {deformaties.map(deformaty => (
                     <option                      
                       value={deformaty.id}
                     >

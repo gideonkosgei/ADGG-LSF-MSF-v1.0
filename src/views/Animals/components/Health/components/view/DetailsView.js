@@ -55,8 +55,7 @@ const DetailsView = props => {
     { name: "health_type",label: "Health Type",options: {filter: true,sort: true, display:true}},
     { name: "other_health_type",label: "Other Health Type",options: {filter: false,sort: true,display:true}},    
     { name: "drug_cost",label: "Event Cost",options: {filter: true,sort: true,display:true}}
-  ];
-  
+  ]; 
 
   
   const options = {       
