@@ -2,7 +2,7 @@ import React, { useState,useEffect } from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
-import {Card, CardContent, CardHeader, Grid,Divider,colors } from '@material-ui/core';
+import {Card, CardContent, CardHeader, Grid,Divider,colors,Link } from '@material-ui/core';
 import {getSync}   from '../../../../../../utils/API';
 import {endpoint_sync} from '../../../../../../configs/endpoints';
 import {Sidebar} from '../index';
@@ -10,6 +10,8 @@ import MUIDataTable from "mui-datatables";
 import {MuiThemeProvider } from '@material-ui/core/styles';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import CustomToolbar from "../CustomToolbar";
+import { Link as RouterLink } from 'react-router-dom';
+import OpenInNewIcon from '@material-ui/icons/OpenInNew';
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -51,6 +53,7 @@ const DetailsView = props => {
   
 
   const columns = [
+    { name: "event_id",label: "Event ID",options: {filter: false,sort: false,display:false}}, 
     { name: "sync_date",label: "Sync Date",options: {filter: false,sort: true,display:true}},    
     { name: "sync_number",label: "Sync Number",options: {filter: false,sort: true,display:true}},
     { name: "hormone_type",label: "Hormone",options: {filter: true,sort: true, display:true}},
@@ -58,7 +61,24 @@ const DetailsView = props => {
     { name: "animal_parity",label: "Parity",options: {filter: true,sort: true,display:true}},
     { name: "sync_person",label: "H. Admin",options: {filter: true,sort: true,display:true}},
     { name: "sync_cost",label: "Cost",options: {filter: true,sort: true,display:true}},     
-    { name: "sync_person_phone",label: "A. Contacts",options: {filter: true,sort: true,display:true}}
+    { name: "sync_person_phone",label: "A. Contacts",options: {filter: true,sort: true,display:true}},
+    { name: "",
+      options: {
+      filter: false,
+      sort: false,  
+      empty:true,    
+      customBodyRender: (value, tableMeta, updateValue) => {        
+        return (
+          <Link
+              component={RouterLink}
+              to = {`/management/sync/edit/${tableMeta.rowData[0]}`}              
+          >
+            <OpenInNewIcon/>
+          </Link>          
+        );
+      }
+    }
+  }
   ];
 
   

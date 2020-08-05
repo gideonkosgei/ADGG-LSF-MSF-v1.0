@@ -240,6 +240,11 @@ const routes = [
         exact: true,
         component: lazy(() => import('views/Animals/components/Sync/components/add'))          
       },
+      {
+        path: '/management/sync/edit/:id',
+        exact: true,
+        component: lazy(() => import('views/Animals/components/Sync/components/edit'))          
+      },
       
       {
         path: '/management/calving/view/:id',

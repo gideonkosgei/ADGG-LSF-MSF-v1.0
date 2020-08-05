@@ -148,6 +148,22 @@ export const endpoint_sync_add = {
   headers: headers   
 };
 
+//get specific sync Details : filtered by event ID
+export const endpoint_sync_specific = {
+  url: `${api}/events/sync/`,
+  method: 'GET',
+  headers: headers   
+};
+
+//put sync event
+export const endpoint_sync_update = {
+  url: `${api}/events/sync/`,
+  method: 'PUT',
+  headers: headers   
+};
+
+
+
 //get insemination data for a specific animal
 export const endpoint_insemination = {
   url: `${api}/events/insemination/animal/`,
