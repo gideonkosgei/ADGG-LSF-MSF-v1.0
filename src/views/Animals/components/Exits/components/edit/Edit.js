@@ -25,8 +25,8 @@ const useStyles = makeStyles(theme => ({
 
 const Edit = props => { 
   const classes = useStyles();
-  localStorage.setItem('event_id', parseInt(props.match.params.id)); 
-  
+  localStorage.setItem('exit_event_id', parseInt(props.match.params.id));
+ 
   return (
     <Page
       className={classes.root}

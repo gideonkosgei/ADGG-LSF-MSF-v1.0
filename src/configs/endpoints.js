@@ -176,6 +176,20 @@ export const endpoint_exit_add = {
   headers: headers   
 };
 
+//get specific Exit Details : filtered by event ID
+export const endpoint_exit_specific = {
+  url: `${api}/events/exit/`,
+  method: 'GET',
+  headers: headers   
+};
+
+//Update Exit & Disposal Details
+export const endpoint_exit_update = {
+  url: `${api}/events/exit/`,
+  method: 'PUT',
+  headers: headers   
+};
+
 
 //get calving data for a specific animal
 export const endpoint_calving = {

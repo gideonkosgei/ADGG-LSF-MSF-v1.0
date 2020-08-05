@@ -353,7 +353,7 @@ export const updateWeight =  function (config,event_id,values,user_id) {
     headers: config.headers,
     data: body  
   }    
-  console.log(options);
+
   return new Promise((resolve, reject) => {
     axios(options)
     .then(res => {           
@@ -600,7 +600,7 @@ export const postInsemination =  function (config,animal_id,values,user_id) {
     })    
     .catch(err => reject(err));
   });       
-}
+};
 
 //exit & disposal event
 
@@ -667,6 +667,57 @@ export const postExit =  function (config,animal_id,values,user_id) {
     data: body  
   }; 
 
+  return new Promise((resolve, reject) => {
+    axios(options)
+    .then(res => {           
+        resolve(res.data);
+    })    
+    .catch(err => reject(err));
+  });       
+}
+
+
+// Updayte exit event Record
+export const updateExit =  function (config,event_id,values,user_id) {  
+  let {disposal_amount,disposal_reason,disposal_reason_other,exit_date,field_agent_id,new_breeder_name,new_breeder_phone_no,new_country,new_district,new_farmer_name,new_farmer_phone_no,new_region,new_village} = values;
+  
+  disposal_amount = (typeof disposal_amount === 'undefined')? '0':disposal_amount.replace('','0');  
+  disposal_reason = (typeof disposal_reason === 'undefined')? '0':disposal_reason.replace('','0');
+  field_agent_id = (typeof field_agent_id === 'undefined')? '0':field_agent_id.replace('','0');
+  disposal_reason_other = (typeof disposal_reason_other === 'undefined')? '':disposal_reason_other;
+  new_breeder_name = (typeof new_breeder_name === 'undefined')? '':new_breeder_name;
+  new_breeder_phone_no = (typeof new_breeder_phone_no === 'undefined')? '':new_breeder_phone_no;
+  new_farmer_name = (typeof new_farmer_name === 'undefined')? '':new_farmer_name;
+  new_farmer_phone_no = (typeof new_farmer_phone_no === 'undefined')? '':new_farmer_phone_no;
+  new_country = (typeof new_country === 'undefined')? '0':new_country.replace('','0');
+  new_district = (typeof new_district === 'undefined')? '0':new_district.replace('','0');
+  new_region = (typeof new_region === 'undefined')? '0':new_region.replace('','0');
+  new_village = (typeof new_village === 'undefined')? '0':new_village.replace('','0');
+  exit_date = (typeof exit_date === 'undefined')? moment(new Date()).format('YYYY-MM-DD'):exit_date;   
+
+  const body = {      
+        "exit_date": exit_date,
+        "disposal_amount": disposal_amount,
+        "disposal_reason" : disposal_reason,
+        "disposal_reason_other": disposal_reason_other,
+        "new_breeder_name": new_breeder_name,
+        "new_breeder_phone_number": new_breeder_phone_no,
+        "new_country": new_country,
+        "new_district": new_district,
+        "new_farmer_name":new_farmer_name,
+        "new_farmer_phone_number": new_farmer_phone_no,
+        "new_region": new_region,
+        "new_village": new_village,
+        "field_agent_id": field_agent_id,
+        "updated_by": user_id
+  };
+ 
+  const options = {
+    url:`${config.url}${event_id}`,
+    method: config.method,
+    headers: config.headers,
+    data: body  
+  }; 
 
   return new Promise((resolve, reject) => {
     axios(options)
@@ -676,6 +727,25 @@ export const postExit =  function (config,animal_id,values,user_id) {
     .catch(err => reject(err));
   });       
 }
+
+
+
+  // get specific Exit & Diposal Details
+  export const getExitByEventId =   function (config,id) {   
+    const options = {
+      url:`${config.url}'${id}'`,
+      method: config.method,
+      headers: config.headers  
+    } 
+   
+    return new Promise((resolve, reject) => {
+      axios(options)
+      .then(res => {             
+          resolve(res.data);
+      })
+      .catch(err => reject(err));
+    });       
+  }
 
 
 // get calving events 
@@ -838,7 +908,7 @@ export const postMilking =  function (config,animal_id,values,user_id) {
     "created_by": user_id
   };
 
-  console.log(body);
+
  
   const options = {
     url:`${config.url}`,
@@ -1028,8 +1098,7 @@ export const putAnimalDetails =  function (config,org_id,values,user_id,animal_i
     sire_type,tag_prefix,tag_sequence,tag_id
   } = values;
 
-  console.log(typeof main_breed);
-  console.log(main_breed);
+  
 
   herd_id = (typeof herd_id === 'undefined')? null:parseInt(herd_id);
   main_breed_other =  (typeof main_breed_other === 'undefined')?'':main_breed_other;
