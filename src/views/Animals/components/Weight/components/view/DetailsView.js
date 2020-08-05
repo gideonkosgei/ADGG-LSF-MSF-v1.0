@@ -72,8 +72,7 @@ const DetailsView = props => {
               to = {`/management/weight/edit/${tableMeta.rowData[0]}`}              
           >
             <OpenInNewIcon/>
-          </Link>
-          
+          </Link>          
         );
       }
     }

@@ -218,6 +218,11 @@ const routes = [
         exact: true,
         component: lazy(() => import('views/Animals/components/Health/components/add'))
       },
+      {
+        path: '/management/health/edit/:id',
+        exact: true,
+        component: lazy(() => import('views/Animals/components/Health/components/edit'))
+      },
       
       /*{
         path: '/management/pedigree/',

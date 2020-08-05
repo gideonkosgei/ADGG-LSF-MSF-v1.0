@@ -233,6 +233,20 @@ export const endpoint_health_add = {
   headers: headers   
 };
 
+//get specific Health Details : filtered by event ID
+export const endpoint_health_specific = {
+  url: `${api}/events/health/`,
+  method: 'GET',
+  headers: headers   
+};
+
+//Update Health Record
+export const endpoint_health_update = {
+  url: `${api}/events/health/`,
+  method: 'PUT',
+  headers: headers   
+};
+
 //New animal Registration
 export const endpoint_animal_add = {
   url: `${api}/animal`,
