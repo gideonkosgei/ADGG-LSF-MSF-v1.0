@@ -2,7 +2,7 @@ import React, { useState,useEffect } from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
-import {Card, CardContent, CardHeader, Grid,Divider,colors } from '@material-ui/core';
+import {Card, CardContent, CardHeader, Grid,Divider,colors,Link } from '@material-ui/core';
 import {getMilking}   from '../../../../../../utils/API';
 import {endpoint_milking} from '../../../../../../configs/endpoints';
 import {Sidebar} from '../index';
@@ -10,6 +10,8 @@ import MUIDataTable from "mui-datatables";
 import {MuiThemeProvider } from '@material-ui/core/styles';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import CustomToolbar from "../CustomToolbar";
+import { Link as RouterLink } from 'react-router-dom';
+import OpenInNewIcon from '@material-ui/icons/OpenInNew';
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -50,13 +52,31 @@ const DetailsView = props => {
   }  
 
     const columns = [
+    { name: "event_id",label: "Event ID",options: {filter: false,sort: false,display:false}}, 
     { name: "milk_date",label: "Milk Date",options: {filter: false,sort: true,display:true}}, 
     { name: "lactation_id",label: "Lactation ID",options: {filter: false,sort: true,display:true}}, 
     { name: "testday_no",label: "Test Day",options: {filter: false,sort: true,display:true}},   
     { name: "days_in_milk",label: "Days in Milk",options: {filter: false,sort: true,display:true}},
     { name: "milk_am_litres",label: "Milk(am)(ltr)",options: {filter: false,sort: true,display:true}},    
     { name: "milk_mid_day",label: "Milk(midday)(ltr)",options: {filter: true,sort: true, display:true}},
-    { name: "milk_pm_litres",label: "Milk(pm)(ltr)",options: {filter: false,sort: true,display:true}}       
+    { name: "milk_pm_litres",label: "Milk(pm)(ltr)",options: {filter: false,sort: true,display:true}},
+    { name: "",
+      options: {
+      filter: false,
+      sort: false,  
+      empty:true,    
+      customBodyRender: (value, tableMeta, updateValue) => {        
+        return (
+          <Link
+              component={RouterLink}
+              to = {`/management/milking/edit/${tableMeta.rowData[0]}`}              
+          >
+            <OpenInNewIcon/>
+          </Link>          
+        );
+      }
+    }
+  }         
   ];
   
 

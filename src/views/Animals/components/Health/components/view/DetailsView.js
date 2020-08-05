@@ -75,7 +75,7 @@ const DetailsView = props => {
     }
   }
   ]; 
-
+  
   
   const options = {       
     filter: true,

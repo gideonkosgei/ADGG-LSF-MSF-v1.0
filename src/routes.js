@@ -266,6 +266,11 @@ const routes = [
         exact: true,
         component: lazy(() => import('views/Animals/components/Milking/components/add'))          
       },
+      {
+        path: '/management/milking/edit/:id',
+        exact: true,
+        component: lazy(() => import('views/Animals/components/Milking/components/edit'))          
+      },
       
 
 

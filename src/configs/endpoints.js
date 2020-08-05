@@ -228,10 +228,23 @@ export const endpoint_milking = {
   headers: headers   
 };
 
+//get specific milking record : filtered by event ID
+export const endpoint_milking_specific = {
+  url: `${api}/events/milking/`,
+  method: 'GET',
+  headers: headers   
+};
 //post milking event
 export const endpoint_milking_add = {
   url: `${api}/events/milking`,
   method: 'POST',
+  headers: headers   
+};
+
+//post milking event
+export const endpoint_milking_update = {
+  url: `${api}/events/milking/`,
+  method: 'PUT',
   headers: headers   
 };
 
