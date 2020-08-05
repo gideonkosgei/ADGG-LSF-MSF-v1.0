@@ -249,6 +249,25 @@ const DetailsEdit = props => {
                       xs={12}
                     >
                     <TextField
+                      fullWidth
+                      InputLabelProps={{
+                        shrink: true,
+                      }}
+                      margin = 'dense'
+                      label="Other Hormone Type"
+                      name="other_hormone_type"
+                      onChange={handleChange} 
+                      variant="outlined"
+                    />
+                      
+                  </Grid>
+                 
+                  <Grid
+                      item
+                      md={3}
+                      xs={12}
+                    >
+                    <TextField
                       fullWidth                    
                       InputLabelProps={{
                         shrink: true                      
@@ -273,37 +292,7 @@ const DetailsEdit = props => {
                       }           
                     </TextField>
                   </Grid>
-                  <Grid
-                      item
-                      md={3}
-                      xs={12}
-                    >
-                    <TextField
-                      fullWidth
-                      InputLabelProps={{
-                        shrink: true,
-                      }}
-                      margin = 'dense'
-                      label="Other Hormone Type"
-                      name="other_hormone_type"
-                      onChange={handleChange}                     
-                      default = ""                              
-                      select
-                      // eslint-disable-next-line react/jsx-sort-props
-                      SelectProps={{ native: true }}                    
-                      variant="outlined"
-                    >
-                      <option value=""></option>
-                      {hormone_types.map(type => (
-                            <option                    
-                              value={type.id}
-                            >
-                              {type.value}
-                            </option>
-                          ))
-                      }           
-                    </TextField>
-                  </Grid>
+                  
                   <Grid
                       item
                       md={3}
@@ -317,22 +306,11 @@ const DetailsEdit = props => {
                       margin = 'dense'
                       label="Other Hormone Source"
                       name="other_hormone_source"
-                      onChange={handleChange}                                                
-                      select
-                      // eslint-disable-next-line react/jsx-sort-props
-                      SelectProps={{ native: true }}                    
+                      onChange={handleChange}                                         
                       variant="outlined"
-                    >
-                      <option value=""></option>
-                      {hormone_sources.map(source => (
-                            <option                    
-                              value={source.id}
-                            >
-                              {source.value}
-                            </option>
-                          ))
-                      }           
-                    </TextField>
+                    />
+                               
+                   
                   </Grid>
                   <Grid
                       item
@@ -385,6 +363,25 @@ const DetailsEdit = props => {
                   </TextField>
                   </Grid> 
                   <Grid
+                        item
+                        md={3}
+                        xs={12}
+                      >
+                      <TextField
+                        fullWidth
+                        InputLabelProps={{
+                          shrink: true,
+                        }}
+                        margin = 'dense'
+                        label="Other Hormone Admin"
+                        name="sync_other_person"
+                        onChange={handleChange}
+                        variant="outlined"
+                      />
+                        
+                      </Grid> 
+                  
+                  <Grid
                     item
                     md={3}
                     xs={12}
@@ -402,38 +399,7 @@ const DetailsEdit = props => {
                     
                 />
               </Grid>
-                  <Grid
-                        item
-                        md={3}
-                        xs={12}
-                      >
-                      <TextField
-                        fullWidth
-                        InputLabelProps={{
-                          shrink: true,
-                        }}
-                        margin = 'dense'
-                        label="Other Hormone Admin"
-                        name="sync_other_person"
-                        onChange={handleChange}
-                        //required
-                        default = ""                              
-                        select
-                        // eslint-disable-next-line react/jsx-sort-props
-                        SelectProps={{ native: true }}                    
-                        variant="outlined"
-                      >
-                        <option value=""></option>
-                        {sync_person.map(person => (
-                              <option                    
-                                value={person.id}
-                              >
-                                {person.value}
-                              </option>
-                            ))
-                        }           
-                      </TextField>
-                      </Grid> 
+                  
                   <Grid
                   item
                   md={3}
