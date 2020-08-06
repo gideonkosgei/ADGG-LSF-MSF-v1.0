@@ -2,7 +2,7 @@ import React, { useState,useEffect } from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
-import {Card, CardContent, CardHeader, Grid,Divider,colors } from '@material-ui/core';
+import {Card, CardContent, CardHeader, Grid,Divider,colors,Link} from '@material-ui/core';
 import {getCalving}   from '../../../../../../utils/API';
 import {endpoint_calving} from '../../../../../../configs/endpoints';
 import {Sidebar} from '../index';
@@ -10,6 +10,8 @@ import MUIDataTable from "mui-datatables";
 import {MuiThemeProvider } from '@material-ui/core/styles';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import CustomToolbar from "../CustomToolbar";
+import { Link as RouterLink } from 'react-router-dom';
+import OpenInNewIcon from '@material-ui/icons/OpenInNew';
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -49,6 +51,7 @@ const DetailsView = props => {
     return null;
   }  
     const columns = [
+    { name: "event_id",label: "Event ID",options: {filter: false,sort: false,display:false}},   
     { name: "calving_date",label: "Calving Date",options: {filter: false,sort: true,display:true}}, 
     { name: "calf_tag_id",label: "C.Tag ID",options: {filter: false,sort: true,display:true}}, 
     { name: "calf_name",label: "C.Name",options: {filter: false,sort: true,display:true}},   
@@ -58,7 +61,24 @@ const DetailsView = props => {
     { name: "calf_color",label: "C.Color",options: {filter: false,sort: true,display:true}},
     { name: "calf_weight",label: "C.Weight",options: {filter: true,sort: true,display:true}},    
     { name: "calf_heart_girth",label: "Calf H. Girth",options: {filter: true,sort: true,display:true}},     
-    { name: "calf_deformities",label: "Deformaties",options: {filter: true,sort: true,display:true}}    
+    { name: "calf_deformities",label: "Deformaties",options: {filter: true,sort: true,display:true}},
+    { name: "",
+      options: {
+      filter: false,
+      sort: false,  
+      empty:true,    
+      customBodyRender: (value, tableMeta, updateValue) => {        
+        return (
+          <Link
+              component={RouterLink}
+              to = {`/management/calving/edit/${tableMeta.rowData[0]}`}              
+          >
+            <OpenInNewIcon/>
+          </Link>          
+        );
+      }
+    }
+  }    
   ];
   
 

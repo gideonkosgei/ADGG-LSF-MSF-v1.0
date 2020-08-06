@@ -127,6 +127,12 @@ export const endpoint_pd = {
   headers: headers   
 };
 
+export const endpoint_pd_specific = {
+  url: `${api}/events/pd/`,
+  method: 'GET',
+  headers: headers   
+};
+
 //post new weight event
 export const endpoint_pd_add = {
   url: `${api}/events/pd`,
@@ -171,6 +177,12 @@ export const endpoint_insemination = {
   headers: headers   
 };
 
+export const endpoint_insemination_specific = {
+  url: `${api}/events/insemination/`,
+  method: 'GET',
+  headers: headers   
+};
+
 //post insemination event
 export const endpoint_insemination_add = {
   url: `${api}/events/insemination`,
@@ -210,6 +222,12 @@ export const endpoint_exit_update = {
 //get calving data for a specific animal
 export const endpoint_calving = {
   url: `${api}/events/calving/animal/`,
+  method: 'GET',
+  headers: headers   
+};
+
+export const endpoint_calving_specific = {
+  url: `${api}/events/calving/`,
   method: 'GET',
   headers: headers   
 };

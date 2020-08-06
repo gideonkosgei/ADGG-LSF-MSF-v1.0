@@ -134,7 +134,6 @@ const DetailsView = props => {
     </Card>
   );
 };
-
 DetailsView.propTypes = {
   className: PropTypes.string,
   //profile: PropTypes.object.isRequired

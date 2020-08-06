@@ -3,8 +3,8 @@ import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import {Card, CardContent, CardHeader, Grid,Divider, TextField,colors,Button,CardActions,Box,Switch ,Typography,Tooltip } from '@material-ui/core';
-import {getLookups,putHealth,getHealthByEventId}   from '../../../../../../utils/API';
-import {endpoint_lookup,endpoint_health_update,endpoint_health_specific} from '../../../../../../configs/endpoints';
+import {getLookups,postPd,getPdByEventId}   from '../../../../../../utils/API';
+import {endpoint_lookup,endpoint_pd_add,endpoint_pd_specific} from '../../../../../../configs/endpoints';
 import authContext from '../../../../../../contexts/AuthContext';
 import {Sidebar} from '../index';
 import SuccessSnackbar from '../../../../../../components/SuccessSnackbar';
@@ -30,65 +30,80 @@ const DetailsEdit = props => {
   const [openSnackbarError, setopenSnackbarError] = useState(false);
   const [ {user_id} ] = useContext(authContext);
   const classes = useStyles();
-
-  const [values, setValues] = useState({ });
-  const [providers, setProviders] = useState([]);
-  const [health_types, setHealthTypes] = useState([]);
+  const [values, setValues] = useState({ });  
+  const [body_scores, setBodyScores] = useState([]);
+  const [pd_methods, setPdMethods] = useState([]);
+  const [pd_stages, setPdStages] = useState([]);
+  const [pd_results, setPdResults] = useState([]);
   const [readOnly, setReadOnly] = useState(true);
-  const [openMetadata, setMetadata] = useState(false);   
-  const event_id  = localStorage.getItem('health_event_id');  
+  const [openMetadata, setMetadata] = useState(false); 
+  const animal_id  = localStorage.getItem('animal_id');
+  const event_id  = localStorage.getItem('pd_event_id'); 
 
 
   useEffect(() => {   
     let mounted_lookup = true;
-    let mounted_health = true;    
+    let mounted_pd = true;  
     (async  (endpoint,id) => {     
         await  getLookups(endpoint,id)
         .then(response => {       
           if (mounted_lookup) { 
+            const data = response.payload[0];            
+            let lookup_body_scores = [];
+            let lookup_pd_methods = [];
+            let lookup_pd_results = [];
+            let lookup_pd_stages = [];
 
-            const data = response.payload[0];                        
-            let lookup_providers = [];
-            let lookup_health_types = [];                  
 
             for (let i = 0; i< data.length; i++){              
-              // health providers
-              if(data[i].list_type_id === 47){                
-                lookup_providers.push(data[i]);
+              //Body Score
+              if(data[i].list_type_id === 71){                
+                lookup_body_scores.push(data[i]);
               } 
 
-              //health types
-              if(data[i].list_type_id === 49){                
-                lookup_health_types.push(data[i]);
+              //PD methods
+              if(data[i].list_type_id === 80){                
+                lookup_pd_methods.push(data[i]);
+              }  
+              //PD results
+              if(data[i].list_type_id === 78){                
+                lookup_pd_results.push(data[i]);
               } 
 
+              //PD stages
+              if(data[i].list_type_id === 79){                
+                lookup_pd_stages.push(data[i]);
+              }               
             }  
-
-            setProviders(lookup_providers);
-            setHealthTypes(lookup_health_types);
-            
+                   
+            setBodyScores(lookup_body_scores);
+            setPdMethods(lookup_pd_methods);
+            setPdResults(lookup_pd_results);
+            setPdStages(lookup_pd_stages);            
           }
         });
-      })(endpoint_lookup,'47,49');
+      })(endpoint_lookup,'71,80,78,79');
 
       (async  (endpoint,id) => {             
-        await  getHealthByEventId(endpoint,id)
+        await  getPdByEventId(endpoint,id)
         .then(response => {       
-          if (mounted_health) { 
-            const data = response.payload[0][0];                       
+          if (mounted_pd) { 
+            const data = response.payload[0][0];   
+            console.log(data);                    
             setValues(data);                         
           }
         });
-      })(endpoint_health_specific,event_id);
+      })(endpoint_pd_specific,event_id);
+      
+
       
     return () => {
-      mounted_lookup = false;   
-      mounted_health = false;
+      mounted_lookup = false;  
+      mounted_pd = false;    
     };
-  }, [event_id]);   
+  }, [event_id]);  
 
-
-  if (!providers || !health_types || !values ) {
+  if (!body_scores || !pd_methods || !pd_stages ||!pd_results ||!values) {
     return null;
   }
 
@@ -105,13 +120,15 @@ const DetailsEdit = props => {
   const handleSubmit = event => {
     event.preventDefault();
     (async  (endpoint,id,values,user_id) => {     
-      await  putHealth(endpoint,id,values,user_id)
+      await  postPd(endpoint,id,values,user_id)
       .then(() => {  
-        setopenSnackbarSuccess(true);         
-      }).catch(() => {
+        setopenSnackbarSuccess(true); 
+        setValues({});        
+        document.forms["event"].reset();
+      }).catch(() => {        
         setopenSnackbarError(true); 
       });
-    })(endpoint_health_update,event_id,values,user_id);    
+    })(endpoint_pd_add,animal_id,values,user_id);    
   };
   
   
@@ -130,17 +147,17 @@ const DetailsEdit = props => {
   const handleMetadataOpen = () => {
     setMetadata(true);
   };
-
   const handleMetadataClose = () => {
     setMetadata(false);
   };
 
-   return (
+  return (
     <Card
       {...rest}
       className={clsx(classes.root, className)}
-    >      
-        <CardHeader title= { readOnly ? `View Health Event Record  #${localStorage.getItem('animal_id')}`:`Edit Health Event Record  #${localStorage.getItem('animal_id')}` } />
+    >
+      
+        <CardHeader title= { readOnly ? `View PD Event Record  #${localStorage.getItem('animal_id')}`:`Edit PD Event Record  #${localStorage.getItem('animal_id')}` } />
         <Divider />
         <CardContent> 
           <Grid container spacing={1} justify="center">            
@@ -154,7 +171,8 @@ const DetailsEdit = props => {
               <Grid
                 container
                 spacing={4}
-              >
+              > 
+
                   <Grid
                       item
                       md={3}
@@ -171,14 +189,63 @@ const DetailsEdit = props => {
                       }}
                       required
                       margin = 'dense'
-                      label = "Health Event Date"
-                      type = "date"
-                      name = "health_date"                      
-                      onChange = {handleChange}
-                      variant = "outlined"
-                      value = {values.health_date}
+                      label="Examination Date"
+                      type="date"
+                      name="exam_date"                      
+                      onChange={handleChange}
+                      variant="outlined"
+                      value = {values.exam_date}
                     />
-                  </Grid>                  
+                  </Grid>
+                  <Grid
+                    item
+                    md={3}
+                    xs={12}
+                  >
+                    <TextField
+                      fullWidth
+                      InputLabelProps={{
+                        shrink: true,
+                      }}
+                      inputProps={{
+                        readOnly: Boolean(readOnly),
+                        disabled: Boolean(readOnly)                
+                      }}
+                      required
+                      margin = 'dense'
+                      label="Examination Time"
+                      type="time"
+                      name="exam_time"                      
+                      onChange={handleChange}
+                      variant="outlined"  
+                      value = {values.exam_time}                    
+                                  
+                    />
+                  </Grid>
+                  <Grid
+                      item
+                      md={3}
+                      xs={12}
+                  >
+                    <TextField
+                      fullWidth
+                      InputLabelProps={{
+                        shrink: true,
+                      }}
+                      inputProps={{
+                        readOnly: Boolean(readOnly),
+                        disabled: Boolean(readOnly)                
+                      }}
+                      required
+                      margin = 'dense'
+                      label="Service Date"
+                      type="date"
+                      name="service_date"                      
+                      onChange={handleChange}
+                      variant="outlined"
+                      value = {values.service_date}
+                    />
+                  </Grid>
                   <Grid
                     item
                     md={3}
@@ -194,94 +261,106 @@ const DetailsEdit = props => {
                       disabled: Boolean(readOnly)                
                     }}
                     margin = 'dense'
-                    label="Health Provider"
-                    name="health_provider"
+                    label="PD Method"
+                    name="pd_method"
                     onChange={handleChange}
                     required
-                    value = {values.health_provider}                            
+                    default = ""                              
                     select
                     // eslint-disable-next-line react/jsx-sort-props
                     SelectProps={{ native: true }}                    
                     variant="outlined"
+                    value = {values.pd_method}
                   >
                     <option value=""></option>
-                    {providers.map(provider => (
+                    {pd_methods.map(method => (
                           <option                    
-                            value={provider.id}
+                            value={method.id}
                           >
-                            {provider.value}
+                            {method.value}
                           </option>
                         ))
                     }           
                   </TextField>
                 </Grid>
-
-                <Grid
-                    item
-                    md={3}
-                    xs={12}
-                  >
-                  <TextField
-                    fullWidth
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-                    inputProps={{
-                      readOnly: Boolean(readOnly),
-                      disabled: Boolean(readOnly)                
-                    }}
-                    margin = 'dense'
-                    label="Health Category"
-                    name="health_category"                
-                    onChange={handleChange}
-                    variant="outlined" 
-                    value = {values.health_category} 
-                    
-                />
-              </Grid>               
                   <Grid
                       item
                       md={3}
                       xs={12}
                     >
                     <TextField
-                      fullWidth                    
+                      fullWidth
                       InputLabelProps={{
-                        shrink: true                      
+                        shrink: true,
                       }}
                       inputProps={{
                         readOnly: Boolean(readOnly),
                         disabled: Boolean(readOnly)                
-                      }}                                       
+                      }}
                       margin = 'dense'
-                      label="Health Type"
-                      name="health_type"
-                      onChange={handleChange}  
-                      value = {values.health_type}                                              
-                      select
+                      label="PD Result"
+                      name="pd_results"
+                      onChange={handleChange}
                       required
+                      default = ""                              
+                      select
                       // eslint-disable-next-line react/jsx-sort-props
                       SelectProps={{ native: true }}                    
                       variant="outlined"
+                      value = {values.pd_results}
                     >
                       <option value=""></option>
-                      {health_types.map(health_type => (
+                      {pd_results.map(result => (
                             <option                    
-                              value={health_type.id}
+                              value={result.id}
                             >
-                              {health_type.value}
+                              {result.value}
                             </option>
                           ))
                       }           
                     </TextField>
                   </Grid>
-                  
-                 <Grid
+                  <Grid
                     item
                     md={3}
                     xs={12}
                   >
                   <TextField
+                    fullWidth                    
+                    InputLabelProps={{
+                      shrink: true                      
+                    }} 
+                    inputProps={{
+                      readOnly: Boolean(readOnly),
+                      disabled: Boolean(readOnly)                
+                    }}                                      
+                    margin = 'dense'
+                    label="PD Stage"
+                    name="pd_stage"
+                    onChange={handleChange}                                                
+                    select
+                    // eslint-disable-next-line react/jsx-sort-props
+                    SelectProps={{ native: true }}                    
+                    variant="outlined"
+                    value = {values.pd_stage}
+                  >
+                    <option value=""></option>
+                    {pd_stages.map(stage => (
+                          <option                    
+                            value={stage.id}
+                          >
+                            {stage.value}
+                          </option>
+                        ))
+                    }           
+                  </TextField>
+                </Grid>
+                  <Grid
+                    item
+                    md={3}
+                    xs={12}
+                  >
+                   <TextField
                     fullWidth
                     InputLabelProps={{
                       shrink: true,
@@ -291,23 +370,33 @@ const DetailsEdit = props => {
                       disabled: Boolean(readOnly)                
                     }}
                     margin = 'dense'
-                    label="Other Health Type"
-                    name="other_health_type"                
+                    label="Body Score"
+                    name="body_score"
                     onChange={handleChange}
-                    variant="outlined" 
-                    multiline
-                    maxrows={4} 
-                    value = {values.other_health_type}
-                   
-                />
-              </Grid>
-
-            
-                <Grid
-                    item
-                    md={3}
-                    xs={12}
+                    //required
+                    default = ""                              
+                    select
+                    // eslint-disable-next-line react/jsx-sort-props
+                    SelectProps={{ native: true }}                    
+                    variant="outlined"
+                    value = {values.body_score}
                   >
+                    <option value=""></option>
+                    {body_scores.map(score => (
+                          <option                    
+                            value={score.id}
+                          >
+                            {score.value}
+                          </option>
+                        ))
+                    }           
+                  </TextField>
+                  </Grid>                
+                  <Grid
+                  item
+                  md={3}
+                  xs={12}
+                >
                   <TextField
                     fullWidth
                     InputLabelProps={{
@@ -317,16 +406,18 @@ const DetailsEdit = props => {
                       readOnly: Boolean(readOnly),
                       disabled: Boolean(readOnly)                
                     }}
+                    //required
                     margin = 'dense'
                     label="Cost"
-                    name="drug_cost"                
+                    name="cost"                                   
                     onChange={handleChange}
-                    variant="outlined"  
                     type="number"
-                    value = {values.drug_cost}
-                />
-              </Grid>
-
+                    variant="outlined"   
+                    value = {values.cost}                                              
+                  />
+                </Grid>
+                 
+                  
                   <Grid
                     item
                     md={3}
@@ -341,13 +432,12 @@ const DetailsEdit = props => {
                       readOnly: Boolean(readOnly),
                       disabled: Boolean(readOnly)                
                     }}
-                    value = {values.field_agent_id} 
                     margin = 'dense'
                     label="Field Agent"
                     name="field_agent_id"                
                     onChange={handleChange}
-                    variant="outlined" 
-                    
+                    variant="outlined"  
+                    value = {values.field_agent_id}
                     
                 />
               </Grid>
@@ -355,7 +445,7 @@ const DetailsEdit = props => {
               </Grid>
           </CardContent>
           <Divider />
-          <CardActions>  
+          <CardActions>          
           <Box flexGrow={1}>
             {readOnly ? null :                        
               <Button

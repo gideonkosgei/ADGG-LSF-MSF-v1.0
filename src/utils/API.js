@@ -405,6 +405,23 @@ export const getPD =  function (config,id) {
     })
     .catch(err => reject(err));
   });       
+};
+
+
+export const getPdByEventId =  function (config,id) {   
+  const options = {
+    url:`${config.url}${id}`,
+    method: config.method,
+    headers: config.headers  
+  }  
+ 
+  return new Promise((resolve, reject) => {
+    axios(options)
+    .then(res => {          
+        resolve(res.data);
+    })
+    .catch(err => reject(err));
+  });       
 }
 
 // add new pd event
@@ -602,6 +619,24 @@ export const updateSync =  function (config,event_id,values,user_id) {
 export const getInsemination =  function (config,id) {   
   const options = {
     url:`${config.url}'${id}'`,
+    method: config.method,
+    headers: config.headers  
+  }  
+ 
+  return new Promise((resolve, reject) => {
+    axios(options)
+    .then(res => {          
+        resolve(res.data);
+    })
+    .catch(err => reject(err));
+  });       
+}
+
+
+// get Insemination events 
+export const getInseminationEventById =  function (config,id) {   
+  const options = {
+    url:`${config.url}${id}`,
     method: config.method,
     headers: config.headers  
   }  
@@ -839,6 +874,22 @@ export const getCalving =  function (config,id) {
   });       
 }
 
+
+export const getCalvingByEventId =  function (config,id) {   
+  const options = {
+    url:`${config.url}${id}`,
+    method: config.method,
+    headers: config.headers  
+  }  
+ 
+  return new Promise((resolve, reject) => {
+    axios(options)
+    .then(res => {          
+        resolve(res.data);
+    })
+    .catch(err => reject(err));
+  });       
+}
 
 // add new Calving event
 export const postCalving =  function (config,animal_id,values,user_id) {    

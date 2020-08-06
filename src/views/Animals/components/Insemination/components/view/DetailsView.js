@@ -2,7 +2,7 @@ import React, { useState,useEffect } from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
-import {Card, CardContent, CardHeader, Grid,Divider,colors } from '@material-ui/core';
+import {Card, CardContent, CardHeader, Grid,Divider,colors,Link} from '@material-ui/core';
 import {getInsemination}   from '../../../../../../utils/API';
 import {endpoint_insemination} from '../../../../../../configs/endpoints';
 import {Sidebar} from '../index';
@@ -10,6 +10,8 @@ import MUIDataTable from "mui-datatables";
 import {MuiThemeProvider } from '@material-ui/core/styles';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import CustomToolbar from "../CustomToolbar";
+import { Link as RouterLink } from 'react-router-dom';
+import OpenInNewIcon from '@material-ui/icons/OpenInNew';
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -50,6 +52,7 @@ const DetailsView = props => {
   }
 
     const columns = [
+    { name: "event_id",label: "Event ID",options: {filter: false,sort: true,display:true}},
     { name: "ai_date",label: "AI Date",options: {filter: false,sort: true,display:true}},    
     { name: "type_of_ai",label: "AI Type",options: {filter: false,sort: true,display:true}},
     { name: "semen_batch",label: "Batch",options: {filter: false,sort: true,display:true}},    
@@ -59,7 +62,24 @@ const DetailsView = props => {
     //{ name: "country_of_sire_bull_origin",label: "Bull Origin",options: {filter: true,sort: true,display:true}},
     { name: "breed_of_the_bull",label: "Bull Breed",options: {filter: true,sort: true,display:true}},     
     { name: "breed_composition_of_bull",label: "Breed Comp.",options: {filter: true,sort: true,display:true}},
-    { name: "ai_cost",label: "AI Cost",options: {filter: true,sort: true,display:true}}
+    { name: "ai_cost",label: "AI Cost",options: {filter: true,sort: true,display:true}},
+    { name: "",
+      options: {
+      filter: false,
+      sort: false,  
+      empty:true,    
+      customBodyRender: (value, tableMeta, updateValue) => {        
+        return (
+          <Link
+              component={RouterLink}
+              to = {`/management/insemination/edit/${tableMeta.rowData[0]}`}              
+          >
+            <OpenInNewIcon/>
+          </Link>          
+        );
+      }
+    }
+  }    
   ];
   
 

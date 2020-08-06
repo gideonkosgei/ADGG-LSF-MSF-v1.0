@@ -2,7 +2,7 @@ import React, { useState,useEffect } from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
-import {Card, CardContent, CardHeader, Grid,Divider,colors } from '@material-ui/core';
+import {Card, CardContent, CardHeader, Grid,Divider,colors,Link } from '@material-ui/core';
 import {getPD}   from '../../../../../../utils/API';
 import {endpoint_pd} from '../../../../../../configs/endpoints';
 import {Sidebar} from '../index';
@@ -10,6 +10,8 @@ import MUIDataTable from "mui-datatables";
 import {MuiThemeProvider } from '@material-ui/core/styles';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import CustomToolbar from "../CustomToolbar";
+import { Link as RouterLink } from 'react-router-dom';
+import OpenInNewIcon from '@material-ui/icons/OpenInNew';
 
 
 
@@ -52,6 +54,7 @@ const DetailsView = props => {
   }
  
   const columns = [
+    { name: "event_id",label: "Event ID",options: {filter: false,sort: false,display:false}},
     { name: "examination_date",label: "Date Examined",options: {filter: false,sort: true,display:true}},
     //{ name: "time_examined",label: "Time Examined",options: {filter: true,sort: true, display:true}},
     { name: "pd_method",label: "Method",options: {filter: false,sort: true,display:true}},
@@ -61,6 +64,23 @@ const DetailsView = props => {
     { name: "cost",label: "cost",options: {filter: true,sort: true,display:true}},     
     { name: "date_created",label: "Date Created",options: {filter: true,sort: true,display:true}}, 
     //{ name: "created_by",label: "Created By",options: {filter: true,sort: true,display:true}}
+    { name: "",
+      options: {
+      filter: false,
+      sort: false,  
+      empty:true,    
+      customBodyRender: (value, tableMeta, updateValue) => {        
+        return (
+          <Link
+              component={RouterLink}
+              to = {`/management/pd/edit/${tableMeta.rowData[0]}`}              
+          >
+            <OpenInNewIcon/>
+          </Link>          
+        );
+      }
+    }
+  }
     
   ];
 
