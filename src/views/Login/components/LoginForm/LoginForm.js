@@ -109,8 +109,8 @@ const LoginForm = props => {
     const username = formState.values.email;
     const passport = formState.values.password;
     authenticate(endpoint_user_authentication,username,passport)  
-      .then((userData) => {             
-        if(userData.status ===200){         
+      .then((userData) => {
+        if(typeof userData.payload[0][0] ==='object'){         
             dispatch({
               type: 'LOGIN',
               payload: {

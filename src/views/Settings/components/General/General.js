@@ -26,7 +26,7 @@ const General = props => {
      await  getProfileDetails(endpoint_user_profile_details,user_id)
       .then(response => {       
         if (mounted) {
-          setProfile(response.payload[0]);
+          setProfile(response.payload[0][0]);
         }
       });
     };

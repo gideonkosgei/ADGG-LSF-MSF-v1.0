@@ -15,11 +15,11 @@ export const authenticate =  function (config,username,password) {
   }
 
   return new Promise((resolve, reject) => {
-    axios(options).then(res => {           
+    axios(options)
+    .then(res => {             
         resolve(res.data);
     }).catch(err => reject(err));
-});
-       
+});       
 }
 
 // user profile  
@@ -31,13 +31,12 @@ export const getProfileDetails =  function (config,user_id) {
   }  
   return new Promise((resolve, reject) => {
     axios(options)
-    .then(res => {        
+    .then(res => {              
         resolve(res.data);
     })
     .catch(err => reject(err));
 });       
-}
-
+};
 
 // user timezones 
 export const getTimezones =  function (config) {   
