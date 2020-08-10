@@ -149,8 +149,8 @@ const TopBar = props => {
       <Toolbar>
         <RouterLink to="/">
           <img
-            alt="Logo"
-            src="/images/logos/logo--white.svg"
+            alt=""
+            //src="/images/logos/logo--white.svg"
           />
         </RouterLink>
         <div className={classes.flexGrow} />

@@ -1,9 +1,9 @@
 /* eslint-disable react/no-multi-comp */
 /* eslint-disable react/display-name */
 //import React from 'react';
-//import { colors } from '@material-ui/core';
+//import { colors} from '@material-ui/core';
 import BarChartIcon from '@material-ui/icons/BarChart';
-//import CalendarTodayIcon from '@material-ui/icons/CalendarToday';
+import CalendarTodayIcon from '@material-ui/icons/CalendarToday';
 //import ChatIcon from '@material-ui/icons/ChatOutlined';
 //import CodeIcon from '@material-ui/icons/Code';
 //import DashboardIcon from '@material-ui/icons/DashboardOutlined';
@@ -62,12 +62,12 @@ export default [
             title: 'Farm Details',
             href: '/management/farms/1/summary'
           },
-          {
+           /*{
             title: 'Customers',
             href: '/management/customers'
           },
          
-          {
+         {
             title: 'Customer Details',
             href: '/management/customers/1/summary'
           },
@@ -86,7 +86,7 @@ export default [
           {
             title: 'Test',
             href: '/management/orders/1'
-          }
+          }*/
         ]
       },/*
       {
@@ -183,14 +183,13 @@ export default [
             4
           </Label>
         )
-      },
+      }, */
       {
         title: 'Calendar',
         href: '/calendar',
-        icon: CalendarTodayIcon,
-        label: () => <Label color={colors.green[500]}>New</Label>
+        icon: CalendarTodayIcon       
       },
-      */
+     
       {
         title: 'Settings',
         href: '/settings',

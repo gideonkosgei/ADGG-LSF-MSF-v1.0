@@ -500,7 +500,7 @@ const DetailsEdit = props => {
                     }}
                     //required
                     margin = 'dense'
-                    label="Sync Cost"
+                    label="AI Cost"
                     name="cost"                                   
                     onChange={handleChange}
                     type="number"

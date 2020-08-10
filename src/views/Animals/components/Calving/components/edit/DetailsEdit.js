@@ -169,9 +169,7 @@ const DetailsEdit = props => {
     (async  (endpoint,id,values,user_id) => {     
       await  postCalving(endpoint,id,values,user_id)
       .then(() => {  
-        setopenSnackbarSuccess(true); 
-        setValues({});        
-        document.forms["event"].reset();
+        setopenSnackbarSuccess(true);         
       }).catch(() => {
         setopenSnackbarError(true); 
       });

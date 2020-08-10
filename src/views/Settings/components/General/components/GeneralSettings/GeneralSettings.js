@@ -182,6 +182,9 @@ const GeneralSettings = props => {
                 required
                 value={values.name}
                 variant="outlined"
+                InputLabelProps={{
+                  shrink: true,
+                }}
               />
             </Grid>
             <Grid
@@ -197,6 +200,9 @@ const GeneralSettings = props => {
                 value={values.username}
                 variant="outlined"
                 disabled = "true"
+                InputLabelProps={{
+                  shrink: true,
+                }}
               />
             </Grid>
             <Grid
@@ -212,6 +218,9 @@ const GeneralSettings = props => {
                 value={values.email}
                 variant="outlined"
                 disabled = "true"
+                InputLabelProps={{
+                  shrink: true,
+                }}
               />
             </Grid>
             <Grid
@@ -227,6 +236,9 @@ const GeneralSettings = props => {
                 type="text"
                 value={values.phone}
                 variant="outlined"
+                InputLabelProps={{
+                  shrink: true,
+                }}
               />
             </Grid>
             <Grid
@@ -244,6 +256,9 @@ const GeneralSettings = props => {
                 SelectProps={{ native: true }}
                 value={values.timezone}
                 variant="outlined"
+                InputLabelProps={{
+                  shrink: true,
+                }}
               >
                 {timezones.map(timezone => (
                   <option
@@ -270,6 +285,9 @@ const GeneralSettings = props => {
                 SelectProps={{ native: true }}
                 value={values.state}
                 variant="outlined"
+                InputLabelProps={{
+                  shrink: true,
+                }}
               >
                 {countries.map(country => (
                   <option
@@ -297,6 +315,9 @@ const GeneralSettings = props => {
                 SelectProps={{ native: true }}
                 value={values.region}
                 variant="outlined"
+                InputLabelProps={{
+                  shrink: true,
+                }}
               >
                 {counties.map(county => (
                   <option
@@ -323,6 +344,9 @@ const GeneralSettings = props => {
                 SelectProps={{ native: true }}
                 value={values.district}
                 variant="outlined"
+                InputLabelProps={{
+                  shrink: true,
+                }}
               >
                 {sub_counties.map(sub_county => (
                   <option
@@ -349,6 +373,9 @@ const GeneralSettings = props => {
                 SelectProps={{ native: true }}
                 value={values.ward}
                 variant="outlined"
+                InputLabelProps={{
+                  shrink: true,
+                }}
               >
                 {wards.map(ward => (
                   <option
@@ -374,6 +401,9 @@ const GeneralSettings = props => {
                 SelectProps={{ native: true }}
                 value={values.village}
                 variant="outlined"
+                InputLabelProps={{
+                  shrink: true,
+                }}
               >
                 {villages.map(village => (
                   <option
@@ -399,6 +429,9 @@ const GeneralSettings = props => {
                 value={values.organization}
                 variant="outlined"
                 disabled = "true"
+                InputLabelProps={{
+                  shrink: true,
+                }}
               />
             </Grid>
             <Grid
@@ -430,6 +463,9 @@ const GeneralSettings = props => {
                 value={values.role}
                 variant="outlined"
                 disabled = "true"
+                InputLabelProps={{
+                  shrink: true,
+                }}
               />
             </Grid>
             <Grid
@@ -445,6 +481,9 @@ const GeneralSettings = props => {
                 value={values.level}
                 variant="outlined"
                 disabled = "true"
+                InputLabelProps={{
+                  shrink: true,
+                }}
               />
             </Grid>           
            

@@ -139,9 +139,7 @@ const DetailsEdit = props => {
     (async  (endpoint,id,values,user_id) => {     
       await  postInsemination(endpoint,id,values,user_id)
       .then(() => {  
-        setopenSnackbarSuccess(true); 
-        setValues({});        
-        document.forms["event"].reset();
+        setopenSnackbarSuccess(true);         
       }).catch(() => {
         setopenSnackbarError(true); 
       });
@@ -596,7 +594,7 @@ const DetailsEdit = props => {
                     value = {values.cost}
                     //required
                     margin = 'dense'
-                    label="Sync Cost"
+                    label="AI Cost"
                     name="cost"                                   
                     onChange={handleChange}
                     type="number"
