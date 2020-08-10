@@ -126,6 +126,13 @@ export const endpoint_pd = {
   method: 'GET',
   headers: headers   
 };
+//Update PD Record
+export const endpoint_pd_update = {
+  url: `${api}/events/pd/`,
+  method: 'PUT',
+  headers: headers   
+};
+
 
 export const endpoint_pd_specific = {
   url: `${api}/events/pd/`,

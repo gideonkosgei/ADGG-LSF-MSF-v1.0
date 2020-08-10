@@ -468,6 +468,50 @@ export const postPd =  function (config,animal_id,values,user_id) {
   });       
 }
 
+
+export const updatePd =  function (config,event_id,values,user_id) { 
+
+  let {cost,exam_time,service_date,pd_stage,pd_results,pd_method,body_score,field_agent_id,exam_date} = values;
+  cost = (typeof cost === 'undefined')? '0':cost.replace('','0');  
+  pd_stage = (typeof pd_stage === 'undefined')? '0':pd_stage.replace('','0');
+  field_agent_id = (typeof field_agent_id === 'undefined')? '0':field_agent_id.replace('','0');
+  body_score = (typeof body_score === 'undefined')? '0':body_score.replace('','0');
+  pd_method = (typeof pd_method === 'undefined')? '0':pd_method.replace('','0');
+  pd_results = (typeof pd_results === 'undefined')? '0':pd_results.replace('','0');
+  service_date = (typeof service_date === 'undefined')? moment(new Date()).format('YYYY-MM-DD'):service_date;  
+  exam_date = (typeof exam_date === 'undefined')? moment(new Date()).format('YYYY-MM-DD'):exam_date;  
+  exam_time = (typeof exam_time === 'undefined')? moment(new Date()).format('HH:mm:ss'):exam_time;  
+  
+  const body = {  
+    "service_date": service_date,
+    "time_examined": exam_time,
+    "pd_results" : pd_results,
+    "pd_stage": pd_stage,
+    "body_score": body_score,
+    "cost": cost,
+    "pd_method": pd_method,
+    "data_collection_date": exam_date,
+    "field_agent_id": field_agent_id,
+    "updated_by": user_id
+  };
+ 
+  const options = {
+    url:`${config.url}${event_id}`,
+    method: config.method,
+    headers: config.headers,
+    data: body  
+  }; 
+ 
+ 
+  return new Promise((resolve, reject) => {
+    axios(options)
+    .then(res => {           
+        resolve(res.data);
+    })    
+    .catch(err => reject(err));
+  });       
+}
+
 // get sync events 
 export const getSync =  function (config,id) {   
   const options = {

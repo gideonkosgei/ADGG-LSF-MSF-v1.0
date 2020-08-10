@@ -3,14 +3,14 @@ import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import {Card, CardContent, CardHeader, Grid,Divider, TextField,colors,Button,CardActions,Box,Switch ,Typography,Tooltip } from '@material-ui/core';
-import {getLookups,postPd,getPdByEventId}   from '../../../../../../utils/API';
-import {endpoint_lookup,endpoint_pd_add,endpoint_pd_specific} from '../../../../../../configs/endpoints';
+import {getLookups,updatePd,getPdByEventId}   from '../../../../../../utils/API';
+import {endpoint_lookup,endpoint_pd_update,endpoint_pd_specific} from '../../../../../../configs/endpoints';
 import authContext from '../../../../../../contexts/AuthContext';
 import {Sidebar} from '../index';
 import SuccessSnackbar from '../../../../../../components/SuccessSnackbar';
 import ErrorSnackbar from '../../../../../../components/ErrorSnackbar';
 import OpenInNewIcon from '@material-ui/icons/OpenInNew';
-import {EventHealthMetaData}  from '../../../Modal';
+import {EventPdMetaData}  from '../../../Modal';
 
 
 const useStyles = makeStyles(theme => ({
@@ -36,8 +36,7 @@ const DetailsEdit = props => {
   const [pd_stages, setPdStages] = useState([]);
   const [pd_results, setPdResults] = useState([]);
   const [readOnly, setReadOnly] = useState(true);
-  const [openMetadata, setMetadata] = useState(false); 
-  const animal_id  = localStorage.getItem('animal_id');
+  const [openMetadata, setMetadata] = useState(false);  
   const event_id  = localStorage.getItem('pd_event_id'); 
 
 
@@ -120,15 +119,13 @@ const DetailsEdit = props => {
   const handleSubmit = event => {
     event.preventDefault();
     (async  (endpoint,id,values,user_id) => {     
-      await  postPd(endpoint,id,values,user_id)
+      await  updatePd(endpoint,id,values,user_id)
       .then(() => {  
-        setopenSnackbarSuccess(true); 
-        setValues({});        
-        document.forms["event"].reset();
+        setopenSnackbarSuccess(true);         
       }).catch(() => {        
         setopenSnackbarError(true); 
       });
-    })(endpoint_pd_add,animal_id,values,user_id);    
+    })(endpoint_pd_update,event_id,values,user_id);    
   };
   
   
@@ -488,8 +485,8 @@ const DetailsEdit = props => {
           onClose={handleSnackbarErrorClose}
           open={openSnackbarError}
         />
-        <EventHealthMetaData
-                healthDetails={values}
+        <EventPdMetaData
+                pdDetails={values}
                 onClose={handleMetadataClose}
                 open={openMetadata}
         /> 
