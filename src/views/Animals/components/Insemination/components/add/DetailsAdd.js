@@ -323,22 +323,9 @@ const DetailsEdit = props => {
                       margin = 'dense'
                       label="Other Semen Source"
                       name="other_Semen_source"
-                      onChange={handleChange}                                                
-                      select
-                      // eslint-disable-next-line react/jsx-sort-props
-                      SelectProps={{ native: true }}                    
+                      onChange={handleChange}
                       variant="outlined"
-                    >
-                      <option value=""></option>
-                      {semen_sources.map(semen_source => (
-                            <option                    
-                              value={semen_source.id}
-                            >
-                              {semen_source.value}
-                            </option>
-                          ))
-                      }           
-                    </TextField>
+                    />                      
                   </Grid>
                   
                   <Grid
@@ -386,24 +373,9 @@ const DetailsEdit = props => {
                     margin = 'dense'
                     label="Other Bull Breed"
                     name="other_breed_of_bull"
-                    onChange={handleChange}
-                    //required
-                    default = ""                              
-                    select
-                    // eslint-disable-next-line react/jsx-sort-props
-                    SelectProps={{ native: true }}                    
+                    onChange={handleChange}                                        
                     variant="outlined"
-                  >
-                    <option value=""></option>
-                    {bull_breeds.map(bull_breed => (
-                          <option                    
-                            value={bull_breed.id}
-                          >
-                            {bull_breed.value}
-                          </option>
-                        ))
-                    }           
-                  </TextField>
+                  />                    
                   </Grid> 
                   <Grid
                     item
