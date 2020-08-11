@@ -149,6 +149,8 @@ const DetailsEdit = props => {
     return null;
   }
 
+  console.log(values);
+
 
     const handleChange = event => {
     event.persist();
@@ -857,7 +859,8 @@ const DetailsEdit = props => {
                 margin = 'dense'
                 label="Deformaties"
                 name="deformaties"
-                onChange={handleChange}               
+                onChange={handleChange}  
+                value = {values.deformaties}
                 select
                 // eslint-disable-next-line react/jsx-sort-props
                 SelectProps={{ native: true }}
@@ -866,7 +869,7 @@ const DetailsEdit = props => {
                   disabled: Boolean(readOnly)                
                 }}
 
-                value = {values.deformities} 
+                 
                 variant="outlined"
               > 
                 <option value=""></option> 
