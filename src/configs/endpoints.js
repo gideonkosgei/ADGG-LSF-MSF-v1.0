@@ -197,6 +197,13 @@ export const endpoint_insemination_add = {
   headers: headers   
 };
 
+//Update Insemination Record
+export const endpoint_insemination_update = {
+  url: `${api}/events/insemination/`,
+  method: 'PUT',
+  headers: headers   
+};
+
 //get exit/disposal data for a specific animal
 export const endpoint_exit = {
   url: `${api}/events/exit/animal/`,
@@ -243,6 +250,13 @@ export const endpoint_calving_specific = {
 export const endpoint_calving_add = {
   url: `${api}/events/calving`,
   method: 'POST',
+  headers: headers   
+};
+
+//Update Calving Record
+export const endpoint_calving_update = {
+  url: `${api}/events/calving/`,
+  method: 'PUT',
   headers: headers   
 };
 

@@ -3,14 +3,14 @@ import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import {Card,CardContent,CardHeader,Grid,Divider,TextField,colors,Button,CardActions,Box,Switch,Typography,Tooltip} from '@material-ui/core';
-import {getLookups,postCalving,getCalvingByEventId}   from '../../../../../../utils/API';
-import {endpoint_lookup,endpoint_calving_add,endpoint_calving_specific} from '../../../../../../configs/endpoints';
+import {getLookups,updateCalving,getCalvingByEventId}   from '../../../../../../utils/API';
+import {endpoint_lookup,endpoint_calving_update,endpoint_calving_specific} from '../../../../../../configs/endpoints';
 import authContext from '../../../../../../contexts/AuthContext';
 import {Sidebar} from '../index';
 import SuccessSnackbar from '../../../../../../components/SuccessSnackbar';
 import ErrorSnackbar from '../../../../../../components/ErrorSnackbar';
 import OpenInNewIcon from '@material-ui/icons/OpenInNew';
-import {EventHealthMetaData}  from '../../../Modal';
+import {EventCalvingMetaData}  from '../../../Modal';
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -48,7 +48,7 @@ const DetailsEdit = props => {
   const [readOnly, setReadOnly] = useState(true);
   const [openMetadata, setMetadata] = useState(false);   
   const event_id  = localStorage.getItem('calving_event_id'); 
-  const animal_id  = localStorage.getItem('animal_id');
+ 
 
   useEffect(() => {   
     let mounted_lookup = true;
@@ -167,13 +167,13 @@ const DetailsEdit = props => {
   const handleSubmit = event => {
     event.preventDefault();
     (async  (endpoint,id,values,user_id) => {     
-      await  postCalving(endpoint,id,values,user_id)
+      await  updateCalving(endpoint,id,values,user_id)
       .then(() => {  
         setopenSnackbarSuccess(true);         
       }).catch(() => {
         setopenSnackbarError(true); 
       });
-    })(endpoint_calving_add,animal_id,values,user_id);    
+    })(endpoint_calving_update,event_id,values,user_id);    
   };
   
   
@@ -902,8 +902,8 @@ const DetailsEdit = props => {
           onClose={handleSnackbarErrorClose}
           open={openSnackbarError}
         />
-         <EventHealthMetaData
-                healthDetails={values}
+         <EventCalvingMetaData
+                calvingDetails={values}
                 onClose={handleMetadataClose}
                 open={openMetadata}
         /> 

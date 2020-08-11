@@ -754,6 +754,64 @@ export const postInsemination =  function (config,animal_id,values,user_id) {
   });       
 };
 
+
+//update insemination event record
+export const updateInsemination =  function (config,event_id,values,user_id) { 
+
+  let {ai_type,body_condition_score,breed_composition,breed_of_bull,cost,cow_weight,field_agent_id,origin_country_bull,other_Semen_source,other_breed_of_bull,semen_batch,service_date,source_of_semen,straw_id,straw_semen_type} = values;
+    
+  ai_type = (typeof ai_type === 'undefined')? '0':ai_type.replace('','0');  
+  body_condition_score = (typeof body_condition_score === 'undefined')? '0':body_condition_score.replace('','0');
+  field_agent_id = (typeof field_agent_id === 'undefined')? '0':field_agent_id.replace('','0');
+  straw_semen_type = (typeof straw_semen_type === 'undefined')? '0':straw_semen_type.replace('','0');
+  straw_id = (typeof straw_id === 'undefined')? '':straw_id;
+  source_of_semen = (typeof source_of_semen === 'undefined')? '0':source_of_semen.replace('','0');
+  semen_batch = (typeof semen_batch === 'undefined')? '':semen_batch;
+  other_breed_of_bull = (typeof other_breed_of_bull === 'undefined')? '0':other_breed_of_bull.replace('','0');
+  other_Semen_source = (typeof other_Semen_source === 'undefined')? '0':other_Semen_source.replace('','0');
+  origin_country_bull = (typeof origin_country_bull === 'undefined')? '':origin_country_bull;
+  cow_weight = (typeof cow_weight === 'undefined')? '0':cow_weight.replace('','0');
+  breed_composition = (typeof breed_composition === 'undefined')? '0':breed_composition.replace('','0');
+  cost = (typeof cost === 'undefined')? '0':cost.replace('','0');
+  breed_of_bull = (typeof breed_of_bull === 'undefined')? '0':breed_of_bull.replace('','0');
+  service_date = (typeof service_date === 'undefined')? moment(new Date()).format('YYYY-MM-DD'):service_date; 
+  
+
+  const body = {      
+      "ai_date": service_date,
+      "straw_semen_type": straw_semen_type,
+      "type_of_ai" : ai_type,
+      "straw_id": straw_id,
+      "country_of_origin": origin_country_bull,
+      "body_condition_score": body_condition_score,
+      "breed_composition_bull": breed_composition,
+      "ai_cost": cost,
+      "cow_weight": cow_weight,
+      "semen_batch": semen_batch,
+      "semen_source": source_of_semen,
+      "semen_source_other": other_Semen_source,
+      "breed_of_bull": breed_of_bull,
+      "breed_of_bull_other": other_breed_of_bull, 
+      "field_agent_id": field_agent_id,
+      "updated_by": user_id
+  };
+ 
+  const options = {
+    url:`${config.url}${event_id}`,
+    method: config.method,
+    headers: config.headers,
+    data: body  
+  }; 
+
+  return new Promise((resolve, reject) => {
+    axios(options)
+    .then(res => {           
+        resolve(res.data);
+    })    
+    .catch(err => reject(err));
+  });       
+};
+
 //exit & disposal event
 
 // get Exit events 
@@ -996,6 +1054,81 @@ export const postCalving =  function (config,animal_id,values,user_id) {
  
   const options = {
     url:`${config.url}`,
+    method: config.method,
+    headers: config.headers,
+    data: body  
+  }; 
+
+  return new Promise((resolve, reject) => {
+    axios(options)
+    .then(res => {           
+        resolve(res.data);
+    })    
+    .catch(err => reject(err));
+  });       
+};
+
+
+export const updateCalving =  function (config,event_id,values,user_id) {    
+  let { 
+     Calf_weight,calf_body_condition_score,calf_color,calf_deformities,
+     calf_heart_girth,calf_name,calf_tag_id,calving_birth_type,
+     calving_status,calving_type_other,calving_date,calving_method,
+     ease_of_calving,ease_of_calving_other,field_agent_id,lactation_number,
+     other_calf_deformities,use_of_calf,use_of_calf_other,calf_gender,types_calving
+    } = values;
+
+    
+    Calf_weight = (typeof Calf_weight === 'undefined')? '0':Calf_weight.replace('','0');  
+    use_of_calf_other = (typeof use_of_calf_other === 'undefined')? '0':use_of_calf_other;
+    field_agent_id = (typeof field_agent_id === 'undefined')? '0':field_agent_id.replace('','0');
+    use_of_calf = (typeof use_of_calf === 'undefined')? '':use_of_calf.replace('','0');
+    other_calf_deformities = (typeof other_calf_deformities === 'undefined')? '':other_calf_deformities;
+    lactation_number = (typeof lactation_number === 'undefined')? '':lactation_number;
+    ease_of_calving_other = (typeof ease_of_calving_other === 'undefined')? '':ease_of_calving_other;
+    ease_of_calving = (typeof ease_of_calving === 'undefined')? '':ease_of_calving.replace('','0');;
+    calving_type_other = (typeof calving_type_other === 'undefined')? '0':calving_type_other;
+    types_calving = (typeof types_calving === 'undefined')? '0':types_calving.replace('','0');
+    calving_status = (typeof calving_status === 'undefined')? '0':calving_status.replace('','0');
+    calving_method = (typeof calving_method === 'undefined')? '0':calving_method.replace('','0');
+    calving_date = (typeof calving_date === 'undefined')? moment(new Date()).format('YYYY-MM-DD'):calving_date; 
+    calving_birth_type = (typeof calving_birth_type === 'undefined')? '0':calving_birth_type.replace('','0');
+    calf_tag_id = (typeof calf_tag_id === 'undefined')? '0':calf_tag_id;
+    calf_gender = (typeof calf_gender === 'undefined')? '0':calf_gender.replace('','0');
+    calf_name = (typeof calf_name === 'undefined')? '0':calf_name;
+    calf_body_condition_score = (typeof calf_body_condition_score === 'undefined')? '0':calf_body_condition_score.replace('','0');
+    calf_color = (typeof calf_color === 'undefined')? '0':calf_color.replace('','0');
+    calf_deformities = (typeof calf_deformities === 'undefined')? '0':calf_deformities.replace('','0');
+    calf_heart_girth = (typeof calf_heart_girth === 'undefined')? '0':calf_heart_girth.replace('','0');
+  
+
+  const body = {    
+    "calving_date": calving_date,
+    "birth_type": calving_birth_type,
+    "body_condition_score" : calf_body_condition_score,
+    "calf_color": calf_color,
+    "calf_deformities": calf_deformities,
+    "other_calf_deformities": other_calf_deformities,
+    "heart_girth": calf_heart_girth,
+    "calf_name": calf_name,
+    "calf_sex":calf_gender,
+    "calf_weight": Calf_weight,
+    "ease_of_calving_other": ease_of_calving_other,
+    "calving_method": calving_method,
+    "calving_type_other":calving_type_other,
+    "calving_type":types_calving,
+    "ease_of_calving":ease_of_calving,
+    "calving_status":calving_status,
+    "use_of_calf":use_of_calf,
+    "use_of_calf_other":use_of_calf_other,
+    "calf_tag_id":calf_tag_id,
+    "lactation_number":lactation_number,
+    "field_agent_id": field_agent_id,
+    "updated_by": user_id
+  };
+ 
+  const options = {
+    url:`${config.url}${event_id}`,
     method: config.method,
     headers: config.headers,
     data: body  

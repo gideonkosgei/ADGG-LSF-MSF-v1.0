@@ -3,14 +3,14 @@ import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import {Card, CardContent, CardHeader, Grid,Divider, TextField,colors,Button,CardActions,Box,Switch ,Typography,Tooltip } from '@material-ui/core';
-import {getLookups,postInsemination,getInseminationEventById}   from '../../../../../../utils/API';
-import {endpoint_lookup,endpoint_insemination_add,endpoint_insemination_specific} from '../../../../../../configs/endpoints';
+import {getLookups,updateInsemination,getInseminationEventById}   from '../../../../../../utils/API';
+import {endpoint_lookup,endpoint_insemination_update,endpoint_insemination_specific} from '../../../../../../configs/endpoints';
 import authContext from '../../../../../../contexts/AuthContext';
 import {Sidebar} from '../index';
 import SuccessSnackbar from '../../../../../../components/SuccessSnackbar';
 import ErrorSnackbar from '../../../../../../components/ErrorSnackbar';
 import OpenInNewIcon from '@material-ui/icons/OpenInNew';
-import {EventHealthMetaData}  from '../../../Modal';
+import {EventInseminationMetaData}  from '../../../Modal';
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -40,7 +40,7 @@ const DetailsEdit = props => {
   const [readOnly, setReadOnly] = useState(true);
   const [openMetadata, setMetadata] = useState(false);   
   const event_id  = localStorage.getItem('insemination_event_id');   
-  const animal_id  = localStorage.getItem('animal_id');
+ 
 
   useEffect(() => {   
     let mounted_lookup = true;
@@ -137,13 +137,13 @@ const DetailsEdit = props => {
   const handleSubmit = event => {
     event.preventDefault();
     (async  (endpoint,id,values,user_id) => {     
-      await  postInsemination(endpoint,id,values,user_id)
+      await  updateInsemination(endpoint,id,values,user_id)
       .then(() => {  
         setopenSnackbarSuccess(true);         
       }).catch(() => {
         setopenSnackbarError(true); 
       });
-    })(endpoint_insemination_add,animal_id,values,user_id);    
+    })(endpoint_insemination_update,event_id,values,user_id);    
   };
   
   
@@ -695,8 +695,8 @@ const DetailsEdit = props => {
           onClose={handleSnackbarErrorClose}
           open={openSnackbarError}
         />
-        <EventHealthMetaData
-                healthDetails={values}
+        <EventInseminationMetaData
+                inseminationDetails={values}
                 onClose={handleMetadataClose}
                 open={openMetadata}
         /> 
