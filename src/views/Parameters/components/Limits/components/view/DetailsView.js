@@ -101,7 +101,7 @@ const DetailsView = props => {
       {...rest}
       className={clsx(classes.root, className)}
     >
-        <CardHeader title="Input Limiting Parameters" />
+        <CardHeader title="Limiting Parameters" />
         <Divider />
         <CardContent> 
           <Grid container spacing={1} justify="center">            

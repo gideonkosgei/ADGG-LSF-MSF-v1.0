@@ -27,7 +27,7 @@ const Sidebar = props => {
         </Tooltip>
         <Tooltip  title="view">              
           <IconButton aria-label="view" size="small" >
-            <Link component = {RouterLink} to = {`/management/calving/view`}>
+            <Link component = {RouterLink} to = {`/settings/parameters/limits`}>
               <VisibilityIcon /> 
             </Link>
           </IconButton> 
@@ -41,7 +41,7 @@ const Sidebar = props => {
         </Tooltip>             
         <Tooltip  title="print">              
           <IconButton aria-label="print" size="small" >
-            <Link component = {RouterLink} to="/management/milking /">
+            <Link component = {RouterLink} to="#">
               <PrintIcon /> 
             </Link>
           </IconButton> 
