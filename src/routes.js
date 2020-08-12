@@ -408,14 +408,10 @@ const routes = [
         component: lazy(() => import('views/Parameters/components/Limits/components/add'))        
       },
       {
-        path: '/settings/parameters/limits/edit',
+        path: '/settings/parameters/limits/edit/:id',
         exact: true,
         component: lazy(() => import('views/Parameters/components/Limits/components/edit'))        
       },
-
-
-
-
       {
         path: '/social-feed',
         exact: true,

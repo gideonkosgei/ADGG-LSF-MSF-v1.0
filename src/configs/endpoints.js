@@ -333,6 +333,12 @@ export const endpoint_animal_update = {
 // parameterization
 // Get limit parameter all
 export const endpoint_parameter_limit_all = {
+  url: `${api}/parameters/limit`,
+  method: 'GET',
+  headers: headers   
+};
+
+export const endpoint_parameter_limit_one = {
   url: `${api}/parameters/limit/`,
   method: 'GET',
   headers: headers   
@@ -341,6 +347,12 @@ export const endpoint_parameter_limit_all = {
 export const endpoint_parameter_limit_add = {
   url: `${api}/parameters/limit`,
   method: 'POST',
+  headers: headers   
+};
+
+export const endpoint_parameter_update = {
+  url: `${api}/parameters/limit/`,
+  method: 'PUT',
   headers: headers   
 };
 

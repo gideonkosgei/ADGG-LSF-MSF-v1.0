@@ -1654,7 +1654,8 @@ export const getParametersLimitOne =   function (config,id) {
     url:`${config.url}${id}`,
     method: config.method,
     headers: config.headers  
-  } 
+  }; 
+
   return new Promise((resolve, reject) => {
     axios(options)
     .then(res => {             
@@ -1686,6 +1687,42 @@ export const postLimitingParameter =  function (config,values,user_id) {
 
 const options = {
   url:`${config.url}`, 
+  method: config.method,
+  headers: config.headers,
+  data: body  
+};
+
+return new Promise((resolve, reject) => {
+  axios(options)
+  .then(res => {           
+      resolve(res.data);
+  })
+  .catch(err => reject(err));
+});       
+}
+
+
+// update  limiting parameter
+export const updateLimitingParameter =  function (config,values,user_id,limit_id) {      
+ 
+  let {category ,description,is_active,max_value,min_value} = values;
+  category = (typeof category === 'undefined')? '': category;
+  description =  (typeof description === 'undefined')?'':description;
+  is_active =  (typeof is_active === 'undefined')? 0:is_active; 
+  max_value =  (typeof max_value === 'undefined')? null:parseFloat(max_value); 
+  min_value =  (typeof min_value === 'undefined')? null:parseFloat(min_value); 
+ 
+  const body = { 
+    "category": category,      
+    "description": description,
+    "min_value": min_value,
+    "max_value": max_value ,
+    "is_active": is_active ,
+    "updated_by": user_id 
+  };
+
+const options = {
+  url:`${config.url}${limit_id}`, 
   method: config.method,
   headers: config.headers,
   data: body  
