@@ -396,6 +396,26 @@ const routes = [
         exact: true,
         component: lazy(() => import('views/Settings'))
       },
+
+      {
+        path: '/settings/parameters/limits',
+        exact: true,
+        component: lazy(() => import('views/Parameters/components/Limits/components/view'))        
+      }, 
+      {
+        path: '/settings/parameters/limits/add',
+        exact: true,
+        component: lazy(() => import('views/Parameters/components/Limits/components/add'))        
+      },
+      {
+        path: '/settings/parameters/limits/edit',
+        exact: true,
+        component: lazy(() => import('views/Parameters/components/Limits/components/edit'))        
+      },
+
+
+
+
       {
         path: '/social-feed',
         exact: true,

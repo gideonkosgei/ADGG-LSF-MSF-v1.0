@@ -210,6 +210,10 @@ export default [
           {
             title: 'Security',
             href: '/settings/security'
+          },
+          {
+            title: 'Limits',
+            href: '/settings/parameters/limits'
           }
         ]
       },
