@@ -171,19 +171,22 @@ const DetailsEdit = props => {
                   <TextField
                     fullWidth
                     InputLabelProps={{
-                      shrink: true,
-                    }}
+                      shrink: true                     
+                    }}                    
 
                     inputProps={{
                       readOnly: Boolean(readOnly),
-                      disabled: Boolean(readOnly)                
+                      disabled: Boolean(readOnly),
+                      min: "0",
+                      max: "10",
+                      step: "1"               
                     }}
                     //required
                     margin = 'dense'
                     label="Body Length (cm)"
                     name="body_length"                                   
                     onChange={handleChange}
-                    type="number"
+                    type="number"                    
                     variant="outlined"  
                     value = {values.body_length}                                                
                   />

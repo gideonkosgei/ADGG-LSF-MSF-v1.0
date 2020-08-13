@@ -131,8 +131,8 @@ const DetailsEdit = props => {
                       shrink: true,
                     }}
                     inputProps={{
-                      readOnly: Boolean(readOnly),
-                      disabled: Boolean(readOnly)                
+                      readOnly: true,
+                      disabled: true                
                     }}
                     margin = 'dense'
                     label="Category"
@@ -181,9 +181,10 @@ const DetailsEdit = props => {
                     }}
                     inputProps={{
                       readOnly: Boolean(readOnly),
-                      disabled: Boolean(readOnly)                
+                      disabled: Boolean(readOnly),
+                      step:"0.0001"                
                     }}
-                    type = 'number'
+                    type = 'number'                    
                     margin = 'dense'
                     label="Minimum Value"
                     name="min_value"                
@@ -206,9 +207,10 @@ const DetailsEdit = props => {
                     }}
                     inputProps={{
                       readOnly: Boolean(readOnly),
-                      disabled: Boolean(readOnly)                
+                      disabled: Boolean(readOnly),
+                      step:"0.0001"                 
                     }}
-                    type = 'number'
+                    type = 'number'                    
                     margin = 'dense'
                     label="Maximum Value"
                     name="max_value"

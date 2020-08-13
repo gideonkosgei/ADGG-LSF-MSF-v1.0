@@ -140,7 +140,10 @@ const DetailsEdit = props => {
                     InputLabelProps={{
                       shrink: true,
                     }}
-                    type = 'number'
+                    inputProps={{                      
+                      step: "0.0001"               
+                    }}
+                    type = 'number'                   
                     margin = 'dense'
                     label="Minimum Value"
                     name="min_value"                
@@ -160,7 +163,10 @@ const DetailsEdit = props => {
                     InputLabelProps={{
                       shrink: true,
                     }}
-                    type = 'number'
+                    inputProps={{                      
+                      step: "0.0001"               
+                    }}
+                    type = 'number'                  
                     margin = 'dense'
                     label="Maximum Value"
                     name="max_value"
