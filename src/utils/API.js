@@ -345,7 +345,6 @@ export const updateWeight =  function (config,event_id,values,user_id) {
     "field_agent_id": field_agent_id,
     "updated_by": user_id
   };
-
   const options = {
     url:`${config.url}${event_id}`,
     method: config.method,

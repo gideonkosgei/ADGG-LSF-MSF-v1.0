@@ -3,8 +3,8 @@ import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import {Card, CardContent, CardHeader, Grid,Divider,Tooltip, TextField,colors,Button,CardActions,Box,Switch ,Typography } from '@material-ui/core';
-import {getLookups,updateWeight,getWeightByEventId}   from '../../../../../../utils/API';
-import {endpoint_lookup,endpoint_weight_update,endpoint_weight_specific} from '../../../../../../configs/endpoints';
+import {getLookups,updateWeight,getWeightByEventId,getParametersLimitAll}   from '../../../../../../utils/API';
+import {endpoint_lookup,endpoint_weight_update,endpoint_weight_specific,endpoint_parameter_limit_all} from '../../../../../../configs/endpoints';
 import authContext from '../../../../../../contexts/AuthContext';
 import {Sidebar} from '../index';
 import SuccessSnackbar from '../../../../../../components/SuccessSnackbar';
@@ -32,12 +32,16 @@ const DetailsEdit = props => {
   const [values, setValues] = useState({ });  
   const [body_scores, setBodyScores] = useState([]);  
   const [readOnly, setReadOnly] = useState(true);
-  const [openMetadata, setMetadata] = useState(false);   
+  const [openMetadata, setMetadata] = useState(false); 
+  const [limitParameters, setBodyLimitParameters] = useState([]);   
   const event_id  = localStorage.getItem('event_id');
+
+
 
   useEffect(() => {   
     let mounted_lookup = true;
     let mounted_weight = true;
+    let mounted_limit_parameters = true; 
 
     (async  (endpoint,id) => {     
         await  getLookups(endpoint,id)
@@ -66,15 +70,55 @@ const DetailsEdit = props => {
         });
       })(endpoint_weight_specific,event_id);
 
+      // get limit parameters for input validation
+      (async  (endpoint) => {             
+        await  getParametersLimitAll(endpoint)
+        .then(response => {       
+          if (mounted_limit_parameters) { 
+            const data = response.payload;                       
+            setBodyLimitParameters(data);                         
+          }
+        });
+      })(endpoint_parameter_limit_all);
+
     return () => {
       mounted_lookup = false;  
-      mounted_weight = false;   
+      mounted_weight = false;  
+      mounted_limit_parameters = false; 
     };
   }, [event_id]); 
 
-  if (!body_scores || !values) {
+  if (!body_scores || !values || !limitParameters) {
     return null;
   }
+  
+  // validate weight
+  let mature_weight_limits = limitParameters.filter(obj=>obj.category==='mature_weight_limits');
+  let mature_weight_limits_status = false;
+  let mature_weight_limits_min_value = 0;
+  let mature_weight_limits_max_value = 0;
+  if(mature_weight_limits.length > 0){
+    mature_weight_limits_status = mature_weight_limits[0].is_active_id;  
+    mature_weight_limits_min_value = mature_weight_limits[0].min_value;
+    mature_weight_limits_max_value = mature_weight_limits[0].max_value;    
+  }
+
+  //validate heart Girth
+  let mature_heart_girth_limits = limitParameters.filter(obj=>obj.category==='mature_heart_girth_limits');
+  let mature_heart_girth_limits_status = false;
+  let mature_heart_girth_limits_min_value = 0;
+  let mature_heart_girth_limits_max_value = 0;
+  if(mature_heart_girth_limits.length > 0){
+    mature_heart_girth_limits_status = mature_heart_girth_limits[0].is_active_id;  
+    mature_heart_girth_limits_min_value = mature_heart_girth_limits[0].min_value;
+    mature_heart_girth_limits_max_value = mature_heart_girth_limits[0].max_value;    
+  }
+
+
+    
+  
+
+
 
     const handleChange = event => {
     event.persist();
@@ -176,11 +220,12 @@ const DetailsEdit = props => {
 
                     inputProps={{
                       readOnly: Boolean(readOnly),
-                      disabled: Boolean(readOnly),
-                      min: "0",
-                      max: "10",
-                      step: "1"               
-                    }}
+                      disabled: Boolean(readOnly),                      
+                      min: 0,
+                      max: 1000,
+                      step: "any"               
+                    }}                   
+
                     //required
                     margin = 'dense'
                     label="Body Length (cm)"
@@ -204,7 +249,10 @@ const DetailsEdit = props => {
 
                     inputProps={{
                       readOnly: Boolean(readOnly),
-                      disabled: Boolean(readOnly)                
+                      disabled: Boolean(readOnly),
+                      min: (mature_heart_girth_limits_status)? mature_heart_girth_limits_min_value : "any",
+                      max: (mature_heart_girth_limits_status)? mature_heart_girth_limits_max_value : "any",
+                      step: "any"
                     }}
                     //required
                     margin = 'dense'
@@ -229,7 +277,10 @@ const DetailsEdit = props => {
    
                        inputProps={{
                          readOnly: Boolean(readOnly),
-                         disabled: Boolean(readOnly)                
+                         disabled: Boolean(readOnly),
+                         min: (mature_weight_limits_status)? mature_weight_limits_min_value : "any",
+                         max: (mature_weight_limits_status)? mature_weight_limits_max_value : "any",
+                         step: "any"               
                        }}
                        //required
                        margin = 'dense'
