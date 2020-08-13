@@ -182,7 +182,7 @@ const DetailsEdit = props => {
                     inputProps={{
                       readOnly: Boolean(readOnly),
                       disabled: Boolean(readOnly),
-                      step:"0.0001"                
+                      step:"any"                
                     }}
                     type = 'number'                    
                     margin = 'dense'
@@ -208,7 +208,7 @@ const DetailsEdit = props => {
                     inputProps={{
                       readOnly: Boolean(readOnly),
                       disabled: Boolean(readOnly),
-                      step:"0.0001"                 
+                      step:"any"                 
                     }}
                     type = 'number'                    
                     margin = 'dense'

@@ -141,7 +141,7 @@ const DetailsEdit = props => {
                       shrink: true,
                     }}
                     inputProps={{                      
-                      step: "0.0001"               
+                      step: "any"               
                     }}
                     type = 'number'                   
                     margin = 'dense'
@@ -164,7 +164,7 @@ const DetailsEdit = props => {
                       shrink: true,
                     }}
                     inputProps={{                      
-                      step: "0.0001"               
+                      step: "any"               
                     }}
                     type = 'number'                  
                     margin = 'dense'
