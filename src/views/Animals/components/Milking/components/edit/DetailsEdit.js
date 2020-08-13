@@ -3,8 +3,8 @@ import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import {Card, CardContent, CardHeader, Grid,Divider, TextField,colors,Button,CardActions,Box,Switch ,Typography,Tooltip } from '@material-ui/core';
-import {getLookups,updateMilking,getMilkingByEventId}   from '../../../../../../utils/API';
-import {endpoint_lookup,endpoint_milking_update,endpoint_milking_specific} from '../../../../../../configs/endpoints';
+import {getLookups,updateMilking,getMilkingByEventId,getParametersLimitAll}   from '../../../../../../utils/API';
+import {endpoint_lookup,endpoint_milking_update,endpoint_milking_specific,endpoint_parameter_limit_all} from '../../../../../../configs/endpoints';
 import authContext from '../../../../../../contexts/AuthContext';
 import {Sidebar} from '../index';
 import SuccessSnackbar from '../../../../../../components/SuccessSnackbar';
@@ -33,12 +33,14 @@ const DetailsEdit = props => {
   const [sample_types, setSampleTypes] = useState([]);  
   const [readOnly, setReadOnly] = useState(true);
   const [openMetadata, setMetadata] = useState(false);   
+  const [limitParameters, setBodyLimitParameters] = useState([]);
   const event_id  = localStorage.getItem('milking_event_id');  
  
 
   useEffect(() => {   
     let mounted_lookup = true;
     let mounted_milking = true;
+    let mounted_limit_parameters = true;
     
     (async  (endpoint,id) => {     
         await  getLookups(endpoint,id)
@@ -66,17 +68,97 @@ const DetailsEdit = props => {
           }
         });
       })(endpoint_milking_specific,event_id);
+
+      // get limit parameters for input validation
+      (async  (endpoint) => {             
+        await  getParametersLimitAll(endpoint)
+        .then(response => {       
+          if (mounted_limit_parameters) { 
+            const data = response.payload;                       
+            setBodyLimitParameters(data);                         
+          }
+        });
+      })(endpoint_parameter_limit_all);
       
     return () => {
       mounted_lookup = false; 
-      mounted_milking = false;   
+      mounted_milking = false; 
+      mounted_limit_parameters = false;   
     };
   }, [event_id]);  
     
     
-  if (!sample_types) {
+  if (!sample_types || !limitParameters) {
     return null;
   }
+
+   // validate milk amount
+   let milk_amount_limits = limitParameters.filter(obj=>obj.category==='milk_amount_limits');
+   let milk_amount_limits_status = false;
+   let milk_amount_limits_min_value = 0;
+   let milk_amount_limits_max_value = 0;
+   if(milk_amount_limits.length > 0){
+     milk_amount_limits_status = milk_amount_limits[0].is_active_id;  
+     milk_amount_limits_min_value = milk_amount_limits[0].min_value;
+     milk_amount_limits_max_value = milk_amount_limits[0].max_value;    
+   }
+
+  
+
+   // validate milk lactose
+   let milk_lactose_limits = limitParameters.filter(obj=>obj.category==='milk_lactose_limits');
+   let milk_lactose_limits_status = false;
+   let milk_lactose_limits_min_value = 0;
+   let milk_lactose_limits_max_value = 0;
+   if(milk_lactose_limits.length > 0){
+     milk_lactose_limits_status = milk_lactose_limits[0].is_active_id;  
+     milk_lactose_limits_min_value = milk_lactose_limits[0].min_value;
+     milk_lactose_limits_max_value = milk_lactose_limits[0].max_value;    
+   }
+
+   // validate milk fat
+   let milk_fat_limits = limitParameters.filter(obj=>obj.category==='milk_fat_limits');
+   let milk_fat_limits_status = false;
+   let milk_fat_limits_min_value = 0;
+   let milk_fat_limits_max_value = 0;
+   if(milk_fat_limits.length > 0){
+     milk_fat_limits_status = milk_fat_limits[0].is_active_id;  
+     milk_fat_limits_min_value = milk_fat_limits[0].min_value;
+     milk_fat_limits_max_value = milk_fat_limits[0].max_value;    
+   }
+
+    // validate milk protein
+    let milk_protein_limits = limitParameters.filter(obj=>obj.category==='milk_protein_limits');
+    let milk_protein_limits_status = false;
+    let milk_protein_limits_min_value = 0;
+    let milk_protein_limits_max_value = 0;
+    if(milk_protein_limits.length > 0){
+      milk_protein_limits_status = milk_protein_limits[0].is_active_id;  
+      milk_protein_limits_min_value = milk_protein_limits[0].min_value;
+      milk_protein_limits_max_value = milk_protein_limits[0].max_value;    
+    }
+
+    // validate milk urea
+    let milk_urea_limits = limitParameters.filter(obj=>obj.category==='milk_urea_limits');
+    let milk_urea_limits_status = false;
+    let milk_urea_limits_min_value = 0;
+    let milk_urea_limits_max_value = 0;
+    if(milk_urea_limits.length > 0){
+      milk_urea_limits_status = milk_urea_limits[0].is_active_id;  
+      milk_urea_limits_min_value = milk_urea_limits[0].min_value;
+      milk_urea_limits_max_value = milk_urea_limits[0].max_value;    
+    }
+
+    // validate somatic cell count
+    let milk_somatic_cell_count_limits = limitParameters.filter(obj=>obj.category==='milk_somatic_cell_count_limits');
+    let milk_somatic_cell_count_limits_status = false;
+    let milk_somatic_cell_count_limits_min_value = 0;
+    let milk_somatic_cell_count_limits_max_value = 0;
+    if(milk_somatic_cell_count_limits.length > 0){
+      milk_somatic_cell_count_limits_status = milk_somatic_cell_count_limits[0].is_active_id;  
+      milk_somatic_cell_count_limits_min_value = milk_somatic_cell_count_limits[0].min_value;
+      milk_somatic_cell_count_limits_max_value = milk_somatic_cell_count_limits[0].max_value;    
+    }
 
     const handleChange = event => {
     event.persist();
@@ -281,7 +363,10 @@ const DetailsEdit = props => {
                     }}
                     inputProps={{
                       readOnly: Boolean(readOnly),
-                      disabled: Boolean(readOnly)                
+                      disabled: Boolean(readOnly),
+                      min: (milk_amount_limits_status)? milk_amount_limits_min_value : "any",
+                      max: (milk_amount_limits_status)? milk_amount_limits_max_value : "any",
+                      step: "any"               
                     }}
                     margin = 'dense'
                     label="Milk AM (ltrs)"
@@ -307,7 +392,10 @@ const DetailsEdit = props => {
                     }}
                     inputProps={{
                       readOnly: Boolean(readOnly),
-                      disabled: Boolean(readOnly)                
+                      disabled: Boolean(readOnly),
+                      min: (milk_amount_limits_status)? milk_amount_limits_min_value : "any",
+                      max: (milk_amount_limits_status)? milk_amount_limits_max_value : "any",
+                      step: "any"               
                     }}
                     margin = 'dense'
                     label="Milk mid-day (ltrs)"
@@ -333,7 +421,10 @@ const DetailsEdit = props => {
                     }}
                     inputProps={{
                       readOnly: Boolean(readOnly),
-                      disabled: Boolean(readOnly)                
+                      disabled: Boolean(readOnly),
+                      min: (milk_amount_limits_status)? milk_amount_limits_min_value : "any",
+                      max: (milk_amount_limits_status)? milk_amount_limits_max_value : "any",
+                      step: "any"             
                     }}
                     margin = 'dense'
                     label="Milk PM (ltrs)"
@@ -473,10 +564,13 @@ const DetailsEdit = props => {
                     }}
                     inputProps={{
                       readOnly: Boolean(readOnly),
-                      disabled: Boolean(readOnly)                
+                      disabled: Boolean(readOnly),
+                      min: (milk_fat_limits_status)? milk_fat_limits_min_value : "any",
+                      max: (milk_fat_limits_status)? milk_fat_limits_max_value : "any",
+                      step: "any"                 
                     }}
                     margin = 'dense'
-                    label="Milk Butter Fat"
+                    label="Milk Butter Fat(%)"
                     name="milk_butter_fat"                
                     onChange={handleChange}
                     variant="outlined" 
@@ -500,10 +594,13 @@ const DetailsEdit = props => {
                     }}
                     inputProps={{
                       readOnly: Boolean(readOnly),
-                      disabled: Boolean(readOnly)                
+                      disabled: Boolean(readOnly),
+                      min: (milk_lactose_limits_status)? milk_lactose_limits_min_value : "any",
+                      max: (milk_lactose_limits_status)? milk_lactose_limits_max_value : "any",
+                      step: "any"                
                     }}
                     margin = 'dense'
-                    label="Milk Lactose"
+                    label="Milk Lactose(%)"
                     name="milk_lactose"                
                     onChange={handleChange}
                     variant="outlined" 
@@ -525,10 +622,13 @@ const DetailsEdit = props => {
                     }}
                     inputProps={{
                       readOnly: Boolean(readOnly),
-                      disabled: Boolean(readOnly)                
+                      disabled: Boolean(readOnly),
+                      min: (milk_protein_limits_status)? milk_protein_limits_min_value : "any",
+                      max: (milk_protein_limits_status)? milk_protein_limits_max_value : "any",
+                      step: "any"              
                     }}
                     margin = 'dense'
-                    label="Milk Protein"
+                    label="Milk Protein(%)"
                     name="milk_protein"                
                     onChange={handleChange}
                     variant="outlined"
@@ -551,10 +651,13 @@ const DetailsEdit = props => {
                     }}
                     inputProps={{
                       readOnly: Boolean(readOnly),
-                      disabled: Boolean(readOnly)                
+                      disabled: Boolean(readOnly),
+                      min: (milk_urea_limits_status)? milk_urea_limits_min_value : "any",
+                      max: (milk_urea_limits_status)? milk_urea_limits_max_value : "any",
+                      step: "any"                             
                     }}
                     margin = 'dense'
-                    label="Milk Urea"
+                    label="Milk Urea(mg/dl)"
                     name="milk_urea"                
                     onChange={handleChange}
                     variant="outlined"   
@@ -576,15 +679,17 @@ const DetailsEdit = props => {
                     }}
                     inputProps={{
                       readOnly: Boolean(readOnly),
-                      disabled: Boolean(readOnly)                
+                      disabled: Boolean(readOnly),
+                      min: (milk_somatic_cell_count_limits_status)? milk_somatic_cell_count_limits_min_value : "any",
+                      max: (milk_somatic_cell_count_limits_status)? milk_somatic_cell_count_limits_max_value : "any"                                   
                     }}
                     margin = 'dense'
-                    label="Milk Somatic Cell Count"
+                    label="Somatic Cell Count(cells/ml)"
                     name="milk_somatic_cell_count"                
                     onChange={handleChange}
                     variant="outlined" 
                     type = "number"  
-                    value = {values.milk_somatic_cell_count}                                        
+                    value = {values.milk_somatic_cell_count}                                                          
                     
                 />
               </Grid>   

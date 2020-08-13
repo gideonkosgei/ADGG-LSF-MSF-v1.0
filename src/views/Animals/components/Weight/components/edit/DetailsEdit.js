@@ -113,13 +113,6 @@ const DetailsEdit = props => {
     mature_heart_girth_limits_min_value = mature_heart_girth_limits[0].min_value;
     mature_heart_girth_limits_max_value = mature_heart_girth_limits[0].max_value;    
   }
-
-
-    
-  
-
-
-
     const handleChange = event => {
     event.persist();
     setValues({
