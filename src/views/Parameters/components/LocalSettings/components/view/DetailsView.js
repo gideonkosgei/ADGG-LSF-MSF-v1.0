@@ -52,11 +52,12 @@ const DetailsView = props => {
   }   
  
     const columns = [
-    { name: "id",label: "ID",options: {filter: false,sort: true,display:true}},   
+    { name: "id",label: "ID",options: {filter: false,sort: false,display:false}},   
     { name: "name",label: "Name",options: {filter: true,sort: true,display:true}},
-    { name: "value",label: "Value",options: {filter: true,sort: true,display:true}},
-    { name: "description",label: "Description",options: {filter: false,sort: true,display:true}},
-    { name: "is_active",label: "Is Active?",options: {filter: false,sort: true,display:true}},    
+    { name: "key",label: "Key",options: {filter: true,sort: false,display:true}},
+    { name: "value",label: "Value",options: {filter: true,sort: false,display:true}},
+    { name: "description",label: "Description",options: {filter: false,sort: false,display:true}},
+    { name: "is_active",label: "Is Active?",options: {filter: false,sort: false,display:true}},    
     { name: "",
       options: {
       filter: false,

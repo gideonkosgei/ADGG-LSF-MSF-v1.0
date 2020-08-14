@@ -1774,15 +1774,17 @@ export const getParametersLocalSettingsOrgOne = function (config,param_id) {
 //create organization/farm specific local settings
 export const postParametersLocalSettings =  function (config,values,user_id,org_id) {      
  
-  let {name ,description,is_active,value} = values;
+  let {name ,description,is_active,key,value} = values;
   name = (typeof name === 'undefined')? '': name;
   description =  (typeof description === 'undefined')?'':description;
   is_active =  (typeof is_active === 'undefined')? 0:is_active; 
-  value =  (typeof value === 'undefined')? '':value;  
+  key =  (typeof key === 'undefined')? '':key;  
+  value =  (typeof value === 'undefined')? '':value; 
  
   const body = { 
     "name": name,      
-    "description": description,    
+    "description": description, 
+    "key": key ,   
     "value": value ,
     "is_active": is_active ,
     "created_by": user_id,
@@ -1810,13 +1812,15 @@ return new Promise((resolve, reject) => {
 //update organization/farm specific local settings
 export const updateParametersLocalSettings =  function (config,values,user_id,param_id) {      
  
-  let {description,is_active,value} = values;  
+  let {description,is_active,key,value} = values;  
   description =  (typeof description === 'undefined')?'':description;
   is_active =  (typeof is_active === 'undefined')? 0:is_active; 
-  value =  (typeof value === 'undefined')? '':value;  
+  key =  (typeof key === 'undefined')? '':key; 
+  value =  (typeof value === 'undefined')? '':value; 
  
   const body = {          
-    "description": description,    
+    "description": description, 
+    "key": key ,   
     "value": value ,
     "is_active": is_active ,
     "updated_by": user_id,    

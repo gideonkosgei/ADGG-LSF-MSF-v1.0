@@ -168,6 +168,7 @@ const DetailsEdit = props => {
                     value = {values.description} 
                 />
               </Grid>
+              
               <Grid
                     item
                     md={3}
@@ -177,7 +178,36 @@ const DetailsEdit = props => {
                     fullWidth
                     InputLabelProps={{
                       shrink: true,
-                    }}                
+                    }} 
+                    inputProps={{
+                      readOnly: Boolean(readOnly),
+                      disabled: Boolean(readOnly)                
+                    }}               
+                    margin = 'dense'
+                    label="Parameter Key"
+                    name="key"                
+                    onChange={handleChange}
+                    variant="outlined"  
+                    required  
+                    value = {values.key}                  
+                />
+              </Grid>                
+             
+              
+              <Grid
+                    item
+                    md={3}
+                    xs={12}
+                  >
+                  <TextField
+                    fullWidth
+                    InputLabelProps={{
+                      shrink: true,
+                    }} 
+                    inputProps={{
+                      readOnly: Boolean(readOnly),
+                      disabled: Boolean(readOnly)                
+                    }}               
                     margin = 'dense'
                     label="Parameter Value"
                     name="value"                

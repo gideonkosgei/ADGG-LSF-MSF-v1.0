@@ -141,6 +141,25 @@ const DetailsEdit = props => {
                       shrink: true,
                     }}                
                     margin = 'dense'
+                    label="Parameter Key"
+                    name="key"                
+                    onChange={handleChange}
+                    variant="outlined"  
+                    required                   
+                />
+              </Grid>
+               
+              <Grid
+                    item
+                    md={3}
+                    xs={12}
+                  >
+                  <TextField
+                    fullWidth
+                    InputLabelProps={{
+                      shrink: true,
+                    }}                
+                    margin = 'dense'
                     label="Parameter Value"
                     name="value"                
                     onChange={handleChange}
@@ -149,6 +168,8 @@ const DetailsEdit = props => {
                 />
               </Grid>
             
+
+
               <Grid
                     item
                     md={3}
