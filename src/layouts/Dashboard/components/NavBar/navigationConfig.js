@@ -214,6 +214,10 @@ export default [
           {
             title: 'Limits',
             href: '/settings/parameters/limits'
+          },
+          {
+            title: 'Local Settings',
+            href: '/settings/parameters/local-settings'
           }
         ]
       },

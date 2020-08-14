@@ -413,6 +413,24 @@ const routes = [
         component: lazy(() => import('views/Parameters/components/Limits/components/edit'))        
       },
       {
+        path: '/settings/parameters/local-settings',
+        exact: true,
+        component: lazy(() => import('views/Parameters/components/LocalSettings/components/view'))        
+      },
+      {
+        path: '/settings/parameters/local-settings/add',
+        exact: true,
+        component: lazy(() => import('views/Parameters/components/LocalSettings/components/add'))        
+      },
+      {
+        path: '/settings/parameters/local-settings/edit/:id',
+        exact: true,
+        component: lazy(() => import('views/Parameters/components/LocalSettings/components/edit'))        
+      },
+      
+      
+
+      {
         path: '/social-feed',
         exact: true,
         component: lazy(() => import('views/SocialFeed'))

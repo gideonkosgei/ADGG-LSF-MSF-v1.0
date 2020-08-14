@@ -572,7 +572,7 @@ const DetailsEdit = props => {
                     name="milk_urea"                
                     onChange={handleChange}
                     variant="outlined"   
-                    type = "number"                                        
+                    type = "number"                                      
                     
                 />
               </Grid>

@@ -1,10 +1,10 @@
-import React, { useState,useEffect } from 'react';
+import React, { useState,useEffect,useContext} from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import {Card, CardContent, CardHeader, Grid,Divider,colors,Link} from '@material-ui/core';
-import {getParametersLimitAll}   from '../../../../../../utils/API';
-import {endpoint_parameter_limit_all} from '../../../../../../configs/endpoints';
+import {getParametersLocalSettingsOrgAll}   from '../../../../../../utils/API';
+import {endpoint_parameter_local_settings_org_all} from '../../../../../../configs/endpoints';
 import {Sidebar} from '../index';
 import MUIDataTable from "mui-datatables";
 import {MuiThemeProvider } from '@material-ui/core/styles';
@@ -12,6 +12,7 @@ import PerfectScrollbar from 'react-perfect-scrollbar';
 import CustomToolbar from "../CustomToolbar";
 import { Link as RouterLink } from 'react-router-dom';
 import OpenInNewIcon from '@material-ui/icons/OpenInNew';
+import authContext from '../../../../../../contexts/AuthContext';
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -27,35 +28,34 @@ const DetailsView = props => {
   const {className, ...rest } = props; 
   const classes = useStyles();  
   const [values, setValues] = useState([]);
+  const [ { organization_id }  ] = useContext(authContext);
 
   useEffect(() => {     
     let mounted = true;
-      (async  (endpoint) => {     
-        await  getParametersLimitAll(endpoint)
+      (async  (endpoint,id) => {     
+        await  getParametersLocalSettingsOrgAll(endpoint,id)
         .then(response => {                        
           if (mounted) {            
             setValues(response.payload);                 
           }
         });
-      })(endpoint_parameter_limit_all); 
+      })(endpoint_parameter_local_settings_org_all,organization_id); 
       
     return () => {
       mounted = false;
            
     };
-  }, []); 
+  }, [organization_id]); 
 
   if (!values) {
     return null;
   }   
-  
  
     const columns = [
-    { name: "id",label: "ID",options: {filter: false,sort: false,display:false}},   
-    { name: "category",label: "Category",options: {filter: true,sort: true,display:true}},
-    { name: "description",label: "Description",options: {filter: false,sort: true,display:true}},  
-    { name: "min_value",label: "Minimum Value",options: {filter: false,sort: true,display:true}}, 
-    { name: "max_value",label: "Maximum Value",options: {filter: false,sort: true,display:true}},   
+    { name: "id",label: "ID",options: {filter: false,sort: true,display:true}},   
+    { name: "name",label: "Name",options: {filter: true,sort: true,display:true}},
+    { name: "value",label: "Value",options: {filter: true,sort: true,display:true}},
+    { name: "description",label: "Description",options: {filter: false,sort: true,display:true}},
     { name: "is_active",label: "Is Active?",options: {filter: false,sort: true,display:true}},    
     { name: "",
       options: {
@@ -66,7 +66,7 @@ const DetailsView = props => {
         return (
           <Link
               component={RouterLink}
-              to = {`/settings/parameters/limits/edit/${tableMeta.rowData[0]}`}              
+              to = {`/settings/parameters/local-settings/edit/${tableMeta.rowData[0]}`}              
           >
             <OpenInNewIcon/>
           </Link>          
@@ -101,7 +101,7 @@ const DetailsView = props => {
       {...rest}
       className={clsx(classes.root, className)}
     >
-        <CardHeader title="Limiting Parameters" />
+        <CardHeader title="Local Settings - System Parameterization" />
         <Divider />
         <CardContent> 
           <Grid container spacing={1} justify="center">            

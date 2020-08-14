@@ -357,3 +357,37 @@ export const endpoint_parameter_update = {
 };
 
 
+//system parameterization - local settings
+// 1. get all setting for a particular organization/farm
+
+export const endpoint_parameter_local_settings_org_all = {
+  url: `${api}/parameters/local-settings/`,
+  method: 'GET',
+  headers: headers   
+};
+
+// 2. get specific setting for a particular organization/farm - filter by param/setting id
+export const endpoint_parameter_local_settings_org_one = {
+  url: `${api}/parameters/local-settings/param/`,
+  method: 'GET',
+  headers: headers   
+};
+
+// 3. create a local setting for a particular organization/farm
+export const endpoint_parameter_local_settings_org_add = {
+  url: `${api}/parameters/local-settings`,
+  method: 'POST',
+  headers: headers   
+};
+
+// 4. update a local setting for a particular organization/farm
+export const endpoint_parameter_local_settings_org_update = {
+  url: `${api}/parameters/local-settings/param/`,
+  method: 'PUT',
+  headers: headers   
+};
+
+
+
+
+

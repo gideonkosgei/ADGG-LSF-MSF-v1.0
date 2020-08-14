@@ -1734,7 +1734,111 @@ return new Promise((resolve, reject) => {
   })
   .catch(err => reject(err));
 });       
+};
+
+
+
+//system parameterization - local setting
+//get all local settings for a specific organization
+export const getParametersLocalSettingsOrgAll = function (config,org_id) {   
+  const options = {
+    url:`${config.url}${org_id}`,
+    method: config.method,
+    headers: config.headers  
+  };  
+  return new Promise((resolve, reject) => {
+    axios(options)
+    .then(res => {             
+        resolve(res.data);
+    })
+    .catch(err => reject(err));
+  });       
+};
+
+//get a specific parameter/setting for a specific organization
+export const getParametersLocalSettingsOrgOne = function (config,param_id) {   
+  const options = {
+    url:`${config.url}${param_id}`,
+    method: config.method,
+    headers: config.headers  
+  };  
+  return new Promise((resolve, reject) => {
+    axios(options)
+    .then(res => {             
+        resolve(res.data);
+    })
+    .catch(err => reject(err));
+  });       
+};
+
+//create organization/farm specific local settings
+export const postParametersLocalSettings =  function (config,values,user_id,org_id) {      
+ 
+  let {name ,description,is_active,value} = values;
+  name = (typeof name === 'undefined')? '': name;
+  description =  (typeof description === 'undefined')?'':description;
+  is_active =  (typeof is_active === 'undefined')? 0:is_active; 
+  value =  (typeof value === 'undefined')? '':value;  
+ 
+  const body = { 
+    "name": name,      
+    "description": description,    
+    "value": value ,
+    "is_active": is_active ,
+    "created_by": user_id,
+    "org_id": org_id,
+    "farm_id": null
+  };
+
+const options = {
+  url:`${config.url}`, 
+  method: config.method,
+  headers: config.headers,
+  data: body  
+};
+
+return new Promise((resolve, reject) => {
+  axios(options)
+  .then(res => {           
+      resolve(res.data);
+  })
+  .catch(err => reject(err));
+});       
+};
+
+
+//update organization/farm specific local settings
+export const updateParametersLocalSettings =  function (config,values,user_id,param_id) {      
+ 
+  let {description,is_active,value} = values;  
+  description =  (typeof description === 'undefined')?'':description;
+  is_active =  (typeof is_active === 'undefined')? 0:is_active; 
+  value =  (typeof value === 'undefined')? '':value;  
+ 
+  const body = {          
+    "description": description,    
+    "value": value ,
+    "is_active": is_active ,
+    "updated_by": user_id,    
+    "farm_id": null
+  };
+
+const options = {
+  url:`${config.url}${param_id}`, 
+  method: config.method,
+  headers: config.headers,
+  data: body  
+};
+
+return new Promise((resolve, reject) => {
+  axios(options)
+  .then(res => {           
+      resolve(res.data);
+  })
+  .catch(err => reject(err));
+});       
 }
+
 
 
 
