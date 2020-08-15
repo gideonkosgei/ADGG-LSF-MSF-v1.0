@@ -233,13 +233,6 @@ const routes = [
         exact: true,
         component: lazy(() => import('views/Animals/components/Health/components/edit'))
       },
-      
-      /*{
-        path: '/management/pedigree/',
-        exact: true,
-        component: lazy(() => import('views/Animals/components/Pedigree'))
-      },*/
-
       {
         path: '/management/sync/view/:id',
         exact: true,
@@ -308,13 +301,7 @@ const routes = [
         path: '/management/weight/edit/:id',
         exact: true,
         component: lazy(() => import('views/Animals/components/Weight/components/edit'))          
-      },
-      /*{
-        path: '/management/logs/',
-        exact: true,
-        component: lazy(() => import('views/Animals/components/Logs'))
-      },*/
-     
+      },      
       {
         path: '/management/customers/:id',
         exact: true,
@@ -411,7 +398,7 @@ const routes = [
         path: '/settings/parameters/limits/edit/:id',
         exact: true,
         component: lazy(() => import('views/Parameters/components/Limits/components/edit'))        
-      },
+      },  
       {
         path: '/settings/parameters/local-settings',
         exact: true,
@@ -426,10 +413,18 @@ const routes = [
         path: '/settings/parameters/local-settings/edit/:id',
         exact: true,
         component: lazy(() => import('views/Parameters/components/LocalSettings/components/edit'))        
-      },
-      
-      
+      },  
 
+      // Batch processes Routes
+      {
+        path: '/batch-process/milking-records',
+        exact: true,
+        component: lazy(() => import('views/Batch/components/LocalSettings/components/view'))        
+      },       
+      
+      
+      
+      
       {
         path: '/social-feed',
         exact: true,
@@ -442,7 +437,7 @@ const routes = [
       },
       {
         component: () => <Redirect to="/errors/error-404" />
-      }
+      }        
     ]
   }
 ];
