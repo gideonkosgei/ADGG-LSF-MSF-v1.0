@@ -3,8 +3,8 @@ import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import {Card, CardContent, CardHeader, Grid,Divider, TextField,colors,Button,CardActions,Box,Switch ,Typography,Tooltip } from '@material-ui/core';
-import {getLookups,updateMilking,getMilkingByEventId,getParametersLimitAll}   from '../../../../../../utils/API';
-import {endpoint_lookup,endpoint_milking_update,endpoint_milking_specific,endpoint_parameter_limit_all} from '../../../../../../configs/endpoints';
+import {getLookups,updateMilking,getMilkingByEventId,getParametersLimitAll,getParametersLocalSettingsOrgAll}   from '../../../../../../utils/API';
+import {endpoint_lookup,endpoint_milking_update,endpoint_milking_specific,endpoint_parameter_limit_all,endpoint_parameter_local_settings_org_all} from '../../../../../../configs/endpoints';
 import authContext from '../../../../../../contexts/AuthContext';
 import {Sidebar} from '../index';
 import SuccessSnackbar from '../../../../../../components/SuccessSnackbar';
@@ -34,13 +34,16 @@ const DetailsEdit = props => {
   const [readOnly, setReadOnly] = useState(true);
   const [openMetadata, setMetadata] = useState(false);   
   const [limitParameters, setBodyLimitParameters] = useState([]);
-  const event_id  = localStorage.getItem('milking_event_id');  
+  const [localSettings, setLocalSettings] = useState([]);
+  const event_id  = localStorage.getItem('milking_event_id'); 
+  const [ { organization_id }  ] = useContext(authContext); 
  
 
   useEffect(() => {   
     let mounted_lookup = true;
     let mounted_milking = true;
     let mounted_limit_parameters = true;
+    let mounted_settings = true;  
     
     (async  (endpoint,id) => {     
         await  getLookups(endpoint,id)
@@ -79,16 +82,27 @@ const DetailsEdit = props => {
           }
         });
       })(endpoint_parameter_limit_all);
-      
+
+
+      (async  (endpoint,id) => {     
+        await  getParametersLocalSettingsOrgAll(endpoint,id)
+        .then(response => {                        
+          if (mounted_settings) {            
+            setLocalSettings(response.payload);                 
+          }
+        });
+      })(endpoint_parameter_local_settings_org_all,organization_id); 
+            
     return () => {
       mounted_lookup = false; 
       mounted_milking = false; 
-      mounted_limit_parameters = false;   
+      mounted_limit_parameters = false; 
+      mounted_settings = false;  
     };
-  }, [event_id]);  
+  }, [event_id,organization_id]);  
     
     
-  if (!sample_types || !limitParameters) {
+  if (!sample_types || !limitParameters || !localSettings) {
     return null;
   }
 
@@ -160,6 +174,20 @@ const DetailsEdit = props => {
       milk_somatic_cell_count_limits_max_value = milk_somatic_cell_count_limits[0].max_value;    
     }
 
+    //local settings  
+   const milk_unit = localSettings.filter(obj=>obj.name==='MILK_UNIT');
+   const milk_unit_value = (milk_unit.length > 0)?milk_unit[0].value : "ltrs"; 
+
+   const weight_unit = localSettings.filter(obj=>obj.name==='WEIGHT_UNIT');
+   const weight_unit_value = (weight_unit.length > 0)?weight_unit[0].value : "kg"; 
+
+   const urea_unit = localSettings.filter(obj=>obj.name==='UREA_UNIT');
+   const urea_unit_value = (urea_unit.length > 0)?urea_unit[0].value : "mg/dl"; 
+
+   const somatic_cell_count = localSettings.filter(obj=>obj.name==='SOMATIC_CELL_COUNT');
+   const somatic_cell_count_value = (somatic_cell_count.length > 0)?somatic_cell_count[0].value : "cells/ml"; 
+
+   
     const handleChange = event => {
     event.persist();
     setValues({
@@ -369,7 +397,7 @@ const DetailsEdit = props => {
                       step: "any"               
                     }}
                     margin = 'dense'
-                    label="Milk AM (ltrs)"
+                    label={`Milk AM (${milk_unit_value})`}
                     name="milk_am_litres"                
                     onChange={handleChange}
                     variant="outlined"
@@ -398,7 +426,7 @@ const DetailsEdit = props => {
                       step: "any"               
                     }}
                     margin = 'dense'
-                    label="Milk mid-day (ltrs)"
+                    label={`Milk mid-day (${milk_unit_value})`}                    
                     name="milk_mid_day"                
                     onChange={handleChange}
                     variant="outlined"
@@ -426,8 +454,8 @@ const DetailsEdit = props => {
                       max: (milk_amount_limits_status)? milk_amount_limits_max_value : "any",
                       step: "any"             
                     }}
-                    margin = 'dense'
-                    label="Milk PM (ltrs)"
+                    margin = 'dense'                   
+                    label={`Milk PM (${milk_unit_value})`} 
                     name="milk_pm_litres"                
                     onChange={handleChange}
                     variant="outlined"
@@ -542,13 +570,12 @@ const DetailsEdit = props => {
                       disabled: Boolean(readOnly)                
                     }}
                     margin = 'dense'
-                    label="Milk Weight(kg)"
+                    label = {`Milk Weight (${weight_unit_value})`}                    
                     name="milk_Weight"                
                     onChange={handleChange}
                     variant="outlined"  
                     type = "number"  
-                    value = {values.milk_Weight}                                     
-                    
+                    value = {values.milk_Weight} 
                 />
               </Grid>              
 
@@ -657,7 +684,7 @@ const DetailsEdit = props => {
                       step: "any"                             
                     }}
                     margin = 'dense'
-                    label="Milk Urea(mg/dl)"
+                    label = {`Milk Urea (${urea_unit_value})`}
                     name="milk_urea"                
                     onChange={handleChange}
                     variant="outlined"   
@@ -684,7 +711,7 @@ const DetailsEdit = props => {
                       max: (milk_somatic_cell_count_limits_status)? milk_somatic_cell_count_limits_max_value : "any"                                   
                     }}
                     margin = 'dense'
-                    label="Somatic Cell Count(cells/ml)"
+                    label = {`Somatic Cell Count(${somatic_cell_count_value})`}
                     name="milk_somatic_cell_count"                
                     onChange={handleChange}
                     variant="outlined" 
