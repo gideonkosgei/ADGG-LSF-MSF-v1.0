@@ -419,7 +419,7 @@ const routes = [
       {
         path: '/batch-process/milking-records',
         exact: true,
-        component: lazy(() => import('views/Batch/components/LocalSettings/components/view'))        
+        component: lazy(() => import('views/Batch/components/Milking/components/view'))        
       },       
       
       

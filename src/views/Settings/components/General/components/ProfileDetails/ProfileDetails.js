@@ -29,8 +29,14 @@ const useStyles = makeStyles(theme => ({
   },
   removeBotton: {
     width: '100%'
-  }
+  },
+  previewChip: {
+    minWidth: 160,
+    maxWidth: 210
+  },
 }));
+
+
 
 const ProfileDetails = props => {
   const { profile, className, ...rest } = props;
