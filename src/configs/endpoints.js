@@ -388,6 +388,27 @@ export const endpoint_parameter_local_settings_org_update = {
 };
 
 
+//upload Batch Milking Records
+export const endpoint_batch_milking_upload = {
+  url: `${api}/batches/milking/upload`,
+  method: 'POST',
+  headers: headers   
+};
+
+
+// view milking batched on validation queue
+export const endpoint_batch_milk_validation_view = {
+  url: `${api}/batches/milking/validation/`,
+  method: 'GET',
+  headers: headers   
+};
+
+
+
+
+
+
+
 
 
 

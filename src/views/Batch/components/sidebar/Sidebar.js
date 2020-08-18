@@ -20,7 +20,7 @@ const Sidebar = props => {
       <CardContent>                 
       <Tooltip  title="Home">              
           <IconButton aria-label="home" size="small" >
-            <Link component = {RouterLink} to={`/settings/parameters/limits`}>
+            <Link component = {RouterLink} to={`/batch-process/milking-records/home`}>
               <HomeIcon /> 
             </Link>
           </IconButton> 
@@ -34,7 +34,7 @@ const Sidebar = props => {
         </Tooltip>         
         <Tooltip  title="Add New">              
           <IconButton aria-label="add" size="small" >
-            <Link component = {RouterLink} to={`/settings/parameters/limits/add`}>
+            <Link component = {RouterLink} to={`/batch-process/milking-records/add`}>
               <AddIcon /> 
             </Link>
           </IconButton> 

@@ -2,11 +2,11 @@ import React, { useState,useEffect } from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
-import {Card, CardContent, CardHeader, Grid,Divider,colors,Stepper,Step,StepLabel,Button,Typography} from '@material-ui/core';
-import {getParametersLimitAll}   from '../../../../../../utils/API';
-import {endpoint_parameter_limit_all} from '../../../../../../configs/endpoints';
-import {Sidebar} from '../index';
-import { default as UploadBatch } from '../UploadBatch';
+import {Card, CardContent, CardHeader, Grid,Divider,colors,Stepper,Step,StepLabel,Typography} from '@material-ui/core';
+import {getBatchMilkingValidation}   from '../../../../../../utils/API';
+import {endpoint_batch_milk_validation_view} from '../../../../../../configs/endpoints';
+import {Sidebar} from '../../../sidebar/index';
+import {Upload} from './components';
 
 
 const useStyles = makeStyles(theme => ({
@@ -29,7 +29,7 @@ function getSteps() {
 function getStepContent(step) {
   switch (step) {
     case 0:
-      return <UploadBatch/>;
+      return <Upload/>;      
     case 1:
       return 'What is an ad group anyways?';
     case 2:
@@ -37,43 +37,48 @@ function getStepContent(step) {
     default:
       return 'Unknown step';
   }
-}
+};
 
-
-const DetailsView = props => {
-  const {className, ...rest } = props; 
+const AddDetails = props => {
+  const {className,batch_uuid, ...rest } = props; 
   const classes = useStyles();  
   const [values, setValues] = useState([]);
   const [activeStep, setActiveStep] = React.useState(0);
-  const steps = getSteps();  
+  const steps = getSteps();
+  
+  var batch_upload_uuid = localStorage.getItem("batch_upload_uuid"); 
 
   useEffect(() => {     
     let mounted = true;
-      (async  (endpoint) => {     
-        await  getParametersLimitAll(endpoint)
-        .then(response => {                        
-          if (mounted) {            
-            setValues(response.payload);                 
+      (async  (endpoint,batch_uuid) => {     
+        await  getBatchMilkingValidation(endpoint,batch_uuid)
+        .then(response => {                             
+          if (mounted) { 
+            if(response.payload.length>0){              
+              setValues(response.payload[0]); 
+              setActiveStep(response.payload[0].step); 
+            }              
           }
         });
-      })(endpoint_parameter_limit_all); 
-      
+      })(endpoint_batch_milk_validation_view,batch_upload_uuid);       
     return () => {
-      mounted = false;
-           
+      mounted = false;           
     };
-  }, []); 
+  }, [batch_upload_uuid]); 
 
   if (!values) {
     return null;
   } 
-  const handleNext = () => {
+
+
+  
+  /*const handleNext = () => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);    
   };
 
   const handleBack = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
-  }; 
+  }; */
   return (
     <Card
       {...rest}
@@ -88,8 +93,7 @@ const DetailsView = props => {
           </Grid> 
           <Grid item xs={11}>
               <Card> 
-                <CardContent>                 
-                  
+                <CardContent>  
                     <div className={classes.inner}>
                       <Stepper activeStep={activeStep}>
                         {steps.map((label, index) => {
@@ -127,9 +131,8 @@ const DetailsView = props => {
   );
 };
 
-DetailsView.propTypes = {
-  className: PropTypes.string,
-  //profile: PropTypes.object.isRequired
+AddDetails.propTypes = {
+  className: PropTypes.string 
 };
 
-export default DetailsView;
+export default AddDetails;

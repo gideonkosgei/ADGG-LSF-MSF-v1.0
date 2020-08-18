@@ -62,7 +62,7 @@ export default [
         children: [
           {
             title: 'Milking Batch',
-            href: '/batch-process/milking-records',                     
+            href: '/batch-process/milking-records/home',                     
           }
         ]     
       },

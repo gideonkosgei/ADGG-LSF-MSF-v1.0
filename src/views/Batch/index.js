@@ -1,1 +1,1 @@
-export { default } from './AnimalList';
+export {Home as default} from './components';

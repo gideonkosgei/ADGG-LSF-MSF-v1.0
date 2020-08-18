@@ -1,1 +1,3 @@
-export { default  as Sidebar} from './Sidebar';
+export { default as Add } from './add';
+export {Home} from './home';
+

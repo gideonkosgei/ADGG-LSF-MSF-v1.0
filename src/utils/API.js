@@ -1810,7 +1810,7 @@ return new Promise((resolve, reject) => {
 
 
 //update organization/farm specific local settings
-export const updateParametersLocalSettings =  function (config,values,user_id,param_id) {      
+export const updateParametersLocalSettings =  function (config,values,user_id,param_id) {     
  
   let {description,is_active,key,value} = values;  
   description =  (typeof description === 'undefined')?'':description;
@@ -1842,6 +1842,52 @@ return new Promise((resolve, reject) => {
   .catch(err => reject(err));
 });       
 }
+
+
+//Batch upload - miking
+export const postBatchUploadMilking =  function (config,rows,cols,user_id,org_id,uuid) {  
+ 
+  const body = {          
+    "rows": rows, 
+    "cols": cols ,   
+    "created_by": user_id ,
+    "org_id": org_id,
+    "uuid": uuid   
+  };
+
+  const options = {
+    url:`${config.url}`, 
+    method: config.method,
+    headers: config.headers,
+    data: body  
+  };
+
+return new Promise((resolve, reject) => {
+  axios(options)
+  .then(res => {           
+      resolve(res.data);
+  })
+  .catch(err =>    
+    reject(err));
+});       
+}
+
+
+// view milking batched on validation queue
+export const getBatchMilkingValidation =  function (config,uuid) {   
+  const options = {
+    url:`${config.url}${uuid}`,
+    method: config.method,
+    headers: config.headers  
+  } 
+  return new Promise((resolve, reject) => {
+    axios(options)
+    .then(res => {             
+        resolve(res.data);
+    })
+    .catch(err => reject(err));
+  });       
+};
 
 
 

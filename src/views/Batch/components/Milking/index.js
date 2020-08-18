@@ -1,1 +1,1 @@
-export { default } from './components/view';
+export {Add,Home} from './components';

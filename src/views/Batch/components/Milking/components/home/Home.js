@@ -2,10 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import { Card,CardContent, colors } from '@material-ui/core';
+
 import { Page } from 'components';
-import {default as DetailsView} from './DetailsView';
-
-
+import {default as HomeDetails} from './HomeDetails';
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -23,26 +22,27 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const Edit = props => { 
-  const classes = useStyles(); 
+const Home = props => { 
+  const classes = useStyles();
+  localStorage.setItem('paramater_limit_id', parseInt(props.match.params.id));
+ 
   return (
     <Page
       className={classes.root}
-      title="Profile"
+      title="ADGG"
     >
     <Card>
-        <CardContent>
-            <DetailsView/>
+        <CardContent>            
+            <HomeDetails/>
         </CardContent>
-    </Card>
-     
+    </Card>     
    </Page>
   );
 };
 
-Edit.propTypes = {
+Home.propTypes = {
   history: PropTypes.object.isRequired,
   match: PropTypes.object.isRequired
 };
 
-export default Edit;
+export default Home;
