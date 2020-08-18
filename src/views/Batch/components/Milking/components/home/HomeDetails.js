@@ -37,7 +37,7 @@ function getStepContent(step) {
       Alterations may lead to errors during processing.    
       `;
     case 1:
-      return 'Populate the templete with the milk records. Avoid as much as posssible the use of special characters and symbols';
+      return 'Populate the template with the milk records. Avoid as much as posssible the use of special characters and symbols';
     case 2:
       return `This is the first process of batch processing. Click the create Batch icon. Browse your batch in your directory structure. The application accepts excel(.xls & .xlsx) and csv files only. Once the file has been selected, a grid with the records will appear automatically. Lastly, save the batch. The saved records will be staged on data validation queue`;
     case 3:

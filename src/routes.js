@@ -426,7 +426,16 @@ const routes = [
         path: '/batch-process/milking-records/home',
         exact: true,
         component: lazy(() => import('views/Batch'))        
-      },       
+      },  
+      
+       
+      
+      {
+        path: '/downloads',
+        exact: true,
+        component: lazy(() => import('views/Downloads'))        
+      }, 
+      
       
       
       

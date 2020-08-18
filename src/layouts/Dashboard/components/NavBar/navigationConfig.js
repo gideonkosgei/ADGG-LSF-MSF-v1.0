@@ -18,6 +18,7 @@ import ListAltIcon from '@material-ui/icons/ListAlt';
 //import PersonIcon from '@material-ui/icons/PersonOutlined';
 //import ReceiptIcon from '@material-ui/icons/ReceiptOutlined';
 import SettingsIcon from '@material-ui/icons/SettingsOutlined';
+import CloudDownloadIcon from '@material-ui/icons/CloudDownload';
 //import ViewModuleIcon from '@material-ui/icons/ViewModule';
 //import { Label } from 'components';
 
@@ -89,8 +90,12 @@ export default [
             href: '/settings/parameters/local-settings'
           }          
         ]
-      },
-     
+      },        
+      {
+        title: 'Downloads',
+        href: '/downloads',
+        icon: CloudDownloadIcon,        
+      },     
     ]
   },
  
