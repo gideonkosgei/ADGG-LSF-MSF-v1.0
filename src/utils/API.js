@@ -626,9 +626,7 @@ export const updateSync =  function (config,event_id,values,user_id) {
     method: config.method,
     headers: config.headers,
     data: body  
-  }; 
-
-  console.log(options);
+  };
 
   return new Promise((resolve, reject) => {
     axios(options)
@@ -1880,6 +1878,7 @@ export const getBatchMilkingValidation =  function (config,uuid) {
     method: config.method,
     headers: config.headers  
   } 
+
   return new Promise((resolve, reject) => {
     axios(options)
     .then(res => {             
@@ -1888,6 +1887,26 @@ export const getBatchMilkingValidation =  function (config,uuid) {
     .catch(err => reject(err));
   });       
 };
+
+
+
+// view milking batched on un-processed validation queue
+export const getBatchMilkingUnprocessed =  function (config,org_id,step,user_id) {   
+  const options = {
+    url:`${config.url}${org_id}/${step}/${user_id}`,
+    method: config.method,
+    headers: config.headers  
+  } 
+  return new Promise((resolve, reject) => {
+    axios(options)
+    .then(res => {             
+        resolve(res.data);
+    })
+    .catch(err => reject(err));
+  });       
+};
+
+
 
 
 

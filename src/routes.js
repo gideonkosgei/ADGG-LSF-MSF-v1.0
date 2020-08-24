@@ -427,7 +427,12 @@ const routes = [
         exact: true,
         component: lazy(() => import('views/Batch'))        
       },  
-      
+       // Batch processes - view processing queue
+       {
+        path: '/batch-process/milking-records/stage/:step',
+        exact: true,
+        component: lazy(() => import('views/Batch/components/Milking/components/view'))        
+      },  
        
       
       {

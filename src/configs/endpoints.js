@@ -403,6 +403,12 @@ export const endpoint_batch_milk_validation_view = {
   headers: headers   
 };
 
+export const endpoint_batch_milk_validation_un_processed_view= {
+  url: `${api}/batches/milking/`,
+  method: 'GET',
+  headers: headers   
+};
+
 
 
 

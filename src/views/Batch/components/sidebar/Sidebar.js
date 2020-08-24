@@ -3,18 +3,22 @@ import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import {Card, CardContent,Tooltip,IconButton,Link } from '@material-ui/core';
-import PrintIcon from '@material-ui/icons/Print';
-import VisibilityIcon from '@material-ui/icons/Visibility';
 import AddIcon from '@material-ui/icons/Add';
 import { Link as RouterLink } from 'react-router-dom';
 import HomeIcon from '@material-ui/icons/Home';
+import PlaylistPlayIcon from '@material-ui/icons/PlaylistPlay';
+import PlaylistAddCheckIcon from '@material-ui/icons/PlaylistAddCheck';
+import CloudDownloadIcon from '@material-ui/icons/CloudDownload';
+
+
 
 const useStyles = makeStyles(theme => ({
   root: {}, 
 }));
 const Sidebar = props => {
   const {className, ...rest } = props;  
-  const classes = useStyles();
+  const classes = useStyles(); 
+
   return (  
     <Card {...rest} className={clsx(classes.root, className)}  >
       <CardContent>                 
@@ -24,25 +28,35 @@ const Sidebar = props => {
               <HomeIcon /> 
             </Link>
           </IconButton> 
-        </Tooltip>
-        <Tooltip  title="view">              
-          <IconButton aria-label="view" size="small" >
-            <Link component = {RouterLink} to = {`/settings/parameters/limits`}>
-              <VisibilityIcon /> 
-            </Link>
-          </IconButton> 
-        </Tooltip>         
+        </Tooltip>      
         <Tooltip  title="Add New">              
           <IconButton aria-label="add" size="small" >
             <Link component = {RouterLink} to={`/batch-process/milking-records/add`}>
               <AddIcon /> 
             </Link>
           </IconButton> 
-        </Tooltip>             
-        <Tooltip  title="print">              
-          <IconButton aria-label="print" size="small" >
+        </Tooltip> 
+
+        <Tooltip  title="view Pending">              
+          <IconButton aria-label="pending" size="small" >
+            <Link component = {RouterLink} to = {`/batch-process/milking-records/stage/2`}>
+              <PlaylistPlayIcon /> 
+            </Link>
+          </IconButton> 
+        </Tooltip>  
+
+        <Tooltip  title="view Processed">              
+          <IconButton aria-label="processed" size="small" >
+            <Link component = {RouterLink} to = {`/batch-process/milking-records/stage/3`}>
+              <PlaylistAddCheckIcon /> 
+            </Link>
+          </IconButton> 
+        </Tooltip>       
+                   
+        <Tooltip  title="download template">              
+          <IconButton aria-label="download" size="small" >
             <Link component = {RouterLink} to="#">
-              <PrintIcon /> 
+              <CloudDownloadIcon /> 
             </Link>
           </IconButton> 
         </Tooltip>
