@@ -6,7 +6,7 @@ import {Card, CardContent, CardHeader, Grid,Divider,colors,Stepper,Step,StepLabe
 import {getBatchMilkingValidation}   from '../../../../../../utils/API';
 import {endpoint_batch_milk_validation_view} from '../../../../../../configs/endpoints';
 import {Sidebar} from '../../../sidebar/index';
-import {Upload} from './components';
+import {Upload,Validate} from './components';
 
 
 const useStyles = makeStyles(theme => ({
@@ -28,11 +28,11 @@ function getSteps() {
 
 function getStepContent(step) {
   switch (step) {
-    case 0:
-      return <Upload/>;      
     case 1:
-      return 'What is an ad group anyways?';
+      return <Upload/>;      
     case 2:
+      return <Validate/>;
+    case 3:
       return 'This is the bit I really care about!';
     default:
       return 'Unknown step';
@@ -43,7 +43,7 @@ const AddDetails = props => {
   const {className,batch_uuid, ...rest } = props; 
   const classes = useStyles();  
   const [values, setValues] = useState([]);
-  const [activeStep, setActiveStep] = React.useState(0);
+  const [activeStep, setActiveStep] = React.useState(1);
   const steps = getSteps();
   
   var batch_upload_uuid = localStorage.getItem("batch_upload_uuid"); 

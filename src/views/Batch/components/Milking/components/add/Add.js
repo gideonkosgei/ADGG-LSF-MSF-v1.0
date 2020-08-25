@@ -26,10 +26,15 @@ const useStyles = makeStyles(theme => ({
 const Add = props => { 
   const classes = useStyles(); 
 
+  if(typeof props.match.params.uuid != 'undefined'){
+    localStorage.setItem("batch_upload_uuid", props.match.params.uuid);
+  }
+
+
   return (
     <Page
       className={classes.root}
-      title="Profile"
+      title="ADGG"
     >
     <Card>
         <CardContent>

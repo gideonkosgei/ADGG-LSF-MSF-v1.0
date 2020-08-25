@@ -3,16 +3,16 @@ import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import {Card, CardContent, CardHeader, Grid,Divider,colors,Link } from '@material-ui/core';
-import {getBatchMilkingUnprocessed}   from '../../../../../../utils/API';
-import {endpoint_batch_milk_validation_un_processed_view} from '../../../../../../configs/endpoints';
-import {Sidebar} from '../../../sidebar';
+import {getBatchMilkingUnprocessed}   from '../../../../../../../../utils/API';
+import {endpoint_batch_milk_validation_un_processed_view} from '../../../../../../../../configs/endpoints';
+import {Sidebar} from '../../../../../sidebar';
 import MUIDataTable from "mui-datatables";
 import {MuiThemeProvider } from '@material-ui/core/styles';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import CustomToolbar from "./CustomToolbar";
 import { Link as RouterLink } from 'react-router-dom';
 import OpenInNewIcon from '@material-ui/icons/OpenInNew';
-import authContext from '../../../../../../contexts/AuthContext'
+import authContext from '../../../../../../../../contexts/AuthContext'
 
 
 
@@ -27,7 +27,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const DetailsView = props => {
+const Validate = props => {
   const {className,step, ...rest } = props; 
   const classes = useStyles();  
   const [values, setValues] = useState([]);  
@@ -149,9 +149,9 @@ const DetailsView = props => {
   );
 };
 
-DetailsView.propTypes = {
+Validate.propTypes = {
   className: PropTypes.string,
   //profile: PropTypes.object.isRequired
 };
 
-export default DetailsView;
+export default Validate;
