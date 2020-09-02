@@ -26,13 +26,13 @@ function getSteps() {
 
 
 
-function getStepContent(step) {
+function getStepContent(step,records) {
   switch (step) {
-    case 1:
+    case 0:
       return <Upload/>;      
+    case 1:
+      return <Validate UploadedRecords={records}/>;
     case 2:
-      return <Validate/>;
-    case 3:
       return 'This is the bit I really care about!';
     default:
       return 'Unknown step';
@@ -43,7 +43,7 @@ const AddDetails = props => {
   const {className,batch_uuid, ...rest } = props; 
   const classes = useStyles();  
   const [values, setValues] = useState([]);
-  const [activeStep, setActiveStep] = React.useState(1);
+  const [activeStep, setActiveStep] = React.useState(0);
   const steps = getSteps();
   
   var batch_upload_uuid = localStorage.getItem("batch_upload_uuid"); 
@@ -54,9 +54,9 @@ const AddDetails = props => {
         await  getBatchMilkingValidation(endpoint,batch_uuid)
         .then(response => {                             
           if (mounted) { 
-            if(response.payload.length>0){              
-              setValues(response.payload[0]); 
-              setActiveStep(response.payload[0].step); 
+            if(response.payload.length>0){                       
+              setValues(response.payload); 
+              setActiveStep(response.payload[0].step_id); 
             }              
           }
         });
@@ -69,6 +69,7 @@ const AddDetails = props => {
   if (!values) {
     return null;
   } 
+
 
 
   
@@ -115,7 +116,7 @@ const AddDetails = props => {
                           </div>
                         ) : (
                       <div>
-                          {getStepContent(activeStep)}                         
+                          {getStepContent(activeStep,values)}                         
                        
                       </div>
                       )}

@@ -1907,6 +1907,37 @@ export const getBatchMilkingUnprocessed =  function (config,org_id,step,user_id)
 };
 
 
+//Batch Process Milking - actions
+export const batchProcessMilkingActions =  function (config,uuid,action,user_id) {  
+ 
+
+  const body = {          
+    "action": action,
+	  "uuid":uuid, 
+	  "user":user_id  
+  };
+
+  const options = {
+    url:`${config.url}`, 
+    method: config.method,
+    headers: config.headers,
+    data: body  
+  };
+
+return new Promise((resolve, reject) => {
+  axios(options)
+  .then(res => {           
+      resolve(res.data);
+  })
+  .catch(err =>    
+    reject(err));
+});       
+}
+
+
+
+
+
 
 
 

@@ -2,19 +2,19 @@ import React, { useState,useEffect,useContext } from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
-import {Card, CardContent, CardHeader, Grid,Divider,colors,Link } from '@material-ui/core';
-import {getBatchMilkingUnprocessed}   from '../../../../../../../../utils/API';
-import {endpoint_batch_milk_validation_un_processed_view} from '../../../../../../../../configs/endpoints';
-import {Sidebar} from '../../../../../sidebar';
+import {Card, CardContent, CardHeader, Grid,Divider,colors,Link,CardActions,Box,Button } from '@material-ui/core';
+import {getBatchMilkingUnprocessed,batchProcessMilkingActions}   from '../../../../../../../../utils/API';
+import {endpoint_batch_milk_validation_un_processed_view,endpoint_batch_milk_actions} from '../../../../../../../../configs/endpoints';
+
 import MUIDataTable from "mui-datatables";
 import {MuiThemeProvider } from '@material-ui/core/styles';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import CustomToolbar from "./CustomToolbar";
 import { Link as RouterLink } from 'react-router-dom';
 import OpenInNewIcon from '@material-ui/icons/OpenInNew';
-import authContext from '../../../../../../../../contexts/AuthContext'
-
-
+import authContext from '../../../../../../../../contexts/AuthContext';
+import SuccessSnackbar from '../../../../../../../../components/SuccessSnackbar';
+import ErrorSnackbar from '../../../../../../../../components/ErrorSnackbar';
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -28,16 +28,17 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const Validate = props => {
-  const {className,step, ...rest } = props; 
+  const {className,step,UploadedRecords, ...rest } = props; 
   const classes = useStyles();  
-  const [values, setValues] = useState([]);  
+  const [values, setValues] = useState(UploadedRecords);  
   const [ {organization_id} ] = useContext(authContext);
   const [ {user_id} ] = useContext(authContext);
+  const [openSnackbarSuccess, setopenSnackbarSuccess] = useState(false);
+  const [openSnackbarError, setopenSnackbarError] = useState(false);
 
   
+  const uuid= localStorage.getItem('batch_upload_uuid');
   localStorage.removeItem('batch_upload_uuid');
-
-
 
   useEffect(() => {     
     let mounted = true;
@@ -45,7 +46,7 @@ const Validate = props => {
         await  getBatchMilkingUnprocessed(endpoint,org_id,step,user_id)
         .then(response => {                        
           if (mounted) {                       
-            setValues(response.payload);                 
+            setValues(response.payload);
           }
         });
       })(endpoint_batch_milk_validation_un_processed_view,organization_id,step,user_id); 
@@ -58,18 +59,81 @@ const Validate = props => {
 
   if (!values) {
     return null;
-  }
+  }  
+
+ 
+
+  const handleValidate = event => {
+    event.preventDefault(); 
+    (async  (_endpoint,_uuid,_action,_user_id) => { 
+      await  batchProcessMilkingActions(_endpoint,_uuid,_action,_user_id)
+      .then(() => {  
+        setopenSnackbarSuccess(true);         
+        var delayInMilliseconds = 1000; //1 second
+        setTimeout(function() {
+           window.location.reload();           
+        }, delayInMilliseconds);
+
+      }).catch(() => {
+        setopenSnackbarError(true); 
+      });
+    })(endpoint_batch_milk_actions,uuid,1,user_id);    
+  };
+
+  const handleDiscard = event => {   
+    event.preventDefault(); 
+    (async  (_endpoint,_uuid,_action,_user_id) => { 
+      await  batchProcessMilkingActions(_endpoint,_uuid,_action,_user_id)
+      .then(() => {  
+        setopenSnackbarSuccess(true);         
+        var delayInMilliseconds = 1000; //1 second
+        setTimeout(function() {
+           window.location.reload();           
+        }, delayInMilliseconds);
+
+      }).catch(() => {
+        setopenSnackbarError(true); 
+      });
+    })(endpoint_batch_milk_actions,uuid,2,user_id);    
+  };
+
+
+  const handleProgressToPostingQueue = event => {   
+    event.preventDefault(); 
+    (async  (_endpoint,_uuid,_action,_user_id) => { 
+      await  batchProcessMilkingActions(_endpoint,_uuid,_action,_user_id)
+      .then(() => {  
+        setopenSnackbarSuccess(true);         
+        var delayInMilliseconds = 1000; //1 second
+        setTimeout(function() {
+           window.location.reload();           
+        }, delayInMilliseconds);
+
+      }).catch(() => {
+        setopenSnackbarError(true); 
+      });
+    })(endpoint_batch_milk_actions,uuid,3,user_id);    
+  };
+
+
+
+  const handleSnackbarSuccessClose = () => {
+    setopenSnackbarSuccess(false);
+  };
+
+  const handleSnackbarErrorClose = () => {
+    setopenSnackbarError(false);
+  };
 
 
     const columns = [
-    { name: "uuid",label: "uuid",options: {filter: false,sort: false,display:false}},  
-    { name: "id",label: "ID",options: {filter: false,sort: true,display:true}},    
-    { name: "batch_type",label: "Batch Type",options: {filter: false,sort: true,display:true}},
-    { name: "step",label: "Current Stage",options: {filter: true,sort: true,display:true}},    
-    { name: "status",label: "Status",options: {filter: true,sort: true, display:true}}, 
-    { name: "created_by",label: "Created By",options: {filter: true,sort: true,display:true}},     
-    { name: "created_at",label: "Date Created",options: {filter: true,sort: true,display:true}},
-    { name: "created_time",label: "Time Created",options: {filter: false,sort: true,display:true}},
+    { name: "uuid",label: "uuid",options: {filter: false,sort: false,display:false}},
+    { name: "animal_id",label: "Animal ID",options: {filter: true,sort: true, display:true}},
+    { name: "milk_date",label: "Milk Date",options: {filter: true,sort: true, display:true}},
+    { name: "amount_morning",label: "Morning(ltrs)",options: {filter: true,sort: true, display:true}},
+    { name: "amount_noon",label: "Noon(ltrs)",options: {filter: true,sort: true, display:true}},
+    { name: "amount_afternoon",label: "Afternoon(ltrs)",options: {filter: true,sort: true, display:true}},
+    { name: "record_status",label: "Status",options: {filter: true,sort: true, display:true}},      
     { name: "",
       options: {
       filter: false,
@@ -120,14 +184,10 @@ const Validate = props => {
         <CardHeader title={ (step ==='2')?`Batch processes - Milking Records Pending Validation` :`Batch processes - Milking Records Pending Posting`} />
         <Divider />
         <CardContent> 
-          <Grid container spacing={1} justify="center">            
-          <Grid item  xs={1} >  
-            <Sidebar/>
-          </Grid> 
+          <Grid container spacing={1} justify="center"> 
           <Grid item xs={11}>
-              <Card> 
-                <CardContent> 
-                 
+            <Card>
+                <CardContent>
                   <PerfectScrollbar>
                     <div className={classes.inner}>
                       <MuiThemeProvider>                
@@ -141,10 +201,70 @@ const Validate = props => {
                     </div>
                   </PerfectScrollbar> 
                 </CardContent>
+                <CardActions>          
+          <Box flexGrow={1}>           
+          </Box>   
+          <Box>      
+            {
+            values[0].batch_status_id ===4 ?  null :  
+            values[0].batch_status_id ===1 ? 
+            <form onSubmit={handleValidate}>                
+              <Button
+                className={classes.saveButton}               
+                variant="contained"
+                hidden = "true"
+                type="submit"                                              
+              >
+                validate Batch
+              </Button>
+            </form>  
+              : 
+              values[0].batch_status_id ===2 ? null:
+              <form onSubmit={handleProgressToPostingQueue}>
+                <Button
+                  className={classes.saveButton}
+                  type="submit"
+                  variant="contained"
+                  hidden = "true"                               
+                >
+                  Progress Batch
+                </Button>
+              </form>
+            } 
+          </Box> 
+          {
+          values[0].batch_status_id ===4 ?  null :         
+          
+          
+          <Box> 
+            <form onSubmit={handleDiscard}>         
+              <Button
+                className={classes.saveButton}
+                variant="contained"
+                hidden = "true" 
+                type = "submit"                              
+              >
+                Discard Batch
+              </Button>
+            </form>             
+          </Box>
+      
+          }
+                  
+        </CardActions>
+       
               </Card> 
           </Grid>
         </Grid>
         </CardContent> 
+        <SuccessSnackbar
+          onClose={handleSnackbarSuccessClose}
+          open={openSnackbarSuccess}
+        />
+        <ErrorSnackbar
+          onClose={handleSnackbarErrorClose}
+          open={openSnackbarError}
+        />
     </Card>
   );
 };

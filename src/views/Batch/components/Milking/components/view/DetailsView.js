@@ -65,6 +65,7 @@ const DetailsView = props => {
     { name: "uuid",label: "uuid",options: {filter: false,sort: false,display:false}},  
     { name: "id",label: "ID",options: {filter: false,sort: true,display:true}},    
     { name: "batch_type",label: "Batch Type",options: {filter: false,sort: true,display:true}},
+    { name: "record_count",label: "Records",options: {filter: false,sort: false,display:true}},
     { name: "step",label: "Current Stage",options: {filter: true,sort: true,display:true}},    
     { name: "status",label: "Status",options: {filter: true,sort: true, display:true}}, 
     { name: "created_by",label: "Created By",options: {filter: true,sort: true,display:true}},     

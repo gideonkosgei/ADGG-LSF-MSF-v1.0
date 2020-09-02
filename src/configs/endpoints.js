@@ -408,6 +408,13 @@ export const endpoint_batch_milk_validation_un_processed_view= {
   method: 'GET',
   headers: headers   
 };
+// batch process - milking actions
+export const endpoint_batch_milk_actions= {
+  url: `${api}/batches/milking/action`,
+  method: 'POST',
+  headers: headers   
+};
+
 
 
 
