@@ -1908,9 +1908,7 @@ export const getBatchMilkingUnprocessed =  function (config,org_id,step,user_id)
 
 
 //Batch Process Milking - actions
-export const batchProcessMilkingActions =  function (config,uuid,action,user_id) {  
- 
-
+export const batchProcessMilkingActions =  function (config,uuid,action,user_id) { 
   const body = {          
     "action": action,
 	  "uuid":uuid, 
@@ -1933,6 +1931,27 @@ return new Promise((resolve, reject) => {
     reject(err));
 });       
 }
+
+
+
+// view milking batch validation errors
+export const getBatchMilkValidationErrors =   function (config,id) {   
+  const options = {
+    url:`${config.url}${id}`,
+    method: config.method,
+    headers: config.headers  
+  }; 
+
+  return new Promise((resolve, reject) => {
+    axios(options)
+    .then(res => {             
+        resolve(res.data);
+    })
+    .catch(err => reject(err));
+  });       
+};
+
+
 
 
 

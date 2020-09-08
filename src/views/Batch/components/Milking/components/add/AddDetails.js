@@ -6,7 +6,7 @@ import {Card, CardContent, CardHeader, Grid,Divider,colors,Stepper,Step,StepLabe
 import {getBatchMilkingValidation}   from '../../../../../../utils/API';
 import {endpoint_batch_milk_validation_view} from '../../../../../../configs/endpoints';
 import {Sidebar} from '../../../sidebar/index';
-import {Upload,Validate} from './components';
+import {Upload,Validate,Post} from './components';
 
 
 const useStyles = makeStyles(theme => ({
@@ -33,7 +33,7 @@ function getStepContent(step,records) {
     case 1:
       return <Validate UploadedRecords={records}/>;
     case 2:
-      return 'This is the bit I really care about!';
+      return <Post UploadedRecords={records}/>;
     default:
       return 'Unknown step';
   }

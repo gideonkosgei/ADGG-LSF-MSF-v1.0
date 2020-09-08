@@ -5,17 +5,13 @@ import { makeStyles } from '@material-ui/styles';
 import {Card, CardContent, CardHeader, Grid,Divider,colors,CardActions,Box,Button } from '@material-ui/core';
 import {getBatchMilkingUnprocessed,batchProcessMilkingActions}   from '../../../../../../../../utils/API';
 import {endpoint_batch_milk_validation_un_processed_view,endpoint_batch_milk_actions} from '../../../../../../../../configs/endpoints';
-
 import MUIDataTable from "mui-datatables";
 import {MuiThemeProvider } from '@material-ui/core/styles';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import CustomToolbar from "./CustomToolbar";
-import OpenInNewIcon from '@material-ui/icons/OpenInNew';
 import authContext from '../../../../../../../../contexts/AuthContext';
 import SuccessSnackbar from '../../../../../../../../components/SuccessSnackbar';
 import ErrorSnackbar from '../../../../../../../../components/ErrorSnackbar';
-import {ErrorDetails} from '../errorDetailsModal';
-
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -28,7 +24,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const Validate = props => {
+const Post = props => {
   const {className,step,UploadedRecords, ...rest } = props; 
   const classes = useStyles();  
   const [values, setValues] = useState(UploadedRecords);  
@@ -36,9 +32,6 @@ const Validate = props => {
   const [ {user_id} ] = useContext(authContext);
   const [openSnackbarSuccess, setopenSnackbarSuccess] = useState(false);
   const [openSnackbarError, setopenSnackbarError] = useState(false);
-  const [openErrorLog, setErrorLog] = useState(false); 
-  const [record_id, setRecordID] = useState();    
-
   
   const uuid= localStorage.getItem('batch_upload_uuid');
   localStorage.removeItem('batch_upload_uuid');
@@ -64,7 +57,9 @@ const Validate = props => {
     return null;
   }  
 
-  const handleValidate = event => {
+
+
+  const handlePostRecords = event => {
     event.preventDefault(); 
     (async  (_endpoint,_uuid,_action,_user_id) => { 
       await  batchProcessMilkingActions(_endpoint,_uuid,_action,_user_id)
@@ -98,26 +93,6 @@ const Validate = props => {
     })(endpoint_batch_milk_actions,uuid,2,user_id);    
   };
 
-
-  const handleProgressToPostingQueue = event => {   
-    event.preventDefault(); 
-    (async  (_endpoint,_uuid,_action,_user_id) => { 
-      await  batchProcessMilkingActions(_endpoint,_uuid,_action,_user_id)
-      .then(() => {  
-        setopenSnackbarSuccess(true);         
-        var delayInMilliseconds = 1000; //1 second
-        setTimeout(function() {
-           window.location.reload();           
-        }, delayInMilliseconds);
-
-      }).catch(() => {
-        setopenSnackbarError(true); 
-      });
-    })(endpoint_batch_milk_actions,uuid,3,user_id);    
-  };
-
-
-
   const handleSnackbarSuccessClose = () => {
     setopenSnackbarSuccess(false);
   };
@@ -126,18 +101,8 @@ const Validate = props => {
     setopenSnackbarError(false);
   };
 
-  const handleErrorLogOpen = (record_id) => { 
-    setRecordID(record_id);
-    setErrorLog(true);
-  };
 
-  const handleErrorLogClose = () => {
-    setErrorLog(false);
-  };
- 
-
-    const columns = [      
-    { name: "record_id",label: "record_id",options: {filter: false,sort: false,display:false}},
+    const columns = [
     { name: "uuid",label: "uuid",options: {filter: false,sort: false,display:false}},
     { name: "animal_id",label: "Animal ID",options: {filter: true,sort: true, display:true}},
     { name: "milk_date",label: "Milk Date",options: {filter: true,sort: true, display:true}},
@@ -149,15 +114,7 @@ const Validate = props => {
       options: {
       filter: false,
       sort: false,  
-      empty:true, 
-      display:true,   
-      customBodyRender: (value, tableMeta, updateValue) => {         
-        return (                              
-          <Button onClick = {() => handleErrorLogOpen(tableMeta.rowData[0])}>            
-          <OpenInNewIcon className={classes.buttonIcon} />                
-          </Button>
-        );
-      }
+      empty:true  
     }
 }    
   ];
@@ -185,18 +142,22 @@ const Validate = props => {
   };
 
   return (
-   
-   
+    <Card
+      {...rest}
+      className={clsx(classes.root, className)}
+    >
+        <CardHeader title={ (step ==='2')?`Batch processes - Milking Records Pending Validation` :`Batch processes - Milking Records Pending Posting`} />
+        <Divider />
+        <CardContent> 
           <Grid container spacing={1} justify="center"> 
           <Grid item xs={11}>
-            <Card {...rest}
-      className={clsx(classes.root, className)}>
-                <CardContent>                  
+            <Card>
+                <CardContent>
                   <PerfectScrollbar>
                     <div className={classes.inner}>
                       <MuiThemeProvider>                
                         <MUIDataTable
-                          title = "XXXXXXXXXXXXXX"
+                          title = ""
                           data={values}
                           columns={columns}
                           options={options}
@@ -206,77 +167,63 @@ const Validate = props => {
                   </PerfectScrollbar> 
                 </CardContent>
                 <CardActions>          
-                  <Box flexGrow={1}>           
-                  </Box>   
-                  <Box>      
-                    {
-                    values[0].batch_status_id ===4 ?  null :  
-                    values[0].batch_status_id ===1 ? 
-                    <form onSubmit={handleValidate}>                
-                      <Button
-                        className={classes.saveButton}               
-                        variant="contained"
-                        hidden = "true"
-                        type="submit"                                              
-                      >
-                        validate Batch
-                      </Button>
-                    </form>  
-                      : 
-                      values[0].batch_status_id ===2 ? null:
-                      <form onSubmit={handleProgressToPostingQueue}>
-                        <Button
-                          className={classes.saveButton}
-                          type="submit"
-                          variant="contained"
-                          hidden = "true"                               
-                        >
-                          Progress Batch
-                        </Button>
-                      </form>
-                    } 
-                  </Box> 
-                  {
-                  values[0].batch_status_id ===4 ?  null :                   
-                  <Box> 
-                    <form onSubmit={handleDiscard}>         
-                      <Button
-                        className={classes.saveButton}
-                        variant="contained"
-                        hidden = "true" 
-                        type = "submit"                              
-                      >
-                        Discard Batch
-                      </Button>
-                    </form>             
-                  </Box>              
-                  }
-                          
-                </CardActions>
-                <SuccessSnackbar
-                  onClose={handleSnackbarSuccessClose}
-                  open={openSnackbarSuccess}
-                />
-                <ErrorSnackbar
-                  onClose={handleSnackbarErrorClose}
-                  open={openSnackbarError}
-                />
-
-                <ErrorDetails
-                        record_id={record_id}
-                        onClose={handleErrorLogClose}
-                        open={openErrorLog}    
-                />
+          <Box flexGrow={1}>           
+          </Box>   
+          <Box>      
+            {
+            values[0].batch_status_id ===3 ?            
+            <form onSubmit={handlePostRecords}>                
+              <Button
+                className={classes.saveButton}               
+                variant="contained"
+                hidden = "true"
+                type="submit"                                              
+              >
+                Post Records
+              </Button>
+            </form>  
+              : 
+              null
+            } 
+          </Box> 
+          {
+          values[0].batch_status_id ===4 ?  null : 
+          <Box> 
+            <form onSubmit={handleDiscard}>         
+              <Button
+                className={classes.saveButton}
+                variant="contained"
+                hidden = "true" 
+                type = "submit"                              
+              >
+                Discard Batch
+              </Button>
+            </form>             
+          </Box>
+      
+          }
+                  
+        </CardActions>
+       
               </Card> 
           </Grid>
         </Grid>
-       
+        </CardContent> 
+        <SuccessSnackbar
+          onClose={handleSnackbarSuccessClose}
+          open={openSnackbarSuccess}
+        />
+        <ErrorSnackbar
+          onClose={handleSnackbarErrorClose}
+          open={openSnackbarError}
+        />
+    </Card>
   );
 };
 
-Validate.propTypes = {
+Post.propTypes = {
   className: PropTypes.string,
   //profile: PropTypes.object.isRequired
 };
 
-export default Validate;
+export default Post;

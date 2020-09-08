@@ -9,6 +9,7 @@ import HomeIcon from '@material-ui/icons/Home';
 import PlaylistPlayIcon from '@material-ui/icons/PlaylistPlay';
 import PlaylistAddCheckIcon from '@material-ui/icons/PlaylistAddCheck';
 import CloudDownloadIcon from '@material-ui/icons/CloudDownload';
+import DeleteIcon from '@material-ui/icons/Delete';
 
 
 
@@ -45,13 +46,21 @@ const Sidebar = props => {
           </IconButton> 
         </Tooltip>  
 
-        <Tooltip  title="view Processed">              
+        <Tooltip  title="View Posted">              
           <IconButton aria-label="processed" size="small" >
             <Link component = {RouterLink} to = {`/batch-process/milking-records/stage/3`}>
               <PlaylistAddCheckIcon /> 
             </Link>
           </IconButton> 
-        </Tooltip>       
+        </Tooltip> 
+
+         <Tooltip  title="View Deleted">              
+          <IconButton aria-label="deleted" size="small" >
+            <Link component = {RouterLink} to = {`/batch-process/milking-records/stage/3`}>
+              <DeleteIcon/> 
+            </Link>
+          </IconButton> 
+        </Tooltip>        
                    
         <Tooltip  title="download template">              
           <IconButton aria-label="download" size="small" >

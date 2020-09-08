@@ -415,6 +415,12 @@ export const endpoint_batch_milk_actions= {
   headers: headers   
 };
 
+export const endpoint_batch_milk_errors= {
+  url: `${api}/batches/milking/errors/`,
+  method: 'GET',
+  headers: headers   
+};
+
 
 
 
