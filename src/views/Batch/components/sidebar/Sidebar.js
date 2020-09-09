@@ -56,7 +56,7 @@ const Sidebar = props => {
 
          <Tooltip  title="View Deleted">              
           <IconButton aria-label="deleted" size="small" >
-            <Link component = {RouterLink} to = {`/batch-process/milking-records/stage/3`}>
+            <Link component = {RouterLink} to = {`/batch-process/milking-records/deleted`}>
               <DeleteIcon/> 
             </Link>
           </IconButton> 

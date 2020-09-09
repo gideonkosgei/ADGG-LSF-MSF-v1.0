@@ -2,7 +2,7 @@ import React, { useState,useEffect,useContext } from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
-import {Card, CardContent, CardHeader, Grid,Divider,colors,CardActions,Box,Button } from '@material-ui/core';
+import {Card, CardContent,Grid,colors,CardActions,Box,Button } from '@material-ui/core';
 import {getBatchMilkingUnprocessed,batchProcessMilkingActions}   from '../../../../../../../../utils/API';
 import {endpoint_batch_milk_validation_un_processed_view,endpoint_batch_milk_actions} from '../../../../../../../../configs/endpoints';
 import MUIDataTable from "mui-datatables";
@@ -141,23 +141,16 @@ const Post = props => {
   }  
   };
 
-  return (
-    <Card
-      {...rest}
-      className={clsx(classes.root, className)}
-    >
-        <CardHeader title={ (step ==='2')?`Batch processes - Milking Records Pending Validation` :`Batch processes - Milking Records Pending Posting`} />
-        <Divider />
-        <CardContent> 
-          <Grid container spacing={1} justify="center"> 
+  return (   
+        <Grid container spacing={1} justify="center"> 
           <Grid item xs={11}>
-            <Card>
+            <Card {...rest} className={clsx(classes.root, className)}>      
                 <CardContent>
                   <PerfectScrollbar>
                     <div className={classes.inner}>
                       <MuiThemeProvider>                
                         <MUIDataTable
-                          title = ""
+                          title = "BATCH LISTING - POSTING"
                           data={values}
                           columns={columns}
                           options={options}
@@ -204,20 +197,18 @@ const Post = props => {
           }
                   
         </CardActions>
-       
-              </Card> 
+          <SuccessSnackbar
+            onClose={handleSnackbarSuccessClose}
+            open={openSnackbarSuccess}
+          />
+          <ErrorSnackbar
+            onClose={handleSnackbarErrorClose}
+            open={openSnackbarError}
+          />       
+          </Card> 
           </Grid>
         </Grid>
-        </CardContent> 
-        <SuccessSnackbar
-          onClose={handleSnackbarSuccessClose}
-          open={openSnackbarSuccess}
-        />
-        <ErrorSnackbar
-          onClose={handleSnackbarErrorClose}
-          open={openSnackbarError}
-        />
-    </Card>
+        
   );
 };
 

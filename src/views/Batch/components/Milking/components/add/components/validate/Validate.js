@@ -2,7 +2,7 @@ import React, { useState,useEffect,useContext } from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
-import {Card, CardContent, CardHeader, Grid,Divider,colors,CardActions,Box,Button } from '@material-ui/core';
+import {Card, CardContent,Grid,colors,CardActions,Box,Button } from '@material-ui/core';
 import {getBatchMilkingUnprocessed,batchProcessMilkingActions}   from '../../../../../../../../utils/API';
 import {endpoint_batch_milk_validation_un_processed_view,endpoint_batch_milk_actions} from '../../../../../../../../configs/endpoints';
 
@@ -185,18 +185,15 @@ const Validate = props => {
   };
 
   return (
-   
-   
-          <Grid container spacing={1} justify="center"> 
+        <Grid container spacing={1} justify="center"> 
           <Grid item xs={11}>
-            <Card {...rest}
-      className={clsx(classes.root, className)}>
+            <Card {...rest} className={clsx(classes.root, className)}>                
                 <CardContent>                  
                   <PerfectScrollbar>
                     <div className={classes.inner}>
                       <MuiThemeProvider>                
                         <MUIDataTable
-                          title = "XXXXXXXXXXXXXX"
+                          title = {(values[0].batch_status_id ===4)?'BATCH LISTING - VALIDATION(DISCARDED)':'BATCH LISTING - VALIDATION'}
                           data={values}
                           columns={columns}
                           options={options}

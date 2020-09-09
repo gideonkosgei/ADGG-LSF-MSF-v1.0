@@ -12,8 +12,6 @@ import SuccessSnackbar from '../../../../../../../../components/SuccessSnackbar'
 import ErrorSnackbar from '../../../../../../../../components/ErrorSnackbar';
 import uuid from 'uuid';
 
-
-
 const useStyles = makeStyles(theme => ({
   root: {},
   content: {
@@ -94,11 +92,10 @@ const Upload = props => {
       await  postBatchUploadMilking(endpoint,rows,cols,user_id,org_id,uuid)
       .then(() => {  
         setopenSnackbarSuccess(true);
-        var delayInMilliseconds = 1000; //1 second
+        var delayInMilliseconds = 1000; //1 second        
         setTimeout(function() {
-           window.location.reload();           
+          window.location.replace(`/batch-process/milking-records/add/${batch_uuid}`);
         }, delayInMilliseconds);
-                     
         document.forms["event"].reset();
       }).catch((err) => {        
         setopenSnackbarError(true); 

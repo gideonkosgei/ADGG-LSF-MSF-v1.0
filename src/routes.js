@@ -421,6 +421,12 @@ const routes = [
         exact: true,
         component: lazy(() => import('views/Batch/components/Milking/components/add'))        
       }, 
+      // deleted milk batches
+      {
+        path: '/batch-process/milking-records/deleted',
+        exact: true,
+        component: lazy(() => import('views/Batch/components/Milking/components/deleted'))        
+      }, 
       // Batch processes Routes subsequent Steps
       {
         path: '/batch-process/milking-records/add/:uuid',
