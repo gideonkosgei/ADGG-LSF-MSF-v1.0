@@ -428,6 +428,19 @@ export const endpoint_batch_milk_errors= {
   headers: headers   
 };
 
+//get calender items
+export const endpoint_calender_items= {
+  url: `${api}/calender/event/`,
+  method: 'GET',
+  headers: headers   
+};
+
+export const endpoint_calender_event_create= {
+  url: `${api}/calender/event`,
+  method: 'POST',
+  headers: headers   
+};
+
 
 
 

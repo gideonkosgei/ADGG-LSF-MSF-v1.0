@@ -1970,6 +1970,70 @@ export const getBatchMilkValidationErrors =   function (config,id) {
 
 
 
+// calender
+//1.  view calender items
+
+// view milking batch validation errors
+export const getCalenderItems =   function (config,org_id) {   
+  const options = {
+    url:`${config.url}${org_id}`,
+    method: config.method,
+    headers: config.headers  
+  }; 
+
+  return new Promise((resolve, reject) => {
+    axios(options)
+    .then(res => {             
+        resolve(res.data);
+    })
+    .catch(err => reject(err));
+  });       
+};
+
+
+//Calender Event - Create
+export const postCalenderEvent =  function (config,title,description,event_start,event_end,all_day,color,created_by,org_id) {  
+
+  const body = {          
+    "title": title, 
+    "description": description ,  
+    "event_start": event_start ,
+    "event_end": event_end , 
+    "all_day": all_day , 
+    "color": color , 
+    "created_by": created_by ,
+    "org_id": org_id  
+  };
+
+  const options = {
+    url:`${config.url}`, 
+    method: config.method,
+    headers: config.headers,
+    data: body  
+  };
+
+return new Promise((resolve, reject) => {
+  axios(options)
+  .then(res => {           
+      resolve(res.data);
+  })
+  .catch(err =>    
+    reject(err));
+});       
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

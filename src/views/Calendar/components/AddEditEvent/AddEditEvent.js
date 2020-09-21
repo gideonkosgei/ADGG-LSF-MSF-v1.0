@@ -1,5 +1,5 @@
 /* eslint-disable react/display-name */
-import React, { useState, forwardRef } from 'react';
+import React, { useState, forwardRef,useContext } from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import moment from 'moment';
@@ -19,6 +19,11 @@ import {
   colors
 } from '@material-ui/core';
 import DeleteIcon from '@material-ui/icons/DeleteOutlined';
+import authContext from '../../../../contexts/AuthContext';
+import {postCalenderEvent}   from '../../../../utils/API';
+import {endpoint_calender_event_create} from '../../../../configs/endpoints';
+import SuccessSnackbar from '../../../../components/SuccessSnackbar';
+import ErrorSnackbar from '../../../../components/ErrorSnackbar';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -49,15 +54,10 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const AddEditEvent = forwardRef((props, ref) => {
-  const {
-    event,
-    onDelete,
-    onCancel,
-    onAdd,
-    onEdit,
-    className,
-    ...rest
-  } = props;
+  const {event,onDelete,onCancel,onAdd,onEdit,className, ...rest} = props;
+  const [{user_id,organization_id}] = useContext(authContext);
+  const [openSnackbarSuccess, setopenSnackbarSuccess] = useState(false);
+  const [openSnackbarError, setopenSnackbarError] = useState(false);
 
   const classes = useStyles();
 
@@ -86,13 +86,28 @@ const AddEditEvent = forwardRef((props, ref) => {
     onDelete && onDelete(event);
   };
 
-  const handleAdd = () => {
+  const handleAdd = (event) => {
+    event.preventDefault();
+    (async  (endpoint,title,description,event_start,event_end,all_day,color,created_by,org_id) => {      
+      await  postCalenderEvent(endpoint,title,description,event_start,event_end,all_day,color,created_by,org_id)
+      .then(() => {  
+        setopenSnackbarSuccess(true);        
+        document.forms["calender"].reset();
+      }).catch((err) => {               
+        setopenSnackbarError(true); 
+      });
+    })(endpoint_calender_event_create,values.title,values.desc,moment(values.start).format('YYYY-MM-DD HH:mm'),moment(values.end).format('YYYY-MM-DD HH:mm'),values.allDay,1,user_id,organization_id);
+  
     if (!values.title || !values.desc) {
       return;
-    }
-
-    onAdd({ ...values, id: uuid() });
+    } 
+    var delayInMilliseconds = 800; //1 second        
+        setTimeout(function() {
+          onAdd({ ...values, id: uuid()});
+        }, delayInMilliseconds);
   };
+
+
 
   const handleEdit = () => {
     if (!values.title || !values.desc) {
@@ -102,13 +117,21 @@ const AddEditEvent = forwardRef((props, ref) => {
     onEdit(values);
   };
 
+  const handleSnackbarSuccessClose = () => {
+    setopenSnackbarSuccess(false);
+  };
+
+  const handleSnackbarErrorClose = () => {
+    setopenSnackbarError(false);
+  };
+
   return (
     <Card
       {...rest}
       className={clsx(classes.root, className)}
       ref={ref}
     >
-      <form>
+      <form id ="calender">
         <CardContent>
           <Typography
             align="center"
@@ -202,6 +225,14 @@ const AddEditEvent = forwardRef((props, ref) => {
           )}
         </CardActions>
       </form>
+        <SuccessSnackbar
+        onClose={handleSnackbarSuccessClose}
+        open={openSnackbarSuccess}
+        />
+        <ErrorSnackbar
+          onClose={handleSnackbarErrorClose}
+          open={openSnackbarError}
+        />
     </Card>
   );
 });

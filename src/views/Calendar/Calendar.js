@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect,useContext } from 'react';
 import moment from 'moment';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
@@ -7,6 +7,8 @@ import interactionPlugin from '@fullcalendar/interaction';
 import listPlugin from '@fullcalendar/list';
 import timelinePlugin from '@fullcalendar/timeline';
 import { makeStyles } from '@material-ui/styles';
+import {getCalenderItems}   from '../../utils/API';
+import {endpoint_calender_items} from '../../configs/endpoints';
 import {
   Modal,
   Card,
@@ -19,10 +21,9 @@ import '@fullcalendar/core/main.css';
 import '@fullcalendar/daygrid/main.css';
 import '@fullcalendar/timegrid/main.css';
 import '@fullcalendar/list/main.css';
-
-import axios from 'utils/axios';
 import { Page } from 'components';
 import { AddEditEvent, Toolbar } from './components';
+import authContext from '../../contexts/AuthContext'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -94,30 +95,32 @@ const Calendar = () => {
   const theme = useTheme();
   const mobileDevice = useMediaQuery(theme.breakpoints.down('sm'));
   const [view, setView] = useState(mobileDevice ? 'listWeek' : 'dayGridMonth');
-  const [date, setDate] = useState(moment('2019-07-30 08:00:00').toDate());
+  const [date, setDate] = useState(moment(Date.now()).toDate());
   const [events, setEvents] = useState([]);
+  const [ {organization_id} ] = useContext(authContext);
   const [eventModal, setEventModal] = useState({
     open: false,
     event: null
   });
+  
 
-  useEffect(() => {
+  useEffect(() => {     
     let mounted = true;
-
-    const fetchEvents = () => {
-      if (mounted) {
-        axios
-          .get('/api/calendar')
-          .then(response => setEvents(response.data.events));
-      }
-    };
-
-    fetchEvents();
-
+      (async  (endpoint,org_id,step,user_id) => {     
+        await  getCalenderItems(endpoint,org_id,step,user_id)
+        .then(response => {                        
+          if (mounted) {                       
+            setEvents(response.payload);                 
+          }
+        });
+      })(endpoint_calender_items,organization_id); 
+      
     return () => {
       mounted = false;
+           
     };
-  }, []);
+  }, [organization_id]);
+
 
   useEffect(() => {
     const calendarApi = calendarRef.current.getApi();
@@ -202,6 +205,9 @@ const Calendar = () => {
     setDate(calendarApi.getDate());
   };
 
+  if (!events) {
+    return null;
+  }
   return (
     <Page
       className={classes.root}
