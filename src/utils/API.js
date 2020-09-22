@@ -2023,6 +2023,22 @@ return new Promise((resolve, reject) => {
 };
 
 
+// view event setup
+export const getEventSetup =  function (config,animal_id) {   
+  const options = {
+    url:`${config.url}${animal_id}`,
+    method: config.method,
+    headers: config.headers  
+  }
+  return new Promise((resolve, reject) => {
+    axios(options)
+    .then(res => {             
+        resolve(res.data);
+    })
+    .catch(err => reject(err));
+  });       
+};
+
 
 
 

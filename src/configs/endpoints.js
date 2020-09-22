@@ -441,6 +441,12 @@ export const endpoint_calender_event_create= {
   headers: headers   
 };
 
+export const endpoint_event_setup= {
+  url: `${api}/events/setup/`,
+  method: 'GET',
+  headers: headers   
+};
+
 
 
 
