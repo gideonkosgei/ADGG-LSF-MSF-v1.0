@@ -2030,6 +2030,7 @@ export const getEventSetup =  function (config,animal_id) {
     method: config.method,
     headers: config.headers  
   }
+  
   return new Promise((resolve, reject) => {
     axios(options)
     .then(res => {             
@@ -2038,6 +2039,54 @@ export const getEventSetup =  function (config,animal_id) {
     .catch(err => reject(err));
   });       
 };
+
+export const getEventSetupAll =  function (config) {   
+  const options = {
+    url:`${config.url}`,
+    method: config.method,
+    headers: config.headers  
+  }
+  return new Promise((resolve, reject) => {
+    axios(options)
+    .then(res => {             
+        resolve(res.data);
+    })
+    .catch(err => reject(err));
+  });       
+};
+
+
+export const updateEventSetup =  function (config,values,user_id,param_id) { 
+  console.log(values);
+  let {calving,milking,health,bio_data,insemination,sync,exit,weight,pd} = values; 
+  
+  const body = {
+    "calving": calving,
+    "milking": milking,
+    "health": health,
+    "bio_data": bio_data,
+    "insemination": insemination,
+    "sync": sync,
+    "exit": exit,
+    "weight": weight,
+    "pd": pd,
+    "updated_by": user_id
+  };
+const options = {
+  url:`${config.url}${param_id}`, 
+  method: config.method,
+  headers: config.headers,
+  data: body  
+};
+
+return new Promise((resolve, reject) => {
+  axios(options)
+  .then(res => {           
+      resolve(res.data);
+  })
+  .catch(err => reject(err));
+});       
+}
 
 
 

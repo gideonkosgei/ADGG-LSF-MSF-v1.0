@@ -447,6 +447,19 @@ export const endpoint_event_setup= {
   headers: headers   
 };
 
+export const endpoint_event_setup_all= {
+  url: `${api}/events/setup`,
+  method: 'GET',
+  headers: headers   
+}
+
+export const endpoint_event_setup_update= {
+  url: `${api}/events/setup/`,
+  method: 'PUT',
+  headers: headers   
+}
+
+
 
 
 

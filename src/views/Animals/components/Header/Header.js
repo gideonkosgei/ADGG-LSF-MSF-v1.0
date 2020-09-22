@@ -45,30 +45,6 @@ const Header = props => {
   if (!values) {
     return null;
   }
-
-  console.log(values.animal_type);
-
-  /*
-  bio_data: 0
-calving: 0
-exit: 0
-health: 0
-insemination: 0
-milking: 0
-pd: 0
-sync: 0
-weight: 0
-  
-  const calving_menu = ''
-  const milking_menu = ''
-  const health_menu = ''
-  const insemination = ''
-  const sync = ''
-  const exit = ''
-  const weight = ''
-  const pd = ''
-  const bio_data = ''*/
- 
   return (    
     <Card
       {...rest}

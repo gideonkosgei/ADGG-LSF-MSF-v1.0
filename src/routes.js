@@ -415,6 +415,18 @@ const routes = [
         component: lazy(() => import('views/Parameters/components/LocalSettings/components/edit'))        
       },  
 
+      // events matrix
+      {
+        path: '/settings/parameters/events-matrix',
+        exact: true,
+        component: lazy(() => import('views/Parameters/components/EventsMatrix/components/view'))        
+      }, 
+      {
+        path: '/settings/parameters/events-matrix/edit/:id',
+        exact: true,
+        component: lazy(() => import('views/Parameters/components/EventsMatrix/components/edit'))        
+      }, 
+
       // Batch processes Routes
       {
         path: '/batch-process/milking-records/add',
