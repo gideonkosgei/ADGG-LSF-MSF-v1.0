@@ -36,18 +36,18 @@ export default [
         href: '/management',
         icon: BarChartIcon,
         children: [
-          {
+          /*{
             title: 'Clients',
             href: '/management/clients'
-          },
+          },*/
           {
             title: 'Animals',
             href: '/management/animals'
-          },
+          }/*
           {
             title: 'Farm Details',
             href: '/management/farms/1/summary'
-          },
+          },*/
            
         ]
       },
