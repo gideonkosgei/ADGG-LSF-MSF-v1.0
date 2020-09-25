@@ -189,9 +189,9 @@ export const getAnimalStats =  function (config,organisation_id) {
 
 
 // get all animals that belong to an organization
-export const getAnimalsOrg =  function (config,organisation_id) {   
+export const getAnimalsOrg =  function (config,organisation_id,status) {   
   const options = {
-    url:`${config.url}${organisation_id}`,
+    url:`${config.url}${organisation_id}/${status}`,
     method: config.method,
     headers: config.headers  
   }  
@@ -827,6 +827,25 @@ export const getExit =  function (config,id) {
     .catch(err => reject(err));
   });       
 }
+
+
+// get Exit events 
+export const getExitList =  function (config,id) {   
+  const options = {
+    url:`${config.url}'${id}'`,
+    method: config.method,
+    headers: config.headers  
+  }  
+ 
+  return new Promise((resolve, reject) => {
+    axios(options)
+    .then(res => {          
+        resolve(res.data);
+    })
+    .catch(err => reject(err));
+  });       
+}
+
 
 
 

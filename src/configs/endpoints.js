@@ -210,6 +210,11 @@ export const endpoint_exit = {
   method: 'GET',
   headers: headers   
 };
+export const endpoint_exit_list = {
+  url: `${api}/events/exit/list/`,
+  method: 'GET',
+  headers: headers   
+};
 
 //post exit event
 export const endpoint_exit_add = {

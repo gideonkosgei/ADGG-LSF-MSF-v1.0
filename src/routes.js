@@ -207,6 +207,7 @@ const routes = [
         exact: true,
         component: lazy(() => import('views/Animals/components/Exits'))
       },
+
       {
         path: '/management/exit/add/:id',
         exact: true,
@@ -218,6 +219,16 @@ const routes = [
         component: lazy(() => import('views/Animals/components/Exits/components/edit'))
       },
 
+      {
+        path: '/management/exit-list',
+        exact: true,
+        component: lazy(() => import('views/Animals/components/ExitList'))
+      },
+      {
+        path: '/management/exit-list/details/:id',
+        exact: true,
+        component: lazy(() => import('views/Animals/components/ExitList/components/details'))
+      },
       {
         path: '/management/health/view/:id',
         exact: true,

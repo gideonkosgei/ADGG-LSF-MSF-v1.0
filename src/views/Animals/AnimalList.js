@@ -24,8 +24,8 @@ const AnimalList = props => {
 
   useEffect(() => {   
     let mounted = true;
-    (async  (endpoint,id) => {     
-        await  getAnimalsOrg(endpoint,id)
+    (async  (endpoint,id,status) => {     
+        await  getAnimalsOrg(endpoint,id,status)
         .then(response => {       
           if (mounted) { 
           let filtered = []; 
@@ -44,7 +44,7 @@ const AnimalList = props => {
             setAnimals(res);
           }
         });
-      })(endpoint_animal_org,organization_id); 
+      })(endpoint_animal_org,organization_id,1); 
     return () => {
       mounted = false;
     };

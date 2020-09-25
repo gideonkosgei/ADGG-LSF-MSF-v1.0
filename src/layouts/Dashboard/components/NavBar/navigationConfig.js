@@ -43,7 +43,11 @@ export default [
           {
             title: 'Animals',
             href: '/management/animals'
-          }/*
+          },
+          {
+            title: 'Exit List',
+            href: '/management/exit-list'
+          },/*
           {
             title: 'Farm Details',
             href: '/management/farms/1/summary'
