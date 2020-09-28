@@ -56,7 +56,7 @@ const DetailsView = props => {
     { name: "calf_tag_id",label: "C.Tag ID",options: {filter: false,sort: true,display:true}}, 
     { name: "calf_name",label: "C.Name",options: {filter: false,sort: true,display:true}},   
     { name: "calving_birth_type",label: "Birth Type",options: {filter: false,sort: true,display:true}},
-    { name: "calf_body_condition_score",label: "C.Body Score",options: {filter: false,sort: true,display:true}},    
+    { name: "calf_body_condition_score_id",label: "C.Body Score",options: {filter: false,sort: true,display:true}},    
     { name: "calf_sex",label: "C.Gender",options: {filter: true,sort: true, display:true}},
     { name: "calf_color",label: "C.Color",options: {filter: false,sort: true,display:true}},
     { name: "calf_weight",label: "C.Weight",options: {filter: true,sort: true,display:true}},    

@@ -320,7 +320,7 @@ const DetailsEdit = props => {
                           <option                    
                             value={score.id}
                           >
-                            {score.value}
+                            {score.id}
                           </option>
                         ))
                     }           

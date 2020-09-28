@@ -550,7 +550,7 @@ const DetailsEdit = props => {
                             <option                    
                               value={body_score.id}
                             >
-                              {body_score.value}
+                              {body_score.id}
                             </option>
                           ))
                       }           

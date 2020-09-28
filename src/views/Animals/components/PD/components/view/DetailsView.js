@@ -60,7 +60,7 @@ const DetailsView = props => {
     { name: "pd_method",label: "Method",options: {filter: false,sort: true,display:true}},
     { name: "pd_result",label: "Results",options: {filter: true,sort: true, display:true}},
     { name: "pd_stage",label: "Stage",options: {filter: false,sort: true,display:true}},
-    { name: "body_condition_score",label: "Body Condition",options: {filter: true,sort: true,display:true}},
+    { name: "body_condition_score_id",label: "Body Condition",options: {filter: true,sort: true,display:true}},
     { name: "cost",label: "cost",options: {filter: true,sort: true,display:true}},     
     { name: "date_created",label: "Date Created",options: {filter: true,sort: true,display:true}}, 
     //{ name: "created_by",label: "Created By",options: {filter: true,sort: true,display:true}}

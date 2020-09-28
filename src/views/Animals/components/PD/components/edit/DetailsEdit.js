@@ -115,6 +115,8 @@ const DetailsEdit = props => {
     });
   };
 
+  console.log(values);
+
 
   const handleSubmit = event => {
     event.preventDefault();
@@ -383,7 +385,7 @@ const DetailsEdit = props => {
                           <option                    
                             value={score.id}
                           >
-                            {score.value}
+                            {score.id}
                           </option>
                         ))
                     }           

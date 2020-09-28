@@ -59,7 +59,7 @@ const DetailsView = props => {
     { name: "body_length",label: "Body Length",options: {filter: false,sort: true,display:true}},
     { name: "heart_girth",label: "Heart Girth",options: {filter: true,sort: true, display:true}},
     { name: "weight_kg",label: "Weight(kg)",options: {filter: true,sort: true, display:true}},
-    { name: "body_score",label: "Body Score",options: {filter: false,sort: true,display:true}},
+    { name: "body_score_id",label: "Body Score",options: {filter: false,sort: true,display:true}},
     { name: "",
       options: {
       filter: false,
