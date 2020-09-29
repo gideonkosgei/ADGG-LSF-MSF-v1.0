@@ -78,25 +78,53 @@ export default [
         icon: SettingsIcon,
         children: [
           {
-            title: 'General',
-            href: '/settings/general'
+            title: 'Account',
+            href: '/settings',
+            children: [
+              {
+                title: 'General',
+                href: '/settings/general'
+              },
+              {
+                title: 'Security',
+                href: '/settings/security'
+              },
+            ]
           },         
+         
           {
-            title: 'Security',
-            href: '/settings/security'
+            title: 'System Parameters',
+            href: '/settings/parameters',
+            children: [
+              {
+                title: 'Limits',
+                href: '/settings/parameters/limits'
+              },
+              {
+                title: 'Local Settings',
+                href: '/settings/parameters/local-settings'
+              },   
+              {
+                title: 'Events Matrix',
+                href: '/settings/parameters/events-matrix'
+              }
+            ]
           },
+          
           {
-            title: 'Limits',
-            href: '/settings/parameters/limits'
-          },
-          {
-            title: 'Local Settings',
-            href: '/settings/parameters/local-settings'
-          },   
-          {
-            title: 'Events Matrix',
-            href: '/settings/parameters/events-matrix'
-          }        
+            title: 'Partners',
+            href: '/settings/partners/service-providers',
+            children: [
+              {
+                title: 'Service Providers',
+                href: '/settings/partners/service-providers'
+              },
+              {
+                title: 'Agents',
+                href: '/settings/partners/agents'
+              }
+            ] 
+          }         
         ]
       },        
       {

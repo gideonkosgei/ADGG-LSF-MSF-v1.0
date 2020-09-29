@@ -464,6 +464,19 @@ export const endpoint_event_setup_update= {
   headers: headers   
 }
 
+//partners
+export const endpoint_service_provider= {
+  url: `${api}/partners/service-provider/`,
+  method: 'GET',
+  headers: headers   
+}
+
+export const endpoint_service_provider_add= {
+  url: `${api}/partners/service-provider`,
+  method: 'POST',
+  headers: headers   
+};
+
 
 
 

@@ -844,7 +844,63 @@ export const getExitList =  function (config,id) {
     })
     .catch(err => reject(err));
   });       
+};
+
+//partners
+export const getServiceProviders =  function (config,id,option) {   
+  const options = {
+    url:`${config.url}${id}/${option}`,
+    method: config.method,
+    headers: config.headers  
+  }  
+  return new Promise((resolve, reject) => {
+    axios(options)
+    .then(res => {          
+        resolve(res.data);
+    })
+    .catch(err => reject(err));
+  });       
 }
+
+export const postServiceProvider =  function (config,values,user_id,org_id) { 
+  let {phone_number,acronym,city,contact_person,contact_person_mobile_number,country,description,email,name,postal_address,postal_code,service_provider_type,services_offered} = values;
+ 
+  const body = {
+    "name": name,
+    "acronym": acronym,
+    "postal_address": postal_address ,
+    "postal_code": postal_code,
+    "city": city,
+    "phone": phone_number,
+    "email": email,
+    "description": description,
+    "services_offered": services_offered,
+    "contact_person": contact_person,
+    "contact_person_mobile_number": contact_person_mobile_number,
+    "service_provider_type": service_provider_type,
+    "country": country,
+    "org_id": org_id,
+    "created_by": user_id
+  };
+  
+  const options = {
+    url:`${config.url}`,
+    method: config.method,
+    headers: config.headers,
+    data: body  
+  }; 
+ 
+ 
+  return new Promise((resolve, reject) => {
+    axios(options)
+    .then(res => {           
+        resolve(res.data);
+    })    
+    .catch(err => reject(err));
+  });       
+}
+
+
 
 
 

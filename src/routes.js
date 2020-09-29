@@ -438,6 +438,33 @@ const routes = [
         component: lazy(() => import('views/Parameters/components/EventsMatrix/components/edit'))        
       }, 
 
+      //service providers
+      {
+        path: '/settings/partners/service-providers',
+        exact: true,
+        component: lazy(() => import('views/Partners/components/ServiceProviders/components/view'))        
+      }, 
+      {
+        path: '/settings/partners/service-providers/add',
+        exact: true,
+        component: lazy(() => import('views/Partners/components/ServiceProviders/components/add'))        
+      }, 
+      {
+        path: '/settings/partners/service-providers/edit/:id',
+        exact: true,
+        component: lazy(() => import('views/Partners/components/ServiceProviders/components/edit'))        
+      },
+      //agents
+      {
+        path: '/settings/partners/agents',
+        exact: true,
+        component: lazy(() => import('views/Partners/components/Agents/components/view'))        
+      }, 
+      
+
+
+      
+
       // Batch processes Routes
       {
         path: '/batch-process/milking-records/add',
