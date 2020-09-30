@@ -2,16 +2,16 @@ import React, { useState,useEffect,useContext } from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
-import {Card, CardContent, CardHeader, Grid,Divider, TextField,colors,Button,CardActions,Switch,Typography,Box,Tooltip } from '@material-ui/core';
-import {updateParametersLocalSettings,getParametersLocalSettingsOrgOne}   from '../../../../../../utils/API';
-import {endpoint_parameter_local_settings_org_update,endpoint_parameter_local_settings_org_one} from '../../../../../../configs/endpoints';
+import {Card, CardContent, CardHeader, Grid,Divider, TextField,colors,Button,CardActions,Typography,Box,Switch,Tooltip} from '@material-ui/core';
+import {getCountries,getServiceProviders,putAgents,getAgents}   from '../../../../../../utils/API';
+import {endpoint_countries,endpoint_service_provider,endpoint_agent_edit,endpoint_agent} from '../../../../../../configs/endpoints';
 import authContext from '../../../../../../contexts/AuthContext';
 import {Sidebar} from '../index';
 import SuccessSnackbar from '../../../../../../components/SuccessSnackbar';
 import ErrorSnackbar from '../../../../../../components/ErrorSnackbar';
 import OpenInNewIcon from '@material-ui/icons/OpenInNew';
-import {ParameterMetaData}  from '../Modal';
-
+import {MetaData}  from '../Modal';
+ 
 const useStyles = makeStyles(theme => ({
   root: {},
   saveButton: {
@@ -27,31 +27,64 @@ const DetailsEdit = props => {
   const {className, ...rest } = props; 
   const [openSnackbarSuccess, setopenSnackbarSuccess] = useState(false);
   const [openSnackbarError, setopenSnackbarError] = useState(false);
-  const [ {user_id} ] = useContext(authContext);
-  const classes = useStyles();  
-  const [values, setValues] = useState({ }); 
+  const [ {organization_id,user_id} ] = useContext(authContext);
+  const classes = useStyles();
+  const [values, setValues] = useState({ });  
+  const [affiliates, setAffiliates] = useState([]);
+  const [countries, setCountries] = useState([]);
   const [readOnly, setReadOnly] = useState(true);
   const [openMetadata, setMetadata] = useState(false); 
-  const local_setting_id  = localStorage.getItem('paramater_local_setting_id'); 
-   
-  useEffect(() => {
-    let mounted_params = true;
-    (async  (endpoint,id) => {             
-      await  getParametersLocalSettingsOrgOne(endpoint,id)
-      .then(response => {       
-        if (mounted_params) {           
-          const data = response.payload[0];          
-          setValues(data);                                
+  
+  
+  const agent_id  = localStorage.getItem('agent_id'); 
+  
+
+  useEffect(() => {    
+    let mounted_countries = true;
+    let mounted_affiliates = true;
+    let mounted_agents = true;
+    
+    
+
+    (async  (endpoint,org_id,option) => {     
+      await  getServiceProviders(endpoint,org_id,option)
+      .then(response => {                        
+        if (mounted_affiliates) {            
+          setAffiliates(response.payload);                 
         }
       });
-    })(endpoint_parameter_local_settings_org_one,local_setting_id);
-    return () => { 
-      mounted_params = false;          
-    };
-  },[local_setting_id]);
-  if (!values) {
-    return null;
+    })(endpoint_service_provider,organization_id,0);  
+    
+    (async  (endpoint,id,option) => {     
+      await  getAgents(endpoint,id,option)
+      .then(response => {                        
+        if (mounted_agents) {            
+          setValues(response.payload[0]);                 
+        }
+      });
+    })(endpoint_agent,agent_id,1);   
+    
+   
+    
+      (async  (endpoint) => {     
+        await  getCountries(endpoint)
+        .then(response => {       
+          if (mounted_countries) { 
+            const data = response.payload;           
+            setCountries(data);               
+          }
+        });
+      })(endpoint_countries);
+ 
+    return () => {      
+      mounted_countries = false; 
+      mounted_affiliates = false; 
+      mounted_agents = false;
+    };    
+  }, [organization_id,agent_id]);  
 
+  if (!affiliates || !countries || !values ) {
+    return null;
   }
 
     const handleChange = event => {
@@ -62,21 +95,19 @@ const DetailsEdit = props => {
           
     });
   };
-
+ 
 
   const handleSubmit = event => {
     event.preventDefault();
-    (async  (endpoint,id,values,user_id,local_setting_id) => {     
-      await  updateParametersLocalSettings(endpoint,id,values,user_id,local_setting_id)
+    (async  (endpoint,values,user_id,id) => {     
+      await  putAgents(endpoint,values,user_id,id)
       .then(() => {  
         setopenSnackbarSuccess(true);         
       }).catch(() => {
         setopenSnackbarError(true); 
       });
-    })(endpoint_parameter_local_settings_org_update,values,user_id,local_setting_id);    
+    })(endpoint_agent_edit,values,user_id,agent_id);    
   };
-  
-  
   const handleSnackbarSuccessClose = () => {
     setopenSnackbarSuccess(false);
   };
@@ -84,27 +115,24 @@ const DetailsEdit = props => {
   const handleSnackbarErrorClose = () => {
     setopenSnackbarError(false);
   };
-
   const handleSwitchChange = event => {
     event.persist();
     setReadOnly(!readOnly);   
   };
+
   const handleMetadataOpen = () => {
     setMetadata(true);
   };
-
   const handleMetadataClose = () => {
     setMetadata(false);
   };
-
 
   return (
     <Card
       {...rest}
       className={clsx(classes.root, className)}
     >
-      
-        <CardHeader title= { readOnly ? `Local Settings - View System Parameter #${local_setting_id}`:`Local Settings - Edit System Parameter  #${local_setting_id}` } />
+        <CardHeader title= { readOnly ? `AGENT #${agent_id}`:`EDIT AGENT #${agent_id}` } />
         <Divider />
         <CardContent> 
           <Grid container spacing={1} justify="center">            
@@ -113,139 +141,298 @@ const DetailsEdit = props => {
          </Grid> 
           <Grid item xs={11}>
             <Card> 
-            <form id ='event' onSubmit={handleSubmit}>
-              <CardContent>        
-              <Grid
-                container
-                spacing={4}
-              >               
-              <Grid
-                    item
-                    md={3}
-                    xs={12}
-                  >
-                  <TextField
-                    fullWidth
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-                    inputProps={{
-                      readOnly: true,
-                      disabled: true                
-                    }}
-                    margin = 'dense'
-                    label="Parameter name"
-                    name="name"                
-                    onChange={handleChange}
-                    variant="outlined" 
-                    required 
-                    value = {values.name}                    
-                />
-              </Grid>
-              
-              <Grid
-                    item
-                    md={6}
-                    xs={12}
-                  >
-                  <TextField
-                    fullWidth
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-                    inputProps={{
-                      readOnly: Boolean(readOnly),
-                      disabled: Boolean(readOnly)                
-                    }}
-                    margin = 'dense'
-                    required
-                    label="Parameter Description"
-                    name="description"  
-                    multiline      
-                    rowsMax = {4}                            
-                    onChange={handleChange}
-                    variant="outlined"
-                    value = {values.description} 
-                />
-              </Grid>
-              
-              <Grid
-                    item
-                    md={3}
-                    xs={12}
-                  >
-                  <TextField
-                    fullWidth
-                    InputLabelProps={{
-                      shrink: true,
-                    }} 
-                    inputProps={{
-                      readOnly: Boolean(readOnly),
-                      disabled: Boolean(readOnly)                
-                    }}               
-                    margin = 'dense'
-                    label="Parameter Key"
-                    name="key"                
-                    onChange={handleChange}
-                    variant="outlined"  
-                    required  
-                    value = {values.key}                  
-                />
-              </Grid>                
-             
-              
-              <Grid
-                    item
-                    md={3}
-                    xs={12}
-                  >
-                  <TextField
-                    fullWidth
-                    InputLabelProps={{
-                      shrink: true,
-                    }} 
-                    inputProps={{
-                      readOnly: Boolean(readOnly),
-                      disabled: Boolean(readOnly)                
-                    }}               
-                    margin = 'dense'
-                    label="Parameter Value"
-                    name="value"                
-                    onChange={handleChange}
-                    variant="outlined"  
-                    required  
-                    value = {values.value}                  
-                />
-              </Grid>                
-             
-              <Grid
-                    item
-                    md={3}
-                    xs={12}
-                  >
-                    <Box> 
-                    <Typography variant="h6"> { values.is_active? "Deactivate" : "Activate"} </Typography> 
-          </Box> 
-          <Box> 
-              <Switch   
-              inputProps={{
-                readOnly: Boolean(readOnly),
-                disabled: Boolean(readOnly)                
-              }}
-                name = "is_active"          
-                className={classes.toggle} 
-                color="secondary"
-                edge="start"
-                onChange={handleChange}
-                checked = {(values.is_active)?true:false}
-              />             
-         </Box>
-               </Grid> 
-
-              </Grid>
-          </CardContent>
-          <Divider />
-          <CardActions>          
+            <form id ='event' onSubmit={handleSubmit} >
+            <CardContent> 
+                       
+                       <Grid
+                         container
+                         spacing={4}
+                       > 
+                       <Grid
+                             item
+                             md={3}
+                             xs={12}
+                           >
+                           <TextField
+                             fullWidth
+                             InputLabelProps={{
+                               shrink: true,
+                             }}
+                             inputProps={{
+                              readOnly: Boolean(readOnly),
+                              disabled: Boolean(readOnly)                
+                            }}
+                             
+                             margin = 'dense'
+                             label="Agent Name"
+                             name="name"                
+                             onChange={handleChange}
+                             variant="outlined" 
+                             value = {values.name}                                        
+                         />
+                       </Grid>
+         
+                       <Grid
+                             item
+                             md={3}
+                             xs={12}
+                           >
+                           <TextField
+                             fullWidth
+                             InputLabelProps={{
+                               shrink: true,
+                             }}
+                             inputProps={{
+                              readOnly: Boolean(readOnly),
+                              disabled: Boolean(readOnly)                
+                            }}
+                             margin = 'dense'
+                             label="Occupation"
+                             name="occupation"                
+                             onChange={handleChange}
+                             variant="outlined"  
+                             value = {values.occupation}                                       
+                         />
+                       </Grid>
+                                     
+                    <Grid
+                             item
+                             md={6}
+                             xs={12}
+                           >
+                           <TextField
+                             fullWidth
+                             InputLabelProps={{
+                               shrink: true,
+                             }}
+                             inputProps={{
+                              readOnly: Boolean(readOnly),
+                              disabled: Boolean(readOnly)                
+                            }}
+                             margin = 'dense'
+                             label="Affiliation"
+                             name="affiliation_id"
+                             onChange={handleChange}                    
+                             default = ""                              
+                             select
+                             // eslint-disable-next-line react/jsx-sort-props
+                             SelectProps={{ native: true }}                    
+                             variant="outlined"
+                             value = {values.affiliation_id}
+                           >
+                             <option value=""></option>
+                             {affiliates.map(affiliate => (
+                                   <option                    
+                                     value={affiliate.id}
+                                   >
+                                     {affiliate.name}
+                                   </option>
+                                 ))
+                             }           
+                           </TextField>
+                         </Grid>                
+                         <Grid
+                             item
+                             md={3}
+                             xs={12}
+                           >
+                           <TextField
+                             fullWidth
+                             InputLabelProps={{
+                               shrink: true,
+                             }}
+                             inputProps={{
+                              readOnly: Boolean(readOnly),
+                              disabled: Boolean(readOnly)                
+                            }}
+                             margin = 'dense'
+                             label="Country"
+                             name="country_id"
+                             onChange={handleChange}                   
+                             default = ""                              
+                             select                    
+                             SelectProps={{ native: true }}                    
+                             variant="outlined"
+                             value = {values.country_id}
+                           >
+                             <option value=""></option>
+                             {countries.map(country => (
+                                   <option                    
+                                     value={country.id}
+                                   >
+                                     {country.name}
+                                   </option>
+                                 ))
+                             }           
+                           </TextField>
+                         </Grid>
+                         <Grid
+                             item
+                             md={3}
+                             xs={12}
+                           >
+                           <TextField
+                             fullWidth
+                             InputLabelProps={{
+                               shrink: true,
+                             }}
+                             inputProps={{
+                              readOnly: Boolean(readOnly),
+                              disabled: Boolean(readOnly)                
+                            }}
+                             margin = 'dense'
+                             label="Physical Address"
+                             name="physical_address"                
+                             onChange={handleChange}
+                             variant="outlined"  
+                             value = {values.physical_address}                                       
+                         />
+                       </Grid>
+                         <Grid
+                             item
+                             md={3}
+                             xs={12}
+                           >
+                           <TextField
+                             fullWidth
+                             InputLabelProps={{
+                               shrink: true,
+                             }}
+                             inputProps={{
+                              readOnly: Boolean(readOnly),
+                              disabled: Boolean(readOnly)                
+                            }}
+                             margin = 'dense'
+                             label="Postal Address"
+                             name="postal_address"                
+                             onChange={handleChange}
+                             variant="outlined" 
+                             value = {values.postal_address}                                        
+                         />
+                       </Grid>
+                       <Grid
+                             item
+                             md={3}
+                             xs={12}
+                           >
+                           <TextField
+                             fullWidth
+                             InputLabelProps={{
+                               shrink: true,
+                             }}
+                             inputProps={{
+                              readOnly: Boolean(readOnly),
+                              disabled: Boolean(readOnly)                
+                            }}
+                             margin = 'dense'
+                             label="Postal Code"
+                             name="postal_code"                
+                             onChange={handleChange}
+                             variant="outlined" 
+                             value = {values.postal_code}                                        
+                         />
+                       </Grid>
+                       <Grid
+                             item
+                             md={3}
+                             xs={12}
+                           >
+                           <TextField
+                             fullWidth
+                             InputLabelProps={{
+                               shrink: true,
+                             }}
+                             inputProps={{
+                              readOnly: Boolean(readOnly),
+                              disabled: Boolean(readOnly)                
+                            }}
+                             margin = 'dense'
+                             label="City/Town"
+                             name="city"                
+                             onChange={handleChange}
+                             variant="outlined" 
+                             value = {values.city}                                        
+                         />
+                       </Grid>
+                       <Grid
+                             item
+                             md={3}
+                             xs={12}
+                           >
+                           <TextField
+                             fullWidth
+                             InputLabelProps={{
+                               shrink: true,
+                             }}
+                             inputProps={{
+                              readOnly: Boolean(readOnly),
+                              disabled: Boolean(readOnly)                
+                            }}
+                             margin = 'dense'
+                             label="Email"
+                             name="email"  
+                             type = 'email'              
+                             onChange={handleChange}
+                             variant="outlined"  
+                             value = {values.email}                                       
+                         />
+                       </Grid>
+                       <Grid
+                             item
+                             md={3}
+                             xs={12}
+                           >
+                           <TextField
+                             fullWidth
+                             InputLabelProps={{
+                               shrink: true,
+                             }}
+                             inputProps={{
+                              readOnly: Boolean(readOnly),
+                              disabled: Boolean(readOnly)                
+                            }}
+                             margin = 'dense'
+                             label="Phone Number"
+                             name="phone"                
+                             onChange={handleChange}
+                             variant="outlined" 
+                             value = {values.phone}                                        
+                         />
+                       </Grid>            
+                          
+                      <Grid
+                             item
+                             md={6}
+                             xs={12}
+                           >
+                           <TextField
+                             fullWidth
+                             InputLabelProps={{
+                               shrink: true,
+                             }}
+                             inputProps={{
+                              readOnly: Boolean(readOnly),
+                              disabled: Boolean(readOnly)                
+                            }}
+                             margin = 'dense'
+                             required
+                             label="Services Offered"
+                             name="speciality"  
+                             multiline      
+                             rowsMax = {5}
+                             rows={4}                                               
+                             onChange={handleChange}
+                             variant="outlined" 
+                             value = {values.speciality}
+                         />
+                       </Grid>
+                     
+                      
+                       </Grid>
+                   </CardContent>
+                  
+         <Divider />
+          <CardActions>  
           <Box flexGrow={1}>
             {readOnly ? null :                        
               <Button
@@ -277,6 +464,8 @@ const DetailsEdit = props => {
                 onChange={handleSwitchChange}
               />             
          </Box>
+        
+          
         </CardActions> 
         </form> 
         <SuccessSnackbar
@@ -287,7 +476,7 @@ const DetailsEdit = props => {
           onClose={handleSnackbarErrorClose}
           open={openSnackbarError}
         />
-        <ParameterMetaData
+        <MetaData
                 Details={values}
                 onClose={handleMetadataClose}
                 open={openMetadata}

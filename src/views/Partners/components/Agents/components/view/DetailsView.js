@@ -1,10 +1,11 @@
-import React, { useState,useEffect,useContext} from 'react';
+import React, { useState,useEffect,useContext } from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import {Card, CardContent, CardHeader, Grid,Divider,colors,Link} from '@material-ui/core';
-import {getParametersLocalSettingsOrgAll}   from '../../../../../../utils/API';
-import {endpoint_parameter_local_settings_org_all} from '../../../../../../configs/endpoints';
+import {getAgents}   from '../../../../../../utils/API';
+import {endpoint_agent} from '../../../../../../configs/endpoints';
+import authContext from '../../../../../../contexts/AuthContext';
 import {Sidebar} from '../index';
 import MUIDataTable from "mui-datatables";
 import {MuiThemeProvider } from '@material-ui/core/styles';
@@ -12,7 +13,6 @@ import PerfectScrollbar from 'react-perfect-scrollbar';
 import CustomToolbar from "../CustomToolbar";
 import { Link as RouterLink } from 'react-router-dom';
 import OpenInNewIcon from '@material-ui/icons/OpenInNew';
-import authContext from '../../../../../../contexts/AuthContext';
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -28,18 +28,20 @@ const DetailsView = props => {
   const {className, ...rest } = props; 
   const classes = useStyles();  
   const [values, setValues] = useState([]);
-  const [ { organization_id }  ] = useContext(authContext);
+  const [ {organization_id}  ] = useContext(authContext);
+  const option  =  0;
 
   useEffect(() => {     
     let mounted = true;
-      (async  (endpoint,id) => {     
-        await  getParametersLocalSettingsOrgAll(endpoint,id)
+      (async  (endpoint,org_id,option) => {     
+        await  getAgents(endpoint,org_id,option)
         .then(response => {                        
           if (mounted) {            
             setValues(response.payload);                 
           }
         });
-      })(endpoint_parameter_local_settings_org_all,organization_id); 
+      })(endpoint_agent,organization_id,option);       
+
       
     return () => {
       mounted = false;
@@ -50,14 +52,19 @@ const DetailsView = props => {
   if (!values) {
     return null;
   }   
+  
  
     const columns = [
     { name: "id",label: "ID",options: {filter: false,sort: false,display:false}},   
-    { name: "name",label: "Name",options: {filter: true,sort: true,display:true}},
-    { name: "key",label: "Key",options: {filter: true,sort: false,display:true}},
-    { name: "value",label: "Value",options: {filter: true,sort: false,display:true}},
-    { name: "description",label: "Description",options: {filter: false,sort: false,display:true}},
-    { name: "is_active",label: "Is Active?",options: {filter: false,sort: false,display:true}},    
+    { name: "name",label: "Name",options: {filter: false,sort: true,display:true}},
+    { name: "occupation",label: "Occupation",options: {filter: false,sort: true,display:true}},  
+    { name: "affiliation_name",label: "Affiliation",options: {filter:true,sort: true,display:true}},
+    //{ name: "physical_address",label: "Physical Address",options: {filter: true,sort: false,display:true}}, 
+    //{ name: "country",label: "Country",options: {filter: true,sort: false,display:true}},   
+    { name: "phone",label: "Phone",options: {filter: false,sort: false,display:true}}, 
+    { name: "email",label: "Email",options: {filter: false,sort: false,display:true}},
+    //{ name: "services_offered",label: "Services",options: {filter: false,sort: false,display:true}},
+      
     { name: "",
       options: {
       filter: false,
@@ -67,7 +74,7 @@ const DetailsView = props => {
         return (
           <Link
               component={RouterLink}
-              to = {`/settings/parameters/local-settings/edit/${tableMeta.rowData[0]}`}              
+              to = {`/settings/partners/agents/edit/${tableMeta.rowData[0]}`}              
           >
             <OpenInNewIcon/>
           </Link>          
@@ -102,7 +109,7 @@ const DetailsView = props => {
       {...rest}
       className={clsx(classes.root, className)}
     >
-        <CardHeader title="Local Settings - System Parameterization" />
+        <CardHeader title="AGENTS" />
         <Divider />
         <CardContent> 
           <Grid container spacing={1} justify="center">            
@@ -116,7 +123,7 @@ const DetailsView = props => {
                     <div className={classes.inner}>
                       <MuiThemeProvider>                
                         <MUIDataTable
-                          title = ""
+                          title = "AGENTS"
                           data={values}
                           columns={columns}
                           options={options}

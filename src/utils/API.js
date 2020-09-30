@@ -862,6 +862,22 @@ export const getServiceProviders =  function (config,id,option) {
   });       
 }
 
+export const getAgents =  function (config,id,option) {   
+  const options = {
+    url:`${config.url}${id}/${option}`,
+    method: config.method,
+    headers: config.headers  
+  }  
+  return new Promise((resolve, reject) => {
+    axios(options)
+    .then(res => {          
+        resolve(res.data);
+    })
+    .catch(err => reject(err));
+  });       
+}
+
+
 export const postServiceProvider =  function (config,values,user_id,org_id) { 
   let {phone_number,acronym,city,contact_person,contact_person_mobile_number,country,description,email,name,postal_address,postal_code,service_provider_type,services_offered} = values;
  
@@ -889,6 +905,42 @@ export const postServiceProvider =  function (config,values,user_id,org_id) {
     headers: config.headers,
     data: body  
   };
+ 
+  return new Promise((resolve, reject) => {
+    axios(options)
+    .then(res => {           
+        resolve(res.data);
+    })    
+    .catch(err => reject(err));
+  });       
+}
+
+export const postAgent =  function (config,values,user_id,org_id) { 
+  let {phone_number,occupation,city,physical_address,affiliation,country,speciality,email,name,postal_address,postal_code} = values;
+  
+  const body = {
+    "name": name,
+    "occupation": occupation,    
+    "physical_address": physical_address ,
+    "postal_address": postal_address ,
+    "postal_code": postal_code,
+    "city": city,
+    "phone": phone_number,
+    "email": email,   
+    "speciality": speciality,    
+    "affiliation": affiliation,
+    "country": country,
+    "org_id": org_id,
+    "created_by": user_id
+  };
+
+  const options = {
+    url:`${config.url}`,
+    method: config.method,
+    headers: config.headers,
+    data: body  
+  };
+
  
   return new Promise((resolve, reject) => {
     axios(options)
@@ -928,6 +980,40 @@ export const putServiceProvider =  function (config,values,user_id,org_id,record
   }; 
 
  
+  return new Promise((resolve, reject) => {
+    axios(options)
+    .then(res => {           
+        resolve(res.data);
+    })    
+    .catch(err => reject(err));
+  });       
+}
+
+export const putAgents =  function (config,values,user_id,record_id) { 
+  let {phone,occupation,city,physical_address,affiliation_id,country_id,speciality,email,name,postal_address,postal_code} = values;
+  
+  const body = {
+    "name": name,
+    "occupation": occupation,    
+    "physical_address": physical_address ,
+    "postal_address": postal_address ,
+    "postal_code": postal_code,
+    "city": city,
+    "phone": phone,
+    "email": email,   
+    "speciality": speciality,    
+    "affiliation": affiliation_id,
+    "country": country_id,    
+    "updated_by": user_id
+  };
+    const options = {
+    url:`${config.url}${record_id}`,
+    method: config.method,
+    headers: config.headers,
+    data: body  
+  }; 
+
+
   return new Promise((resolve, reject) => {
     axios(options)
     .then(res => {           

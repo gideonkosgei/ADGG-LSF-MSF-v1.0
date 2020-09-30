@@ -482,6 +482,23 @@ export const endpoint_service_provider_edit= {
   headers: headers   
 };
 
+//agents
+export const endpoint_agent= {
+  url: `${api}/partners/agent/`,
+  method: 'GET',
+  headers: headers   
+}
+export const endpoint_agent_add= {
+  url: `${api}/partners/agent`,
+  method: 'POST',
+  headers: headers   
+};
+export const endpoint_agent_edit= {
+  url: `${api}/partners/agent/`,
+  method: 'PUT',
+  headers: headers   
+};
+
 
 
 

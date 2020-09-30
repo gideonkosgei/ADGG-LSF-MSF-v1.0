@@ -460,6 +460,16 @@ const routes = [
         exact: true,
         component: lazy(() => import('views/Partners/components/Agents/components/view'))        
       }, 
+      {
+        path: '/settings/partners/agents/add',
+        exact: true,
+        component: lazy(() => import('views/Partners/components/Agents/components/add'))        
+      }, 
+      {
+        path: '/settings/partners/agents/edit/:id',
+        exact: true,
+        component: lazy(() => import('views/Partners/components/Agents/components/edit'))        
+      },
       
 
 

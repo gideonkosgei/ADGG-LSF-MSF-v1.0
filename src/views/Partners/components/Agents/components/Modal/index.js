@@ -1,4 +1,4 @@
-export { default as ParameterMetaData } from './ParameterMetaData';
+export { default as MetaData } from './MetaData'
 
 
 

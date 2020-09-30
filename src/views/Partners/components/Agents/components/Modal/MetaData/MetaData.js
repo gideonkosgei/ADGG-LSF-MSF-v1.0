@@ -35,7 +35,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const ParameterMetaData = props => {
+const MetaData = props => {
   const { open, onClose, Details, className, ...rest } = props;
   const classes = useStyles(); 
 
@@ -58,7 +58,7 @@ const ParameterMetaData = props => {
               gutterBottom
               variant="h5"
             >
-              Local Setting- System Parameter Metadata-<span className={classes.details}> #{Details.id}</span>
+              Agent Metadata-<span className={classes.details}> #{Details.id}</span>
             </Typography>
             <Grid
               className={classes.container}
@@ -76,27 +76,6 @@ const ParameterMetaData = props => {
                   label="ID"
                   name="id" 
                   value = {Details.id} 
-                  variant="outlined"
-                  InputLabelProps={{
-                    shrink: true,
-                  }}
-                  inputProps={{
-                    readOnly: true,
-                    disabled: true               
-                  }}
-                />
-              </Grid>
-              <Grid
-                item
-                md={6}
-                xs={12}
-              >
-                <TextField
-                  fullWidth                 
-                  margin = 'dense'
-                  label="Setting"
-                  name="name" 
-                  value = {Details.name} 
                   variant="outlined"
                   InputLabelProps={{
                     shrink: true,
@@ -209,18 +188,18 @@ const ParameterMetaData = props => {
   );
 };
 
-ParameterMetaData.displayName = 'ParameterMetaData';
+MetaData.displayName = 'MetaData';
 
-ParameterMetaData.propTypes = {
+MetaData.propTypes = {
   className: PropTypes.string,
   customer: PropTypes.any,
   onClose: PropTypes.func,
   open: PropTypes.bool
 };
 
-ParameterMetaData.defaultProps = {
+MetaData.defaultProps = {
   open: false,
   onClose: () => {}
 };
 
-export default ParameterMetaData;
+export default MetaData;

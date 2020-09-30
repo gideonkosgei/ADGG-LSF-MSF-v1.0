@@ -24,12 +24,11 @@ const useStyles = makeStyles(theme => ({
 
 const Edit = props => { 
   const classes = useStyles();
-  localStorage.setItem('paramater_local_setting_id', parseInt(props.match.params.id));
- 
+  localStorage.setItem('agent_id', parseInt(props.match.params.id)); 
   return (
     <Page
       className={classes.root}
-      title="Profile"
+      title="Agents"
     >
     <Card>
         <CardContent>            

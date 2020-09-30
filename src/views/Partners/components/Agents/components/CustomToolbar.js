@@ -19,7 +19,7 @@ class CustomToolbar extends React.Component {
         <Tooltip title={"Add New"}>
         <Link
             component={RouterLink}
-            to={`/settings/parameters/local-settings/add`}            
+            to={`/settings/partners/agents/add`}            
           >
             <IconButton className={classes.iconButton}>
             <AddIcon className={classes.deleteIcon} />

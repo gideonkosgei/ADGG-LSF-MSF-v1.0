@@ -28,7 +28,7 @@ const Edit = props => {
   return (
     <Page
       className={classes.root}
-      title="Profile"
+      title="Agents"
     >
     <Card>
         <CardContent>            

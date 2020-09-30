@@ -20,21 +20,21 @@ const Sidebar = props => {
       <CardContent>                 
       <Tooltip  title="Home">              
           <IconButton aria-label="home" size="small" >
-            <Link component = {RouterLink} to={`/settings/parameters/local-settings`}>
+            <Link component = {RouterLink} to={`/settings/partners/agents`}>
               <HomeIcon /> 
             </Link>
           </IconButton> 
         </Tooltip>
         <Tooltip  title="view">              
           <IconButton aria-label="view" size="small" >
-            <Link component = {RouterLink} to = {`/settings/parameters/local-settings`}>
+            <Link component = {RouterLink} to = {`/settings/partners/agents`}>
               <VisibilityIcon /> 
             </Link>
           </IconButton> 
         </Tooltip>         
         <Tooltip  title="Add New">              
           <IconButton aria-label="add" size="small" >
-            <Link component = {RouterLink} to={`/settings/parameters/local-settings/add`}>
+            <Link component = {RouterLink} to={`/settings/partners/agents/add`}>
               <AddIcon /> 
             </Link>
           </IconButton> 

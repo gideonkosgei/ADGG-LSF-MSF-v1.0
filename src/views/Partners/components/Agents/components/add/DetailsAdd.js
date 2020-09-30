@@ -2,13 +2,14 @@ import React, { useState,useEffect,useContext } from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
-import {Card, CardContent, CardHeader, Grid,Divider, TextField,colors,Button,CardActions,Switch,Typography,Box } from '@material-ui/core';
-import {postParametersLocalSettings}   from '../../../../../../utils/API';
-import {endpoint_parameter_local_settings_org_add} from '../../../../../../configs/endpoints';
+import {Card, CardContent, CardHeader, Grid,Divider, TextField,colors,Button,CardActions} from '@material-ui/core';
+import {getCountries,postAgent,getServiceProviders}   from '../../../../../../utils/API';
+import {endpoint_countries,endpoint_agent_add,endpoint_service_provider} from '../../../../../../configs/endpoints';
 import authContext from '../../../../../../contexts/AuthContext';
 import {Sidebar} from '../index';
 import SuccessSnackbar from '../../../../../../components/SuccessSnackbar';
 import ErrorSnackbar from '../../../../../../components/ErrorSnackbar';
+
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -25,18 +26,46 @@ const DetailsEdit = props => {
   const {className, ...rest } = props; 
   const [openSnackbarSuccess, setopenSnackbarSuccess] = useState(false);
   const [openSnackbarError, setopenSnackbarError] = useState(false);
-  const [ {user_id} ] = useContext(authContext);
-  const [ { organization_id }  ] = useContext(authContext);
+  const [ {organization_id,user_id} ] = useContext(authContext);  
   const classes = useStyles();
+
   const [values, setValues] = useState({ });  
+  const [affiliates, setAffiliates] = useState([]);
+  const [countries, setCountries] = useState([]);
+  const option  =  0;
 
-  useEffect(() => {
-    return () => {         
-    };
-  }, []);  
-    
+  useEffect(() => {   
+    let mounted_countries = true;
+    let mounted_affiliates = true;
 
+    (async  (endpoint,org_id,option) => {     
+      await  getServiceProviders(endpoint,org_id,option)
+      .then(response => {                        
+        if (mounted_affiliates) {            
+          setAffiliates(response.payload);                 
+        }
+      });
+    })(endpoint_service_provider,organization_id,option);
 
+      (async  (endpoint) => {     
+        await  getCountries(endpoint)
+        .then(response => {       
+          if (mounted_countries) { 
+            const data = response.payload;           
+            setCountries(data);               
+          }
+        });
+      })(endpoint_countries);
+          
+    return () => {     
+      mounted_countries = false; 
+      mounted_affiliates = false;
+    };    
+  }, [organization_id]);  
+
+  if ( !countries || !affiliates) {
+    return null;
+  }
     const handleChange = event => {
     event.persist();
     setValues({
@@ -49,8 +78,8 @@ const DetailsEdit = props => {
 
   const handleSubmit = event => {
     event.preventDefault();
-    (async  (endpoint,id,values,user_id,org_id) => {     
-      await  postParametersLocalSettings(endpoint,id,values,user_id,org_id)
+    (async  (endpoint,values,user_id,org_id) => {     
+      await  postAgent(endpoint,values,user_id,org_id)
       .then(() => {  
         setopenSnackbarSuccess(true); 
         setValues({});        
@@ -58,7 +87,7 @@ const DetailsEdit = props => {
       }).catch(() => {
         setopenSnackbarError(true); 
       });
-    })(endpoint_parameter_local_settings_org_add,values,user_id,organization_id);    
+    })(endpoint_agent_add,values,user_id,organization_id);    
   };
   
   
@@ -76,7 +105,7 @@ const DetailsEdit = props => {
       className={clsx(classes.root, className)}
     >
       
-        <CardHeader title="Local Settings - New System Parameter" />
+        <CardHeader title="Agent Registration" />
         <Divider />
         <CardContent> 
           <Grid container spacing={1} justify="center">            
@@ -86,11 +115,12 @@ const DetailsEdit = props => {
           <Grid item xs={11}>
             <Card> 
             <form id ='event' onSubmit={handleSubmit} >
-              <CardContent>        
+              <CardContent> 
+                       
               <Grid
                 container
                 spacing={4}
-              >               
+              > 
               <Grid
                     item
                     md={3}
@@ -102,15 +132,197 @@ const DetailsEdit = props => {
                       shrink: true,
                     }}
                     margin = 'dense'
-                    label="Parameter Name"
+                    label="Agent Name"
                     name="name"                
                     onChange={handleChange}
-                    variant="outlined" 
-                    required                     
+                    variant="outlined"                                         
                 />
               </Grid>
-              
+
               <Grid
+                    item
+                    md={3}
+                    xs={12}
+                  >
+                  <TextField
+                    fullWidth
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                    margin = 'dense'
+                    label="Occupation"
+                    name="occupation"                
+                    onChange={handleChange}
+                    variant="outlined"                                         
+                />
+              </Grid>
+                            
+           <Grid
+                    item
+                    md={6}
+                    xs={12}
+                  >
+                  <TextField
+                    fullWidth
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                    margin = 'dense'
+                    label="Affiliation"
+                    name="affiliation"
+                    onChange={handleChange}                    
+                    default = ""                              
+                    select
+                    // eslint-disable-next-line react/jsx-sort-props
+                    SelectProps={{ native: true }}                    
+                    variant="outlined"
+                  >
+                    <option value=""></option>
+                    {affiliates.map(affiliate => (
+                          <option                    
+                            value={affiliate.id}
+                          >
+                            {affiliate.name}
+                          </option>
+                        ))
+                    }           
+                  </TextField>
+                </Grid>                
+                <Grid
+                    item
+                    md={3}
+                    xs={12}
+                  >
+                  <TextField
+                    fullWidth
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                    margin = 'dense'
+                    label="Country"
+                    name="country"
+                    onChange={handleChange}                   
+                    default = ""                              
+                    select                    
+                    SelectProps={{ native: true }}                    
+                    variant="outlined"
+                  >
+                    <option value=""></option>
+                    {countries.map(country => (
+                          <option                    
+                            value={country.id}
+                          >
+                            {country.name}
+                          </option>
+                        ))
+                    }           
+                  </TextField>
+                </Grid>
+                <Grid
+                    item
+                    md={3}
+                    xs={12}
+                  >
+                  <TextField
+                    fullWidth
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                    margin = 'dense'
+                    label="Physical Address"
+                    name="physical_address"                
+                    onChange={handleChange}
+                    variant="outlined"                                         
+                />
+              </Grid>
+                <Grid
+                    item
+                    md={3}
+                    xs={12}
+                  >
+                  <TextField
+                    fullWidth
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                    margin = 'dense'
+                    label="Postal Address"
+                    name="postal_address"                
+                    onChange={handleChange}
+                    variant="outlined"                                         
+                />
+              </Grid>
+              <Grid
+                    item
+                    md={3}
+                    xs={12}
+                  >
+                  <TextField
+                    fullWidth
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                    margin = 'dense'
+                    label="Postal Code"
+                    name="postal_code"                
+                    onChange={handleChange}
+                    variant="outlined"                                         
+                />
+              </Grid>
+              <Grid
+                    item
+                    md={3}
+                    xs={12}
+                  >
+                  <TextField
+                    fullWidth
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                    margin = 'dense'
+                    label="City/Town"
+                    name="city"                
+                    onChange={handleChange}
+                    variant="outlined"                                         
+                />
+              </Grid>
+              <Grid
+                    item
+                    md={3}
+                    xs={12}
+                  >
+                  <TextField
+                    fullWidth
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                    margin = 'dense'
+                    label="Email"
+                    name="email"  
+                    type = 'email'              
+                    onChange={handleChange}
+                    variant="outlined"                                         
+                />
+              </Grid>
+              <Grid
+                    item
+                    md={3}
+                    xs={12}
+                  >
+                  <TextField
+                    fullWidth
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                    margin = 'dense'
+                    label="Phone Number"
+                    name="phone_number"                
+                    onChange={handleChange}
+                    variant="outlined"                                         
+                />
+              </Grid>            
+                 
+             <Grid
                     item
                     md={6}
                     xs={12}
@@ -122,73 +334,17 @@ const DetailsEdit = props => {
                     }}
                     margin = 'dense'
                     required
-                    label="Parameter Description"
-                    name="description"  
+                    label="Services Offered"
+                    name="speciality"  
                     multiline      
-                    rowsMax = {4}                            
+                    rowsMax = {5}
+                    rows={4}                                               
                     onChange={handleChange}
                     variant="outlined" 
                 />
               </Grid>
-              <Grid
-                    item
-                    md={3}
-                    xs={12}
-                  >
-                  <TextField
-                    fullWidth
-                    InputLabelProps={{
-                      shrink: true,
-                    }}                
-                    margin = 'dense'
-                    label="Parameter Key"
-                    name="key"                
-                    onChange={handleChange}
-                    variant="outlined"  
-                    required                   
-                />
-              </Grid>
-               
-              <Grid
-                    item
-                    md={3}
-                    xs={12}
-                  >
-                  <TextField
-                    fullWidth
-                    InputLabelProps={{
-                      shrink: true,
-                    }}                
-                    margin = 'dense'
-                    label="Parameter Value"
-                    name="value"                
-                    onChange={handleChange}
-                    variant="outlined"  
-                    required                   
-                />
-              </Grid>
             
-
-
-              <Grid
-                    item
-                    md={3}
-                    xs={12}
-                  >
-                    <Box> 
-              <Typography variant="h6"> { values.is_active? "Deactivate" : "Activate"} </Typography> 
-          </Box> 
-          <Box> 
-              <Switch   
-                name = "is_active"          
-                className={classes.toggle} 
-                color="secondary"
-                edge="start"
-                onChange={handleChange}
-              />             
-         </Box>
-               </Grid> 
-
+             
               </Grid>
           </CardContent>
           <Divider />
