@@ -882,14 +882,13 @@ export const postServiceProvider =  function (config,values,user_id,org_id) {
     "org_id": org_id,
     "created_by": user_id
   };
-  
+
   const options = {
     url:`${config.url}`,
     method: config.method,
     headers: config.headers,
     data: body  
-  }; 
- 
+  };
  
   return new Promise((resolve, reject) => {
     axios(options)
@@ -899,6 +898,45 @@ export const postServiceProvider =  function (config,values,user_id,org_id) {
     .catch(err => reject(err));
   });       
 }
+
+export const putServiceProvider =  function (config,values,user_id,org_id,record_id) { 
+  let {phone,acronym,city,contact_person,contact_person_mobile_number,country_id,description,email,name,postal_address,postal_code,service_provider_type_id,services_offered} = values;
+ 
+  const body = {
+    "name": name,
+    "acronym": acronym,
+    "postal_address": postal_address ,
+    "postal_code": postal_code,
+    "city": city,
+    "phone": phone,
+    "email": email,
+    "description": description,
+    "services_offered": services_offered,
+    "contact_person": contact_person,
+    "contact_person_mobile_number": contact_person_mobile_number,
+    "service_provider_type": service_provider_type_id,
+    "country": country_id,
+    "org_id": org_id,
+    "updated_by": user_id
+  };
+
+  const options = {
+    url:`${config.url}${record_id}`,
+    method: config.method,
+    headers: config.headers,
+    data: body  
+  }; 
+
+ 
+  return new Promise((resolve, reject) => {
+    axios(options)
+    .then(res => {           
+        resolve(res.data);
+    })    
+    .catch(err => reject(err));
+  });       
+}
+
 
 
 

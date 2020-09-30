@@ -2,13 +2,15 @@ import React, { useState,useEffect,useContext } from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
-import {Card, CardContent, CardHeader, Grid,Divider, TextField,colors,Button,CardActions} from '@material-ui/core';
-import {getLookups,getCountries,getServiceProviders,postServiceProvider}   from '../../../../../../utils/API';
-import {endpoint_lookup,endpoint_countries,endpoint_service_provider,endpoint_service_provider_add} from '../../../../../../configs/endpoints';
+import {Card, CardContent, CardHeader, Grid,Divider, TextField,colors,Button,CardActions,Typography,Box,Switch,Tooltip} from '@material-ui/core';
+import {getLookups,getCountries,getServiceProviders,putServiceProvider}   from '../../../../../../utils/API';
+import {endpoint_lookup,endpoint_countries,endpoint_service_provider,endpoint_service_provider_edit} from '../../../../../../configs/endpoints';
 import authContext from '../../../../../../contexts/AuthContext';
 import {Sidebar} from '../index';
 import SuccessSnackbar from '../../../../../../components/SuccessSnackbar';
 import ErrorSnackbar from '../../../../../../components/ErrorSnackbar';
+import OpenInNewIcon from '@material-ui/icons/OpenInNew';
+import {MetaData}  from '../Modal';
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -31,6 +33,8 @@ const DetailsEdit = props => {
   const [values, setValues] = useState({ });  
   const [provideTypes, setProvideTypes] = useState([]);
   const [countries, setCountries] = useState([]);
+  const [readOnly, setReadOnly] = useState(true);
+  const [openMetadata, setMetadata] = useState(false); 
   
   const provider_id  = localStorage.getItem('provider_id'); 
 
@@ -88,6 +92,7 @@ const DetailsEdit = props => {
     return null;
   }
 
+
   
     const handleChange = event => {
     event.persist();
@@ -101,19 +106,15 @@ const DetailsEdit = props => {
 
   const handleSubmit = event => {
     event.preventDefault();
-    (async  (endpoint,values,user_id,org_id) => {     
-      await  postServiceProvider(endpoint,values,user_id,org_id)
+    (async  (endpoint,values,user_id,org_id,id) => {     
+      await  putServiceProvider(endpoint,values,user_id,org_id,id)
       .then(() => {  
-        setopenSnackbarSuccess(true); 
-        setValues({});        
-        document.forms["event"].reset();
+        setopenSnackbarSuccess(true);         
       }).catch(() => {
         setopenSnackbarError(true); 
       });
-    })(endpoint_service_provider_add,values,user_id,organization_id);    
+    })(endpoint_service_provider_edit,values,user_id,organization_id,provider_id);    
   };
-  
-  
   const handleSnackbarSuccessClose = () => {
     setopenSnackbarSuccess(false);
   };
@@ -121,14 +122,24 @@ const DetailsEdit = props => {
   const handleSnackbarErrorClose = () => {
     setopenSnackbarError(false);
   };
+  const handleSwitchChange = event => {
+    event.persist();
+    setReadOnly(!readOnly);   
+  };
+
+  const handleMetadataOpen = () => {
+    setMetadata(true);
+  };
+  const handleMetadataClose = () => {
+    setMetadata(false);
+  };
 
   return (
     <Card
       {...rest}
       className={clsx(classes.root, className)}
     >
-      
-        <CardHeader title="Service Provider Registration" />
+        <CardHeader title= { readOnly ? `SERVICE PROVIDER #${provider_id}`:`EDIT SERVICE PROVIDER #${provider_id}` } />
         <Divider />
         <CardContent> 
           <Grid container spacing={1} justify="center">            
@@ -153,6 +164,10 @@ const DetailsEdit = props => {
                     InputLabelProps={{
                       shrink: true,
                     }}
+                    inputProps={{
+                      readOnly: Boolean(readOnly),
+                      disabled: Boolean(readOnly)                
+                    }}
                     margin = 'dense'
                     label="Service Provider Name"
                     name="name"                
@@ -172,6 +187,10 @@ const DetailsEdit = props => {
                     InputLabelProps={{
                       shrink: true,
                     }}
+                    inputProps={{
+                      readOnly: Boolean(readOnly),
+                      disabled: Boolean(readOnly)                
+                    }}
                     margin = 'dense'
                     label="Acronym"
                     name="acronym"                
@@ -190,9 +209,13 @@ const DetailsEdit = props => {
                     InputLabelProps={{
                       shrink: true,
                     }}
+                    inputProps={{
+                      readOnly: Boolean(readOnly),
+                      disabled: Boolean(readOnly)                
+                    }}
                     margin = 'dense'
                     label="Service Provider Type"
-                    name="service_provider_type"
+                    name="service_provider_type_id"
                     onChange={handleChange}                    
                     default = ""                              
                     select
@@ -222,9 +245,13 @@ const DetailsEdit = props => {
                     InputLabelProps={{
                       shrink: true,
                     }}
+                    inputProps={{
+                      readOnly: Boolean(readOnly),
+                      disabled: Boolean(readOnly)                
+                    }}
                     margin = 'dense'
                     label="Country"
-                    name="country"
+                    name="country_id"
                     onChange={handleChange}                   
                     default = ""                              
                     select                    
@@ -253,6 +280,10 @@ const DetailsEdit = props => {
                     InputLabelProps={{
                       shrink: true,
                     }}
+                    inputProps={{
+                      readOnly: Boolean(readOnly),
+                      disabled: Boolean(readOnly)                
+                    }}
                     margin = 'dense'
                     label="Postal Address"
                     name="postal_address"                
@@ -270,6 +301,10 @@ const DetailsEdit = props => {
                     fullWidth
                     InputLabelProps={{
                       shrink: true,
+                    }}
+                    inputProps={{
+                      readOnly: Boolean(readOnly),
+                      disabled: Boolean(readOnly)                
                     }}
                     margin = 'dense'
                     label="Postal Code"
@@ -289,6 +324,10 @@ const DetailsEdit = props => {
                     InputLabelProps={{
                       shrink: true,
                     }}
+                    inputProps={{
+                      readOnly: Boolean(readOnly),
+                      disabled: Boolean(readOnly)                
+                    }}
                     margin = 'dense'
                     label="City/Town"
                     name="city"                
@@ -306,6 +345,10 @@ const DetailsEdit = props => {
                     fullWidth
                     InputLabelProps={{
                       shrink: true,
+                    }}
+                    inputProps={{
+                      readOnly: Boolean(readOnly),
+                      disabled: Boolean(readOnly)                
                     }}
                     margin = 'dense'
                     label="Email"
@@ -326,9 +369,13 @@ const DetailsEdit = props => {
                     InputLabelProps={{
                       shrink: true,
                     }}
+                    inputProps={{
+                      readOnly: Boolean(readOnly),
+                      disabled: Boolean(readOnly)                
+                    }}
                     margin = 'dense'
                     label="Phone Number"
-                    name="phone_number"                
+                    name="phone"                
                     onChange={handleChange}
                     variant="outlined" 
                     value = {values.phone}                                        
@@ -344,6 +391,12 @@ const DetailsEdit = props => {
                     InputLabelProps={{
                       shrink: true,
                     }}
+                    inputProps={{
+                      readOnly: Boolean(readOnly),
+                      disabled: Boolean(readOnly)                
+                    }}
+                    
+
                     margin = 'dense'
                     label="Contact Person"
                     name="contact_person"                
@@ -361,6 +414,10 @@ const DetailsEdit = props => {
                     fullWidth
                     InputLabelProps={{
                       shrink: true,
+                    }}
+                    inputProps={{
+                      readOnly: Boolean(readOnly),
+                      disabled: Boolean(readOnly)                
                     }}
                     margin = 'dense'
                     label="Contact Person Contact"
@@ -381,6 +438,10 @@ const DetailsEdit = props => {
                     fullWidth
                     InputLabelProps={{
                       shrink: true,
+                    }}
+                    inputProps={{
+                      readOnly: Boolean(readOnly),
+                      disabled: Boolean(readOnly)                
                     }}
                     margin = 'dense'
                     required
@@ -404,6 +465,10 @@ const DetailsEdit = props => {
                     InputLabelProps={{
                       shrink: true,
                     }}
+                    inputProps={{
+                      readOnly: Boolean(readOnly),
+                      disabled: Boolean(readOnly)                
+                    }}
                     margin = 'dense'
                     required
                     label="Services Offered"
@@ -421,14 +486,40 @@ const DetailsEdit = props => {
               </Grid>
           </CardContent>
           <Divider />
-          <CardActions>          
-          <Button
-            className={classes.saveButton}
-            type="submit"
-            variant="contained"
-          >
-            Save Details
-          </Button>
+          <CardActions>  
+          <Box flexGrow={1}>
+            {readOnly ? null :                        
+              <Button
+                className={classes.saveButton}
+                type="submit"
+                variant="contained"
+                hidden = "true"                               
+              >
+                Save Changes
+              </Button>              
+            }                             
+          </Box> 
+          <Box>
+            <Tooltip  title="view Metadata">
+              <Button onClick={handleMetadataOpen}>
+                <OpenInNewIcon className={classes.buttonIcon} />                
+              </Button>
+            </Tooltip>               
+          </Box>  
+          <Box> 
+              <Typography variant="h6">{ readOnly? "Enable Form" : "Disable Form"} </Typography> 
+          </Box> 
+          <Box> 
+              <Switch             
+                className={classes.toggle}            
+                checked={values.readOnly}
+                color="secondary"
+                edge="start"               
+                onChange={handleSwitchChange}
+              />             
+         </Box>
+        
+          
         </CardActions> 
         </form> 
         <SuccessSnackbar
@@ -439,6 +530,11 @@ const DetailsEdit = props => {
           onClose={handleSnackbarErrorClose}
           open={openSnackbarError}
         />
+        <MetaData
+                Details={values}
+                onClose={handleMetadataClose}
+                open={openMetadata}
+        /> 
           </Card>
           </Grid>
           </Grid>

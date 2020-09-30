@@ -476,6 +476,11 @@ export const endpoint_service_provider_add= {
   method: 'POST',
   headers: headers   
 };
+export const endpoint_service_provider_edit= {
+  url: `${api}/partners/service-provider/`,
+  method: 'PUT',
+  headers: headers   
+};
 
 
 

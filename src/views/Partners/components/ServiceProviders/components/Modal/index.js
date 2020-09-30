@@ -1,4 +1,4 @@
-export { default as LimitParameterMetaData } from './LimitParameterMetaData';
+export { default as MetaData } from './MetaData'
 
 
 

@@ -131,8 +131,8 @@ const DetailsEdit = props => {
                       shrink: true,
                     }}
                     inputProps={{
-                      readOnly: true,
-                      disabled: true                
+                      readOnly: Boolean(readOnly),
+                      disabled: Boolean(readOnly)                
                     }}
                     margin = 'dense'
                     label="Category"

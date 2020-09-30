@@ -3,7 +3,7 @@ import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import { Modal,Card,CardContent, CardActions, Grid,Typography,TextField,Button, colors} from '@material-ui/core';
-import moment from 'moment';
+
 const useStyles = makeStyles(theme => ({
   root: {
     position: 'absolute',
@@ -35,8 +35,8 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const LimitParameterMetaData = props => {
-  const { open, onClose, limitDetails, className, ...rest } = props;
+const MetaData = props => {
+  const { open, onClose, Details, className, ...rest } = props;
   const classes = useStyles(); 
 
   if (!open) {
@@ -58,7 +58,7 @@ const LimitParameterMetaData = props => {
               gutterBottom
               variant="h5"
             >
-              Limiting Parameter Metadata-<span className={classes.details}> #{limitDetails.id}</span>
+              Service Provider Metadata-<span className={classes.details}> #{Details.id}</span>
             </Typography>
             <Grid
               className={classes.container}
@@ -75,28 +75,7 @@ const LimitParameterMetaData = props => {
                   margin = 'dense'
                   label="ID"
                   name="id" 
-                  value = {limitDetails.id} 
-                  variant="outlined"
-                  InputLabelProps={{
-                    shrink: true,
-                  }}
-                  inputProps={{
-                    readOnly: true,
-                    disabled: true               
-                  }}
-                />
-              </Grid>
-              <Grid
-                item
-                md={6}
-                xs={12}
-              >
-                <TextField
-                  fullWidth                 
-                  margin = 'dense'
-                  label="Category"
-                  name="category" 
-                  value = {limitDetails.category} 
+                  value = {Details.id} 
                   variant="outlined"
                   InputLabelProps={{
                     shrink: true,
@@ -117,7 +96,7 @@ const LimitParameterMetaData = props => {
                   margin = 'dense'
                   label="Creation Date"
                   name="creation_date" 
-                  value = {moment(limitDetails.created_at).format('DD/MM/YYYY')} 
+                  value = {Details.created_at} 
                   variant="outlined"
                   InputLabelProps={{
                     shrink: true,
@@ -142,7 +121,7 @@ const LimitParameterMetaData = props => {
                   margin = 'dense'
                   label="Created By"
                   name="created_by"                  
-                  value={limitDetails.created_by}
+                  value={Details.created_by}
                   variant="outlined"
                   InputLabelProps={{
                     shrink: true,
@@ -163,7 +142,7 @@ const LimitParameterMetaData = props => {
                   margin = 'dense'
                   label="Last Update Date"
                   name="update_date"                  
-                  value = {moment(limitDetails.updated_at).format('DD/MM/YYYY')} 
+                  value = {Details.updated_at} 
                   variant="outlined"
                   InputLabelProps={{
                     shrink: true,
@@ -184,7 +163,7 @@ const LimitParameterMetaData = props => {
                   margin = 'dense'
                   label="Last Update By"
                   name="updated_by"                  
-                  value={limitDetails.updated_by}
+                  value={Details.updated_by}
                   variant="outlined"
                   InputLabelProps={{
                     shrink: true,
@@ -209,18 +188,18 @@ const LimitParameterMetaData = props => {
   );
 };
 
-LimitParameterMetaData.displayName = 'LimitParameterMetaData';
+MetaData.displayName = 'MetaData';
 
-LimitParameterMetaData.propTypes = {
+MetaData.propTypes = {
   className: PropTypes.string,
   customer: PropTypes.any,
   onClose: PropTypes.func,
   open: PropTypes.bool
 };
 
-LimitParameterMetaData.defaultProps = {
+MetaData.defaultProps = {
   open: false,
   onClose: () => {}
 };
 
-export default LimitParameterMetaData;
+export default MetaData;
