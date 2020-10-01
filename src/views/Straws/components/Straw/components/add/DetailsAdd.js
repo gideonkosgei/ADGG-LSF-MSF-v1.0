@@ -3,13 +3,12 @@ import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import {Card, CardContent, CardHeader, Grid,Divider, TextField,colors,Button,CardActions} from '@material-ui/core';
-import {getCountries,postAgent,getServiceProviders}   from '../../../../../../utils/API';
-import {endpoint_countries,endpoint_agent_add,endpoint_service_provider} from '../../../../../../configs/endpoints';
+import {getLookups,postStraw}   from '../../../../../../utils/API';
+import {endpoint_lookup,endpoint_straw_add} from '../../../../../../configs/endpoints';
 import authContext from '../../../../../../contexts/AuthContext';
 import {Sidebar} from '../index';
 import SuccessSnackbar from '../../../../../../components/SuccessSnackbar';
 import ErrorSnackbar from '../../../../../../components/ErrorSnackbar';
-
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -26,46 +25,58 @@ const DetailsEdit = props => {
   const {className, ...rest } = props; 
   const [openSnackbarSuccess, setopenSnackbarSuccess] = useState(false);
   const [openSnackbarError, setopenSnackbarError] = useState(false);
-  const [ {organization_id,user_id} ] = useContext(authContext);  
+  const [ {organization_id,user_id} ] = useContext(authContext);
   const classes = useStyles();
 
-  const [values, setValues] = useState({ });  
-  const [affiliates, setAffiliates] = useState([]);
-  const [countries, setCountries] = useState([]);
-  const option  =  0;
+  const [values, setValues] = useState({ });
+  const [specifications, setSpecification] = useState([]);
+  const [breeds, setBreeds] = useState([]);
+  const [breedCompositions, setBreedCompositions] = useState([]);
+ 
+  useEffect(() => {
+    let mounted_lookup = true;    
 
-  useEffect(() => {   
-    let mounted_countries = true;
-    let mounted_affiliates = true;
-
-    (async  (endpoint,org_id,option) => {     
-      await  getServiceProviders(endpoint,org_id,option)
-      .then(response => {                        
-        if (mounted_affiliates) {            
-          setAffiliates(response.payload);                 
-        }
-      });
-    })(endpoint_service_provider,organization_id,option);
-
-      (async  (endpoint) => {     
-        await  getCountries(endpoint)
+    (async  (endpoint,id) => {     
+        await  getLookups(endpoint,id)
         .then(response => {       
-          if (mounted_countries) { 
-            const data = response.payload;           
-            setCountries(data);               
+          if (mounted_lookup) { 
+            const data = response.payload[0];            
+            
+            let lookup_specification = [];
+            let lookup_breed = [];
+            let lookup_breed_composition = [];
+
+            for (let i = 0; i< data.length; i++){
+              //specifications
+              if(data[i].list_type_id === 85){                
+                lookup_specification.push(data[i]);
+              } 
+              //main breeds
+              if(data[i].list_type_id === 8){                
+                lookup_breed.push(data[i]);
+              }
+              //breed Composition
+              if(data[i].list_type_id === 14){                
+                lookup_breed_composition.push(data[i]);
+              }          
+            }                    
+            setSpecification(lookup_specification);
+            setBreedCompositions(lookup_breed_composition);
+            setBreeds(lookup_breed);
+            
+                        
           }
         });
-      })(endpoint_countries);
-          
-    return () => {     
-      mounted_countries = false; 
-      mounted_affiliates = false;
+      })(endpoint_lookup,'85,8,14'); 
+    return () => {
+      mounted_lookup = false;      
     };    
-  }, [organization_id]);  
+  }, []);  
 
-  if ( !countries || !affiliates) {
+  if (!breeds || !breedCompositions || !specifications) {
     return null;
   }
+
     const handleChange = event => {
     event.persist();
     setValues({
@@ -75,11 +86,10 @@ const DetailsEdit = props => {
     });
   };
 
-
   const handleSubmit = event => {
     event.preventDefault();
     (async  (endpoint,values,user_id,org_id) => {     
-      await  postAgent(endpoint,values,user_id,org_id)
+      await  postStraw(endpoint,values,user_id,org_id)
       .then(() => {  
         setopenSnackbarSuccess(true); 
         setValues({});        
@@ -87,7 +97,7 @@ const DetailsEdit = props => {
       }).catch(() => {
         setopenSnackbarError(true); 
       });
-    })(endpoint_agent_add,values,user_id,organization_id);    
+    })(endpoint_straw_add,values,user_id,organization_id);    
   };
   
   
@@ -105,7 +115,7 @@ const DetailsEdit = props => {
       className={clsx(classes.root, className)}
     >
       
-        <CardHeader title="Agent Registration" />
+        <CardHeader title="AI Straw Registration" />
         <Divider />
         <CardContent> 
           <Grid container spacing={1} justify="center">            
@@ -115,49 +125,12 @@ const DetailsEdit = props => {
           <Grid item xs={11}>
             <Card> 
             <form id ='event' onSubmit={handleSubmit} >
-              <CardContent> 
-                       
+              <CardContent>        
               <Grid
                 container
                 spacing={4}
-              > 
+              >               
               <Grid
-                    item
-                    md={3}
-                    xs={12}
-                  >
-                  <TextField
-                    fullWidth
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-                    margin = 'dense'
-                    label="Agent Name"
-                    name="name"                
-                    onChange={handleChange}
-                    variant="outlined"                                         
-                />
-              </Grid>
-
-              <Grid
-                    item
-                    md={3}
-                    xs={12}
-                  >
-                  <TextField
-                    fullWidth
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-                    margin = 'dense'
-                    label="Occupation"
-                    name="occupation"                
-                    onChange={handleChange}
-                    variant="outlined"                                         
-                />
-              </Grid>
-                            
-           <Grid
                     item
                     md={6}
                     xs={12}
@@ -168,27 +141,14 @@ const DetailsEdit = props => {
                       shrink: true,
                     }}
                     margin = 'dense'
-                    label="Affiliation"
-                    name="affiliation"
-                    onChange={handleChange}                    
-                    default = ""                              
-                    select
-                    // eslint-disable-next-line react/jsx-sort-props
-                    SelectProps={{ native: true }}                    
-                    variant="outlined"
-                  >
-                    <option value=""></option>
-                    {affiliates.map(affiliate => (
-                          <option                    
-                            value={affiliate.id}
-                          >
-                            {affiliate.name}
-                          </option>
-                        ))
-                    }           
-                  </TextField>
-                </Grid>                
-                <Grid
+                    label="Semen Source"
+                    name="semen_source"                
+                    onChange={handleChange}
+                    variant="outlined" 
+                    required                     
+                />
+              </Grid>
+              <Grid
                     item
                     md={3}
                     xs={12}
@@ -199,20 +159,125 @@ const DetailsEdit = props => {
                       shrink: true,
                     }}
                     margin = 'dense'
-                    label="Country"
-                    name="country"
-                    onChange={handleChange}                   
+                    label="Farm Name/ID"
+                    name="farm_name"                
+                    onChange={handleChange}
+                    variant="outlined"                                         
+                />
+              </Grid>
+              <Grid
+                    item
+                    md={3}
+                    xs={12}
+                  >
+                  <TextField
+                    fullWidth
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                    required
+                    margin = 'dense'
+                    label="Straw ID"
+                    name="straw_id"                
+                    onChange={handleChange}
+                    variant="outlined"                                         
+                />
+              </Grid>
+              <Grid
+                    item
+                    md={3}
+                    xs={12}
+                  >
+                  <TextField
+                    fullWidth
+                    InputLabelProps={{
+                      shrink: true,
+                    }}                   
+                    margin = 'dense'
+                    label="Semen Bar Code"
+                    name="barcode"                
+                    onChange={handleChange}
+                    variant="outlined"                                         
+                />
+              </Grid>
+              <Grid
+                    item
+                    md={3}
+                    xs={12}
+                  >
+                  <TextField
+                    fullWidth
+                    InputLabelProps={{
+                      shrink: true,
+                    }}   
+                    required                
+                    margin = 'dense'
+                    label="Batch Number"
+                    name="batch_number"                
+                    onChange={handleChange}
+                    variant="outlined"                                         
+                />
+              </Grid>
+              <Grid
+                    item
+                    md={3}
+                    xs={12}
+                  >
+                  <TextField
+                    fullWidth
+                    InputLabelProps={{
+                      shrink: true,
+                    }}            
+                    margin = 'dense'
+                    label="Bull ID / Tag ID"
+                    name="bull_tag_id"                
+                    onChange={handleChange}
+                    variant="outlined"                                         
+                />
+              </Grid>
+              <Grid
+                    item
+                    md={3}
+                    xs={12}
+                  >
+                  <TextField
+                    fullWidth
+                    InputLabelProps={{
+                      shrink: true,
+                    }}           
+                    margin = 'dense'
+                    label="Bull Name"
+                    name="bull_name"                
+                    onChange={handleChange}
+                    variant="outlined"                                         
+                />
+              </Grid>
+              <Grid
+                    item
+                    md={3}
+                    xs={12}
+                  >
+                  <TextField
+                    fullWidth
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                    margin = 'dense'
+                    label="Breed of Bull"
+                    name="breed"
+                    onChange={handleChange}                    
                     default = ""                              
-                    select                    
+                    select
+                    // eslint-disable-next-line react/jsx-sort-props
                     SelectProps={{ native: true }}                    
                     variant="outlined"
                   >
                     <option value=""></option>
-                    {countries.map(country => (
+                    {breeds.map(breed => (
                           <option                    
-                            value={country.id}
+                            value={breed.id}
                           >
-                            {country.name}
+                            {breed.value}
                           </option>
                         ))
                     }           
@@ -229,12 +294,25 @@ const DetailsEdit = props => {
                       shrink: true,
                     }}
                     margin = 'dense'
-                    label="Physical Address"
-                    name="physical_address"                
-                    onChange={handleChange}
-                    variant="outlined"                                         
-                />
-              </Grid>
+                    label="Bull Breed Composition"
+                    name="breed_composition"
+                    onChange={handleChange}                   
+                    default = ""                              
+                    select                    
+                    SelectProps={{ native: true }}                    
+                    variant="outlined"
+                  >
+                    <option value=""></option>
+                    {breedCompositions.map(comp => (
+                          <option                    
+                            value={comp.id}
+                          >
+                            {comp.value}
+                          </option>
+                        ))
+                    }           
+                  </TextField>
+                </Grid>
                 <Grid
                     item
                     md={3}
@@ -244,85 +322,36 @@ const DetailsEdit = props => {
                     fullWidth
                     InputLabelProps={{
                       shrink: true,
-                    }}
+                    }}           
                     margin = 'dense'
-                    label="Postal Address"
-                    name="postal_address"                
+                    label="Ejaculation Number"
+                    name="ejaculation_number"                
                     onChange={handleChange}
                     variant="outlined"                                         
                 />
               </Grid>
               <Grid
-                    item
-                    md={3}
-                    xs={12}
-                  >
-                  <TextField
-                    fullWidth
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-                    margin = 'dense'
-                    label="Postal Code"
-                    name="postal_code"                
-                    onChange={handleChange}
-                    variant="outlined"                                         
+                item
+                md={3}
+                xs={12}
+              >
+                <TextField
+                  fullWidth
+                  InputLabelProps={{
+                    shrink: true,
+                  }} 
+                  margin = 'dense'
+                  label="Production Date"
+                  type="date"
+                  name="production_date"
+                  defaultValue = {new Date()}
+                  onChange={handleChange}
+                  variant="outlined" 
+                  required   
                 />
-              </Grid>
-              <Grid
-                    item
-                    md={3}
-                    xs={12}
-                  >
-                  <TextField
-                    fullWidth
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-                    margin = 'dense'
-                    label="City/Town"
-                    name="city"                
-                    onChange={handleChange}
-                    variant="outlined"                                         
-                />
-              </Grid>
-              <Grid
-                    item
-                    md={3}
-                    xs={12}
-                  >
-                  <TextField
-                    fullWidth
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-                    margin = 'dense'
-                    label="Email"
-                    name="email"  
-                    type = 'email'              
-                    onChange={handleChange}
-                    variant="outlined"                                         
-                />
-              </Grid>
-              <Grid
-                    item
-                    md={3}
-                    xs={12}
-                  >
-                  <TextField
-                    fullWidth
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-                    margin = 'dense'
-                    label="Phone Number"
-                    name="phone_number"                
-                    onChange={handleChange}
-                    variant="outlined"                                         
-                />
-              </Grid>            
-                 
-             <Grid
+            </Grid>  
+
+            <Grid
                     item
                     md={6}
                     xs={12}
@@ -333,12 +362,43 @@ const DetailsEdit = props => {
                       shrink: true,
                     }}
                     margin = 'dense'
-                    required
-                    label="Specialization"
-                    name="speciality"  
+                    label="Specification"
+                    name="specification"
+                    onChange={handleChange}                   
+                    default = ""                              
+                    select                    
+                    SelectProps={{ native: true }}                    
+                    variant="outlined"
+                  >
+                    <option value=""></option>
+                    {specifications.map(spec => (
+                          <option                    
+                            value={spec.id}
+                          >
+                            {spec.value}
+                          </option>
+                        ))
+                    }           
+                  </TextField>
+                </Grid>
+                               
+              
+              <Grid
+                    item
+                    md={6}
+                    xs={12}
+                  >
+                  <TextField
+                    fullWidth
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                    margin = 'dense'                 
+                    label="Additional Info"
+                    name="additional_info"  
                     multiline      
-                    rowsMax = {5}
-                    rows={4}                                               
+                    rowsMax = {4}
+                    rows={3}                                               
                     onChange={handleChange}
                     variant="outlined" 
                 />

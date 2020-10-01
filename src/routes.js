@@ -343,6 +343,24 @@ const routes = [
         exact: true,
         component: lazy(() => import('views/OrderManagementDetails'))
       },
+      // AI STRAWS
+      {
+        path: '/management/straws/:status',
+        exact: true,
+        component: lazy(() => import('views/Straws/components/Straw/components/view'))        
+      },       
+      {
+        path: '/management/straws/add',
+        exact: true,
+        component: lazy(() => import('views/Straws/components/Straw/components/add'))        
+      }, 
+      {
+        path: '/management/straws/edit/:id',
+        exact: true,
+        component: lazy(() => import('views/Straws/components/Straw/components/edit'))        
+      },
+
+
       {
         path: '/overview',
         exact: true,

@@ -500,6 +500,26 @@ export const endpoint_agent_edit= {
 };
 
 
+// AI Straws
+//agents
+export const endpoint_straw= {
+  url: `${api}/straws/`,
+  method: 'GET',
+  headers: headers   
+}
+export const endpoint_straw_add= {
+  url: `${api}/straws`,
+  method: 'POST',
+  headers: headers   
+};
+export const endpoint_straw_edit= {
+  url: `${api}/straws/`,
+  method: 'PUT',
+  headers: headers   
+};
+
+
+
 
 
 

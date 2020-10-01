@@ -416,7 +416,7 @@ const DetailsEdit = props => {
                             }}
                              margin = 'dense'
                              required
-                             label="Services Offered"
+                             label="Specialization"
                              name="speciality"  
                              multiline      
                              rowsMax = {5}

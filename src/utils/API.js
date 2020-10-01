@@ -862,6 +862,100 @@ export const getServiceProviders =  function (config,id,option) {
   });       
 }
 
+//get ai straws
+export const getStraws =  function (config,id,option,is_active) {   
+  const options = {
+    url:`${config.url}${id}/${option}/${is_active}`,
+    method: config.method,
+    headers: config.headers  
+  }  
+  return new Promise((resolve, reject) => {
+    axios(options)
+    .then(res => {          
+        resolve(res.data);
+    })
+    .catch(err => reject(err));
+  });       
+}
+
+//post ai straw
+export const postStraw =  function (config,values,user_id,org_id) { 
+  let {straw_id, barcode, bull_tag_id, bull_name ,breed, breed_composition, semen_source, farm_name,batch_number ,ejaculation_number ,production_date, specification ,additional_info  } = values;
+  
+  const body = {
+    "straw_id": straw_id,
+    "barcode": barcode,
+    "bull_tag_id": bull_tag_id,
+    "bull_name": bull_name,           
+    "breed": breed,            
+    "breed_composition": breed_composition,
+    "semen_source": semen_source,
+    "farm_name": farm_name,
+    "batch_number": batch_number,
+    "ejaculation_number": ejaculation_number,
+    "production_date": production_date,          
+    "specification": specification,           
+    "additional_info": additional_info,
+    "created_by": user_id,
+    "org_id":org_id
+  };
+
+  const options = {
+    url:`${config.url}`,
+    method: config.method,
+    headers: config.headers,
+    data: body  
+  };
+
+
+ 
+  return new Promise((resolve, reject) => {
+    axios(options)
+    .then(res => {           
+        resolve(res.data);
+    })    
+    .catch(err => reject(err));
+  });       
+}
+
+//update AI Straw
+export const putStraw =  function (config,values,user_id,id) { 
+  let {straw_id, barcode, bull_tag_id, bull_name ,breed_id, breed_composition_id, semen_source, farm_name,batch_number ,ejaculation_number ,production_date, specification_id ,additional_info  } = values;
+
+  const body = {
+    "straw_id": straw_id,
+    "barcode": barcode,
+    "bull_tag_id": bull_tag_id,
+    "bull_name": bull_name,           
+    "breed": breed_id,            
+    "breed_composition": breed_composition_id,
+    "semen_source": semen_source,
+    "farm_name": farm_name,
+    "batch_number": batch_number,
+    "ejaculation_number": ejaculation_number,
+    "production_date": production_date,          
+    "specification": specification_id,           
+    "additional_info": additional_info,
+    "updated_by": user_id    
+  };
+
+  const options = {
+    url:`${config.url}${id}`,
+    method: config.method,
+    headers: config.headers,
+    data: body  
+  };
+
+  return new Promise((resolve, reject) => {
+    axios(options)
+    .then(res => {           
+        resolve(res.data);
+    })    
+    .catch(err => reject(err));
+  });       
+}
+
+
 export const getAgents =  function (config,id,option) {   
   const options = {
     url:`${config.url}${id}/${option}`,
@@ -1022,10 +1116,6 @@ export const putAgents =  function (config,values,user_id,record_id) {
     .catch(err => reject(err));
   });       
 }
-
-
-
-
 
 
 

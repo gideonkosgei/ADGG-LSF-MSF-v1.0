@@ -47,7 +47,12 @@ export default [
           {
             title: 'Exit List',
             href: '/management/exit-list'
-          },/*
+          },
+          {
+            title: 'AI Straws',
+            href: '/management/straws'
+          },
+          /*
           {
             title: 'Farm Details',
             href: '/management/farms/1/summary'

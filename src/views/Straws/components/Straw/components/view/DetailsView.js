@@ -3,8 +3,8 @@ import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import {Card, CardContent, CardHeader, Grid,Divider,colors,Link} from '@material-ui/core';
-import {getServiceProviders}   from '../../../../../../utils/API';
-import {endpoint_service_provider} from '../../../../../../configs/endpoints';
+import {getStraws}   from '../../../../../../utils/API';
+import {endpoint_straw} from '../../../../../../configs/endpoints';
 import authContext from '../../../../../../contexts/AuthContext';
 import {Sidebar} from '../index';
 import MUIDataTable from "mui-datatables";
@@ -30,39 +30,44 @@ const DetailsView = props => {
   const [values, setValues] = useState([]);
   const [ {organization_id}  ] = useContext(authContext);
   const option  =  0;
+  const is_active = localStorage.getItem('straw_records_view_status');  
+  const form_title = (parseInt(is_active) === 0) ? '(Deleted/Archived)' : ''
+
+ 
 
   useEffect(() => {     
     let mounted = true;
-      (async  (endpoint,org_id,option) => {     
-        await  getServiceProviders(endpoint,org_id,option)
+      (async  (endpoint,org_id,option,is_active) => {     
+        await  getStraws(endpoint,org_id,option,is_active)
         .then(response => {                        
           if (mounted) {            
             setValues(response.payload);                 
           }
         });
-      })(endpoint_service_provider,organization_id,option); 
+      })(endpoint_straw,organization_id,option,is_active); 
       
     return () => {
       mounted = false;
            
     };
-  }, [organization_id]); 
+  }, [organization_id,is_active]); 
 
   if (!values) {
     return null;
   }   
-  
  
     const columns = [
     { name: "id",label: "ID",options: {filter: false,sort: false,display:false}},   
-    { name: "name",label: "Name",options: {filter: false,sort: true,display:true}},
-    { name: "acronym",label: "Acronym",options: {filter: false,sort: true,display:true}},  
-    { name: "service_provider_type_name",label: "Type",options: {filter:true,sort: true,display:true}}, 
-    { name: "country",label: "Country",options: {filter: true,sort: false,display:true}},   
-    { name: "phone",label: "Phone",options: {filter: false,sort: false,display:true}}, 
-    { name: "email",label: "Email",options: {filter: false,sort: false,display:true}},
-    //{ name: "services_offered",label: "Services",options: {filter: false,sort: false,display:true}},
-      
+    { name: "straw_id",label: "Straw ID",options: {filter: false,sort: true,display:true}},
+    { name: "batch_number",label: "Batch",options: {filter: false,sort: true,display:true}},  
+    { name: "barcode",label: "Barcode",options: {filter:true,sort: true,display:true}}, 
+    { name: "semen_source",label: "Source",options: {filter: true,sort: false,display:true}},   
+    { name: "production_date",label: "Prod Date",options: {filter: false,sort: false,display:true}}, 
+    { name: "specification",label: "Specification",options: {filter: false,sort: false,display:true}},
+    { name: "bull_tag_id",label: "Bull Tag",options: {filter: false,sort: false,display:true}},
+    { name: "breed",label: "Breed",options: {filter: false,sort: false,display:true}},
+    { name: "breed_composition",label: "Breed Comp",options: {filter: false,sort: false,display:true}},
+    
     { name: "",
       options: {
       filter: false,
@@ -72,7 +77,7 @@ const DetailsView = props => {
         return (
           <Link
               component={RouterLink}
-              to = {`/settings/partners/service-providers/edit/${tableMeta.rowData[0]}`}              
+              to = {`/management/straws/edit/${tableMeta.rowData[0]}`}              
           >
             <OpenInNewIcon/>
           </Link>          
@@ -107,7 +112,7 @@ const DetailsView = props => {
       {...rest}
       className={clsx(classes.root, className)}
     >
-        <CardHeader title="SERVICE PROVIDERS" />
+        <CardHeader title= {`AI STRAWS ${form_title}`} />
         <Divider />
         <CardContent> 
           <Grid container spacing={1} justify="center">            
@@ -121,7 +126,7 @@ const DetailsView = props => {
                     <div className={classes.inner}>
                       <MuiThemeProvider>                
                         <MUIDataTable
-                          title = "SERVICE PROVIDERS"
+                          title = {`AI STRAWS ${form_title}`}
                           data={values}
                           columns={columns}
                           options={options}
