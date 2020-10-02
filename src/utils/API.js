@@ -881,6 +881,20 @@ export const getStraws =  function (config,id,option,is_active) {
 //post ai straw
 export const postStraw =  function (config,values,user_id,org_id) { 
   let {straw_id, barcode, bull_tag_id, bull_name ,breed, breed_composition, semen_source, farm_name,batch_number ,ejaculation_number ,production_date, specification ,additional_info  } = values;
+ 
+  straw_id = (typeof straw_id === 'undefined')? '':straw_id;
+  barcode = (typeof barcode === 'undefined')? '':barcode;
+  bull_tag_id = (typeof bull_tag_id === 'undefined')? '':bull_tag_id;
+  bull_name = (typeof bull_name === 'undefined')? '':bull_name;
+  breed = (typeof breed === 'undefined')? null:breed;
+  breed_composition = (typeof breed_composition === 'undefined')? null:breed_composition;
+  semen_source = (typeof semen_source === 'undefined')? '':semen_source; 
+  farm_name = (typeof farm_name === 'undefined')? '':farm_name;
+  batch_number = (typeof batch_number === 'undefined')? '':batch_number;
+  ejaculation_number = (typeof ejaculation_number === 'undefined')? '':ejaculation_number;
+  production_date = (typeof production_date === 'undefined')? null:production_date;
+  specification  = (typeof specification === 'undefined')? null:specification;
+  additional_info = (typeof additional_info === 'undefined')? '':additional_info;
   
   const body = {
     "straw_id": straw_id,
@@ -907,7 +921,7 @@ export const postStraw =  function (config,values,user_id,org_id) {
     data: body  
   };
 
-
+console.log(options);
  
   return new Promise((resolve, reject) => {
     axios(options)
