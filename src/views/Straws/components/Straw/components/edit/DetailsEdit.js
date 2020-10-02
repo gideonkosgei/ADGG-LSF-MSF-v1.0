@@ -37,6 +37,7 @@ const DetailsEdit = props => {
   const [readOnly, setReadOnly] = useState(true);
   const [openMetadata, setMetadata] = useState(false);   
   const straw_id  = localStorage.getItem('straw_id'); 
+  
 
   useEffect(() => {
     let mounted_lookup = true;
@@ -98,7 +99,8 @@ const DetailsEdit = props => {
   if (!breeds || !breedCompositions || !specifications || !values) {
     return null;
   }
- 
+   
+
 
     const handleChange = event => {
     event.persist();
@@ -139,6 +141,9 @@ const DetailsEdit = props => {
   const handleMetadataClose = () => {
     setMetadata(false);
   };
+
+
+
 
   return (
     <Card
@@ -438,7 +443,7 @@ const DetailsEdit = props => {
 
             <Grid
                     item
-                    md={6}
+                    md={4}
                     xs={12}
                   >
                   <TextField
@@ -498,6 +503,30 @@ const DetailsEdit = props => {
                     value = {values.additional_info}   
                 />
               </Grid>
+              <Grid
+                item
+                md={2}
+                xs={12}
+              >
+                <Box> 
+                    <Typography variant="h6"> { values.is_active? "Active(on)" : "Active(off)"} </Typography> 
+                </Box> 
+                <Box> 
+                  <Switch   
+                  inputProps={{
+                    readOnly: Boolean(readOnly),
+                    disabled: Boolean(readOnly)                
+                  }}
+                    name = "is_active"          
+                    className={classes.toggle} 
+                    color="secondary"
+                    edge="start"
+                    onChange={handleChange}
+                    checked = {(values.is_active)?true:false}
+                  />             
+                </Box>
+               </Grid> 
+
             
              
               </Grid>

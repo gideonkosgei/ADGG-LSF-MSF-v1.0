@@ -920,7 +920,7 @@ export const postStraw =  function (config,values,user_id,org_id) {
 
 //update AI Straw
 export const putStraw =  function (config,values,user_id,id) { 
-  let {straw_id, barcode, bull_tag_id, bull_name ,breed_id, breed_composition_id, semen_source, farm_name,batch_number ,ejaculation_number ,production_date, specification_id ,additional_info  } = values;
+  let {straw_id, barcode, bull_tag_id, bull_name ,breed_id, breed_composition_id, semen_source, farm_name,batch_number ,ejaculation_number ,production_date, specification_id ,additional_info,is_active  } = values;
 
   const body = {
     "straw_id": straw_id,
@@ -936,7 +936,8 @@ export const putStraw =  function (config,values,user_id,id) {
     "production_date": production_date,          
     "specification": specification_id,           
     "additional_info": additional_info,
-    "updated_by": user_id    
+    "updated_by": user_id,
+    "is_active": is_active    
   };
 
   const options = {

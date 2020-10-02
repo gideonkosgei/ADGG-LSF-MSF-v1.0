@@ -50,7 +50,7 @@ export default [
           },
           {
             title: 'AI Straws',
-            href: '/management/straws'
+            href: '/management/straws/view/1'
           },
           /*
           {

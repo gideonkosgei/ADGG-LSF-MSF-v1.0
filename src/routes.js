@@ -345,7 +345,7 @@ const routes = [
       },
       // AI STRAWS
       {
-        path: '/management/straws/:status',
+        path: '/management/straws/view/:status',
         exact: true,
         component: lazy(() => import('views/Straws/components/Straw/components/view'))        
       },       

@@ -21,14 +21,14 @@ const Sidebar = props => {
       <CardContent>                 
       <Tooltip  title="Home">              
           <IconButton aria-label="home" size="small" >
-            <Link component = {RouterLink} to={`/management/straws/1`}>
+            <Link component = {RouterLink} to={`/management/straws/view/1`}>
               <HomeIcon /> 
             </Link>
           </IconButton> 
         </Tooltip>
         <Tooltip  title="view">              
           <IconButton aria-label="view" size="small" >
-            <Link component = {RouterLink} to = {`/management/straws/1`}>
+            <Link component = {RouterLink} to = {`/management/straws/view/1`}>
               <VisibilityIcon /> 
             </Link>
           </IconButton> 
@@ -42,7 +42,7 @@ const Sidebar = props => {
         </Tooltip>  
         <Tooltip  title="Deleted/Archived">              
           <IconButton aria-label="add" size="small" >
-            <Link component = {RouterLink} to={`/management/straws/0`}>
+            <Link component = {RouterLink} to={`/management/straws/view/0`}>
               <RestoreFromTrashIcon /> 
             </Link>
           </IconButton> 
