@@ -488,6 +488,19 @@ const routes = [
         exact: true,
         component: lazy(() => import('views/Partners/components/Agents/components/edit'))        
       },
+
+       //Administration
+       {
+        path: '/administration/org',
+        exact: true,
+        component: lazy(() => import('views/Administration/components/Organization/components/view'))        
+      },       
+      {
+        path: '/administration/org/edit/:id',
+        exact: true,
+        component: lazy(() => import('views/Administration/components/Organization/components/edit'))        
+      },
+     
       
 
 

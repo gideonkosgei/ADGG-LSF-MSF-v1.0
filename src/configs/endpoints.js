@@ -519,6 +519,38 @@ export const endpoint_straw_edit= {
 };
 
 
+// Administration : userlist
+export const endpoint_user_list= {
+  url: `${api}/users/list`,
+  method: 'GET',
+  headers: headers   
+}
+/*export const endpoint_straw_add= {
+  url: `${api}/straws`,
+  method: 'POST',
+  headers: headers   
+};
+export const endpoint_straw_edit= {
+  url: `${api}/straws/`,
+  method: 'PUT',
+  headers: headers   
+};*/
+
+// all organizations
+export const endpoint_orgs= {
+  url: `${api}/orgs`,
+  method: 'GET',
+  headers: headers   
+}
+
+// org access list
+export const endpoint_orgs_access= {
+  url: `${api}/orgs/access/`,
+  method: 'GET',
+  headers: headers   
+}
+
+
 
 
 

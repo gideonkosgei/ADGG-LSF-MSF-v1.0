@@ -11,6 +11,7 @@ import CalendarTodayIcon from '@material-ui/icons/CalendarToday';
 //import FolderIcon from '@material-ui/icons/FolderOutlined';
 import HomeIcon from '@material-ui/icons/HomeOutlined';
 import ListAltIcon from '@material-ui/icons/ListAlt';
+import SupervisorAccountIcon from '@material-ui/icons/SupervisorAccount';
 //import LockOpenIcon from '@material-ui/icons/LockOpenOutlined';
 //import MailIcon from '@material-ui/icons/MailOutlined';
 //import PresentToAllIcon from '@material-ui/icons/PresentToAll';
@@ -136,6 +137,19 @@ export default [
         title: 'Downloads',
         href: '/downloads',
         icon: CloudDownloadIcon,        
+      }, 
+      {
+        title: 'Administration',       
+        icon: SupervisorAccountIcon,  
+        children: [
+          {
+            title: 'Organization',
+            href: '/administration/org',                     
+          }
+        ]  
+         
+
+        
       },     
     ]
   },

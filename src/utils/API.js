@@ -921,7 +921,7 @@ export const postStraw =  function (config,values,user_id,org_id) {
     data: body  
   };
 
-console.log(options);
+
  
   return new Promise((resolve, reject) => {
     axios(options)
@@ -2391,6 +2391,60 @@ return new Promise((resolve, reject) => {
   .catch(err => reject(err));
 });       
 }
+
+
+// ADMINISTRATION
+// 1. ORGANIZATION
+
+export const getUserList =  function (config) {   
+  const options = {
+    url:`${config.url}`,
+    method: config.method,
+    headers: config.headers  
+  }  
+  return new Promise((resolve, reject) => {
+    axios(options)
+    .then(res => {          
+        resolve(res.data);
+    })
+    .catch(err => reject(err));
+  });       
+};
+
+// GET ALL ORGANIZATIONS
+export const getOrgList =  function (config) {   
+  const options = {
+    url:`${config.url}`,
+    method: config.method,
+    headers: config.headers  
+  }  
+  return new Promise((resolve, reject) => {
+    axios(options)
+    .then(res => {          
+        resolve(res.data);
+    })
+    .catch(err => reject(err));
+  });       
+};
+
+//access
+export const getOrgAccess =  function (config,user) {   
+  const options = {
+    url:`${config.url}${user}`,
+    method: config.method,
+    headers: config.headers  
+  }  
+  return new Promise((resolve, reject) => {
+    axios(options)
+    .then(res => {          
+        resolve(res.data);
+    })
+    .catch(err => reject(err));
+  });       
+};
+
+
+
 
 
 
