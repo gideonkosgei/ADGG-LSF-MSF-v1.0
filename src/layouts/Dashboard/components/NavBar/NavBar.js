@@ -42,7 +42,7 @@ const useStyles = makeStyles(theme => ({
 
 const NavBar = props => {
   const { openMobile, onMobileClose, className, ...rest } = props;
-  const [ {name,role ,email} ] = useContext(authContext);
+  const [ {name ,email,organization} ] = useContext(authContext);
 
   const classes = useStyles();
   const router = useRouter();
@@ -69,9 +69,10 @@ const NavBar = props => {
           variant="h4"
         >
            {name}
-        </Typography>        
-        <Typography variant="body2">{role}</Typography>
+        </Typography> 
+        <Typography variant="body2">{organization}</Typography>
         <Typography variant="body2">{email}</Typography>
+        
       </div>
       <Divider className={classes.divider} />
       <nav className={classes.navigation}>

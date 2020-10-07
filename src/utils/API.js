@@ -2472,6 +2472,32 @@ export const putOrgAccess =  function (config,values,user,created_by) {
 
 
 
+export const putOrgAccessSwitch =  function (config,org,user) {  
+  const body = {      
+    "org": org,
+    "user":user
+  }; 
+
+  const options = {
+  url:`${config.url}`,
+  method: config.method,
+  headers: config.headers,
+  data: body  
+  }; 
+
+  return new Promise((resolve, reject) => {
+    axios(options)
+    .then(res => {           
+        resolve(res.data);
+    })    
+    .catch(err => reject(err));
+  });       
+}
+
+
+
+
+
 
 
 

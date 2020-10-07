@@ -9,7 +9,8 @@ export const initialAuthState = {
 	status:localStorage.getItem('status')?localStorage.getItem('status'):'',
 	role:localStorage.getItem('role')?localStorage.getItem('role'):'',  
 	error: localStorage.getItem('error')?localStorage.getItem('error'):'',
-	organization_id: localStorage.getItem('organization_id')?localStorage.getItem('organization_id'):''
+	organization_id: localStorage.getItem('organization_id')?localStorage.getItem('organization_id'):'',
+	organization: localStorage.getItem('organization')?localStorage.getItem('organization'):''
 	
 };
 export const authReducer = (state, action) => {	
@@ -24,6 +25,7 @@ export const authReducer = (state, action) => {
 				localStorage.setItem("email",data.email);			
 				localStorage.setItem("role", data.role);
 				localStorage.setItem("organization_id", data.org_id);
+				localStorage.setItem("organization", data.organization);
 			
 			return {
 				user_id:data.id,
@@ -34,7 +36,8 @@ export const authReducer = (state, action) => {
 				email:data.email,				
 				status:data.status,
 				role:data.role,  
-				organization_id:data.org_id,  				
+				organization_id:data.org_id,  
+				organization:data.organization,  				
 				error: ''
 			};
 		case 'LOGIN_ERROR':
@@ -48,6 +51,7 @@ export const authReducer = (state, action) => {
 				status:'',				
 				role:'', 
 				organization_id:'',
+				organization:'',
 				error: action.payload.error
 			};
 		case 'LOGOUT':
@@ -61,6 +65,7 @@ export const authReducer = (state, action) => {
 				status:'',				
 				role:'', 
 				organization_id:'',
+				organization:'',
 				error: ''
 			};
 		default:

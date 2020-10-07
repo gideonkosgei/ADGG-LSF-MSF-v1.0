@@ -557,6 +557,14 @@ export const endpoint_orgs_access_update= {
   headers: headers   
 }
 
+// org access switch
+export const endpoint_orgs_access_switch = {
+  url: `${api}/orgs/switch/access`,
+  method: 'PUT',
+  headers: headers   
+}
+
+
 
 
 

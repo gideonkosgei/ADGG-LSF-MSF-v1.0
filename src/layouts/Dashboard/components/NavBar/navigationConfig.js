@@ -95,6 +95,10 @@ export default [
                 title: 'Security',
                 href: '/settings/security'
               },
+              {
+                title: 'Switch Organization',
+                href: '/switch/org'
+              },
             ]
           },         
          
