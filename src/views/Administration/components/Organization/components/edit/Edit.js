@@ -24,7 +24,8 @@ const useStyles = makeStyles(theme => ({
 
 const Edit = props => { 
   const classes = useStyles();
-  localStorage.setItem('agent_id', parseInt(props.match.params.id)); 
+  localStorage.setItem('user_record_id', parseInt(props.match.params.id)); 
+  localStorage.setItem('user_name_org', props.match.params.name);
   return (
     <Page
       className={classes.root}

@@ -2443,6 +2443,33 @@ export const getOrgAccess =  function (config,user) {
   });       
 };
 
+export const putOrgAccess =  function (config,values,user,created_by) { 
+  let orgs = [];
+  for (let i = 0; i<values.length;i++){
+    orgs.push(values[i].id)
+  }
+   
+  const body = {      
+    "orgs": orgs,
+    "created_by":created_by
+  };
+    const options = {
+    url:`${config.url}${user}`,
+    method: config.method,
+    headers: config.headers,
+    data: body  
+  }; 
+
+  return new Promise((resolve, reject) => {
+    axios(options)
+    .then(res => {           
+        resolve(res.data);
+    })    
+    .catch(err => reject(err));
+  });       
+}
+
+
 
 
 

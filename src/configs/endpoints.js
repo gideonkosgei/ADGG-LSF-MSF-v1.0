@@ -550,6 +550,14 @@ export const endpoint_orgs_access= {
   headers: headers   
 }
 
+// org access list put
+export const endpoint_orgs_access_update= {
+  url: `${api}/orgs/access/`,
+  method: 'PUT',
+  headers: headers   
+}
+
+
 
 
 

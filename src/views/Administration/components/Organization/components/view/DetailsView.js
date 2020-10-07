@@ -63,7 +63,7 @@ const DetailsView = props => {
         return (
           <Link
               component={RouterLink}
-              to = {`/administration/org/edit/${tableMeta.rowData[0]}`}              
+              to = {`/administration/org/edit/${tableMeta.rowData[0]}/${tableMeta.rowData[1]}`}              
           >
             <OpenInNewIcon/>
           </Link>          

@@ -496,15 +496,10 @@ const routes = [
         component: lazy(() => import('views/Administration/components/Organization/components/view'))        
       },       
       {
-        path: '/administration/org/edit/:id',
+        path: '/administration/org/edit/:id/:name',
         exact: true,
         component: lazy(() => import('views/Administration/components/Organization/components/edit'))        
       },
-     
-      
-
-
-      
 
       // Batch processes Routes
       {

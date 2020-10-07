@@ -2,15 +2,12 @@ import React, { useState,useEffect,useContext } from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
-import {Card,Checkbox,List,ListItem,ListItemIcon,ListItemText, CardContent, CardHeader, Grid,Divider, TextField,colors,Button,CardActions,Typography,Box,Switch,Tooltip} from '@material-ui/core';
-import {getOrgAccess,getServiceProviders,putAgents,getAgents}   from '../../../../../../utils/API';
-import {endpoint_orgs_access,endpoint_service_provider,endpoint_agent_edit,endpoint_agent} from '../../../../../../configs/endpoints';
+import {Card,Checkbox,List,ListItem,ListItemIcon,ListItemText, CardContent, CardHeader, Grid,Divider,colors,Button,CardActions,Box} from '@material-ui/core';
+import {getOrgAccess,putOrgAccess}   from '../../../../../../utils/API';
+import {endpoint_orgs_access,endpoint_orgs_access_update} from '../../../../../../configs/endpoints';
 import authContext from '../../../../../../contexts/AuthContext';
-import {Sidebar} from '../index';
 import SuccessSnackbar from '../../../../../../components/SuccessSnackbar';
 import ErrorSnackbar from '../../../../../../components/ErrorSnackbar';
-import OpenInNewIcon from '@material-ui/icons/OpenInNew';
-import {MetaData}  from '../Modal';
  
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -51,19 +48,17 @@ const DetailsEdit = props => {
   const {className, ...rest } = props; 
   const [openSnackbarSuccess, setopenSnackbarSuccess] = useState(false);
   const [openSnackbarError, setopenSnackbarError] = useState(false);
-  const [ {organization_id,user_id} ] = useContext(authContext);
-  const classes = useStyles();
-  const [values, setValues] = useState({ });  
-  const [affiliates, setAffiliates] = useState([]);
-  const [countries, setCountries] = useState([]);
-  const [readOnly, setReadOnly] = useState(true);
-  const [openMetadata, setMetadata] = useState(false); 
+  const [ {user_id} ] = useContext(authContext);
+  const classes = useStyles(); 
   const [checked, setChecked] = useState([]);
   const [left, setLeft] = useState([]);
-  const [right, setRight] = useState([4, 5, 6, 7]);
+  const [right, setRight] = useState([]);
 
   const leftChecked = intersection(checked, left);
   const rightChecked = intersection(checked, right);
+  
+  const user_record_id  = localStorage.getItem('user_record_id');
+  const user_name_org  = localStorage.getItem('user_name_org');  
 
   const handleToggle = (value) => () => {
     const currentIndex = checked.indexOf(value);
@@ -141,32 +136,14 @@ const DetailsEdit = props => {
     </Card>
   );
 
-  const agent_id  = localStorage.getItem('agent_id');   
 
   useEffect(() => {    
-    let mounted_countries = true;
-    let mounted_affiliates = true;
-    let mounted_agents = true;
-    
-    
-
-    (async  (endpoint,org_id,option) => {     
-      await  getServiceProviders(endpoint,org_id,option)
-      .then(response => {                        
-        if (mounted_affiliates) {            
-          setAffiliates(response.payload);                 
-        }
-      });
-    })(endpoint_service_provider,organization_id,0);  
-    
-    
-    
-   
+    let mounted_orgs = true;   
     
       (async  (endpoint,user_id) => {     
         await  getOrgAccess(endpoint,user_id)
         .then(response => {       
-          if (mounted_countries) { 
+          if (mounted_orgs) { 
             const data = response.payload;
             let orgs_selected = [];
             let orgs_not_selected = [];
@@ -186,41 +163,29 @@ const DetailsEdit = props => {
             setRight(orgs_selected);            
           }
         });
-      })(endpoint_orgs_access,user_id);
+      })(endpoint_orgs_access,user_record_id);
  
     return () => {      
-      mounted_countries = false; 
-      mounted_affiliates = false; 
-      mounted_agents = false;
+      mounted_orgs = false;      
     };    
-  }, [organization_id,user_id]);  
+  }, [user_record_id]);  
 
-  if (!affiliates || !countries || !values ) {
+  if ( !left || !right ) {
     return null;
   }
 
-
-    const handleChange = event => {
-    event.persist();
-    setValues({
-      ...values,
-      [event.target.name]:event.target.type === 'checkbox' ? event.target.checked: event.target.value  
-          
-    });
-  };
- 
-
   const handleSubmit = event => {
-    event.preventDefault();
-    (async  (endpoint,values,user_id,id) => {     
-      await  putAgents(endpoint,values,user_id,id)
+    event.preventDefault();    
+    (async  (endpoint,values,record_id,user_id) => {     
+      await  putOrgAccess(endpoint,values,record_id,user_id)
       .then(() => {  
         setopenSnackbarSuccess(true);         
       }).catch(() => {
         setopenSnackbarError(true); 
       });
-    })(endpoint_agent_edit,values,user_id,agent_id);    
+    })(endpoint_orgs_access_update,right,user_record_id,user_id);  
   };
+
   const handleSnackbarSuccessClose = () => {
     setopenSnackbarSuccess(false);
   };
@@ -228,27 +193,16 @@ const DetailsEdit = props => {
   const handleSnackbarErrorClose = () => {
     setopenSnackbarError(false);
   };
-  const handleSwitchChange = event => {
-    event.persist();
-    setReadOnly(!readOnly);   
-  };
-
-  const handleMetadataOpen = () => {
-    setMetadata(true);
-  };
-  const handleMetadataClose = () => {
-    setMetadata(false);
-  };
-
   return (
     <Card
       {...rest}
       className={clsx(classes.root, className)}
     >
-        <CardHeader title= { readOnly ? `Organization Access -  #${agent_id}`:`Organization Access #${agent_id}` } />
+        <CardHeader title= { `Organization Access - ${user_name_org}`} />
         <Divider />
+        <form  onSubmit={handleSubmit} >
         <CardContent> 
-
+       
         <Grid container spacing={2} justify="center" alignItems="center" className={classes.root}>
       <Grid item>{customList('NO ACCESS', left)}</Grid>
       <Grid item>
@@ -277,15 +231,33 @@ const DetailsEdit = props => {
       </Grid>
       <Grid item>{customList('HAVE ACCESS', right)}</Grid>
        </Grid>
-       </CardContent>               
-        
+       </CardContent> 
+       <CardActions>
+          <Box flexGrow={2}>                                  
+              <Button
+                className={classes.saveButton}
+                type="submit"
+                variant="contained"
+                hidden = "true"                               
+              >
+                Save Changes
+              </Button>                
+          </Box> 
+        </CardActions>
+       </form> 
+       <SuccessSnackbar
+          onClose={handleSnackbarSuccessClose}
+          open={openSnackbarSuccess}
+        />
+        <ErrorSnackbar
+          onClose={handleSnackbarErrorClose}
+          open={openSnackbarError}
+        />
     </Card>
   );
 };
 
 DetailsEdit.propTypes = {
-  className: PropTypes.string,
-  //profile: PropTypes.object.isRequired
+  className: PropTypes.string  
 };
-
 export default DetailsEdit;
