@@ -66,7 +66,7 @@ const AnimalCategorySegmentation = props => {
     >
       <CardHeader
         action={<GenericMoreButton />}
-        title="Animal Category Segmentation"
+        title="Animal Types Segmentation"
       />
       <Divider />
       <CardContent className={classes.content}>
