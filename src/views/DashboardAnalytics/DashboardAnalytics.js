@@ -7,7 +7,7 @@ import {
   Header,
   Overview,
   FinancialStats,
-  EarningsSegmentation,
+  AnimalCategorySegmentation,
   TopReferrals,
   MostProfitableProducts,
   CustomerActivity,
@@ -59,7 +59,7 @@ const DashboardAnalytics = () => {
           xl={3}
           xs={12}
         >
-          <EarningsSegmentation />
+          <AnimalCategorySegmentation />
         </Grid>
         <Grid
           item

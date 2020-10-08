@@ -1,18 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
-import {
-  Card,
-  CardHeader,
-  CardContent,
-  Divider,
-  Typography
-} from '@material-ui/core';
-
-import axios from 'utils/axios';
+import {Card, CardHeader, CardContent, Divider, Typography } from '@material-ui/core';
 import { GenericMoreButton } from 'components';
 import { Chart } from './components';
+import authContext from '../../../../contexts/AuthContext';
+import {endpoint_animal_statistics} from '../../../../configs/endpoints';
+import {getAnimalStats}   from '../../../../utils/API';
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -43,29 +38,26 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const EarningsSegmentation = props => {
+const AnimalCategorySegmentation = props => {
   const { className, ...rest } = props;
-
-  const classes = useStyles();
-  const [earnings, setEarnings] = useState([]);
+  const [ { organization_id }  ] = useContext(authContext);
+  const classes = useStyles(); 
+  const [stats, setStats] = useState([]);
 
   useEffect(() => {
     let mounted = true;
-
-    const fetchEarnings = () => {
-      axios.get('/api/dashboard/earnings').then(response => {
-        if (mounted) {
-          setEarnings(response.data.earnings);
-        }
-      });
-    };
-
-    fetchEarnings();
-
+    (async  (org_id)=>{     
+      await  getAnimalStats(endpoint_animal_statistics,org_id)
+       .then(response => {              
+         if (mounted) {
+          setStats(response.payload);
+         }
+       });
+     })(organization_id);
     return () => {
       mounted = false;
     };
-  }, []);
+  }, [organization_id]);
 
   return (
     <Card
@@ -74,22 +66,22 @@ const EarningsSegmentation = props => {
     >
       <CardHeader
         action={<GenericMoreButton />}
-        title="Earnings Segmentation"
+        title="Animal Category Segmentation"
       />
       <Divider />
       <CardContent className={classes.content}>
         <div className={classes.chartContainer}>
           <Chart
             className={classes.chart}
-            data={earnings}
+            data={stats}
           />
         </div>
         <Divider />
         <div className={classes.statsContainer}>
-          {earnings.map(earning => (
+          {stats.map(stat => (
             <div
               className={classes.statsItem}
-              key={earning.id}
+              key={stat.animal_type_id}
             >
               <Typography
                 align="center"
@@ -97,13 +89,13 @@ const EarningsSegmentation = props => {
                 gutterBottom
                 variant="overline"
               >
-                {earning.label}
+                {stat.animal_type}
               </Typography>
               <Typography
                 align="center"
                 variant="h4"
               >
-                {earning.value}%
+                {stat.percentage}%
               </Typography>
             </div>
           ))}
@@ -113,8 +105,8 @@ const EarningsSegmentation = props => {
   );
 };
 
-EarningsSegmentation.propTypes = {
+AnimalCategorySegmentation.propTypes = {
   className: PropTypes.string
 };
 
-export default EarningsSegmentation;
+export default AnimalCategorySegmentation;

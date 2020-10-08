@@ -229,7 +229,7 @@ const DetailsEdit = props => {
           </Button>
         </Grid>
       </Grid>
-      <Grid item>{customList('HAVE ACCESS', right)}</Grid>
+      <Grid item>{customList('HAS ACCESS', right)}</Grid>
        </Grid>
        </CardContent> 
        <CardActions>

@@ -1,4 +1,4 @@
-export { default as EarningsSegmentation } from './EarningsSegmentation';
+export { default as AnimalCategorySegmentation } from './AnimalCategorySegmentation';
 export { default as FinancialStats } from './FinancialStats';
 export { default as Header } from './Header';
 export { default as MostProfitableProducts } from './MostProfitableProducts';

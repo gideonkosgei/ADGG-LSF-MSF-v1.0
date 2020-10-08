@@ -136,7 +136,8 @@ const SwitchOrg = props => {
               >
                 Current Context <b> {`${organization}`} </b>
                 <br/>
-                <b>NB:</b> Changes Take Effect On The Next Login!                
+                <b>NB:</b> Changes Take Effect On The Next Login!    
+                <br/>            
                 {(orgs.length<1) ? "User not allowed to switch organization/farms. Contact Admin!" : 
                 null
                 }
