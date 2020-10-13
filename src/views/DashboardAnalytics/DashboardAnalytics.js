@@ -8,7 +8,7 @@ import {
   Overview,
   FinancialStats,
   AnimalCategorySegmentation,
-  TopReferrals,
+  TopCows,
   MostProfitableProducts,
   CustomerActivity,
   LatestOrders
@@ -47,16 +47,16 @@ const DashboardAnalytics = () => {
         </Grid>
         <Grid
           item
-          lg={8}
-          xl={9}
+          lg={7}
+          xl={8}
           xs={12}
         >
           <FinancialStats />
         </Grid>
         <Grid
           item
-          lg={4}
-          xl={3}
+          lg={5}
+          xl={4}
           xs={12}
         >
           <AnimalCategorySegmentation />
@@ -87,7 +87,7 @@ const DashboardAnalytics = () => {
           lg={4}
           xs={12}
         >
-          <TopReferrals />
+          <TopCows />
         </Grid>
       </Grid>
     </Page>

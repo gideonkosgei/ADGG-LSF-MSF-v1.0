@@ -2495,6 +2495,24 @@ export const putOrgAccessSwitch =  function (config,org,user) {
 }
 
 
+//Dashboard - Stats
+// to cows
+export const getTopCows =  function (config,organisation_id,start_date,end_date) {   
+  const options = {
+    url:`${config.url}${organisation_id}/${start_date}/${end_date}`,
+    method: config.method,
+    headers: config.headers  
+  }    
+  return new Promise((resolve, reject) => {
+    axios(options)
+    .then(res => {          
+        resolve(res.data);
+    })
+    .catch(err => reject(err));
+});       
+}
+
+
 
 
 

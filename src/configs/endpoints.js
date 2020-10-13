@@ -565,6 +565,15 @@ export const endpoint_orgs_access_switch = {
 }
 
 
+// DASHBOARD: ANALYTICS
+// TOP COWS
+export const endpoint_top_cows = {
+  url: `${api}/stats/top-cows/`,
+  method: 'GET',
+  headers: headers   
+}
+
+
 
 
 

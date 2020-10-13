@@ -20,8 +20,6 @@ function getRandomColor() {
 
 const Chart = props => {
   const { data: dataProp, className, ...rest } = props;
-  console.log(dataProp);
-
   const classes = useStyles();
   const theme = useTheme();
 

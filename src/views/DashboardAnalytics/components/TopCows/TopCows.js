@@ -1,25 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
-import {
-  Avatar,
-  Button,
-  Card,
-  CardActions,
-  CardContent,
-  CardHeader,
-  Divider,
-  List,
-  ListItem,
-  ListItemAvatar,
-  ListItemText,
-  Typography
-} from '@material-ui/core';
+import {Button,Card, CardActions, CardContent, CardHeader, Divider,List, ListItem, ListItemText, Typography } from '@material-ui/core';
 import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
+import authContext from '../../../../contexts/AuthContext';
+import {endpoint_top_cows} from '../../../../configs/endpoints';
+import {getTopCows}   from '../../../../utils/API';
 
-import axios from 'utils/axios';
 import { GenericMoreButton } from 'components';
 
 const useStyles = makeStyles(theme => ({
@@ -44,29 +33,29 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const TopReferrals = props => {
+const TopCows = props => {
   const { className, ...rest } = props;
-
   const classes = useStyles();
-  const [referrals, setReferrals] = useState([]);
-
+  const [topCows, setTopCows] = useState([]);
+  const [ { organization_id }  ] = useContext(authContext);
+  const start_date = '2020-01-01';
+  const end_date = '2020-12-30';
+  
   useEffect(() => {
-    let mounted = true;
-
-    const fetchReferrals = () => {
-      axios.get('/api/dashboard/top-referrals').then(response => {
-        if (mounted) {
-          setReferrals(response.data.referrals);
-        }
-      });
-    };
-
-    fetchReferrals();
-
+    let mounted = true;   
+    (async  (endpoint,org_id,start_date,end_date)=>{     
+      await  getTopCows(endpoint,org_id,start_date,end_date)
+       .then(response => {              
+         if (mounted) {
+          setTopCows(response.payload);  
+          console.log(response.payload);                
+         }
+       });
+     })(endpoint_top_cows,organization_id,start_date,end_date);
     return () => {
       mounted = false;
     };
-  }, []);
+  }, [organization_id]);
 
   return (
     <Card
@@ -75,27 +64,18 @@ const TopReferrals = props => {
     >
       <CardHeader
         action={<GenericMoreButton />}
-        title="Top Referrals"
+        title="TOP COWS"
       />
       <Divider />
       <CardContent className={classes.content}>
         <List disablePadding>
-          {referrals.map((referral, i) => (
+          {topCows.slice(0,10).map((topCow, i) => (
             <ListItem
-              divider={i < referrals.length - 1}
-              key={referral.id}
-            >
-              <ListItemAvatar>
-                <Avatar
-                  className={classes.avatar}
-                  size="small"
-                  style={{ backgroundColor: referral.color }}
-                >
-                  {referral.initials}
-                </Avatar>
-              </ListItemAvatar>
-              <ListItemText primary={referral.name} />
-              <Typography variant="subtitle2">{referral.value}</Typography>
+              divider={i < topCow.length - 1}
+              key={topCow.id}
+            >              
+              <ListItemText primary={`${topCow.name} (${topCow.tag_id})`} />
+              <Typography variant="subtitle2">{`${topCow.total_milk} ltrs`}</Typography>
             </ListItem>
           ))}
         </List>
@@ -117,8 +97,8 @@ const TopReferrals = props => {
   );
 };
 
-TopReferrals.propTypes = {
+TopCows.propTypes = {
   className: PropTypes.string
 };
 
-export default TopReferrals;
+export default TopCows;
