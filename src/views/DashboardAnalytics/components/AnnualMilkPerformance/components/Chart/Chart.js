@@ -32,7 +32,6 @@ const Chart = props => {
     ],
     labels
   };
-
   const options = {
     responsive: true,
     maintainAspectRatio: false,
