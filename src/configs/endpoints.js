@@ -581,6 +581,13 @@ export const endpoint_annual_milk_performance = {
   headers: headers   
 }
 
+// BREEDS DISTRIBUTION
+export const endpoint_breeds_distribution = {
+  url: `${api}/stats/breed-distribution/`,
+  method: 'GET',
+  headers: headers   
+}
+
 
 
 

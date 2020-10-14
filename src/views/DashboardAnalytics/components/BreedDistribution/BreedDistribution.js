@@ -4,11 +4,11 @@ import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import {Card, CardHeader, CardContent, Divider, Typography } from '@material-ui/core';
 import { GenericMoreButton } from 'components';
-import PerfectScrollbar from 'react-perfect-scrollbar';
 import { Chart } from './components';
+import PerfectScrollbar from 'react-perfect-scrollbar';
 import authContext from '../../../../contexts/AuthContext';
-import {endpoint_animal_statistics} from '../../../../configs/endpoints';
-import {getAnimalStats}   from '../../../../utils/API';
+import {endpoint_breeds_distribution} from '../../../../configs/endpoints';
+import {getStatsBreedsDistribution}   from '../../../../utils/API';
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -39,7 +39,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const AnimalCategorySegmentation = props => {
+const BreedDistribution = props => {
   const { className, ...rest } = props;
   const [ { organization_id }  ] = useContext(authContext);
   const classes = useStyles(); 
@@ -48,7 +48,7 @@ const AnimalCategorySegmentation = props => {
   useEffect(() => {
     let mounted = true;
     (async  (org_id)=>{     
-      await  getAnimalStats(endpoint_animal_statistics,org_id)
+      await  getStatsBreedsDistribution(endpoint_breeds_distribution,org_id)
        .then(response => {              
          if (mounted) {
           setStats(response.payload);
@@ -59,6 +59,7 @@ const AnimalCategorySegmentation = props => {
       mounted = false;
     };
   }, [organization_id]);
+  console.log(stats);
 
   return (
     <Card
@@ -67,49 +68,49 @@ const AnimalCategorySegmentation = props => {
     >
       <CardHeader
         action={<GenericMoreButton/>}
-        title="Animal Categories"
+        title="Breeds Distribution"
       />
       <Divider />
       <CardContent className={classes.content}>
         <PerfectScrollbar>
-          <div className={classes.chartContainer}>
-            <Chart
-              className={classes.chart}
-              data={stats}
-            />
-          </div>
-          <Divider />
-          <div className={classes.statsContainer}>
-            {stats.map(stat => (
-              <div
-                className={classes.statsItem}
-                key={stat.animal_type_id}
-              >
-                <Typography
-                  align="center"
-                  component="h6"
-                  gutterBottom
-                  variant="overline"
+            <div className={classes.chartContainer}>
+              <Chart
+                className={classes.chart}
+                data={stats}
+              />
+            </div>
+            <Divider />
+            <div className={classes.statsContainer}>
+              {stats.map(stat => (
+                <div
+                  className={classes.statsItem}
+                  key={stat.breed}
                 >
-                  {stat.animal_type}
-                </Typography>
-                <Typography
-                  align="center"
-                  variant="h4"
-                >
-                  {stat.percentage}%
-                </Typography>
-              </div>
-            ))}
-          </div>
-        </PerfectScrollbar>  
+                  <Typography
+                    align="center"
+                    component="h6"
+                    gutterBottom
+                    variant="overline"
+                  >
+                    {stat.breed}
+                  </Typography>
+                  <Typography
+                    align="center"
+                    variant="h4"
+                  >
+                    {stat.percentage}%
+                  </Typography>
+                </div>
+              ))}
+            </div>
+          </PerfectScrollbar>
       </CardContent>
     </Card>
   );
 };
 
-AnimalCategorySegmentation.propTypes = {
+BreedDistribution.propTypes = {
   className: PropTypes.string
 };
 
-export default AnimalCategorySegmentation;
+export default BreedDistribution;

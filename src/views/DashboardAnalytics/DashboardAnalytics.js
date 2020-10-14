@@ -9,9 +9,10 @@ import {
   AnnualMilkPerformance,
   AnimalCategorySegmentation,
   TopCows,
-  MostProfitableProducts,
+  BreedDistribution
+  /*MostProfitableProducts,
   CustomerActivity,
-  LatestOrders
+  LatestOrders*/
 } from './components';
 
 const useStyles = makeStyles(theme => ({
@@ -47,11 +48,19 @@ const DashboardAnalytics = () => {
         </Grid>
         <Grid
           item
-          lg={12}
+          lg={9}
           xl={12}
           xs={12}
         >
           <AnnualMilkPerformance />
+        </Grid>
+        <Grid
+          item
+          lg={3}
+          xl={4}
+          xs={12}
+        >
+          <TopCows />
         </Grid>
         <Grid
           item
@@ -63,32 +72,35 @@ const DashboardAnalytics = () => {
         </Grid>
         <Grid
           item
+          lg={7}
+          xl={4}
+          xs={12}
+        >
+          <BreedDistribution/>
+        </Grid>
+       
+        <Grid
+          item
           lg={8}
           xs={12}
         >
-          <LatestOrders />
+          {/*<LatestOrders />*/}
         </Grid>
         <Grid
           item
           lg={4}
           xs={12}
         >
-          <CustomerActivity />
+         {/* <CustomerActivity />*/}
         </Grid>
         <Grid
           item
           lg={8}
           xs={12}
         >
-          <MostProfitableProducts />
+         {/* <MostProfitableProducts />*/}
         </Grid>
-        <Grid
-          item
-          lg={4}
-          xs={12}
-        >
-          <TopCows />
-        </Grid>
+       
       </Grid>
     </Page>
   );
