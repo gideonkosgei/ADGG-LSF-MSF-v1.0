@@ -1,5 +1,5 @@
 export { default as AnimalCategorySegmentation } from './AnimalCategorySegmentation';
-export { default as FinancialStats } from './FinancialStats';
+export { default as AnnualMilkPerformance } from './AnnualMilkPerformance';
 export { default as Header } from './Header';
 export { default as MostProfitableProducts } from './MostProfitableProducts';
 export { default as Overview } from './Overview';

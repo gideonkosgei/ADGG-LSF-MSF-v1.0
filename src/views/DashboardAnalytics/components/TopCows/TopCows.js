@@ -47,8 +47,7 @@ const TopCows = props => {
       await  getTopCows(endpoint,org_id,start_date,end_date)
        .then(response => {              
          if (mounted) {
-          setTopCows(response.payload);  
-          console.log(response.payload);                
+          setTopCows(response.payload);                           
          }
        });
      })(endpoint_top_cows,organization_id,start_date,end_date);

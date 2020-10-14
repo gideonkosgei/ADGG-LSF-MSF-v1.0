@@ -574,6 +574,14 @@ export const endpoint_top_cows = {
 }
 
 
+// ANNUAL ANIMAL PERFORMANCE
+export const endpoint_annual_milk_performance = {
+  url: `${api}/stats/milk-performance-comparator/`,
+  method: 'GET',
+  headers: headers   
+}
+
+
 
 
 

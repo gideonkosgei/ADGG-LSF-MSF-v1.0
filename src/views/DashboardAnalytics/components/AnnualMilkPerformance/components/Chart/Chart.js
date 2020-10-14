@@ -39,7 +39,7 @@ const Chart = props => {
     animation: false,
     cornerRadius: 20,
     legend: {
-      display: false
+      display: true
     },
     layout: {
       padding: 0
@@ -79,7 +79,7 @@ const Chart = props => {
             min: 0,
             maxTicksLimit: 5,
             callback: value => {
-              return value > 0 ? value + 'K' : value;
+              return value > 0 ? value + 'L' : value;
             }
           }
         }
@@ -101,10 +101,10 @@ const Chart = props => {
       callbacks: {
         title: () => {},
         label: tooltipItem => {
-          let label = `This year: ${tooltipItem.yLabel}`;
+          let label = `${tooltipItem.yLabel}`;
 
           if (tooltipItem.yLabel > 0) {
-            label += 'K';
+            label += 'L';
           }
 
           return label;

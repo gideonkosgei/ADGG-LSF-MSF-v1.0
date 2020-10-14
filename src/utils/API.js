@@ -2513,6 +2513,22 @@ export const getTopCows =  function (config,organisation_id,start_date,end_date)
 }
 
 
+export const getAnnualMilkPerformance =  function (config,organisation_id) {   
+  const options = {
+    url:`${config.url}${organisation_id}`,
+    method: config.method,
+    headers: config.headers  
+  }    
+  return new Promise((resolve, reject) => {
+    axios(options)
+    .then(res => {          
+        resolve(res.data);
+    })
+    .catch(err => reject(err));
+});       
+}
+
+
 
 
 

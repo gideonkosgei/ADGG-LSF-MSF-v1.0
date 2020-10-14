@@ -6,7 +6,7 @@ import { Page } from 'components';
 import {
   Header,
   Overview,
-  FinancialStats,
+  AnnualMilkPerformance,
   AnimalCategorySegmentation,
   TopCows,
   MostProfitableProducts,
@@ -47,11 +47,11 @@ const DashboardAnalytics = () => {
         </Grid>
         <Grid
           item
-          lg={7}
-          xl={8}
+          lg={12}
+          xl={12}
           xs={12}
         >
-          <FinancialStats />
+          <AnnualMilkPerformance />
         </Grid>
         <Grid
           item
