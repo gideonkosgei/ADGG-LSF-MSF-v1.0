@@ -59,7 +59,7 @@ const BreedDistribution = props => {
       mounted = false;
     };
   }, [organization_id]);
-  console.log(stats);
+
 
   return (
     <Card
@@ -68,7 +68,7 @@ const BreedDistribution = props => {
     >
       <CardHeader
         action={<GenericMoreButton/>}
-        title="Breeds Distribution"
+        title="Breed Distribution"
       />
       <Divider />
       <CardContent className={classes.content}>

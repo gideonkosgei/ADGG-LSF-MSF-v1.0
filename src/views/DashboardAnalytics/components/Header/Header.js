@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import moment from 'moment';
 import { makeStyles } from '@material-ui/styles';
-import { Typography, Grid, Button, ButtonGroup } from '@material-ui/core';
+import { Grid, Button, ButtonGroup } from '@material-ui/core';
 import { DatePicker } from '@material-ui/pickers';
 import CalendarTodayIcon from '@material-ui/icons/CalendarTodayOutlined';
 
@@ -78,20 +78,8 @@ const Header = props => {
           lg={6}
           xs={12}
         >
-          <Typography
-            component="h2"
-            gutterBottom
-            variant="overline"
-          >
-            Analytics
-          </Typography>
-          <Typography
-            component="h1"
-            gutterBottom
-            variant="h3"
-          >
-            Finance Overview
-          </Typography>
+         
+          
         </Grid>
         <Grid
           className={classes.dates}

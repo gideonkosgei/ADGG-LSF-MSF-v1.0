@@ -1,10 +1,12 @@
-import React from 'react';
+import React,{ useState, useEffect, useContext } from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/styles';
 import { Card, Typography, Grid, colors } from '@material-ui/core';
-
 import { Label } from 'components';
+import authContext from '../../../../contexts/AuthContext';
+import {endpoint_dashboard_overview} from '../../../../configs/endpoints';
+import {getStatsDashboardOverview}   from '../../../../utils/API';
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -37,16 +39,26 @@ const useStyles = makeStyles(theme => ({
 
 const Overview = props => {
   const { className, ...rest } = props;
-
+  const [ { organization_id }  ] = useContext(authContext);
+  const [stats, setStats] = useState([]);
   const classes = useStyles();
 
-  const data = {
-    income: '854,355.00',
-    expanses: '373,250.50',
-    profit: '123,532.00',
-    subscriptions: '26,000'
-  };
+  useEffect(() => {
+    let mounted = true;
+    (async  (org_id)=>{     
+      await  getStatsDashboardOverview(endpoint_dashboard_overview,org_id)
+       .then(response => {              
+         if (mounted) {
+          setStats(response.payload[0]);
+         }
+       });
+     })(organization_id);
+    return () => {
+      mounted = false;
+    };
+  }, [organization_id]);
 
+ 
   return (
     <Card
       {...rest}
@@ -69,16 +81,16 @@ const Overview = props => {
             gutterBottom
             variant="overline"
           >
-            Total Income
+            Active Animals
           </Typography>
           <div className={classes.valueContainer}>
-            <Typography variant="h3">${data.income}</Typography>
+            <Typography variant="h3">{Number(stats.current_year_active_animals).toLocaleString()}</Typography> 
             <Label
               className={classes.label}
-              color={colors.green[600]}
+              color= { (stats.active_animals_change_percentage>0) ? colors.green[600] : colors.red[600] }
               variant="contained"
             >
-              +25%
+              {`${stats.active_animals_change_percentage}%`}
             </Label>
           </div>
         </Grid>
@@ -94,16 +106,16 @@ const Overview = props => {
             gutterBottom
             variant="overline"
           >
-            Total Expanses
+            Milk Production
           </Typography>
           <div className={classes.valueContainer}>
-            <Typography variant="h3">${data.expanses}</Typography>
+            <Typography variant="h3">{Number(stats.current_year_total_milk).toLocaleString()} (L)</Typography>           
             <Label
               className={classes.label}
-              color={colors.green[600]}
+              color= { (stats.milk_change_percentage>0) ? colors.green[600] : colors.red[600] }
               variant="contained"
             >
-              +12%
+              {`${stats.milk_change_percentage}%`}              
             </Label>
           </div>
         </Grid>
@@ -119,16 +131,16 @@ const Overview = props => {
             gutterBottom
             variant="overline"
           >
-            Net Profit
+            New Births 
           </Typography>
           <div className={classes.valueContainer}>
-            <Typography variant="h3">{data.profit}</Typography>
+            <Typography variant="h3">{Number(stats.current_year_births).toLocaleString()}</Typography>            
             <Label
               className={classes.label}
-              color={colors.red[600]}
+              color={ (stats.birth_change_percentage>0) ? colors.green[600] : colors.red[600] }
               variant="contained"
             >
-              -20%
+              {`${stats.birth_change_percentage}%`} 
             </Label>
           </div>
         </Grid>
@@ -144,10 +156,10 @@ const Overview = props => {
             gutterBottom
             variant="overline"
           >
-            Active Subscriptions
+            Net Movement
           </Typography>
           <div className={classes.valueContainer}>
-            <Typography variant="h3">{data.subscriptions}</Typography>
+            <Typography variant="h3">{Number(stats.current_year_net_movement).toLocaleString()}</Typography>            
           </div>
         </Grid>
       </Grid>

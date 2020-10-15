@@ -588,6 +588,13 @@ export const endpoint_breeds_distribution = {
   headers: headers   
 }
 
+// DASHBOARD OVERVIEW
+export const endpoint_dashboard_overview = {
+  url: `${api}/stats/dashboard-overview/`,
+  method: 'GET',
+  headers: headers   
+}
+
 
 
 
