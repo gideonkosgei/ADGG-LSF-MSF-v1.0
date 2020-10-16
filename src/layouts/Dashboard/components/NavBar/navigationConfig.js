@@ -68,6 +68,10 @@ export default [
             title: 'AI Straws',
             href: '/management/straws/view/1'
           },
+          {
+            title: 'Graduation',
+            href: '/management/straws/view/1'
+          },
           /*
           {
             title: 'Farm Details',

@@ -1,14 +1,13 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { Link as RouterLink } from 'react-router-dom';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
-import {Button,Card, CardActions, CardContent, CardHeader, Divider,List, ListItem, ListItemText, Typography } from '@material-ui/core';
+import { Button,Card, CardActions, CardContent, CardHeader, Divider,List, ListItem, ListItemText, Typography } from '@material-ui/core';
 import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
 import authContext from '../../../../contexts/AuthContext';
 import {endpoint_top_cows} from '../../../../configs/endpoints';
 import {getTopCows}   from '../../../../utils/API';
-
+import { SeeAllModal } from './components';
 import { GenericMoreButton } from 'components';
 
 const useStyles = makeStyles(theme => ({
@@ -37,7 +36,8 @@ const TopCows = props => {
   const { className, ...rest } = props;
   const classes = useStyles();
   const [topCows, setTopCows] = useState([]);
-  const [ { organization_id }  ] = useContext(authContext);
+  const [ { organization_id }  ] = useContext(authContext); 
+  const [openModal, setModal] = useState(false); 
   const start_date = '2020-01-01';
   const end_date = '2020-12-30';
   
@@ -54,7 +54,16 @@ const TopCows = props => {
     return () => {
       mounted = false;
     };
-  }, [organization_id]);
+  }, [organization_id]);  
+
+  const handleModalOpen = () => {
+    setModal(true);
+  };
+
+  const handleModalClose = () => {
+    setModal(false);
+  };
+
 
   return (
     <Card
@@ -82,17 +91,22 @@ const TopCows = props => {
       <Divider />
       <CardActions className={classes.actions}>
         <Button
-          color="primary"
-          component={RouterLink}
-          size="small"
-          to="#"
+          color="primary" 
+          onClick={handleModalOpen} 
+          size="small"         
           variant="text"
         >
           See all
           <ArrowForwardIcon className={classes.arrowForwardIcon} />
         </Button>
       </CardActions>
+      <SeeAllModal
+        Details={topCows}
+        onClose={handleModalClose}
+        open={openModal}
+      /> 
     </Card>
+    
   );
 };
 
