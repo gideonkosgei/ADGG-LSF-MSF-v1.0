@@ -367,6 +367,12 @@ const routes = [
       exact: true,
       component: lazy(() => import('views/Graduation/components/Graduation/components/view'))        
       },  
+      // Process Graduation Record
+      {
+        path: '/management/graduation/edit/:id',
+        exact: true,
+        component: lazy(() => import('views/Graduation/components/Graduation/components/edit'))        
+      },
 
       {
         path: '/overview',

@@ -3,10 +3,10 @@ import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import {Card, CardContent,Tooltip,IconButton,Link } from '@material-ui/core';
-import VisibilityIcon from '@material-ui/icons/Visibility';
 import { Link as RouterLink } from 'react-router-dom';
 import HomeIcon from '@material-ui/icons/Home';
-import RestoreFromTrashIcon from '@material-ui/icons/RestoreFromTrash';
+import PlaylistAddCheckIcon from '@material-ui/icons/PlaylistAddCheck';
+import ListIcon from '@material-ui/icons/List';
 
 const useStyles = makeStyles(theme => ({
   root: {}, 
@@ -24,17 +24,17 @@ const Sidebar = props => {
             </Link>
           </IconButton> 
         </Tooltip>
-        <Tooltip  title="view">              
+        <Tooltip  title="View List">              
           <IconButton aria-label="view" size="small" >
             <Link component = {RouterLink} to = {`/management/graduation/view/0`}>
-              <VisibilityIcon /> 
+              <ListIcon /> 
             </Link>
           </IconButton> 
         </Tooltip>
-        <Tooltip  title="Deleted/Archived">              
+        <Tooltip  title="Processed / Finalized">              
           <IconButton aria-label="add" size="small" >
             <Link component = {RouterLink} to={`/management/graduation/view/1`}>
-              <RestoreFromTrashIcon /> 
+              <PlaylistAddCheckIcon /> 
             </Link>
           </IconButton> 
         </Tooltip>             

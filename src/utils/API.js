@@ -2577,6 +2577,51 @@ export const getGraduation =  function (config,organisation_id,status) {
 });       
 }
 
+// GET GRADUATION RECORD
+export const getGraduationRecord =  function (config,id) {   
+  const options = {
+    url:`${config.url}${id}`,
+    method: config.method,
+    headers: config.headers  
+  }   
+
+  return new Promise((resolve, reject) => {
+    axios(options)
+    .then(res => {          
+        resolve(res.data);
+    })
+    .catch(err => reject(err));
+});       
+}
+
+
+// PROCESS GRADUATION RECORD
+//update AI Straw
+export const putGraduationRecord =  function (config,values,user_id,id) { 
+  let {action} = values;  
+  const body = {
+    "option": action,
+	  "user": user_id
+        
+  };
+
+  const options = {
+    url:`${config.url}${id}`,
+    method: config.method,
+    headers: config.headers,
+    data: body  
+  };
+
+  return new Promise((resolve, reject) => {
+    axios(options)
+    .then(res => {           
+        resolve(res.data);
+    })    
+    .catch(err => reject(err));
+  });       
+}
+
+
 
 
 

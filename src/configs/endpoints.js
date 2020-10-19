@@ -602,6 +602,19 @@ export const endpoint_graduation_list = {
   headers: headers   
 }
 
+//  GRADUATION RECORD
+export const endpoint_graduation_record = {
+  url: `${api}/graduation/record/`,
+  method: 'GET',
+  headers: headers   
+}
+
+export const endpoint_graduation_record_edit = {
+  url: `${api}/graduation/record/`,
+  method: 'PUT',
+  headers: headers   
+}
+
 
 
 

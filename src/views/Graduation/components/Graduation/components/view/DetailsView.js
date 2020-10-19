@@ -29,7 +29,7 @@ const DetailsView = props => {
   const [values, setValues] = useState([]);
   const [ {organization_id}  ] = useContext(authContext); 
   const graduation_status = sessionStorage.getItem('graduation_status');  
-  const form_title = (parseInt(graduation_status) === 0) ? '(un-processed)' : '(Processed)'
+  const form_title = (parseInt(graduation_status) === 0) ? '(UN-PROCESSED)' : '(PROCESSED)'
 
  
 
@@ -59,7 +59,8 @@ const DetailsView = props => {
     { name: "tag_id",label: "Tag ID",options: {filter: false,sort: true,display:true}}, 
     { name: "name",label: "Animal Name",options: {filter: false,sort: true,display:true}},   
     { name: "graduate_from",label: "Graduate FROM",options: {filter:true,sort: true,display:true}}, 
-    { name: "graduate_to",label: "Graduate TO",options: {filter: true,sort: false,display:true}},   
+    { name: "graduate_to",label: "Graduate TO",options: {filter: true,sort: false,display:true}}, 
+    { name: "action",label: "Status",options: {filter: true,sort: false,display:true}},  
     { name: "created_at",label: "Graduation Date",options: {filter: false,sort: false,display:true}}, 
     { name: "uuid",label: "UUID",options: {filter: false,sort: false,display:false}},
     { name: "",
@@ -71,7 +72,7 @@ const DetailsView = props => {
         return (
           <Link
               component={RouterLink}
-              to = {`/management/straws/edit/${tableMeta.rowData[0]}`}              
+              to = {`/management/graduation/edit/${tableMeta.rowData[0]}`}              
           >
             <OpenInNewIcon/>
           </Link>          

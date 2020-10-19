@@ -3,8 +3,8 @@ import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import {makeStyles} from '@material-ui/styles';
 import {Card, CardContent, CardHeader, Grid,Divider, TextField,colors,Button,CardActions,Typography,Box,Switch,Tooltip} from '@material-ui/core';
-import {getLookups,putStraw,getStraws}   from '../../../../../../utils/API';
-import {endpoint_lookup,endpoint_straw_edit,endpoint_straw} from '../../../../../../configs/endpoints';
+import {putGraduationRecord,getGraduationRecord}   from '../../../../../../utils/API';
+import {endpoint_graduation_record_edit,endpoint_graduation_record} from '../../../../../../configs/endpoints';
 import authContext from '../../../../../../contexts/AuthContext';
 import {Sidebar} from '../index';
 import SuccessSnackbar from '../../../../../../components/SuccessSnackbar';
@@ -30,76 +30,34 @@ const DetailsEdit = props => {
   const [ {user_id} ] = useContext(authContext);
   const classes = useStyles();
 
-  const [values, setValues] = useState({ });  
-  const [specifications, setSpecification] = useState([]);
-  const [breeds, setBreeds] = useState([]);
-  const [breedCompositions, setBreedCompositions] = useState([]); 
+  const [values, setValues] = useState({ });   
   const [readOnly, setReadOnly] = useState(true);
   const [openMetadata, setMetadata] = useState(false);   
-  const straw_id  = localStorage.getItem('straw_id'); 
+  const record_id  = sessionStorage.getItem('record_id'); 
+  const disable_form  = true;
+
+
   
 
-  useEffect(() => {
-    let mounted_lookup = true;
+  useEffect(() => {   
     let mounted = true;
-    const option  =  1;
-    const is_active = 1;
-
-
-    (async  (endpoint,org_id,option,is_active) => {     
-      await  getStraws(endpoint,org_id,option,is_active)
+    (async  (endpoint,record_id) => {     
+      await  getGraduationRecord(endpoint,record_id)
       .then(response => {                        
         if (mounted) {            
           setValues(response.payload[0]);                 
         }
       });
-    })(endpoint_straw,straw_id,option,is_active); 
-
-    (async  (endpoint,id) => {     
-        await  getLookups(endpoint,id)
-        .then(response => {       
-          if (mounted_lookup) { 
-            const data = response.payload[0];            
-            
-            let lookup_specification = [];
-            let lookup_breed = [];
-            let lookup_breed_composition = [];
-
-            for (let i = 0; i< data.length; i++){
-              //specifications
-              if(data[i].list_type_id === 85){                
-                lookup_specification.push(data[i]);
-              } 
-              //main breeds
-              if(data[i].list_type_id === 8){                
-                lookup_breed.push(data[i]);
-              }
-              //breed Composition
-              if(data[i].list_type_id === 14){                
-                lookup_breed_composition.push(data[i]);
-              }          
-            }                    
-            setSpecification(lookup_specification);
-            setBreedCompositions(lookup_breed_composition);
-            setBreeds(lookup_breed);
-            
-                        
-          }
-        });
-      })(endpoint_lookup,'85,8,14'); 
-
-      
-        
-    return () => {
-      mounted_lookup = false;   
+    })(endpoint_graduation_record,record_id); 
+    
+    return () => {    
       mounted = false;      
     };    
-  }, [straw_id]);  
+  }, [record_id]);  
 
-  if (!breeds || !breedCompositions || !specifications || !values) {
+  if (!values) {
     return null;
   }
-   
 
 
     const handleChange = event => {
@@ -115,13 +73,13 @@ const DetailsEdit = props => {
   const handleSubmit = event => {
     event.preventDefault();
     (async  (endpoint,values,user_id,id) => {     
-      await  putStraw(endpoint,values,user_id,id)
+      await  putGraduationRecord(endpoint,values,user_id,id)
       .then(() => {  
         setopenSnackbarSuccess(true);         
       }).catch(() => {
         setopenSnackbarError(true); 
       });
-    })(endpoint_straw_edit,values,user_id,straw_id);    
+    })(endpoint_graduation_record_edit,values,user_id,record_id);    
   };
   const handleSnackbarSuccessClose = () => {
     setopenSnackbarSuccess(false);
@@ -150,7 +108,7 @@ const DetailsEdit = props => {
       {...rest}
       className={clsx(classes.root, className)}
     >
-        <CardHeader title= { readOnly ? `AI STRAW #${straw_id}`:`EDIT AI STRAW #${straw_id}` } />
+        <CardHeader title= {`GRADUATION PROCESSING #${record_id}`} />
         <Divider />
         <CardContent> 
           <Grid container spacing={1} justify="center">            
@@ -167,7 +125,7 @@ const DetailsEdit = props => {
               >               
               <Grid
                     item
-                    md={6}
+                    md={3}
                     xs={12}
                   >
                   <TextField
@@ -176,16 +134,15 @@ const DetailsEdit = props => {
                       shrink: true,
                     }}
                     inputProps={{
-                      readOnly: Boolean(readOnly),
-                      disabled: Boolean(readOnly)                
+                      readOnly: Boolean(disable_form),
+                      disabled: Boolean(disable_form)                
                     }}
                     margin = 'dense'
-                    label="Semen Source"
-                    name="semen_source"                
+                    label="Animal ID"
+                    name="animal_id"                
                     onChange={handleChange}
-                    variant="outlined" 
-                    required 
-                    value = {values.semen_source}                    
+                    variant="outlined"                   
+                    value = {values.animal_id}                    
                 />
               </Grid>
               <Grid
@@ -199,284 +156,18 @@ const DetailsEdit = props => {
                       shrink: true,
                     }}
                     inputProps={{
-                      readOnly: Boolean(readOnly),
-                      disabled: Boolean(readOnly)                
+                      readOnly: Boolean(disable_form),
+                      disabled: Boolean(disable_form)                
                     }}
                     margin = 'dense'
-                    label="Farm Name/ID"
-                    name="farm_name"                
+                    label="Tag ID"
+                    name="tag_id"                
                     onChange={handleChange}
-                    variant="outlined"  
-                    value = {values.farm_name}                                        
+                    variant="outlined"                    
+                    value = {values.tag_id}                    
                 />
               </Grid>
-              <Grid
-                    item
-                    md={3}
-                    xs={12}
-                  >
-                  <TextField
-                    fullWidth
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-                    inputProps={{
-                      readOnly: Boolean(readOnly),
-                      disabled: Boolean(readOnly)                
-                    }}
-                    required
-                    margin = 'dense'
-                    label="Straw ID"
-                    name="straw_id"                
-                    onChange={handleChange}
-                    variant="outlined" 
-                    value = {values.straw_id}                                            
-                />
-              </Grid>
-              <Grid
-                    item
-                    md={3}
-                    xs={12}
-                  >
-                  <TextField
-                    fullWidth
-                    InputLabelProps={{
-                      shrink: true,
-                    }}   
-                    inputProps={{
-                      readOnly: Boolean(readOnly),
-                      disabled: Boolean(readOnly)                
-                    }}                
-                    margin = 'dense'
-                    label="Semen Bar Code"
-                    name="barcode"                
-                    onChange={handleChange}
-                    variant="outlined"    
-                    value = {values.barcode}                                      
-                />
-              </Grid>
-              <Grid
-                    item
-                    md={3}
-                    xs={12}
-                  >
-                  <TextField
-                    fullWidth
-                    InputLabelProps={{
-                      shrink: true,
-                    }}  
-                    inputProps={{
-                      readOnly: Boolean(readOnly),
-                      disabled: Boolean(readOnly)                
-                    }} 
-                    required                
-                    margin = 'dense'
-                    label="Batch Number"
-                    name="batch_number"                
-                    onChange={handleChange}
-                    variant="outlined" 
-                    value = {values.batch_number}                                        
-                />
-              </Grid>
-              <Grid
-                    item
-                    md={3}
-                    xs={12}
-                  >
-                  <TextField
-                    fullWidth
-                    InputLabelProps={{
-                      shrink: true,
-                    }}   
-                    inputProps={{
-                      readOnly: Boolean(readOnly),
-                      disabled: Boolean(readOnly)                
-                    }}         
-                    margin = 'dense'
-                    label="Bull ID / Tag ID"
-                    name="bull_tag_id"                
-                    onChange={handleChange}
-                    variant="outlined"  
-                    value = {values.bull_tag_id}                                       
-                />
-              </Grid>
-              <Grid
-                    item
-                    md={3}
-                    xs={12}
-                  >
-                  <TextField
-                    fullWidth
-                    InputLabelProps={{
-                      shrink: true,
-                    }}   
-                    inputProps={{
-                      readOnly: Boolean(readOnly),
-                      disabled: Boolean(readOnly)                
-                    }}        
-                    margin = 'dense'
-                    label="Bull Name"
-                    name="bull_name"                
-                    onChange={handleChange}
-                    variant="outlined"  
-                    value = {values.bull_name}                                       
-                />
-              </Grid>
-              <Grid
-                    item
-                    md={3}
-                    xs={12}
-                  >
-                  <TextField
-                    fullWidth
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-                    inputProps={{
-                      readOnly: Boolean(readOnly),
-                      disabled: Boolean(readOnly)                
-                    }}
-                    margin = 'dense'
-                    label="Breed of Bull"
-                    name="breed_id"
-                    onChange={handleChange}                    
-                    default = "" 
-                    value = {values.breed_id}                                
-                    select
-                    // eslint-disable-next-line react/jsx-sort-props
-                    SelectProps={{ native: true }}                    
-                    variant="outlined"
-                  >
-                    <option value=""></option>
-                    {breeds.map(breed => (
-                          <option                    
-                            value={breed.id}
-                          >
-                            {breed.value}
-                          </option>
-                        ))
-                    }           
-                  </TextField>
-                </Grid>
-                <Grid
-                    item
-                    md={3}
-                    xs={12}
-                  >
-                  <TextField
-                    fullWidth
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-                    inputProps={{
-                      readOnly: Boolean(readOnly),
-                      disabled: Boolean(readOnly)                
-                    }}
-                    margin = 'dense'
-                    label="Bull Breed Composition"
-                    name="breed_composition_id"
-                    onChange={handleChange}                   
-                    default = ""                              
-                    select 
-                    value = {values.breed_composition_id}                     
-                    SelectProps={{ native: true }}                    
-                    variant="outlined"
-                  >
-                    <option value=""></option>
-                    {breedCompositions.map(comp => (
-                          <option                    
-                            value={comp.id}
-                          >
-                            {comp.value}
-                          </option>
-                        ))
-                    }           
-                  </TextField>
-                </Grid>
-                <Grid
-                    item
-                    md={3}
-                    xs={12}
-                  >
-                  <TextField
-                    fullWidth
-                    InputLabelProps={{
-                      shrink: true,
-                    }}  
-                    inputProps={{
-                      readOnly: Boolean(readOnly),
-                      disabled: Boolean(readOnly)                
-                    }}         
-                    margin = 'dense'
-                    label="Ejaculation Number"
-                    name="ejaculation_number"                
-                    onChange={handleChange}
-                    variant="outlined"   
-                    value = {values.ejaculation_number}                                       
-                />
-              </Grid>
-              <Grid
-                item
-                md={3}
-                xs={12}
-              >
-                <TextField
-                  fullWidth
-                  InputLabelProps={{
-                    shrink: true,
-                  }} 
-                  inputProps={{
-                    readOnly: Boolean(readOnly),
-                    disabled: Boolean(readOnly)                
-                  }}
-                  margin = 'dense'
-                  label="Production Date"
-                  type="date"
-                  name="production_date"
-                  defaultValue = {new Date()}
-                  onChange={handleChange}
-                  variant="outlined" 
-                  required   
-                  value = {values.production_date}
-                />
-            </Grid>  
-
-            <Grid
-                    item
-                    md={4}
-                    xs={12}
-                  >
-                  <TextField
-                    fullWidth
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-                    inputProps={{
-                      readOnly: Boolean(readOnly),
-                      disabled: Boolean(readOnly)                
-                    }}
-                    margin = 'dense'
-                    label="Specification"
-                    name="specification_id"
-                    onChange={handleChange}  
-                    value = {values.specification_id}                 
-                    default = ""                              
-                    select                    
-                    SelectProps={{ native: true }}                    
-                    variant="outlined"
-                  >
-                    <option value=""></option>
-                    {specifications.map(spec => (
-                          <option                    
-                            value={spec.id}
-                          >
-                            {spec.value}
-                          </option>
-                        ))
-                    }           
-                  </TextField>
-                </Grid>
-                               
+              
               
               <Grid
                     item
@@ -489,45 +180,119 @@ const DetailsEdit = props => {
                       shrink: true,
                     }}
                     inputProps={{
-                      readOnly: Boolean(readOnly),
-                      disabled: Boolean(readOnly)                
+                      readOnly: Boolean(disable_form),
+                      disabled: Boolean(disable_form)                
                     }}
-                    margin = 'dense'                 
-                    label="Additional Info"
-                    name="additional_info"  
-                    multiline      
-                    rowsMax = {4}
-                    rows={3}                                               
+                    margin = 'dense'
+                    label="Animal Name"
+                    name="name"                
                     onChange={handleChange}
-                    variant="outlined" 
-                    value = {values.additional_info}   
+                    variant="outlined"  
+                    value = {values.name}                                        
                 />
               </Grid>
               <Grid
+                    item
+                    md={3}
+                    xs={12}
+                  >
+                  <TextField
+                    fullWidth
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                    inputProps={{
+                      readOnly: Boolean(disable_form),
+                      disabled: Boolean(disable_form)                
+                    }}                   
+                    margin = 'dense'
+                    label="Graduate From"
+                    name="graduate_from"                
+                    onChange={handleChange}
+                    variant="outlined" 
+                    value = {values.graduate_from}                                            
+                />
+              </Grid>
+              
+              <Grid
+                    item
+                    md={3}
+                    xs={12}
+                  >
+                  <TextField
+                    fullWidth
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                    inputProps={{
+                      readOnly: Boolean(disable_form),
+                      disabled: Boolean(disable_form)                
+                    }}                  
+                    margin = 'dense'
+                    label="Graduate TO"
+                    name="graduate_to"                
+                    onChange={handleChange}
+                    variant="outlined" 
+                    value = {values.graduate_to}                                            
+                />
+              </Grid>
+              
+            
+              <Grid
                 item
-                md={2}
+                md={3}
                 xs={12}
               >
-                <Box> 
-                    <Typography variant="h6"> { values.is_active? "Active(on)" : "Active(off)"} </Typography> 
-                </Box> 
-                <Box> 
-                  <Switch   
+                <TextField
+                  fullWidth
+                  InputLabelProps={{
+                    shrink: true,
+                  }} 
                   inputProps={{
-                    readOnly: Boolean(readOnly),
-                    disabled: Boolean(readOnly)                
+                    readOnly: Boolean(disable_form),
+                    disabled: Boolean(disable_form)                
                   }}
-                    name = "is_active"          
-                    className={classes.toggle} 
-                    color="secondary"
-                    edge="start"
-                    onChange={handleChange}
-                    checked = {(values.is_active)?true:false}
-                  />             
-                </Box>
-               </Grid> 
+                  margin = 'dense'
+                  label="Graduation Date"
+                  type="date"
+                  name="graduation_date"
+                  defaultValue = {new Date()}
+                  onChange={handleChange}
+                  variant="outlined"                   
+                  value = {values.created_at}
+                />
+            </Grid>  
 
-            
+
+            <Grid
+                item
+                md={3}
+                xs={12}
+              >
+                <TextField
+                  fullWidth
+                  InputLabelProps={{
+                    shrink: true,
+                  }} 
+                  default = ""  
+                  required                 
+                  margin = 'dense'
+                  label="Action"                 
+                  name="action"                  
+                  onChange={handleChange}              
+                  select                 
+                  SelectProps={{ native: true }}                    
+                  variant="outlined"                   
+                  
+                >
+                  <option value=""></option>
+                  <option value="1">Graduate</option>
+                  <option value="2">Do Not Graduate</option>
+                </TextField>
+            </Grid>  
+
+
+           
              
               </Grid>
           </CardContent>
