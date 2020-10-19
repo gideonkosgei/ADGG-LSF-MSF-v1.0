@@ -360,6 +360,13 @@ const routes = [
         component: lazy(() => import('views/Straws/components/Straw/components/edit'))        
       },
 
+      //GRADUATION
+      // View Graduation List
+      {
+      path: '/management/graduation/view/:status',
+      exact: true,
+      component: lazy(() => import('views/Graduation/components/Graduation/components/view'))        
+      },  
 
       {
         path: '/overview',

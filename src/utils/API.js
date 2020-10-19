@@ -2561,6 +2561,23 @@ export const getStatsDashboardOverview =  function (config,organisation_id) {
 }
 
 
+// GET GRADUATION LIST
+export const getGraduation =  function (config,organisation_id,status) {   
+  const options = {
+    url:`${config.url}${organisation_id}/${status}`,
+    method: config.method,
+    headers: config.headers  
+  }    
+  return new Promise((resolve, reject) => {
+    axios(options)
+    .then(res => {          
+        resolve(res.data);
+    })
+    .catch(err => reject(err));
+});       
+}
+
+
 
 
 

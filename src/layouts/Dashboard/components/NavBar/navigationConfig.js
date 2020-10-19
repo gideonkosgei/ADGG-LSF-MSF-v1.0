@@ -61,6 +61,10 @@ export default [
             href: '/management/animals'
           },
           {
+            title: 'Action List',
+            href: '/management/exit-list'
+          },
+          {
             title: 'Exit List',
             href: '/management/exit-list'
           },
@@ -70,7 +74,7 @@ export default [
           },
           {
             title: 'Graduation',
-            href: '/management/straws/view/1'
+            href: '/management/graduation/view/0'
           },
           /*
           {

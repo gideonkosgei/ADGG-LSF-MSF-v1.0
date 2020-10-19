@@ -595,6 +595,13 @@ export const endpoint_dashboard_overview = {
   headers: headers   
 }
 
+// UNPROCESSED GRADUATION LIST
+export const endpoint_graduation_list = {
+  url: `${api}/graduation/list/`,
+  method: 'GET',
+  headers: headers   
+}
+
 
 
 
