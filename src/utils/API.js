@@ -2360,8 +2360,7 @@ export const getEventSetupAll =  function (config) {
 };
 
 
-export const updateEventSetup =  function (config,values,user_id,param_id) { 
-  console.log(values);
+export const updateEventSetup =  function (config,values,user_id,param_id) {  
   let {calving,milking,health,bio_data,insemination,sync,exit,weight,pd} = values; 
   
   const body = {
@@ -2638,6 +2637,50 @@ export const getBackgroundProcessAll =  function (config,org_id) {
 });       
 }
 
+
+// GET BACKGROUND-PROCESS RECORD
+export const getBackgroundProcessRecord=  function (config,id) {   
+  const options = {
+    url:`${config.url}${id}`,
+    method: config.method,
+    headers: config.headers  
+  }   
+  return new Promise((resolve, reject) => {
+    axios(options)
+    .then(res => {          
+        resolve(res.data);
+    })
+    .catch(err => reject(err));
+});       
+}
+
+// UPDATE BACKGROUND PROCESS RECORD
+export const updateBackgroundProcessRecord =  function (config,values,user,id,org_id) {  
+  let {process_id,status_id} = values;   
+ 
+  const body = {
+    "process_id": process_id,
+    "org_id": org_id,
+    "status_id": status_id,
+    "user": user
+  };
+const options = {
+  url:`${config.url}${id}`, 
+  method: config.method,
+  headers: config.headers,
+  data: body  
+};
+
+console.log(options);
+
+return new Promise((resolve, reject) => {
+  axios(options)
+  .then(res => {           
+      resolve(res.data);
+  })
+  .catch(err => reject(err));
+});       
+}
 
 
 

@@ -525,6 +525,11 @@ const routes = [
         exact: true,
         component: lazy(() => import('views/Administration/components/BackgroundProcesses/components/view'))        
       },   
+      {
+        path: '/background-processes/org/edit/:id',
+        exact: true,
+        component: lazy(() => import('views/Administration/components/BackgroundProcesses/components/edit'))        
+      }, 
 
       // Batch processes Routes
       {

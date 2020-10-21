@@ -622,6 +622,20 @@ export const endpoint_background_process_view_all = {
   headers: headers   
 }
 
+export const endpoint_background_process_view_one = {
+  url: `${api}/background-process/`,
+  method: 'GET',
+  headers: headers   
+}
+
+// edit background process record
+export const endpoint_background_process_edit = {
+  url: `${api}/background-process/`,
+  method: 'PUT',
+  headers: headers   
+}
+
+
 
 
 

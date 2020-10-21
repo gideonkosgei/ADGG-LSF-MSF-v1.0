@@ -18,14 +18,14 @@ const Sidebar = props => {
       <CardContent>                 
       <Tooltip  title="Home">              
           <IconButton aria-label="home" size="small" >
-            <Link component = {RouterLink} to={`/administration/org`}>
+            <Link component = {RouterLink} to={`/background-processes/org`}>
               <HomeIcon /> 
             </Link>
           </IconButton> 
         </Tooltip>
         <Tooltip  title="view">              
           <IconButton aria-label="view" size="small" >
-            <Link component = {RouterLink} to = {`/administration/org`}>
+            <Link component = {RouterLink} to = {`/background-processes/org`}>
               <VisibilityIcon /> 
             </Link>
           </IconButton> 

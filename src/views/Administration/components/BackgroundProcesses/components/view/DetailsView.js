@@ -29,7 +29,7 @@ const DetailsView = props => {
   const classes = useStyles();  
   const [ {organization_id} ] = useContext(authContext);
   const [values, setValues] = useState([]);
-
+  
   useEffect(() => {     
     let mounted = true;
       (async  (endpoint,org) => {     
@@ -74,7 +74,7 @@ const DetailsView = props => {
         return (
           <Link
               component={RouterLink}
-              to = {`/administration/org/edit/${tableMeta.rowData[0]}/${tableMeta.rowData[1]}`}              
+              to = {`/background-processes/org/edit/${tableMeta.rowData[0]}`}              
           >
             <OpenInNewIcon/>
           </Link>          

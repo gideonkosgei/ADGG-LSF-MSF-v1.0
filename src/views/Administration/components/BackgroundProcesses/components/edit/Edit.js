@@ -24,12 +24,12 @@ const useStyles = makeStyles(theme => ({
 
 const Edit = props => { 
   const classes = useStyles();
-  localStorage.setItem('user_record_id', parseInt(props.match.params.id)); 
-  localStorage.setItem('user_name_org', props.match.params.name);
+  sessionStorage.setItem('background_process_id', parseInt(props.match.params.id)); 
+  
   return (
     <Page
       className={classes.root}
-      title="Organization"
+      title="Background Processes"
     >
     <Card>
         <CardContent>            

@@ -1,14 +1,17 @@
 import React, { useState,useEffect,useContext } from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
-import { makeStyles } from '@material-ui/styles';
-import {Card,Checkbox,List,ListItem,ListItemIcon,ListItemText, CardContent, CardHeader, Grid,Divider,colors,Button,CardActions,Box} from '@material-ui/core';
-import {getOrgAccess,putOrgAccess}   from '../../../../../../utils/API';
-import {endpoint_orgs_access,endpoint_orgs_access_update} from '../../../../../../configs/endpoints';
+import {makeStyles} from '@material-ui/styles';
+import {Card, CardContent, CardHeader, Grid,Divider, TextField,colors,Button,CardActions,Typography,Box,Switch,Tooltip} from '@material-ui/core';
+import {updateBackgroundProcessRecord,getBackgroundProcessRecord}   from '../../../../../../utils/API';
+import {endpoint_background_process_edit,endpoint_background_process_view_one} from '../../../../../../configs/endpoints';
 import authContext from '../../../../../../contexts/AuthContext';
+import {Sidebar} from '../index';
 import SuccessSnackbar from '../../../../../../components/SuccessSnackbar';
 import ErrorSnackbar from '../../../../../../components/ErrorSnackbar';
- 
+import OpenInNewIcon from '@material-ui/icons/OpenInNew';
+import {MetaData}  from '../Modal';
+  
 const useStyles = makeStyles(theme => ({
   root: {},
   saveButton: {
@@ -17,175 +20,63 @@ const useStyles = makeStyles(theme => ({
     '&:hover': {
       backgroundColor: colors.green[900]
     }
-  },
-  cardHeader: {
-    padding: theme.spacing(1, 2),
-  },
-  list: {
-    width: 300,
-    height: 250,
-    backgroundColor: theme.palette.background.paper,
-    overflow: 'auto',
-  },
-  button: {
-    margin: theme.spacing(0.5, 0),
-  },
+  }
 }));
-
-function not(a, b) {
-  return a.filter((value) => b.indexOf(value) === -1);
-}
-
-function intersection(a, b) {
-  return a.filter((value) => b.indexOf(value) !== -1);
-}
-
-function union(a, b) {
-  return [...a, ...not(b, a)];
-}
 
 const DetailsEdit = props => {
   const {className, ...rest } = props; 
   const [openSnackbarSuccess, setopenSnackbarSuccess] = useState(false);
   const [openSnackbarError, setopenSnackbarError] = useState(false);
-  const [ {user_id} ] = useContext(authContext);
-  const classes = useStyles(); 
-  const [checked, setChecked] = useState([]);
-  const [left, setLeft] = useState([]);
-  const [right, setRight] = useState([]);
+  const [ {user_id,organization_id} ] = useContext(authContext);
+  const classes = useStyles();
 
-  const leftChecked = intersection(checked, left);
-  const rightChecked = intersection(checked, right);
-  
-  const user_record_id  = localStorage.getItem('user_record_id');
-  const user_name_org  = localStorage.getItem('user_name_org');  
+  const [values, setValues] = useState({ });   
+  const [readOnly, setReadOnly] = useState(true);
+  const [openMetadata, setMetadata] = useState(false);   
+  const record_id  = sessionStorage.getItem('background_process_id'); 
+  const disable_form  = true; 
 
-  const handleToggle = (value) => () => {
-    const currentIndex = checked.indexOf(value);
-    const newChecked = [...checked];
-
-    if (currentIndex === -1) {
-      newChecked.push(value);
-    } else {
-      newChecked.splice(currentIndex, 1);
-    }
-
-    setChecked(newChecked);
-  };
-
-  const numberOfChecked = (items) => intersection(checked, items).length;
-
-  const handleToggleAll = (items) => () => {
-    if (numberOfChecked(items) === items.length) {
-      setChecked(not(checked, items));
-    } else {
-      setChecked(union(checked, items));
-    }
-  };
-
-  const handleCheckedRight = () => {
-    setRight(right.concat(leftChecked));
-    setLeft(not(left, leftChecked));
-    setChecked(not(checked, leftChecked));
-  };
-
-  const handleCheckedLeft = () => {
-    setLeft(left.concat(rightChecked));
-    setRight(not(right, rightChecked));
-    setChecked(not(checked, rightChecked));
-  };
-
-  
-  const customList = (title, items) => (      
-    <Card>
-      <CardHeader
-        className={classes.cardHeader}
-        avatar={
-          <Checkbox
-            onClick={handleToggleAll(items)}
-            checked={numberOfChecked(items) === items.length && items.length !== 0}
-            indeterminate={numberOfChecked(items) !== items.length && numberOfChecked(items) !== 0}
-            disabled={items.length === 0}
-            inputProps={{ 'aria-label': 'all items selected' }}
-          />
+  useEffect(() => {   
+    let mounted = true;
+    (async  (endpoint,record_id) => {     
+      await  getBackgroundProcessRecord(endpoint,record_id)
+      .then(response => {                        
+        if (mounted) {            
+          setValues(response.payload[0]);                 
         }
-        title={title}
-        subheader={`${numberOfChecked(items)}/${items.length} selected`}
-      />
-      <Divider />
-      <List className={classes.list} dense component="div" role="list">      
-        {items.map((value) => {
-          const labelId = `transfer-list-all-item-${value}-label`;
-
-          return (
-            <ListItem key={value} role="listitem" button onClick={handleToggle(value)}>
-              <ListItemIcon>
-                <Checkbox
-                  checked={checked.indexOf(value) !== -1}
-                  tabIndex={-1}
-                  disableRipple
-                  inputProps={{ 'aria-labelledby': labelId }}
-                />
-              </ListItemIcon>
-              <ListItemText id={`${value.name}`} primary={` ${value.name}`} />
-            </ListItem>
-          );
-        })}
-        <ListItem />
-      </List>
-    </Card>
-  );
-
-
-  useEffect(() => {    
-    let mounted_orgs = true;   
+      });
+    })(endpoint_background_process_view_one,record_id); 
     
-      (async  (endpoint,user_id) => {     
-        await  getOrgAccess(endpoint,user_id)
-        .then(response => {       
-          if (mounted_orgs) { 
-            const data = response.payload;
-            let orgs_selected = [];
-            let orgs_not_selected = [];
-
-          for (let i = 0; i<data.length; i++){
-            if (data[i].status === 1){
-              orgs_selected.push(data[i]);
-            }
-          }
-
-          for (let i = 0; i<data.length; i++){
-            if (data[i].status === 0){
-              orgs_not_selected.push(data[i]);
-            }
-          }       
-            setLeft(orgs_not_selected);   
-            setRight(orgs_selected);            
-          }
-        });
-      })(endpoint_orgs_access,user_record_id);
- 
-    return () => {      
-      mounted_orgs = false;      
+    return () => {    
+      mounted = false;      
     };    
-  }, [user_record_id]);  
+  }, [record_id,organization_id]);  
 
-  if ( !left || !right ) {
+  if (!values) {
     return null;
   }
+    const handleChange = event => {
+    event.persist();
+    setValues({
+      ...values,
+      [event.target.name]:event.target.type === 'checkbox' ? event.target.checked: event.target.value  
+          
+    });
+  };
+
 
   const handleSubmit = event => {
-    event.preventDefault();    
-    (async  (endpoint,values,record_id,user_id) => {     
-      await  putOrgAccess(endpoint,values,record_id,user_id)
+    event.preventDefault();
+    (async  (endpoint,values,user,id,org) => {     
+      await  updateBackgroundProcessRecord(endpoint,values,user,id,org)
       .then(() => {  
         setopenSnackbarSuccess(true);         
       }).catch(() => {
         setopenSnackbarError(true); 
       });
-    })(endpoint_orgs_access_update,right,user_record_id,user_id);  
+    })(endpoint_background_process_edit,values,user_id,record_id,organization_id);    
   };
-
+ 
   const handleSnackbarSuccessClose = () => {
     setopenSnackbarSuccess(false);
   };
@@ -193,47 +84,127 @@ const DetailsEdit = props => {
   const handleSnackbarErrorClose = () => {
     setopenSnackbarError(false);
   };
+  const handleSwitchChange = event => {
+    event.persist();
+    setReadOnly(!readOnly);   
+  };
+
+  const handleMetadataOpen = () => {
+    setMetadata(true);
+  };
+  const handleMetadataClose = () => {
+    setMetadata(false);
+  };
+
+
+
+
   return (
     <Card
       {...rest}
       className={clsx(classes.root, className)}
     >
-        <CardHeader title= { `Organization Access - ${user_name_org}`} />
+        <CardHeader title= {`BACKGROUND PROCESS #${record_id}`} />
         <Divider />
-        <form  onSubmit={handleSubmit} >
         <CardContent> 
-       
-        <Grid container spacing={2} justify="center" alignItems="center" className={classes.root}>
-      <Grid item>{customList('NO ACCESS', left)}</Grid>
-      <Grid item>
-        <Grid container direction="column" alignItems="center">
-          <Button
-            variant="outlined"
-            size="small"
-            className={classes.button}
-            onClick={handleCheckedRight}
-            disabled={leftChecked.length === 0}
-            aria-label="move selected right"
-          >
-            &gt;
-          </Button>
-          <Button
-            variant="outlined"
-            size="small"
-            className={classes.button}
-            onClick={handleCheckedLeft}
-            disabled={rightChecked.length === 0}
-            aria-label="move selected left"
-          >
-            &lt;
-          </Button>
-        </Grid>
-      </Grid>
-      <Grid item>{customList('HAS ACCESS', right)}</Grid>
-       </Grid>
-       </CardContent> 
-       <CardActions>
-          <Box flexGrow={2}>                                  
+          <Grid container spacing={1} justify="center">            
+          <Grid item  xs={1} >  
+            <Sidebar/>
+         </Grid> 
+          <Grid item xs={11}>
+            <Card> 
+            <form id ='event' onSubmit={handleSubmit} >
+            <CardContent>        
+              <Grid
+                container
+                spacing={4}
+              >               
+              <Grid
+                    item
+                    md={4}
+                    xs={12}
+                  >
+                  <TextField
+                    fullWidth
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                    inputProps={{
+                      readOnly: Boolean(disable_form),
+                      disabled: Boolean(disable_form)                
+                    }}
+                    margin = 'dense'
+                    label="Process Name"
+                    name="name"                
+                    onChange={handleChange}
+                    variant="outlined"                   
+                    value = {values.name}                    
+                />
+              </Grid>
+
+              <Grid
+                    item
+                    md={6}
+                    xs={12}
+                  >
+                  <TextField
+                    fullWidth
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                    inputProps={{
+                      readOnly: Boolean(disable_form),
+                      disabled: Boolean(disable_form)                
+                    }}
+                    multiline      
+                    rowsMax = {4}
+                    rows={1}  
+                    margin = 'dense'
+                    label="Description"
+                    name="description"                
+                    onChange={handleChange}
+                    variant="outlined"                   
+                    value = {values.description}                    
+                />
+              </Grid>
+            
+           
+            <Grid
+                item
+                md={2}
+                xs={12}
+              >
+                <Box> 
+                    <Typography variant="h6"> { values.status_id? "Active(on)" : "Active(off)"} </Typography> 
+                </Box> 
+                <Box> 
+                  <Switch   
+                  inputProps={{
+                    readOnly: Boolean(readOnly),
+                    disabled: Boolean(readOnly)                
+                  }}
+                    name = "status_id"          
+                    className={classes.toggle} 
+                    color="secondary"
+                    edge="start"
+                    onChange={handleChange}
+                    checked = {(values.status_id)?true:false}
+                  />             
+                </Box>
+                
+                  
+            </Grid>  
+
+
+           
+             
+              </Grid>
+          </CardContent>
+           
+          <Divider />
+          <CardActions>  
+          <Box flexGrow={1}>
+            {readOnly ? null :                        
               <Button
                 className={classes.saveButton}
                 type="submit"
@@ -241,11 +212,33 @@ const DetailsEdit = props => {
                 hidden = "true"                               
               >
                 Save Changes
-              </Button>                
+              </Button>              
+            }                             
           </Box> 
-        </CardActions>
-       </form> 
-       <SuccessSnackbar
+          <Box>
+            <Tooltip  title="view Metadata">
+              <Button onClick={handleMetadataOpen}>
+                <OpenInNewIcon className={classes.buttonIcon} />                
+              </Button>
+            </Tooltip>               
+          </Box>  
+          <Box> 
+              <Typography variant="h6">{ readOnly? "Enable Form" : "Disable Form"} </Typography> 
+          </Box> 
+          <Box> 
+              <Switch             
+                className={classes.toggle}            
+                checked={values.readOnly}
+                color="secondary"
+                edge="start"               
+                onChange={handleSwitchChange}
+              />             
+         </Box>
+        
+          
+        </CardActions> 
+        </form> 
+        <SuccessSnackbar
           onClose={handleSnackbarSuccessClose}
           open={openSnackbarSuccess}
         />
@@ -253,11 +246,23 @@ const DetailsEdit = props => {
           onClose={handleSnackbarErrorClose}
           open={openSnackbarError}
         />
+        <MetaData
+                Details={values}
+                onClose={handleMetadataClose}
+                open={openMetadata}
+        /> 
+          </Card>
+          </Grid>
+          </Grid>
+        </CardContent>               
+        
     </Card>
   );
 };
 
 DetailsEdit.propTypes = {
-  className: PropTypes.string  
+  className: PropTypes.string,
+  //profile: PropTypes.object.isRequired
 };
+
 export default DetailsEdit;
