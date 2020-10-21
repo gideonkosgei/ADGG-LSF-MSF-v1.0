@@ -615,6 +615,13 @@ export const endpoint_graduation_record_edit = {
   headers: headers   
 }
 
+// VIEW BACKGROUND PROCESS 
+export const endpoint_background_process_view_all = {
+  url: `${api}/background-process/org/`,
+  method: 'GET',
+  headers: headers   
+}
+
 
 
 

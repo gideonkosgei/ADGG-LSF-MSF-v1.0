@@ -2621,6 +2621,24 @@ export const putGraduationRecord =  function (config,values,user_id,id) {
   });       
 }
 
+// GET BACKGROUND PROCESSES OF AN ORGANIZATION
+export const getBackgroundProcessAll =  function (config,org_id) {   
+  const options = {
+    url:`${config.url}${org_id}`,
+    method: config.method,
+    headers: config.headers  
+  } 
+  
+  return new Promise((resolve, reject) => {
+    axios(options)
+    .then(res => {          
+        resolve(res.data);
+    })
+    .catch(err => reject(err));
+});       
+}
+
+
 
 
 

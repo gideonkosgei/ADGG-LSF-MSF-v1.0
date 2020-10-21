@@ -519,6 +519,13 @@ const routes = [
         component: lazy(() => import('views/Administration/components/Organization/components/edit'))        
       },
 
+      // BACKGROUND-PROCESS VIEW
+      {
+        path: '/background-processes/org',
+        exact: true,
+        component: lazy(() => import('views/Administration/components/BackgroundProcesses/components/view'))        
+      },   
+
       // Batch processes Routes
       {
         path: '/batch-process/milking-records/add',

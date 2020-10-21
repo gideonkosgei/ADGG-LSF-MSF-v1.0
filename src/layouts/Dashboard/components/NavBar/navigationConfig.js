@@ -171,7 +171,11 @@ export default [
         children: [
           {
             title: 'Organization',
-            href: '/administration/org',                     
+            href: '/administration/org'                     
+          },
+          {
+            title: 'Background Processes',
+            href: '/background-processes/org'                     
           }
         ]  
          
