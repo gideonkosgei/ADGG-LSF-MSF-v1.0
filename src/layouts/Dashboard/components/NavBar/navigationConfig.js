@@ -60,10 +60,10 @@ export default [
             title: 'Animals',
             href: '/management/animals'
           },
-          {
+          /*{
             title: 'Action List',
             href: '/management/exit-list'
-          },
+          },*/
           {
             title: 'Exit List',
             href: '/management/exit-list'
