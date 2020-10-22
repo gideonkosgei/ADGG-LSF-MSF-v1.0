@@ -280,25 +280,7 @@ const DetailsEdit = props => {
                     }           
                   </TextField>
                 </Grid>
-                <Grid
-                    item
-                    md={3}
-                    xs={12}
-                  >
-                  <TextField
-                    fullWidth
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-                    margin = 'dense'
-                    label="Field Agent"
-                    name="field_agent_id"                
-                    onChange={handleChange}
-                    variant="outlined"  
-                    
-                />
-              </Grid>
-            
+                
               </Grid>
           </CardContent>
           <Divider />

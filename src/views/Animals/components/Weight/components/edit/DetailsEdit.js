@@ -91,17 +91,22 @@ const DetailsEdit = props => {
   if (!body_scores || !values || !limitParameters) {
     return null;
   }
+
+ 
   
   // validate weight
   let mature_weight_limits = limitParameters.filter(obj=>obj.category==='mature_weight_limits');
   let mature_weight_limits_status = false;
   let mature_weight_limits_min_value = 0;
   let mature_weight_limits_max_value = 0;
+ 
   if(mature_weight_limits.length > 0){
     mature_weight_limits_status = mature_weight_limits[0].is_active_id;  
     mature_weight_limits_min_value = mature_weight_limits[0].min_value;
     mature_weight_limits_max_value = mature_weight_limits[0].max_value;    
   }
+
+
 
   //validate heart Girth
   let mature_heart_girth_limits = limitParameters.filter(obj=>obj.category==='mature_heart_girth_limits');
@@ -113,6 +118,9 @@ const DetailsEdit = props => {
     mature_heart_girth_limits_min_value = mature_heart_girth_limits[0].min_value;
     mature_heart_girth_limits_max_value = mature_heart_girth_limits[0].max_value;    
   }
+
+
+
     const handleChange = event => {
     event.persist();
     setValues({
@@ -154,6 +162,7 @@ const DetailsEdit = props => {
   const handleMetadataClose = () => {
     setMetadata(false);
   };
+
 
   return (
     <Card
@@ -247,6 +256,7 @@ const DetailsEdit = props => {
                       max: (mature_heart_girth_limits_status)? mature_heart_girth_limits_max_value : "any",
                       step: "any"
                     }}
+
                     //required
                     margin = 'dense'
                     label="Heart Girth (cm)"
@@ -273,7 +283,9 @@ const DetailsEdit = props => {
                          disabled: Boolean(readOnly),
                          min: (mature_weight_limits_status)? mature_weight_limits_min_value : "any",
                          max: (mature_weight_limits_status)? mature_weight_limits_max_value : "any",
-                         step: "any"               
+                         step: "any"   
+                         // console.log(typeof mature_weight_limits_max_value);
+                                  //console.log(typeof mature_weight_limits_min_value);            
                        }}
                        //required
                        margin = 'dense'
@@ -322,31 +334,7 @@ const DetailsEdit = props => {
                     }           
                   </TextField>
                 </Grid>
-                <Grid
-                    item
-                    md={3}
-                    xs={12}
-                  >
-                  <TextField
-                    fullWidth
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-
-                    inputProps={{
-                      readOnly: Boolean(readOnly),
-                      disabled: Boolean(readOnly)                
-                    }}
-
-                    margin = 'dense'
-                    label="Field Agent"
-                    name="field_agent_id"                
-                    onChange={handleChange}
-                    variant="outlined" 
-                    value = {values.field_agent_id}  
-                />
-              </Grid>
-            
+               
               </Grid>
           </CardContent>
           <Divider />
