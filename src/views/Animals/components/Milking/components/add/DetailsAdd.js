@@ -2,13 +2,14 @@ import React, { useState,useEffect,useContext } from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
-import {Card, CardContent, CardHeader, Grid,Divider, TextField,colors,Button,CardActions } from '@material-ui/core';
+import {Card, CardContent, CardHeader, Grid,Divider, TextField,colors,Button,CardActions,Box,Typography,Switch} from '@material-ui/core';
 import {getLookups,postMilking,getParametersLimitAll,getParametersLocalSettingsOrgAll}   from '../../../../../../utils/API';
 import {endpoint_lookup,endpoint_milking_add,endpoint_parameter_limit_all,endpoint_parameter_local_settings_org_all} from '../../../../../../configs/endpoints';
 import authContext from '../../../../../../contexts/AuthContext';
 import {Sidebar} from '../index';
 import SuccessSnackbar from '../../../../../../components/SuccessSnackbar';
 import ErrorSnackbar from '../../../../../../components/ErrorSnackbar';
+import moment from 'moment';
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -20,6 +21,7 @@ const useStyles = makeStyles(theme => ({
     }
   }
 }));
+
 
 const DetailsEdit = props => {
   const {className, ...rest } = props; 
@@ -34,6 +36,9 @@ const DetailsEdit = props => {
   const animal_id  = localStorage.getItem('animal_id');
   const [ { organization_id }  ] = useContext(authContext); 
   const [localSettings, setLocalSettings] = useState([]);
+  const animal_tag  = sessionStorage.getItem('animal_tag');
+  const animal_name  = sessionStorage.getItem('animal_name');
+  const [quality_fields_view, setQualityFieldsView] = useState(false);
 
   useEffect(() => {   
     let mounted_lookup = true;
@@ -185,8 +190,8 @@ const DetailsEdit = props => {
 
   const handleSubmit = event => {
     event.preventDefault();
-    (async  (endpoint,id,values,user_id) => {     
-      await  postMilking(endpoint,id,values,user_id)
+    (async  (endpoint,id,values,user_id,quality_toggle) => {     
+      await  postMilking(endpoint,id,values,user_id,quality_toggle)
       .then(() => {  
         setopenSnackbarSuccess(true); 
         setValues({});        
@@ -194,7 +199,7 @@ const DetailsEdit = props => {
       }).catch(() => {
         setopenSnackbarError(true); 
       });
-    })(endpoint_milking_add,animal_id,values,user_id);    
+    })(endpoint_milking_add,animal_id,values,user_id,quality_fields_view);    
   };
   
   
@@ -206,13 +211,18 @@ const DetailsEdit = props => {
     setopenSnackbarError(false);
   };
 
+  const handleQualitySwitchChange = event => {
+    event.persist();
+    setQualityFieldsView(!quality_fields_view);   
+  };
+
   return (
     <Card
       {...rest}
       className={clsx(classes.root, className)}
     >
       
-        <CardHeader title="New Milking Record" />
+        <CardHeader title= {`NEW MILKING RECORD  - ${animal_name}(${animal_tag}) `}/>  
         <Divider />
         <CardContent> 
           <Grid container spacing={1} justify="center">            
@@ -225,7 +235,7 @@ const DetailsEdit = props => {
               <CardContent>        
               <Grid
                 container
-                spacing={4}
+                spacing={3}
               >  
                   <Grid
                       item
@@ -237,7 +247,11 @@ const DetailsEdit = props => {
                       InputLabelProps={{
                         shrink: true,
                       }}
+                      inputProps={{                                                
+                        max: moment(new Date()).format('YYYY-MM-DD')     
+                      }}
                       required
+                      defaultValue = {moment(new Date()).format('YYYY-MM-DD')}
                       margin = 'dense'
                       label = "Milk Date"
                       type = "date"
@@ -406,9 +420,53 @@ const DetailsEdit = props => {
                     
                 />
               </Grid>
+              <Grid
+                    item
+                    md={12}
+                    xs={12}
+                  >
+                  <TextField
+                    fullWidth
+                    InputLabelProps={{
+                      shrink: true,
+                    }}                    
+                    margin = 'dense'
+                    label="Milking Notes"
+                    name="milking_notes"                
+                    onChange={handleChange}
+                    variant="outlined" 
+                    rowsMax={4} 
+                    multiline  
+                    rows={2}                        
+                />
+              </Grid>
+              
 
-           
+              <Grid
+                    item
+                    md={12}
+                    xs={12}
+                  >
 
+                    <Box> 
+                      <Typography variant="h6">{ quality_fields_view? "Discard/Hide Milk Quality Attributes" : "Capture Milk Quality Attributes"} </Typography> 
+                    </Box> 
+                    <Box> 
+                        <Switch             
+                          className={classes.toggle}            
+                          checked={quality_fields_view}
+                          color="secondary"
+                          edge="start"               
+                          onChange={handleQualitySwitchChange}
+                        />             
+                    </Box> 
+               </Grid>
+            
+              <Grid item md={12} xs={12}> 
+              <Box>
+              {quality_fields_view ?   
+              <Grid container spacing={3}> 
+             
               <Grid
                     item
                     md={3}
@@ -440,48 +498,7 @@ const DetailsEdit = props => {
                     }           
                   </TextField>
                 </Grid> 
-
-                <Grid
-                    item
-                    md={3}
-                    xs={12}
-                  >
-                  <TextField
-                    fullWidth
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-                    margin = 'dense'
-                    label="Milking Notes"
-                    name="milking_notes"                
-                    onChange={handleChange}
-                    variant="outlined" 
-                    rowsMax={4} 
-                    multiline                                              
-                    
-                />
-              </Grid>
-            
-
-              <Grid
-                    item
-                    md={3}
-                    xs={12}
-                  >
-                  <TextField
-                    fullWidth
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-                    margin = 'dense'
-                    label="Milk Quality"
-                    name="milk_quality"                
-                    onChange={handleChange}
-                    variant="outlined"                                          
-                    
-                />
-              </Grid>
-                 
+  
               <Grid
                     item
                     md={3}
@@ -501,7 +518,6 @@ const DetailsEdit = props => {
                     
                 />
               </Grid>              
-
               <Grid
                     item
                     md={3}
@@ -526,9 +542,7 @@ const DetailsEdit = props => {
                     
                 />
               </Grid>
-                   
-              
-              
+     
               <Grid
                     item
                     md={3}
@@ -579,7 +593,6 @@ const DetailsEdit = props => {
                 />
               </Grid>
 
-
               <Grid
                     item
                     md={3}
@@ -604,10 +617,10 @@ const DetailsEdit = props => {
                     
                 />
               </Grid>
-  
+     
               <Grid
                     item
-                    md={3}
+                    md={6}
                     xs={12}
                   >
                   <TextField
@@ -624,31 +637,19 @@ const DetailsEdit = props => {
                     name="milk_somatic_cell_count"                
                     onChange={handleChange}
                     variant="outlined" 
-                    type = "number"                                          
+                    type = "number"  
+                    value = {values.milk_somatic_cell_count}                                                          
                     
                 />
               </Grid>   
-
- 
-                  <Grid
-                    item
-                    md={3}
-                    xs={12}
-                  >
-                  <TextField
-                    fullWidth
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-                    margin = 'dense'
-                    label="Field Agent"
-                    name="field_agent_id"                
-                    onChange={handleChange}
-                    variant="outlined"  
-                    
-                />
+           
               </Grid>
-                  
+              : null
+               }
+              </Box>
+              </Grid>
+  
+             
               </Grid>
           </CardContent>
           <Divider />

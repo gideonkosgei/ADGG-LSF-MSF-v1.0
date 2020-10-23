@@ -3,8 +3,7 @@ import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import {Card, CardContent,Tooltip,IconButton,Link } from '@material-ui/core';
-import PrintIcon from '@material-ui/icons/Print';
-import VisibilityIcon from '@material-ui/icons/Visibility';
+import ListIcon from '@material-ui/icons/List';
 import AddIcon from '@material-ui/icons/Add';
 import { Link as RouterLink } from 'react-router-dom';
 import HomeIcon from '@material-ui/icons/Home';
@@ -28,10 +27,10 @@ const Sidebar = props => {
             </Link>
           </IconButton> 
         </Tooltip>
-        <Tooltip  title="view">              
+        <Tooltip  title="View List">              
           <IconButton aria-label="view" size="small" >
             <Link component = {RouterLink} to = {`/management/milking/view/${animal_id}`}>
-              <VisibilityIcon /> 
+              <ListIcon /> 
             </Link>
           </IconButton> 
         </Tooltip>         
@@ -42,20 +41,13 @@ const Sidebar = props => {
             </Link>
           </IconButton> 
         </Tooltip>
-        <Tooltip  title="graph">              
+        <Tooltip  title="Trends">              
           <IconButton aria-label="graph" size="small" >          
             <Link component = {RouterLink} to={`/management/milking/charts/${animal_id}`}>
               <BarChartIcon /> 
             </Link>
           </IconButton> 
-        </Tooltip>      
-        <Tooltip  title="print">              
-          <IconButton aria-label="print" size="small" >
-            <Link component = {RouterLink} to="/management/milking /">
-              <PrintIcon /> 
-            </Link>
-          </IconButton> 
-        </Tooltip>
+        </Tooltip> 
       </CardContent> 
     </Card>
   );

@@ -11,6 +11,7 @@ import SuccessSnackbar from '../../../../../../components/SuccessSnackbar';
 import ErrorSnackbar from '../../../../../../components/ErrorSnackbar';
 import OpenInNewIcon from '@material-ui/icons/OpenInNew';
 import {EventMilkingMetaData}  from '../../../Modal';
+import moment from 'moment';
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -35,9 +36,10 @@ const DetailsEdit = props => {
   const [openMetadata, setMetadata] = useState(false);   
   const [limitParameters, setBodyLimitParameters] = useState([]);
   const [localSettings, setLocalSettings] = useState([]);
-  const event_id  = localStorage.getItem('milking_event_id'); 
+  const event_id  = sessionStorage.getItem('milking_event_id'); 
   const [ { organization_id }  ] = useContext(authContext); 
- 
+  const animal_tag  = sessionStorage.getItem('animal_tag');
+  const animal_name  = sessionStorage.getItem('animal_name');
 
   useEffect(() => {   
     let mounted_lookup = true;
@@ -67,7 +69,7 @@ const DetailsEdit = props => {
         .then(response => {       
           if (mounted_milking) { 
             const data = response.payload[0][0];                       
-            setValues(data);                         
+            setValues(data);                                 
           }
         });
       })(endpoint_milking_specific,event_id);
@@ -236,7 +238,7 @@ const DetailsEdit = props => {
       className={clsx(classes.root, className)}
     >
       
-        <CardHeader title= { readOnly ? `View Milk Record  #${localStorage.getItem('animal_id')}`:`Edit Milk Record  #${localStorage.getItem('animal_id')}` } />
+        <CardHeader title= { readOnly ? `MILKING RECORD - ${animal_name}(${animal_tag})`:`MILKING RECORD - ${animal_name}(${animal_tag})` } />         
         <Divider />
         <CardContent> 
           <Grid container spacing={1} justify="center">            
@@ -263,8 +265,10 @@ const DetailsEdit = props => {
                       }}
                       inputProps={{
                         readOnly: Boolean(readOnly),
-                        disabled: Boolean(readOnly)                
+                        disabled: Boolean(readOnly),
+                        max: moment(new Date()).format('YYYY-MM-DD')                 
                       }}
+                      defaultValue = {moment(new Date()).format('YYYY-MM-DD')}
                       required
                       margin = 'dense'
                       label = "Milk Date"
@@ -465,7 +469,28 @@ const DetailsEdit = props => {
                 />
               </Grid>
 
-           
+              <Grid
+                    item
+                    md={12}
+                    xs={12}
+                  >
+                  <TextField
+                    fullWidth
+                    InputLabelProps={{
+                      shrink: true,
+                    }}                    
+                    margin = 'dense'
+                    label="Milking Notes"
+                    name="milking_notes"                
+                    onChange={handleChange}
+                    variant="outlined" 
+                    rowsMax={4} 
+                    multiline  
+                    rows={2}   
+                    value = {values.milking_notes}  
+                />
+              </Grid>
+
 
               <Grid
                     item
@@ -502,59 +527,7 @@ const DetailsEdit = props => {
                         ))
                     }           
                   </TextField>
-                </Grid> 
-
-                <Grid
-                    item
-                    md={3}
-                    xs={12}
-                  >
-                  <TextField
-                    fullWidth
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-                    inputProps={{
-                      readOnly: Boolean(readOnly),
-                      disabled: Boolean(readOnly)                
-                    }}
-                    margin = 'dense'
-                    label="Milking Notes"
-                    name="milking_notes"                
-                    onChange={handleChange}
-                    variant="outlined" 
-                    rowsMax={4} 
-                    multiline   
-                    value = {values.milking_notes}                                           
-                    
-                />
-              </Grid>
-            
-
-              <Grid
-                    item
-                    md={3}
-                    xs={12}
-                  >
-                  <TextField
-                    fullWidth
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-                    inputProps={{
-                      readOnly: Boolean(readOnly),
-                      disabled: Boolean(readOnly)                
-                    }}
-                    margin = 'dense'
-                    label="Milk Quality"
-                    name="milk_quality"                
-                    onChange={handleChange}
-                    variant="outlined" 
-                    value = {values.milk_quality}                                         
-                    
-                />
-              </Grid>
-                 
+                </Grid>             
               <Grid
                     item
                     md={3}
@@ -696,7 +669,7 @@ const DetailsEdit = props => {
   
               <Grid
                     item
-                    md={3}
+                    md={6}
                     xs={12}
                   >
                   <TextField
@@ -720,32 +693,7 @@ const DetailsEdit = props => {
                     
                 />
               </Grid>   
-
- 
-                  <Grid
-                    item
-                    md={3}
-                    xs={12}
-                  >
-                  <TextField
-                    fullWidth
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-                    inputProps={{
-                      readOnly: Boolean(readOnly),
-                      disabled: Boolean(readOnly)                
-                    }}
-                    margin = 'dense'
-                    label="Field Agent"
-                    name="field_agent_id"                
-                    onChange={handleChange}
-                    variant="outlined" 
-                    value = {values.field_agent_id} 
-                    
-                />
-              </Grid>
-                  
+            
               </Grid>
           </CardContent>
           <Divider />
