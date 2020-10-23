@@ -30,8 +30,10 @@ const DetailsView = props => {
   const classes = useStyles();  
   const [values, setValues] = useState([]);
   const animal_id  = localStorage.getItem('animal_id');
+  const animal_tag  = sessionStorage.getItem('animal_tag');
+  const animal_name  = sessionStorage.getItem('animal_name');
 
-  useEffect(() => {     
+    useEffect(() => {     
     let mounted = true;
       (async  (endpoint,id) => {     
         await  getWeights(endpoint,id)
@@ -55,7 +57,7 @@ const DetailsView = props => {
 
   const columns = [
     { name: "Event_ID",label: "Event ID",options: {filter: false,sort: true,display:true}},    
-    { name: "weight_Date",label: "Weight Date",options: {filter: false,sort: true,display:true}},
+    { name: "event_date",label: "Weight Date",options: {filter: false,sort: true,display:true}},
     { name: "body_length",label: "Body Length",options: {filter: false,sort: true,display:true}},
     { name: "heart_girth",label: "Heart Girth",options: {filter: true,sort: true, display:true}},
     { name: "weight_kg",label: "Weight(kg)",options: {filter: true,sort: true, display:true}},
@@ -109,7 +111,7 @@ const DetailsView = props => {
       {...rest}
       className={clsx(classes.root, className)}
     >
-        <CardHeader title="Weight & Growth Details" />
+        <CardHeader title= {`WEIGHT & GROWTH  - ${animal_name}(${animal_tag}) `}/>  
         <Divider />
         <CardContent> 
           <Grid container spacing={1} justify="center">            

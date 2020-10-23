@@ -29,7 +29,7 @@ const Chart = props => {
   return (
     <Page
       className={classes.root}
-      title="Profile"
+      title="Weight Trends"
     >
     <Card>
         <CardContent>

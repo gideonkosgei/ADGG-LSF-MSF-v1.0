@@ -11,6 +11,7 @@ import SuccessSnackbar from '../../../../../../components/SuccessSnackbar';
 import ErrorSnackbar from '../../../../../../components/ErrorSnackbar';
 import OpenInNewIcon from '@material-ui/icons/OpenInNew';
 import {EventWeightMetaData}  from '../../../Modal';
+import moment from 'moment';
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -35,8 +36,8 @@ const DetailsEdit = props => {
   const [openMetadata, setMetadata] = useState(false); 
   const [limitParameters, setBodyLimitParameters] = useState([]);   
   const event_id  = localStorage.getItem('event_id');
-
-
+  const animal_tag  = sessionStorage.getItem('animal_tag');
+  const animal_name  = sessionStorage.getItem('animal_name');
 
   useEffect(() => {   
     let mounted_lookup = true;
@@ -168,10 +169,9 @@ const DetailsEdit = props => {
     <Card
       {...rest}
       className={clsx(classes.root, className)}
-    >     
-    
-        <CardHeader title= { readOnly ? `View Weight & Growth Details  #${localStorage.getItem('animal_id')}`:`Edit Weight & Growth Details  #${localStorage.getItem('animal_id')}` }/>
-        <Divider />
+    >         
+        <CardHeader title= { readOnly ? `WEIGHT & GROWTH  - ${animal_name}(${animal_tag})`:`EDIT WEIGHT & GROWTH -${animal_name}(${animal_tag})` }/>
+         <Divider />
         <CardContent> 
           <Grid container spacing={1} justify="center">            
           <Grid item  xs={1} >  
@@ -197,16 +197,18 @@ const DetailsEdit = props => {
                       }}
                       inputProps={{
                         readOnly: Boolean(readOnly),
-                        disabled: Boolean(readOnly)                
+                        disabled: Boolean(readOnly) ,                         
+                        max: moment(new Date()).format('YYYY-MM-DD')     
                       }}
                       required
                       margin = 'dense'
                       label="Weight Date"
                       type="date"
-                      name="weight_date"  
-                      value = {values.weight_date}                    
+                      name="event_date"  
+                      value = {values.event_date}                    
                       onChange={handleChange}
                       variant="outlined" 
+                     
                     />
                   </Grid>
                 <Grid

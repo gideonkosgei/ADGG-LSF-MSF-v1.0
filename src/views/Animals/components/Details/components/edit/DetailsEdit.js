@@ -46,7 +46,10 @@ const DetailsEdit = props => {
   const [deformaties, setDeformaties] = useState([]);
   const [readOnly, setReadOnly] = useState(true);
   const animal_id  = localStorage.getItem('animal_id');
-  const [openMetadata, setMetadata] = useState(false); 
+  const [openMetadata, setMetadata] = useState(false);
+
+  sessionStorage.setItem('animal_tag', values.tag_id);
+  sessionStorage.setItem('animal_name', values.animal_name); 
 
 
   useEffect(() => {   

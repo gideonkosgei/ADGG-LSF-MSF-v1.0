@@ -48,6 +48,8 @@ const DetailsView = props => {
     return null;
   }
 
+ 
+
   return (
     <Card
       {...rest}

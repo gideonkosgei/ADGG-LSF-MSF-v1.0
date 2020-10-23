@@ -9,6 +9,7 @@ import authContext from '../../../../../../contexts/AuthContext';
 import {Sidebar} from '../index';
 import SuccessSnackbar from '../../../../../../components/SuccessSnackbar';
 import ErrorSnackbar from '../../../../../../components/ErrorSnackbar';
+import moment from 'moment';
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -31,8 +32,8 @@ const DetailsEdit = props => {
   const [body_scores, setBodyScores] = useState([]);
   const [limitParameters, setBodyLimitParameters] = useState([]);  
   const animal_id  = localStorage.getItem('animal_id');
-  
- 
+  const animal_tag  = sessionStorage.getItem('animal_tag');
+  const animal_name  = sessionStorage.getItem('animal_name');
 
   useEffect(() => {   
     let mounted_lookup = true;
@@ -136,7 +137,7 @@ const DetailsEdit = props => {
       className={clsx(classes.root, className)}
     >
       
-        <CardHeader title="Add Weight & Growth Details " />
+        <CardHeader title = {`NEW WEIGHT & GROWTH RECORD  - ${animal_name}(${animal_tag}) `} />
         <Divider />
         <CardContent> 
           <Grid container spacing={1} justify="center">            
@@ -162,13 +163,17 @@ const DetailsEdit = props => {
                       InputLabelProps={{
                         shrink: true,
                       }}
+                      inputProps={{                                                 
+                        max: moment(new Date()).format('YYYY-MM-DD')     
+                      }}
+                      defaultValue = {moment(new Date()).format('YYYY-MM-DD')}
                       required
                       margin = 'dense'
                       label="Weight Date"
                       type="date"
                       name="weight_date"                      
                       onChange={handleChange}
-                      variant="outlined"                      
+                      variant="outlined"                     
                                   
                     />
                   </Grid>

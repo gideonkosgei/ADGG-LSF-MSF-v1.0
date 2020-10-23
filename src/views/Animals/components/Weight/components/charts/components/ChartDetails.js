@@ -29,6 +29,8 @@ const ChartDetails = props => {
   const [girthSummary, setGirthSummary] = useState([]);
   const animal_id  = localStorage.getItem('animal_id');
   const year = new Date().getFullYear();
+  const animal_tag  = sessionStorage.getItem('animal_tag');
+  const animal_name  = sessionStorage.getItem('animal_name');
  
   useEffect(() => {   
     let mounted = true;
@@ -84,8 +86,8 @@ const ChartDetails = props => {
     <Card
       {...rest}
       className={clsx(classes.root, className)}
-    >      
-        <CardHeader title="Weight & Growth Performance Charts" />
+    >           
+        <CardHeader title= {`WEIGHT & GROWTH CHARTS - ${animal_name}(${animal_tag}) `}/> 
         <Divider />
         <CardContent> 
           <Grid container spacing={1} justify="center">            
