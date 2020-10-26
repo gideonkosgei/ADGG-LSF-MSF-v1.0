@@ -108,6 +108,7 @@ const DetailsEdit = props => {
     return null;
   }
 
+  console.log(values);
    // validate milk amount
    let milk_amount_limits = limitParameters.filter(obj=>obj.category==='milk_amount_limits');
    let milk_amount_limits_status = false;
@@ -292,8 +293,8 @@ const DetailsEdit = props => {
                       shrink: true,
                     }}
                     inputProps={{
-                      readOnly: Boolean(readOnly),
-                      disabled: Boolean(readOnly)                
+                      readOnly: true,
+                      disabled: true                
                     }}
                     margin = 'dense'
                     label="Lactation ID"
@@ -317,8 +318,8 @@ const DetailsEdit = props => {
                       shrink: true,
                     }}
                     inputProps={{
-                      readOnly: Boolean(readOnly),
-                      disabled: Boolean(readOnly)                
+                      readOnly: true,
+                      disabled: true               
                     }}
                     margin = 'dense'                    
                     label="Lactation Number"
@@ -327,6 +328,7 @@ const DetailsEdit = props => {
                     variant="outlined" 
                     type = "number"
                     value = {values.lactation_number} 
+                    required
                     
                 />
               </Grid>
@@ -342,8 +344,8 @@ const DetailsEdit = props => {
                       shrink: true,
                     }}
                     inputProps={{
-                      readOnly: Boolean(readOnly),
-                      disabled: Boolean(readOnly)                
+                      readOnly: true,
+                      disabled: true                
                     }}
                     margin = 'dense'
                     label="Test Day No"
@@ -351,7 +353,8 @@ const DetailsEdit = props => {
                     onChange={handleChange}
                     variant="outlined"
                     type = "number"
-                    value = {values.testday_no}                       
+                    value = {values.testday_no} 
+                    required                      
                     
                 />
               </Grid>
@@ -368,8 +371,8 @@ const DetailsEdit = props => {
                       shrink: true,
                     }}
                     inputProps={{
-                      readOnly: Boolean(readOnly),
-                      disabled: Boolean(readOnly)                
+                      readOnly: true,
+                      disabled: true               
                     }}
                     margin = 'dense'
                     label="Days in Milk"
@@ -378,7 +381,7 @@ const DetailsEdit = props => {
                     variant="outlined"
                     type = "number"  
                     value = {values.days_in_milk}                     
-                    
+                    required
                 />
               </Grid>
 

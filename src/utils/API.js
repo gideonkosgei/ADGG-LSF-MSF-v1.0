@@ -1462,11 +1462,27 @@ export const getMilking =  function (config,id) {
   });       
 };
 
+//get milking parameters
+export const getMilkingParameters =  function (config,id,milk_date) {   
+  const options = {
+    url:`${config.url}${id}/${milk_date}`,
+    method: config.method,
+    headers: config.headers  
+  }     
+  return new Promise((resolve, reject) => {
+    axios(options)
+    .then(res => {          
+        resolve(res.data);
+    })
+    .catch(err => reject(err));
+  });       
+};
+
 
 // add new Milking event
-export const postMilking =  function (config,animal_id,values,user_id,quality_toggle) {      
-  let {milk_mid_day,testday_no,milk_lactose,milk_am_litres,milk_protein,milk_urea,milk_somatic_cell_count,field_agent_id,milk_butter_fat,milk_date,lactation_id,lactation_number,days_in_milk,milk_pm_litres,milk_sample_type,milking_notes,milk_Weight} = values;
-   
+export const postMilking =  function (config,animal_id,values,user_id,quality_toggle,lactation_id, lactation_number, days_in_milk,test_day_no) {      
+  let {milk_mid_day,milk_lactose,milk_am_litres,milk_protein,milk_urea,milk_somatic_cell_count,field_agent_id,milk_butter_fat,milk_date,milk_pm_litres,milk_sample_type,milking_notes,milk_Weight} = values;
+ 
     milk_urea = quality_toggle ? (typeof milk_urea === 'undefined')? '0':milk_urea.replace('','0') : null; 
     milk_protein = quality_toggle ? (typeof milk_protein === 'undefined')? '0':milk_protein.replace('','0') : null; 
     milk_butter_fat = quality_toggle ? (typeof milk_butter_fat === 'undefined')? '0':milk_butter_fat.replace('','0') : null;   
@@ -1475,17 +1491,13 @@ export const postMilking =  function (config,animal_id,values,user_id,quality_to
     milk_sample_type =  quality_toggle ?(typeof milk_sample_type === 'undefined')? '0':milk_sample_type.replace('','0') : null;
     milk_lactose = quality_toggle ? (typeof milk_lactose === 'undefined')? '0':milk_lactose.replace('','0') : null;  
 
-    milking_notes = (typeof milking_notes === 'undefined')? '':milking_notes; 
-    testday_no = (typeof testday_no === 'undefined')? '0':testday_no.replace('','0');
-    lactation_id = (typeof lactation_id === 'undefined')? '':lactation_id;    
+    milking_notes = (typeof milking_notes === 'undefined')? '':milking_notes;        
     field_agent_id = (typeof field_agent_id === 'undefined')? '0':field_agent_id.replace('','0');       
-    milk_pm_litres = (typeof milk_pm_litres === 'undefined')? '0':milk_pm_litres.replace('','0');  
-    
-    milk_date = (typeof milk_date === 'undefined')? moment(new Date()).format('YYYY-MM-DD'):milk_date;   
-    lactation_number = (typeof lactation_number === 'undefined')? '0':lactation_number;
-    days_in_milk = (typeof days_in_milk === 'undefined')? '0':days_in_milk.replace('','0');     
+    milk_pm_litres = (typeof milk_pm_litres === 'undefined')? '0':milk_pm_litres.replace('','0');     
+    milk_date = (typeof milk_date === 'undefined')? moment(new Date()).format('YYYY-MM-DD'):milk_date;
     milk_mid_day = (typeof milk_mid_day === 'undefined')? '0':milk_mid_day.replace('','0');
-    milk_am_litres = (typeof milk_am_litres === 'undefined')? '0':milk_am_litres.replace('','0');     
+    milk_am_litres = (typeof milk_am_litres === 'undefined')? '0':milk_am_litres.replace('','0'); 
+    
 
   const body = {
     "animal_id": animal_id, 
@@ -1503,14 +1515,14 @@ export const postMilking =  function (config,animal_id,values,user_id,quality_to
     "milk_am_litres": milk_am_litres,
     "milk_somatic_cell_count": milk_somatic_cell_count,
     "milk_urea": milk_urea,
-    "testday_no": testday_no,
+    "testday_no": test_day_no,
     "milk_Weight":milk_Weight,        
     "field_agent_id": field_agent_id,
     "created_by": user_id
   };
 
+  console.log(body);
 
- 
   const options = {
     url:`${config.url}`,
     method: config.method,
@@ -2539,8 +2551,6 @@ export const getStatsBreedsDistribution =  function (config,organisation_id) {
 });       
 }
 
-
-
 export const getStatsDashboardOverview =  function (config,organisation_id) {   
   const options = {
     url:`${config.url}${organisation_id}`,
@@ -2667,7 +2677,6 @@ const options = {
   headers: config.headers,
   data: body  
 };
-
 
 return new Promise((resolve, reject) => {
   axios(options)

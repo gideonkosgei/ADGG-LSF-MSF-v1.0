@@ -3,8 +3,8 @@ import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import {Card, CardContent, CardHeader, Grid,Divider, TextField,colors,Button,CardActions,Box,Typography,Switch} from '@material-ui/core';
-import {getLookups,postMilking,getParametersLimitAll,getParametersLocalSettingsOrgAll}   from '../../../../../../utils/API';
-import {endpoint_lookup,endpoint_milking_add,endpoint_parameter_limit_all,endpoint_parameter_local_settings_org_all} from '../../../../../../configs/endpoints';
+import {getLookups,postMilking,getParametersLimitAll,getParametersLocalSettingsOrgAll,getMilkingParameters}   from '../../../../../../utils/API';
+import {endpoint_milking_parameter,endpoint_lookup,endpoint_milking_add,endpoint_parameter_limit_all,endpoint_parameter_local_settings_org_all} from '../../../../../../configs/endpoints';
 import authContext from '../../../../../../contexts/AuthContext';
 import {Sidebar} from '../index';
 import SuccessSnackbar from '../../../../../../components/SuccessSnackbar';
@@ -33,6 +33,7 @@ const DetailsEdit = props => {
   const [values, setValues] = useState({ });
   const [sample_types, setSampleTypes] = useState([]);  
   const [limitParameters, setBodyLimitParameters] = useState([]);
+  const [milkingParameters, setMilkingParameters] = useState([]);
   const animal_id  = localStorage.getItem('animal_id');
   const [ { organization_id }  ] = useContext(authContext); 
   const [localSettings, setLocalSettings] = useState([]);
@@ -44,6 +45,28 @@ const DetailsEdit = props => {
     let mounted_lookup = true;
     let mounted_limit_parameters = true;
     let mounted_settings = true;
+    let mounted_milking_parameters = true;
+    
+    /* 
+      get milk parameters
+      -------------------
+      1. Lactation Number
+      2. Lactation ID
+      3. Test Day No
+      4. Days in Milk
+    */
+    
+    
+    (async  (endpoint,id,milk_date) => {     
+      await  getMilkingParameters(endpoint,id,milk_date)
+      .then(response => {       
+        if (mounted_milking_parameters) { 
+          const data = response.payload[0][0];                   
+          setMilkingParameters(data);          
+        }
+      });
+    })(endpoint_milking_parameter,animal_id,moment(new Date()).format('YYYY-MM-DD'));
+
 
     (async  (endpoint,id) => {     
         await  getLookups(endpoint,id)
@@ -88,11 +111,12 @@ const DetailsEdit = props => {
       mounted_lookup = false;  
       mounted_limit_parameters = false;  
       mounted_settings = false;
+      mounted_milking_parameters = false;
     };
-  }, [organization_id]);  
+  }, [organization_id,animal_id]);  
     
     
-  if (!sample_types || !limitParameters || !localSettings) {
+  if (!sample_types || !limitParameters || !localSettings || !milkingParameters) {
     return null;
   }
 
@@ -186,20 +210,31 @@ const DetailsEdit = props => {
       [event.target.name]:event.target.type === 'checkbox' ? event.target.checked: event.target.value  
           
     });
+
+    if (event.target.name === 'milk_date') {       
+        (async  (endpoint,id,milk_date) => {     
+        await  getMilkingParameters(endpoint,id,milk_date)
+        .then(response => { 
+            const data = response.payload[0][0];                   
+            setMilkingParameters(data); 
+        });
+      })(endpoint_milking_parameter,animal_id,event.target.value);      
+    } 
   };
 
   const handleSubmit = event => {
     event.preventDefault();
-    (async  (endpoint,id,values,user_id,quality_toggle) => {     
-      await  postMilking(endpoint,id,values,user_id,quality_toggle)
+    (async  (endpoint,id,values,user_id,quality_toggle,lactation_id, lactation_number,  days_in_milk, test_day_no) => {     
+      await  postMilking(endpoint,id,values,user_id,quality_toggle,lactation_id, lactation_number,  days_in_milk, test_day_no)
       .then(() => {  
         setopenSnackbarSuccess(true); 
         setValues({});        
-        document.forms["event"].reset();
+        //document.forms["event"].reset();
+        //window.location.reload(); 
       }).catch(() => {
         setopenSnackbarError(true); 
       });
-    })(endpoint_milking_add,animal_id,values,user_id,quality_fields_view);    
+    })(endpoint_milking_add,animal_id,values,user_id,quality_fields_view,milkingParameters.lactation_id, milkingParameters.lactation_number,  milkingParameters.days_in_milk, milkingParameters.test_day_no);    
   };
   
   
@@ -215,6 +250,8 @@ const DetailsEdit = props => {
     event.persist();
     setQualityFieldsView(!quality_fields_view);   
   };
+
+ 
 
   return (
     <Card
@@ -272,12 +309,17 @@ const DetailsEdit = props => {
                     InputLabelProps={{
                       shrink: true,
                     }}
+                    inputProps={{
+                      readOnly: true,
+                      disabled: true               
+                    }}
                     margin = 'dense'
                     label="Lactation ID"
                     name="lactation_id"              
                     onChange={handleChange}
                     variant="outlined" 
-                    required                    
+                    value = {milkingParameters.lactation_id}  
+                    required                                    
                 />
               </Grid>
               
@@ -292,13 +334,18 @@ const DetailsEdit = props => {
                     InputLabelProps={{
                       shrink: true,
                     }}
+                    inputProps={{
+                      readOnly: true,
+                      disabled: true               
+                    }}
                     margin = 'dense'                    
                     label="Lactation Number"
                     name="lactation_number" 
                     type = "number"               
                     onChange={handleChange}
-                    variant="outlined"  
-                    
+                    variant="outlined" 
+                    value = {milkingParameters.lactation_number}  
+                    required                   
                 />
               </Grid>
             
@@ -312,13 +359,18 @@ const DetailsEdit = props => {
                     InputLabelProps={{
                       shrink: true,
                     }}
+                    inputProps={{
+                      readOnly: true,
+                      disabled: true               
+                    }}
                     margin = 'dense'
                     label="Test Day No"
                     name="testday_no"                
                     onChange={handleChange}
                     variant="outlined"
-                    type = "number"                       
-                    
+                    type = "number" 
+                    value = {milkingParameters.test_day_no}                        
+                    required
                 />
               </Grid>
              
@@ -333,13 +385,18 @@ const DetailsEdit = props => {
                     InputLabelProps={{
                       shrink: true,
                     }}
+                    inputProps={{
+                      readOnly: true,
+                      disabled: true               
+                    }}
                     margin = 'dense'
                     label="Days in Milk"
                     name="days_in_milk"                
                     onChange={handleChange}
                     variant="outlined"
-                    type = "number"                       
-                    
+                    type = "number"
+                    value = {milkingParameters.days_in_milk} 
+                    required
                 />
               </Grid>
 

@@ -272,6 +272,13 @@ export const endpoint_milking = {
   headers: headers   
 };
 
+//get milking parameter
+export const endpoint_milking_parameter = {
+  url: `${api}/events/milking/parameters/`,
+  method: 'GET',
+  headers: headers   
+};
+
 //get specific milking record : filtered by event ID
 export const endpoint_milking_specific = {
   url: `${api}/events/milking/`,
