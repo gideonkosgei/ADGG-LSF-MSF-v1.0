@@ -3,8 +3,8 @@ import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import {Card, CardContent, CardHeader, Grid,Divider,colors,Link } from '@material-ui/core';
-import {getBatchMilkingUnprocessed}   from '../../../../../../utils/API';
-import {endpoint_batch_milk_validation_un_processed_view} from '../../../../../../configs/endpoints';
+import {getBatchMilkingPosted}   from '../../../../../../utils/API';
+import {endpoint_batch_milk_posted_records} from '../../../../../../configs/endpoints';
 import {Sidebar} from '../../../sidebar';
 import MUIDataTable from "mui-datatables";
 import {MuiThemeProvider } from '@material-ui/core/styles';
@@ -35,20 +35,22 @@ const DetailsView = props => {
   const [ {user_id} ] = useContext(authContext);
   
   localStorage.removeItem('batch_upload_uuid');
+
+
   useEffect(() => {     
     let mounted = true;
-      (async  (endpoint,org_id,step,user_id) => {     
-        await  getBatchMilkingUnprocessed(endpoint,org_id,step,user_id)
-        .then(response => {                        
+      (async  (endpoint,org_id,user_id) => {     
+        await  getBatchMilkingPosted(endpoint,org_id,user_id)
+        .then(response => {
+          console.log(response);                        
           if (mounted) {                       
             setValues(response.payload);                 
           }
         });
-      })(endpoint_batch_milk_validation_un_processed_view,organization_id,step,user_id); 
+      })(endpoint_batch_milk_posted_records,organization_id,user_id); 
       
     return () => {
-      mounted = false;
-           
+      mounted = false;           
     };
   }, [organization_id,step,user_id]); 
 
@@ -56,19 +58,17 @@ const DetailsView = props => {
     return null;
   }
 
-
-
-
-    const columns = [
-    { name: "uuid",label: "uuid",options: {filter: false,sort: false,display:false}},  
+ 
+    const columns = [    
     { name: "id",label: "ID",options: {filter: false,sort: true,display:true}},    
     { name: "batch_type",label: "Batch Type",options: {filter: false,sort: true,display:true}},
-    { name: "record_count",label: "Records",options: {filter: false,sort: false,display:true}},
-    { name: "step",label: "Current Stage",options: {filter: true,sort: true,display:true}},    
+    { name: "record_count",label: "Records",options: {filter: false,sort: false,display:true}},       
     { name: "status",label: "Status",options: {filter: true,sort: true, display:true}}, 
     { name: "created_by",label: "Created By",options: {filter: true,sort: true,display:true}},     
     { name: "created_at",label: "Date Created",options: {filter: true,sort: true,display:true}},
     { name: "created_time",label: "Time Created",options: {filter: false,sort: true,display:true}},
+    { name: "updated_at",label: "Date Posted",options: {filter: false,sort: true,display:true}},
+    { name: "updated_by",label: "Posted By",options: {filter: false,sort: true,display:true}},    
     { name: "",
       options: {
       filter: false,
@@ -78,7 +78,7 @@ const DetailsView = props => {
         return (
           <Link
               component={RouterLink}
-              to = {`/batch-process/milking-records/add/${tableMeta.rowData[0]}`}              
+              to = {`/batch-process/milking-records/finalized/${tableMeta.rowData[0]}`}              
           >
             <OpenInNewIcon/>
           </Link>
@@ -131,7 +131,7 @@ const DetailsView = props => {
                     <div className={classes.inner}>
                       <MuiThemeProvider>                
                         <MUIDataTable
-                          title = "BATCH LISTING - UNFINALIZED"
+                          title = "BATCH LISTING - POSTED BATCHES"
                           data={values}
                           columns={columns}
                           options={options}

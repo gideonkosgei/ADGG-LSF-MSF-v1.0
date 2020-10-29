@@ -543,6 +543,17 @@ const routes = [
         exact: true,
         component: lazy(() => import('views/Batch/components/Milking/components/deleted'))        
       }, 
+      //posted milk batches
+      {
+        path: '/batch-process/milking-records/posted',
+        exact: true,
+        component: lazy(() => import('views/Batch/components/Milking/components/posted'))        
+      }, 
+      {
+        path: '/batch-process/milking-records/finalized/:id',
+        exact: true,
+        component: lazy(() => import('views/Batch/components/Milking/components/finalized'))        
+      }, 
       // Batch processes Routes subsequent Steps
       {
         path: '/batch-process/milking-records/add/:uuid',

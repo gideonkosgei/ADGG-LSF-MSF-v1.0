@@ -67,7 +67,7 @@ const DetailsEdit = props => {
 
             for (let i = 0; i< data.length; i++){
               //specifications
-              if(data[i].list_type_id === 85){                
+              if(data[i].list_type_id === 201){                
                 lookup_specification.push(data[i]);
               } 
               //main breeds
@@ -81,12 +81,11 @@ const DetailsEdit = props => {
             }                    
             setSpecification(lookup_specification);
             setBreedCompositions(lookup_breed_composition);
-            setBreeds(lookup_breed);
-            
+            setBreeds(lookup_breed);            
                         
           }
         });
-      })(endpoint_lookup,'85,8,14'); 
+      })(endpoint_lookup,'201,8,14'); 
 
       
         

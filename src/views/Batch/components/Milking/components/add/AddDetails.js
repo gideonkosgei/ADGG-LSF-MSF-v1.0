@@ -21,7 +21,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 function getSteps() {
-  return ['Upload Batch', 'Validate Batch', 'Post Batch'];
+  return ['Upload Batch', 'Validate Batch', 'Post Batch','Post Successful'];
 }
 
 
@@ -33,11 +33,13 @@ function getStepContent(step,records) {
     case 1:
       return <Validate UploadedRecords={records}/>;
     case 2:
-      return <Post UploadedRecords={records}/>;
+      return <Post UploadedRecords={records}/>;    
     default:
       return 'Unknown step';
   }
 };
+
+
 
 const AddDetails = props => {
   const {className,batch_uuid, ...rest } = props; 
@@ -101,7 +103,7 @@ const AddDetails = props => {
                         {activeStep === steps.length ? (
                           <div>
                             <Typography className={classes.instructions}>
-                              All steps completed - you&apos;re finished
+                              <h3>All steps completed - you&apos;re finished</h3>
                             </Typography>            
                           </div>
                         ) : (

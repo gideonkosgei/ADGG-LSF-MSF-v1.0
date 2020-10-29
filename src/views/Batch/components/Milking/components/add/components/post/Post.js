@@ -55,9 +55,7 @@ const Post = props => {
 
   if (!values) {
     return null;
-  }  
-
-
+  }   
 
   const handlePostRecords = event => {
     event.preventDefault(); 
@@ -73,7 +71,7 @@ const Post = props => {
       }).catch(() => {
         setopenSnackbarError(true); 
       });
-    })(endpoint_batch_milk_actions,uuid,1,user_id);    
+    })(endpoint_batch_milk_actions,uuid,4,user_id);    
   };
 
   const handleDiscard = event => {   
@@ -101,15 +99,19 @@ const Post = props => {
     setopenSnackbarError(false);
   };
 
-
+  
     const columns = [
     { name: "uuid",label: "uuid",options: {filter: false,sort: false,display:false}},
-    { name: "animal_id",label: "Animal ID",options: {filter: true,sort: true, display:true}},
+    { name: "animal_id",label: "Animal",options: {filter: true,sort: true, display:true}},
     { name: "milk_date",label: "Milk Date",options: {filter: true,sort: true, display:true}},
-    { name: "amount_morning",label: "Morning(ltrs)",options: {filter: true,sort: true, display:true}},
-    { name: "amount_noon",label: "Noon(ltrs)",options: {filter: true,sort: true, display:true}},
-    { name: "amount_afternoon",label: "Afternoon(ltrs)",options: {filter: true,sort: true, display:true}},
-    { name: "record_status",label: "Status",options: {filter: true,sort: true, display:true}},      
+    { name: "amount_morning",label: "Morning",options: {filter: true,sort: true, display:true}},
+    { name: "amount_noon",label: "Noon",options: {filter: true,sort: true, display:true}},
+    { name: "amount_afternoon",label: "Afternoon",options: {filter: true,sort: true, display:true}},
+    { name: "lactation_id",label: "Lact ID",options: {filter: true,sort: true, display:true}},
+    { name: "lactation_number",label: "Lact No",options: {filter: true,sort: true, display:true}},
+    { name: "days_in_milk",label: "Days in Milk",options: {filter: true,sort: true, display:true}},
+    { name: "test_day_no",label: "Test Day",options: {filter: true,sort: true, display:true}},
+    //{ name: "record_status",label: "Status",options: {filter: true,sort: true, display:true}},      
     { name: "",
       options: {
       filter: false,

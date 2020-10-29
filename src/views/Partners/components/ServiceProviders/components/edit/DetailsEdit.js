@@ -52,7 +52,7 @@ const DetailsEdit = props => {
             let lookup_provider_types = [];
 
             for (let i = 0; i< data.length; i++){
-              if(data[i].list_type_id === 84){                
+              if(data[i].list_type_id === 200){                
                 lookup_provider_types.push(data[i]);
               }         
             }                    
@@ -60,7 +60,7 @@ const DetailsEdit = props => {
                         
           }
         });
-      })(endpoint_lookup,'84'); 
+      })(endpoint_lookup,'200'); 
 
       (async  (endpoint) => {     
         await  getCountries(endpoint)

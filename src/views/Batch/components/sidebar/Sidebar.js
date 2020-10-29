@@ -47,8 +47,8 @@ const Sidebar = props => {
         </Tooltip>  
 
         <Tooltip  title="View Posted">              
-          <IconButton aria-label="processed" size="small" >
-            <Link component = {RouterLink} to = {`/batch-process/milking-records/stage/3`}>
+          <IconButton aria-label="posted" size="small" >
+            <Link component = {RouterLink} to = {`/batch-process/milking-records/posted`}>
               <PlaylistAddCheckIcon /> 
             </Link>
           </IconButton> 

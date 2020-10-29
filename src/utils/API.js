@@ -2210,6 +2210,8 @@ export const getBatchMilkingUnprocessed =  function (config,org_id,step,user_id)
     method: config.method,
     headers: config.headers  
   } 
+
+  console.log(options);
   return new Promise((resolve, reject) => {
     axios(options)
     .then(res => {             
@@ -2237,6 +2239,24 @@ export const getBatchMilkingDiscarded =  function (config,org_id,user_id) {
 };
 
 
+// view milking Posted batches
+export const getBatchMilkingPosted =  function (config,org_id,user_id) {   
+  const options = {
+    url:`${config.url}${org_id}/${user_id}`,
+    method: config.method,
+    headers: config.headers  
+  }  
+  return new Promise((resolve, reject) => {
+    axios(options)
+    .then(res => {             
+        resolve(res.data);
+    })
+    .catch(err => reject(err));
+  });       
+};
+
+
+
 //Batch Process Milking - actions
 export const batchProcessMilkingActions =  function (config,uuid,action,user_id) { 
   const body = {          
@@ -2251,6 +2271,8 @@ export const batchProcessMilkingActions =  function (config,uuid,action,user_id)
     headers: config.headers,
     data: body  
   };
+
+  console.log(options);
 
 return new Promise((resolve, reject) => {
   axios(options)
