@@ -1521,7 +1521,6 @@ export const postMilking =  function (config,animal_id,values,user_id,quality_to
     "created_by": user_id
   };
 
-  console.log(body);
 
   const options = {
     url:`${config.url}`,
@@ -2192,6 +2191,8 @@ export const getBatchMilkingValidation =  function (config,uuid) {
     headers: config.headers  
   } 
 
+
+
   return new Promise((resolve, reject) => {
     axios(options)
     .then(res => {             
@@ -2211,7 +2212,6 @@ export const getBatchMilkingUnprocessed =  function (config,org_id,step,user_id)
     headers: config.headers  
   } 
 
-  console.log(options);
   return new Promise((resolve, reject) => {
     axios(options)
     .then(res => {             

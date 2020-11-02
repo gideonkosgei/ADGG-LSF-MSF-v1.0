@@ -103,7 +103,9 @@ const AddDetails = props => {
                         {activeStep === steps.length ? (
                           <div>
                             <Typography className={classes.instructions}>
+                              <br/>
                               <h3>All steps completed - you&apos;re finished</h3>
+                              <br/>
                             </Typography>            
                           </div>
                         ) : (

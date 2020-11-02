@@ -43,6 +43,8 @@ const Validate = props => {
   const uuid= localStorage.getItem('batch_upload_uuid');
   localStorage.removeItem('batch_upload_uuid');
 
+  
+
   useEffect(() => {     
     let mounted = true;
       (async  (endpoint,org_id,step,user_id) => {     

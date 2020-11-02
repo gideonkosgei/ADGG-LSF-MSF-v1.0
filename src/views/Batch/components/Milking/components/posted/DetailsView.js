@@ -41,8 +41,7 @@ const DetailsView = props => {
     let mounted = true;
       (async  (endpoint,org_id,user_id) => {     
         await  getBatchMilkingPosted(endpoint,org_id,user_id)
-        .then(response => {
-          console.log(response);                        
+        .then(response => {                               
           if (mounted) {                       
             setValues(response.payload);                 
           }
@@ -56,10 +55,10 @@ const DetailsView = props => {
 
   if (!values) {
     return null;
-  }
+  } 
 
- 
-    const columns = [    
+    const columns = [   
+    { name: "uuid",label: "UUID",options: {filter: false,sort:false,display:false}},  
     { name: "id",label: "ID",options: {filter: false,sort: true,display:true}},    
     { name: "batch_type",label: "Batch Type",options: {filter: false,sort: true,display:true}},
     { name: "record_count",label: "Records",options: {filter: false,sort: false,display:true}},       

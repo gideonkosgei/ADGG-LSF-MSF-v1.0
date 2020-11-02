@@ -550,7 +550,7 @@ const routes = [
         component: lazy(() => import('views/Batch/components/Milking/components/posted'))        
       }, 
       {
-        path: '/batch-process/milking-records/finalized/:id',
+        path: '/batch-process/milking-records/finalized/:uuid',
         exact: true,
         component: lazy(() => import('views/Batch/components/Milking/components/finalized'))        
       }, 
