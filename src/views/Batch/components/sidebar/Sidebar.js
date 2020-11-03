@@ -64,7 +64,7 @@ const Sidebar = props => {
                    
         <Tooltip  title="download template">              
           <IconButton aria-label="download" size="small" >
-            <Link component = {RouterLink} to="#">
+            <Link component = {RouterLink} to="/batch-process/milking-list">
               <CloudDownloadIcon /> 
             </Link>
           </IconButton> 

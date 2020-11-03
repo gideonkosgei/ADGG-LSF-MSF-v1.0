@@ -28,7 +28,7 @@ const Edit = props => {
   return (
     <Page
       className={classes.root}
-      title="Posted Milk Records"
+      title="Batch - milking template"
     >
     <Card>
         <CardContent> 

@@ -448,6 +448,12 @@ export const endpoint_batch_milk_errors= {
   headers: headers   
 };
 
+export const endpoint_batch_milk_template= {
+  url: `${api}/batches/milking/list/`,
+  method: 'GET',
+  headers: headers   
+};
+
 //get calender items
 export const endpoint_calender_items= {
   url: `${api}/calender/event/`,

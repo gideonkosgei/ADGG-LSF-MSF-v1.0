@@ -2221,6 +2221,22 @@ export const getBatchMilkingUnprocessed =  function (config,org_id,step,user_id)
   });       
 };
 
+// view milking template for download
+export const getBatchMilkingTemplate =  function (config,org_id) {   
+  const options = {
+    url:`${config.url}${org_id}`,
+    method: config.method,
+    headers: config.headers  
+  } 
+  return new Promise((resolve, reject) => {
+    axios(options)
+    .then(res => {             
+        resolve(res.data);
+    })
+    .catch(err => reject(err));
+  });       
+};
+
 
 // view milking discarded batches
 export const getBatchMilkingDiscarded =  function (config,org_id,user_id) {   

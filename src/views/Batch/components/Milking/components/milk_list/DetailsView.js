@@ -1,19 +1,15 @@
-import React, { useState,useEffect } from 'react';
+import React, { useState,useEffect,useContext } from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import {Card, CardContent, CardHeader, Grid,Divider,colors } from '@material-ui/core';
-import {getBatchMilkingValidation}   from '../../../../../../utils/API';
-import {endpoint_batch_milk_validation_view} from '../../../../../../configs/endpoints';
+import {getBatchMilkingTemplate}   from '../../../../../../utils/API';
+import {endpoint_batch_milk_template} from '../../../../../../configs/endpoints';
+import authContext from '../../../../../../contexts/AuthContext';
 import {Sidebar} from '../../../sidebar';
 import MUIDataTable from "mui-datatables";
 import {MuiThemeProvider } from '@material-ui/core/styles';
 import PerfectScrollbar from 'react-perfect-scrollbar';
-import CustomToolbar from "./CustomToolbar";
-
-
-
-
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -30,11 +26,12 @@ const DetailsView = props => {
   const {className,uuid, ...rest } = props; 
   const classes = useStyles();  
   const [values, setValues] = useState([]); 
+  const [ {organization_id} ] = useContext(authContext);
 
   useEffect(() => {     
     let mounted = true;
-      (async  (endpoint,batch_uuid) => {     
-        await  getBatchMilkingValidation(endpoint,batch_uuid)
+      (async  (endpoint,org) => {     
+        await  getBatchMilkingTemplate(endpoint,org)
         .then(response => {                             
           if (mounted) { 
             if(response.payload.length>0){                       
@@ -42,28 +39,22 @@ const DetailsView = props => {
             }              
           }
         });
-      })(endpoint_batch_milk_validation_view,uuid);       
+      })(endpoint_batch_milk_template,organization_id);       
     return () => {
       mounted = false;           
     };
-  }, [uuid]); 
+  }, [organization_id]); 
 
   if (!values) {
     return null;
   }
-
  
     const columns = [
-      { name: "uuid",label: "uuid",options: {filter: false,sort: false,display:false}},
-      { name: "animal_id",label: "Animal",options: {filter: true,sort: true, display:true}},
-      { name: "milk_date",label: "Milk Date",options: {filter: true,sort: true, display:true}},
-      { name: "amount_morning",label: "Morning",options: {filter: true,sort: true, display:true}},
-      { name: "amount_noon",label: "Noon",options: {filter: true,sort: true, display:true}},
-      { name: "amount_afternoon",label: "Afternoon",options: {filter: true,sort: true, display:true}},
-      { name: "lactation_id",label: "Lact ID",options: {filter: true,sort: true, display:true}},
-      { name: "lactation_number",label: "Lact No",options: {filter: true,sort: true, display:true}},
-      { name: "days_in_milk",label: "Days in Milk",options: {filter: true,sort: true, display:true}},
-      { name: "test_day_no",label: "Test Day",options: {filter: true,sort: true, display:true}} 
+      { name: "Milk_Date",label: "Milk_Date",options: {filter: false,sort: false,display:true}},
+      { name: "Animal_ID",label: "Animal_ID",options: {filter: true,sort: true, display:true}},
+      { name: "Amount_Morning",label: "Amount_Morning",options: {filter: true,sort: true, display:true}},
+      { name: "Amount_Noon",label: "Amount_Noon",options: {filter: true,sort: true, display:true}},
+      { name: "Amount_Afternoon",label: "Amount_Afternoon",options: {filter: true,sort: true, display:true}}    
     
   ];
 
@@ -81,12 +72,7 @@ const DetailsView = props => {
        padding: "none" ,         
        size: "small",
      };
-   },
-   customToolbar: () => {
-    return (
-      <CustomToolbar />
-    );
-  }  
+   }   
   };
 
   return (
@@ -94,7 +80,7 @@ const DetailsView = props => {
       {...rest}
       className={clsx(classes.root, className)}
     >
-        <CardHeader title= "POSTED MILK RECORDS"/>
+        <CardHeader title= "BATCH - MILKING TEMPLATE"/>
         <Divider />
         <CardContent> 
           <Grid container spacing={1} justify="center">            
@@ -109,7 +95,7 @@ const DetailsView = props => {
                     <div className={classes.inner}>
                       <MuiThemeProvider>                
                         <MUIDataTable
-                          title = "POSTED MILK RECORDS"
+                          title = "BATCH - MILKING TEMPLATE"
                           data={values}
                           columns={columns}
                           options={options}

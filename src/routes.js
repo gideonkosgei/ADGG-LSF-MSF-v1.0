@@ -554,6 +554,11 @@ const routes = [
         exact: true,
         component: lazy(() => import('views/Batch/components/Milking/components/finalized'))        
       }, 
+      {
+        path: '/batch-process/milking-list',
+        exact: true,
+        component: lazy(() => import('views/Batch/components/Milking/components/milk_list'))        
+      }, 
       // Batch processes Routes subsequent Steps
       {
         path: '/batch-process/milking-records/add/:uuid',
