@@ -530,23 +530,35 @@ export const getSync =  function (config,id) {
 
 
 // add new sync event
-export const postSync =  function (config,animal_id,values,user_id) { 
-
-  let {animal_parity,cost,field_agent_id,hormone_source,hormone_type,other_hormone_source,other_hormone_type,sync_number,sync_date,sync_other_person,sync_person,sync_person_phone,sync_time} = values;
+export const postSync =  function (config,animal_id,values,user_id) {   
+  let {animal_parity,cost,field_agent_id,hormone_source,hormone_type,other_hormone_type,sync_number,sync_date,sync_other_person,sync_person,sync_person_phone,sync_time} = values;
   
-  animal_parity = (typeof animal_parity === 'undefined')? '':animal_parity;  
+  animal_parity = (typeof animal_parity === 'undefined') ? null: isNaN(parseInt(animal_parity))?null:parseInt(animal_parity);  
   cost = (typeof cost === 'undefined')? '0':cost.replace('','0');
-  field_agent_id = (typeof field_agent_id === 'undefined')? '0':field_agent_id.replace('','0');
+  field_agent_id = (typeof field_agent_id === 'undefined')? '':field_agent_id.replace('','');
   hormone_source = (typeof hormone_source === 'undefined')? '0':hormone_source.replace('','0');
   hormone_type = (typeof hormone_type === 'undefined')? '0':hormone_type.replace('','0');
-  other_hormone_source = (typeof other_hormone_source === 'undefined')? '':other_hormone_source;
+  
   other_hormone_type = (typeof other_hormone_type === 'undefined')? '':other_hormone_type;
   sync_number = (typeof sync_number === 'undefined')? '0':sync_number.replace('','0');
   sync_other_person = (typeof sync_other_person === 'undefined')? '':sync_other_person;
-  sync_person = (typeof sync_person === 'undefined')? '0':sync_person.replace('','0');
+  sync_person = (typeof sync_person === 'undefined')? '0':parseInt(sync_person);
   sync_person_phone = (typeof sync_person_phone === 'undefined')? '':sync_person_phone;
   sync_date = (typeof sync_date === 'undefined')? moment(new Date()).format('YYYY-MM-DD'):sync_date; 
-  sync_time = (typeof sync_time === 'undefined')? moment(new Date()).format('HH:mm:ss'):sync_time; 
+  sync_time = (typeof sync_time === 'undefined')? moment(new Date()).format('HH:mm:ss'):sync_time;
+  
+  //hormone_type = (parseInt(hormone_type) ===3)? null : hormone_type;
+  other_hormone_type = (parseInt(hormone_type) === 1 || parseInt(hormone_type) === 2)? null : other_hormone_type;
+  
+  if(isNaN(sync_person)){
+    sync_person = null;
+    sync_other_person = null;
+    field_agent_id = null;
+  }
+
+  field_agent_id = (sync_person === 1 )? user_id : null;
+  sync_other_person = (sync_person === 1)? null : sync_other_person;
+ 
 
   const body = {
       "animal_id": animal_id,
@@ -557,7 +569,7 @@ export const postSync =  function (config,animal_id,values,user_id) {
       "hormone_type": hormone_type,
       "other_hormone_type": other_hormone_type,
       "hormone_source": hormone_source,
-      "other_hormone_source": other_hormone_source,
+      "other_hormone_source": null,
       "sync_cost": cost,
       "sync_person": sync_person,
       "sync_other_person": sync_other_person,
@@ -566,7 +578,6 @@ export const postSync =  function (config,animal_id,values,user_id) {
       "created_by": user_id
   };
   
- 
   const options = {
     url:`${config.url}`,
     method: config.method,

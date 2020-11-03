@@ -29,6 +29,8 @@ const DetailsView = props => {
   const classes = useStyles();  
   const [values, setValues] = useState([]);
   const animal_id  = localStorage.getItem('animal_id');
+  const animal_tag  = sessionStorage.getItem('animal_tag');
+  const animal_name  = sessionStorage.getItem('animal_name');
 
   useEffect(() => {     
     let mounted = true;
@@ -108,7 +110,7 @@ const DetailsView = props => {
       {...rest}
       className={clsx(classes.root, className)}
     >
-        <CardHeader title="Synchronization Details" />
+        <CardHeader title= {`SYNCHRONIZATION  - ${animal_name}(${animal_tag}) `}/>  
         <Divider />
         <CardContent> 
           <Grid container spacing={1} justify="center">            

@@ -3,12 +3,13 @@ import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import {Card, CardContent, CardHeader, Grid,Divider, TextField,colors,Button,CardActions } from '@material-ui/core';
-import {getLookups,postSync}   from '../../../../../../utils/API';
-import {endpoint_lookup,endpoint_sync_add} from '../../../../../../configs/endpoints';
+import {getLookups,postSync,getServiceProviders,getAgents}   from '../../../../../../utils/API';
+import {endpoint_lookup,endpoint_sync_add,endpoint_service_provider,endpoint_agent} from '../../../../../../configs/endpoints';
 import authContext from '../../../../../../contexts/AuthContext';
 import {Sidebar} from '../index';
 import SuccessSnackbar from '../../../../../../components/SuccessSnackbar';
 import ErrorSnackbar from '../../../../../../components/ErrorSnackbar';
+import moment from 'moment';
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -25,19 +26,48 @@ const DetailsEdit = props => {
   const {className, ...rest } = props; 
   const [openSnackbarSuccess, setopenSnackbarSuccess] = useState(false);
   const [openSnackbarError, setopenSnackbarError] = useState(false);
-  const [ {user_id} ] = useContext(authContext);
+  const [ {user_id,username,organization_id} ] = useContext(authContext);
   const classes = useStyles();
 
-  const [values, setValues] = useState({ });
-  const [hormone_sources, setHormoneSources] = useState([]);
+  const [values, setValues] = useState({ }); 
   const [sync_numbers, setSyncNumbers] = useState([]);
   const [hormone_types, setHormoneTypes] = useState([]);
   const [sync_person, setSyncPerson] = useState([]);
+  const [service_providers, setServiceProviders] = useState([]);
+  const [agents, setAgents] = useState([]);
   
   const animal_id  = localStorage.getItem('animal_id');
+  const animal_tag  = sessionStorage.getItem('animal_tag');
+  const animal_name  = sessionStorage.getItem('animal_name');
+  const option  =  0;
+ 
+
+ 
 
   useEffect(() => {   
     let mounted_lookup = true;
+    let mounted_sp = true;
+    let mounted_agents = true;
+
+    (async  (endpoint,org_id,option) => {     
+      await  getServiceProviders(endpoint,org_id,option)
+      .then(response => {                        
+        if (mounted_sp) {            
+          setServiceProviders(response.payload);                 
+        }
+      });
+    })(endpoint_service_provider,organization_id,option); 
+
+    (async  (endpoint,org_id,option) => {     
+      await  getAgents(endpoint,org_id,option)
+      .then(response => {                        
+        if (mounted_agents) {            
+          setAgents(response.payload);                 
+        }
+      });
+    })(endpoint_agent,organization_id,option); 
+
+
     (async  (endpoint,id) => {     
         await  getLookups(endpoint,id)
         .then(response => {       
@@ -46,7 +76,6 @@ const DetailsEdit = props => {
             let lookup_sync_number = [];
             let lookup_hormone_type = [];
             let lookup_sync_person = [];
-            let lookup_hormone_source = [];
 
             for (let i = 0; i< data.length; i++){              
               //sync numbers
@@ -61,31 +90,29 @@ const DetailsEdit = props => {
               //sync person
               if(data[i].list_type_id === 77){                
                 lookup_sync_person.push(data[i]);
-              } 
-
-              //hormone sources
-              if(data[i].list_type_id === 74){                
-                lookup_hormone_source.push(data[i]);
-              }               
+              }             
             }  
                    
             setSyncNumbers(lookup_sync_number);
             setHormoneTypes(lookup_hormone_type);
-            setSyncPerson(lookup_sync_person);
-            setHormoneSources(lookup_hormone_source);            
+            setSyncPerson(lookup_sync_person);                       
           }
         });
       })(endpoint_lookup,'74,75,76,77');
       
     return () => {
-      mounted_lookup = false;     
+      mounted_lookup = false;  
+      mounted_sp = false; 
+      mounted_agents = false;
     };
-  }, []);  
+  }, [organization_id]);  
 
-  if (!hormone_sources || !sync_numbers || !hormone_types ||!sync_person) {
+  if ( !sync_numbers || !hormone_types ||!sync_person || !service_providers || !agents) {
     return null;
   }
 
+  //console.log(sync_person);
+  
     const handleChange = event => {
     event.persist();
     setValues({
@@ -95,6 +122,7 @@ const DetailsEdit = props => {
     });
   };
 
+  
 
   const handleSubmit = event => {
     event.preventDefault();
@@ -119,13 +147,14 @@ const DetailsEdit = props => {
     setopenSnackbarError(false);
   };
 
+
+
   return (
     <Card
       {...rest}
       className={clsx(classes.root, className)}
-    >
-      
-        <CardHeader title="New Synchronization Details" />
+    >      
+      <CardHeader title= {`NEW SYNCHRONIZATION RECORD - ${animal_name}(${animal_tag}) `}/>  
         <Divider />
         <CardContent> 
           <Grid container spacing={1} justify="center">            
@@ -150,6 +179,10 @@ const DetailsEdit = props => {
                       InputLabelProps={{
                         shrink: true,
                       }}
+                      inputProps={{                                                 
+                        max: moment(new Date()).format('YYYY-MM-DD')     
+                      }}
+                      defaultValue = {moment(new Date()).format('YYYY-MM-DD')}
                       required
                       margin = 'dense'
                       label = "Sync Date"
@@ -169,6 +202,8 @@ const DetailsEdit = props => {
                       InputLabelProps={{
                         shrink: true,
                       }}
+                      
+                      defaultValue = {moment(new Date()).format('HH:MM')}
                       required
                       margin = 'dense'
                       label="Sync Time"
@@ -243,28 +278,35 @@ const DetailsEdit = props => {
                       }           
                     </TextField>
                   </Grid>
-                  <Grid
+                  {
+                    (parseInt(values.hormone_type) === 3) ? 
+                      <Grid
                       item
                       md={3}
                       xs={12}
+                   
                     >
-                    <TextField
-                      fullWidth
-                      InputLabelProps={{
-                        shrink: true,
-                      }}
-                      margin = 'dense'
-                      label="Other Hormone Type"
-                      name="other_hormone_type"
-                      onChange={handleChange} 
-                      variant="outlined"
-                    />
+                    
+                      <TextField
+                        fullWidth
+                        InputLabelProps={{
+                          shrink: true,
+                        }}
+                        margin = 'dense'
+                        label="Other Hormone Type"
+                        name="other_hormone_type"
+                        onChange={handleChange} 
+                        variant="outlined"
+                      />                  
                       
                   </Grid>
-                 
+                 : null
+
+                  }
+                
                   <Grid
                       item
-                      md={3}
+                      md={6}
                       xs={12}
                     >
                     <TextField
@@ -275,18 +317,19 @@ const DetailsEdit = props => {
                       margin = 'dense'
                       label="Hormone Source"
                       name="hormone_source"
-                      onChange={handleChange}                                                
+                      onChange={handleChange} 
+                      required                                               
                       select
                       // eslint-disable-next-line react/jsx-sort-props
                       SelectProps={{ native: true }}                    
                       variant="outlined"
                     >
                       <option value=""></option>
-                      {hormone_sources.map(source => (
+                      {service_providers.map(service_provider => (
                             <option                    
-                              value={source.id}
+                              value={service_provider.id}
                             >
-                              {source.value}
+                              {service_provider.name}
                             </option>
                           ))
                       }           
@@ -299,32 +342,15 @@ const DetailsEdit = props => {
                       xs={12}
                     >
                     <TextField
-                      fullWidth                    
-                      InputLabelProps={{
-                        shrink: true                      
-                      }}                                       
-                      margin = 'dense'
-                      label="Other Hormone Source"
-                      name="other_hormone_source"
-                      onChange={handleChange}                                         
-                      variant="outlined"
-                    />
-                               
-                   
-                  </Grid>
-                  <Grid
-                      item
-                      md={3}
-                      xs={12}
-                    >
-                    <TextField
                       fullWidth
                       InputLabelProps={{
                         shrink: true,
                       }}
                       margin = 'dense'
+                      type="number"
                       label="Animal Parity"
                       name="animal_parity"                
+
                       onChange={handleChange}
                       variant="outlined"  
                       
@@ -347,6 +373,7 @@ const DetailsEdit = props => {
                     //required
                     default = ""                              
                     select
+                    required
                     // eslint-disable-next-line react/jsx-sort-props
                     SelectProps={{ native: true }}                    
                     variant="outlined"
@@ -362,6 +389,9 @@ const DetailsEdit = props => {
                     }           
                   </TextField>
                   </Grid> 
+                  {  
+                   isNaN(values.sync_person) || values.sync_person ==='' || parseInt(values.sync_person) === -66? null :        
+                                  
                   <Grid
                         item
                         md={3}
@@ -373,14 +403,53 @@ const DetailsEdit = props => {
                           shrink: true,
                         }}
                         margin = 'dense'
-                        label="Other Hormone Admin"
-                        name="sync_other_person"
+                        label=" H. Admin Name (self)"
+                        name="field_agent_id"
                         onChange={handleChange}
                         variant="outlined"
+                        value = {username}
                       />
                         
-                      </Grid> 
+                  </Grid> 
+                   } 
+
+                   {
+                     isNaN(values.sync_person) || values.sync_person ==='' || parseInt(values.sync_person) ===1 ? null :
+                 
+                  <Grid
+                    item
+                    md={6}
+                    xs={12}
+                  >
+                    <TextField
+                      fullWidth
+                      InputLabelProps={{
+                        shrink: true,
+                      }}
+                      margin = 'dense'
+                      label="H. Admin Name (other)"
+                      name="sync_other_person" 
+                      onChange={handleChange}
+                      variant="outlined"  
+                      default = ""                              
+                      select                      
+                      SelectProps={{ native: true }}                    
+                                         
+                    >
+                      <option value=""></option>
+                        {agents.map(agent => (
+                              <option                    
+                                value={agent.id}
+                              >
+                                {agent.name}
+                              </option>
+                            ))
+                        }      
+                    </TextField>  
+                  </Grid>
+                }
                   
+                     
                   <Grid
                     item
                     md={3}
@@ -395,7 +464,7 @@ const DetailsEdit = props => {
                     label="Hormone Admin Mobile No"
                     name="sync_person_phone"                
                     onChange={handleChange}
-                    variant="outlined"  
+                    variant="outlined" 
                     
                 />
               </Grid>
@@ -419,24 +488,7 @@ const DetailsEdit = props => {
                     variant="outlined"                                                 
                   />
                 </Grid>
-                  <Grid
-                    item
-                    md={3}
-                    xs={12}
-                  >
-                  <TextField
-                    fullWidth
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-                    margin = 'dense'
-                    label="Field Agent"
-                    name="field_agent_id"                
-                    onChange={handleChange}
-                    variant="outlined"  
-                    
-                />
-              </Grid>
+                  
             
               </Grid>
           </CardContent>
