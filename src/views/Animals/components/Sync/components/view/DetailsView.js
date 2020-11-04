@@ -61,9 +61,9 @@ const DetailsView = props => {
     { name: "hormone_type",label: "Hormone",options: {filter: true,sort: true, display:true}},
     { name: "hormone_source",label: "H. Source",options: {filter: false,sort: true,display:true}},
     { name: "animal_parity",label: "Parity",options: {filter: true,sort: true,display:true}},
-    { name: "sync_person",label: "H. Admin",options: {filter: true,sort: true,display:true}},
+    { name: "sync_other_person",label: "H. Admin",options: {filter: true,sort: true,display:true}},
     { name: "sync_cost",label: "Cost",options: {filter: true,sort: true,display:true}},     
-    { name: "sync_person_phone",label: "A. Contacts",options: {filter: true,sort: true,display:true}},
+   // { name: "sync_person_phone",label: "A. Contacts",options: {filter: true,sort: true,display:true}},
     { name: "",
       options: {
       filter: false,
@@ -125,7 +125,7 @@ const DetailsView = props => {
                     <div className={classes.inner}>
                       <MuiThemeProvider>                
                         <MUIDataTable
-                          title = ""
+                          title = {`SYNCHRONIZATION  - ${animal_name}(${animal_tag}) `}
                           data={values}
                           columns={columns}
                           options={options}

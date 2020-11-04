@@ -40,9 +40,6 @@ const DetailsEdit = props => {
   const animal_tag  = sessionStorage.getItem('animal_tag');
   const animal_name  = sessionStorage.getItem('animal_name');
   const option  =  0;
- 
-
- 
 
   useEffect(() => {   
     let mounted_lookup = true;

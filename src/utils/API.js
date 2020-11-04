@@ -600,7 +600,8 @@ export const updateSync =  function (config,event_id,values,user_id) {
 
   let {animal_parity,cost,field_agent_id,hormone_source,hormone_type,other_hormone_source,other_hormone_type,sync_number,sync_date,sync_other_person,sync_person,sync_person_phone,sync_time} = values;
   
-  animal_parity = (typeof animal_parity === 'undefined')? '':animal_parity;  
+  animal_parity = (typeof animal_parity === 'undefined') ? null: isNaN(parseInt(animal_parity))?null:parseInt(animal_parity);  
+  
   cost = (typeof cost === 'undefined')? '0':cost.replace('','0');
   field_agent_id = (typeof field_agent_id === 'undefined')? '0':field_agent_id.replace('','0');
   hormone_source = (typeof hormone_source === 'undefined')? '0':hormone_source.replace('','0');
@@ -613,6 +614,17 @@ export const updateSync =  function (config,event_id,values,user_id) {
   sync_person_phone = (typeof sync_person_phone === 'undefined')? '':sync_person_phone;
   sync_date = (typeof sync_date === 'undefined')? moment(new Date()).format('YYYY-MM-DD'):sync_date; 
   sync_time = (typeof sync_time === 'undefined')? moment(new Date()).format('HH:mm:ss'):sync_time; 
+
+  other_hormone_type = (parseInt(hormone_type) === 1 || parseInt(hormone_type) === 2)? null : other_hormone_type;
+  
+  if(isNaN(sync_person)){
+    sync_person = null;
+    sync_other_person = null;
+    field_agent_id = null;
+  }
+
+  field_agent_id = (sync_person === 1 )? user_id : null;
+  sync_other_person = (sync_person === 1)? null : sync_other_person;
 
   const body = {      
       "sync_date": sync_date,
