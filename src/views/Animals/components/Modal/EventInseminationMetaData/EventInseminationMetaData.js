@@ -192,49 +192,6 @@ const EventInseminationMetaData = props => {
                 />
               </Grid>
 
-              <Grid
-                item
-                md={6}
-                xs={12}
-              >
-                <TextField
-                  fullWidth
-                  inputProps={{
-                    readOnly: true,
-                    disabled: true               
-                  }}
-                  margin = 'dense'
-                  label="Migration ID"
-                  name="migration_id"                  
-                  value={inseminationDetails.migration_id}
-                  variant="outlined"
-                  InputLabelProps={{
-                    shrink: true,
-                  }}
-                />
-              </Grid>
-              <Grid
-                item
-                md={6}
-                xs={12}
-              >
-                <TextField
-                  fullWidth
-                  inputProps={{
-                    readOnly: true,
-                    disabled: true               
-                  }}
-                  margin = 'dense'
-                  label="ODK form UUID"
-                  name="odk_form_uuid"                  
-                  value={inseminationDetails.odk_form_uuid}
-                  variant="outlined"
-                  InputLabelProps={{
-                    shrink: true,
-                  }}
-                />
-              </Grid>
-             
                
             </Grid>
           </CardContent>

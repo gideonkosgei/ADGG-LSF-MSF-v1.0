@@ -485,6 +485,8 @@ export const updatePd =  function (config,event_id,values,user_id) {
   exam_date = (typeof exam_date === 'undefined')? moment(new Date()).format('YYYY-MM-DD'):exam_date;  
   exam_time = (typeof exam_time === 'undefined')? moment(new Date()).format('HH:mm:ss'):exam_time;  
   
+  pd_stage = (parseInt(pd_results) === 2 )? null : pd_stage;
+
   const body = {  
     "service_date": service_date,
     "time_examined": exam_time,

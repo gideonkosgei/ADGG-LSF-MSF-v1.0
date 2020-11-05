@@ -3,14 +3,15 @@ import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import {Card, CardContent, CardHeader, Grid,Divider, TextField,colors,Button,CardActions,Box,Switch ,Typography,Tooltip } from '@material-ui/core';
-import {getLookups,updatePd,getPdByEventId}   from '../../../../../../utils/API';
-import {endpoint_lookup,endpoint_pd_update,endpoint_pd_specific} from '../../../../../../configs/endpoints';
+import {getLookups,updatePd,getPdByEventId,getAgents}   from '../../../../../../utils/API';
+import {endpoint_lookup,endpoint_pd_update,endpoint_pd_specific,endpoint_agent} from '../../../../../../configs/endpoints';
 import authContext from '../../../../../../contexts/AuthContext';
 import {Sidebar} from '../index';
 import SuccessSnackbar from '../../../../../../components/SuccessSnackbar';
 import ErrorSnackbar from '../../../../../../components/ErrorSnackbar';
 import OpenInNewIcon from '@material-ui/icons/OpenInNew';
 import {EventPdMetaData}  from '../../../Modal';
+import moment from 'moment';
 
 
 const useStyles = makeStyles(theme => ({
@@ -28,7 +29,7 @@ const DetailsEdit = props => {
   const {className, ...rest } = props; 
   const [openSnackbarSuccess, setopenSnackbarSuccess] = useState(false);
   const [openSnackbarError, setopenSnackbarError] = useState(false);
-  const [ {user_id} ] = useContext(authContext);
+  const [ {user_id,organization_id} ] = useContext(authContext);
   const classes = useStyles();
   const [values, setValues] = useState({ });  
   const [body_scores, setBodyScores] = useState([]);
@@ -40,11 +41,24 @@ const DetailsEdit = props => {
   const event_id  = localStorage.getItem('pd_event_id'); 
   const animal_tag  = sessionStorage.getItem('animal_tag');
   const animal_name  = sessionStorage.getItem('animal_name');
+  const [agents, setAgents] = useState([]);
+  const option  =  0;
 
 
   useEffect(() => {   
     let mounted_lookup = true;
     let mounted_pd = true;  
+    let mounted_agents = true;
+
+    (async  (endpoint,org_id,option) => {     
+      await  getAgents(endpoint,org_id,option)
+      .then(response => {                        
+        if (mounted_agents) {            
+          setAgents(response.payload);                 
+        }
+      });
+    })(endpoint_agent,organization_id,option); 
+
     (async  (endpoint,id) => {     
         await  getLookups(endpoint,id)
         .then(response => {       
@@ -100,11 +114,12 @@ const DetailsEdit = props => {
       
     return () => {
       mounted_lookup = false;  
-      mounted_pd = false;    
+      mounted_pd = false;   
+      mounted_agents = false;  
     };
-  }, [event_id]);  
+  }, [event_id,organization_id]);  
 
-  if (!body_scores || !pd_methods || !pd_stages ||!pd_results ||!values) {
+  if (!body_scores || !pd_methods || !pd_stages ||!pd_results ||!values || !agents) {
     return null;
   }
 
@@ -185,7 +200,8 @@ const DetailsEdit = props => {
                       }}
                       inputProps={{
                         readOnly: Boolean(readOnly),
-                        disabled: Boolean(readOnly)                
+                        disabled: Boolean(readOnly),
+                        max: moment(new Date()).format('YYYY-MM-DD')               
                       }}
                       required
                       margin = 'dense'
@@ -234,7 +250,8 @@ const DetailsEdit = props => {
                       }}
                       inputProps={{
                         readOnly: Boolean(readOnly),
-                        disabled: Boolean(readOnly)                
+                        disabled: Boolean(readOnly),
+                        max: moment(new Date()).format('YYYY-MM-DD')              
                       }}
                       required
                       margin = 'dense'
@@ -320,7 +337,9 @@ const DetailsEdit = props => {
                       }           
                     </TextField>
                   </Grid>
-                  <Grid
+                  {  
+                   isNaN(values.pd_results) || values.pd_results ==='' || parseInt(values.pd_results) === 2? null :        
+                   <Grid
                     item
                     md={3}
                     xs={12}
@@ -355,6 +374,7 @@ const DetailsEdit = props => {
                     }           
                   </TextField>
                 </Grid>
+                  }
                   <Grid
                     item
                     md={3}
@@ -433,13 +453,25 @@ const DetailsEdit = props => {
                       disabled: Boolean(readOnly)                
                     }}
                     margin = 'dense'
-                    label="Field Agent"
+                    label="PD Admin"
                     name="field_agent_id"                
                     onChange={handleChange}
                     variant="outlined"  
-                    value = {values.field_agent_id}
+                    value = {values.field_agent_id}default = ""                              
+                    select
+                    SelectProps={{ native: true }}                    
                     
-                />
+                  >
+                    <option value=""></option>
+                    {agents.map(agent => (
+                          <option                    
+                            value={agent.id}
+                          >
+                            {agent.name}
+                          </option>
+                        ))
+                    }           
+                  </TextField>
               </Grid>
             
               </Grid>
