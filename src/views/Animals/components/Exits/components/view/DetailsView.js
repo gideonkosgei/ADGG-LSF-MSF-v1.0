@@ -5,7 +5,6 @@ import { makeStyles } from '@material-ui/styles';
 import {Card, CardContent, CardHeader, Grid,Divider,colors,Link } from '@material-ui/core';
 import {getExit}   from '../../../../../../utils/API';
 import {endpoint_exit} from '../../../../../../configs/endpoints';
-import {Sidebar} from '../index';
 import MUIDataTable from "mui-datatables";
 import {MuiThemeProvider } from '@material-ui/core/styles';
 import PerfectScrollbar from 'react-perfect-scrollbar';
@@ -108,11 +107,8 @@ const DetailsView = props => {
         <CardHeader title="Exit/Disposal Details" />
         <Divider />
         <CardContent> 
-          <Grid container spacing={1} justify="center">            
-          <Grid item  xs={1} >  
-            <Sidebar animal_id = {animal_id}/>
-          </Grid> 
-          <Grid item xs={11}>
+          <Grid container spacing={1} justify="center">  
+          <Grid item xs={12}>
               <Card> 
                 <CardContent> 
                  

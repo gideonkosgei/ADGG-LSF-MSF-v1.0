@@ -6,7 +6,6 @@ import {Card, CardContent, CardHeader, Grid,Divider, TextField,colors,Button,Car
 import {getLookups,postExit}   from '../../../../../../utils/API';
 import {endpoint_lookup,endpoint_exit_add} from '../../../../../../configs/endpoints';
 import authContext from '../../../../../../contexts/AuthContext';
-import {Sidebar} from '../index';
 import SuccessSnackbar from '../../../../../../components/SuccessSnackbar';
 import ErrorSnackbar from '../../../../../../components/ErrorSnackbar';
 
@@ -106,11 +105,8 @@ const DetailsEdit = props => {
         <CardHeader title="New Exit/Disposal Details" />
         <Divider />
         <CardContent> 
-          <Grid container spacing={1} justify="center">            
-          <Grid item  xs={1} >  
-            <Sidebar/>
-         </Grid> 
-          <Grid item xs={11}>
+          <Grid container spacing={1} justify="center">  
+          <Grid item xs={12}>
             <Card> 
             <form id ='event' onSubmit={handleSubmit} >
               <CardContent>        

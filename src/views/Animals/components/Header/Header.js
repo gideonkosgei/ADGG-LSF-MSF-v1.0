@@ -129,7 +129,7 @@ const Header = props => {
         {values.exit ?
           <Tooltip  title="Exits">              
             <IconButton aria-label="delete" size="large" >
-              <Link component = {RouterLink} to= {`/management/exit/view/${animal_id}`}>
+              <Link component = {RouterLink} to= {`/management/exit/add/${animal_id}`}>
                 <ExitToAppRoundedIcon /> 
               </Link>              
             </IconButton> 
