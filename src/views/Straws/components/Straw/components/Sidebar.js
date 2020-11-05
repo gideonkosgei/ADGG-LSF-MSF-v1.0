@@ -3,12 +3,11 @@ import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import {Card, CardContent,Tooltip,IconButton,Link } from '@material-ui/core';
-import PrintIcon from '@material-ui/icons/Print';
-import VisibilityIcon from '@material-ui/icons/Visibility';
 import AddIcon from '@material-ui/icons/Add';
 import { Link as RouterLink } from 'react-router-dom';
 import HomeIcon from '@material-ui/icons/Home';
 import RestoreFromTrashIcon from '@material-ui/icons/RestoreFromTrash';
+import ListIcon from '@material-ui/icons/List';
 
 const useStyles = makeStyles(theme => ({
   root: {}, 
@@ -29,7 +28,7 @@ const Sidebar = props => {
         <Tooltip  title="view">              
           <IconButton aria-label="view" size="small" >
             <Link component = {RouterLink} to = {`/management/straws/view/1`}>
-              <VisibilityIcon /> 
+              <ListIcon /> 
             </Link>
           </IconButton> 
         </Tooltip>         
@@ -46,14 +45,8 @@ const Sidebar = props => {
               <RestoreFromTrashIcon /> 
             </Link>
           </IconButton> 
-        </Tooltip>             
-        <Tooltip  title="print">              
-          <IconButton aria-label="print" size="small" >
-            <Link component = {RouterLink} to="#">
-              <PrintIcon /> 
-            </Link>
-          </IconButton> 
-        </Tooltip>
+        </Tooltip>            
+        
       </CardContent> 
     </Card>
   );

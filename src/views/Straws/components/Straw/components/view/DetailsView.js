@@ -59,9 +59,9 @@ const DetailsView = props => {
     const columns = [
     { name: "id",label: "ID",options: {filter: false,sort: false,display:false}},   
     { name: "straw_id",label: "Straw ID",options: {filter: false,sort: true,display:true}},
+    { name: "semen_source",label: "Source",options: {filter: true,sort: false,display:true}},
     { name: "batch_number",label: "Batch",options: {filter: false,sort: true,display:true}},  
     { name: "barcode",label: "Barcode",options: {filter:true,sort: true,display:true}}, 
-    { name: "semen_source",label: "Source",options: {filter: true,sort: false,display:true}},   
     { name: "production_date",label: "Prod Date",options: {filter: false,sort: false,display:true}}, 
     { name: "specification",label: "Specification",options: {filter: false,sort: false,display:true}},
     { name: "bull_tag_id",label: "Bull Tag",options: {filter: false,sort: false,display:true}},

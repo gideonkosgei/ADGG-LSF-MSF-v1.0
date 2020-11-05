@@ -3,14 +3,15 @@ import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import {makeStyles} from '@material-ui/styles';
 import {Card, CardContent, CardHeader, Grid,Divider, TextField,colors,Button,CardActions,Typography,Box,Switch,Tooltip} from '@material-ui/core';
-import {getLookups,putStraw,getStraws}   from '../../../../../../utils/API';
-import {endpoint_lookup,endpoint_straw_edit,endpoint_straw} from '../../../../../../configs/endpoints';
+import {getLookups,putStraw,getStraws,getServiceProviders,getCountries}   from '../../../../../../utils/API';
+import {endpoint_lookup,endpoint_straw_edit,endpoint_straw,endpoint_service_provider,endpoint_countries} from '../../../../../../configs/endpoints';
 import authContext from '../../../../../../contexts/AuthContext';
 import {Sidebar} from '../index';
 import SuccessSnackbar from '../../../../../../components/SuccessSnackbar';
 import ErrorSnackbar from '../../../../../../components/ErrorSnackbar';
 import OpenInNewIcon from '@material-ui/icons/OpenInNew';
 import {MetaData}  from '../Modal';
+import moment from 'moment';
   
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -27,7 +28,7 @@ const DetailsEdit = props => {
   const {className, ...rest } = props; 
   const [openSnackbarSuccess, setopenSnackbarSuccess] = useState(false);
   const [openSnackbarError, setopenSnackbarError] = useState(false);
-  const [ {user_id} ] = useContext(authContext);
+  const [ {user_id,organization_id} ] = useContext(authContext);
   const classes = useStyles();
 
   const [values, setValues] = useState({ });  
@@ -37,6 +38,9 @@ const DetailsEdit = props => {
   const [readOnly, setReadOnly] = useState(true);
   const [openMetadata, setMetadata] = useState(false);   
   const straw_id  = localStorage.getItem('straw_id'); 
+  const [service_providers, setServiceProviders] = useState([]);
+  const [countries, setCountries] = useState([]);
+  const sp_option  =  0;
   
 
   useEffect(() => {
@@ -44,6 +48,27 @@ const DetailsEdit = props => {
     let mounted = true;
     const option  =  1;
     const is_active = 1;
+    let mounted_sp = true;  
+    let mounted_countries = true;
+
+    (async  (endpoint) => {     
+      await  getCountries(endpoint)
+      .then(response => {                        
+        if (mounted_countries) {            
+          setCountries(response.payload);                 
+        }
+      });
+    })(endpoint_countries); 
+    
+    (async  (endpoint,org_id,option) => {     
+      await  getServiceProviders(endpoint,org_id,option)
+      .then(response => {                        
+        if (mounted_sp) {            
+          setServiceProviders(response.payload);                 
+        }
+      });
+    })(endpoint_service_provider,organization_id,sp_option); 
+
 
 
     (async  (endpoint,org_id,option,is_active) => {     
@@ -91,11 +116,13 @@ const DetailsEdit = props => {
         
     return () => {
       mounted_lookup = false;   
-      mounted = false;      
+      mounted = false; 
+      mounted_sp = false;
+      mounted_countries = false;      
     };    
-  }, [straw_id]);  
+  }, [straw_id,organization_id]);  
 
-  if (!breeds || !breedCompositions || !specifications || !values) {
+  if (!breeds || !breedCompositions || !specifications || !values || !service_providers || !countries) {
     return null;
   }
    
@@ -184,8 +211,21 @@ const DetailsEdit = props => {
                     onChange={handleChange}
                     variant="outlined" 
                     required 
-                    value = {values.semen_source}                    
-                />
+                    value = {values.semen_source}   
+                    select                    
+                    SelectProps={{ native: true }}  
+                  >
+                    <option value=""></option>
+                    {service_providers.map(service_provider => (
+                          <option                    
+                            value={service_provider.id}
+                          >
+                            {service_provider.name}
+                          </option>
+                        ))
+                    }           
+                  </TextField>
+
               </Grid>
               <Grid
                     item
@@ -338,6 +378,7 @@ const DetailsEdit = props => {
                     margin = 'dense'
                     label="Breed of Bull"
                     name="breed_id"
+                    required
                     onChange={handleChange}                    
                     default = "" 
                     value = {values.breed_id}                                
@@ -426,7 +467,8 @@ const DetailsEdit = props => {
                   }} 
                   inputProps={{
                     readOnly: Boolean(readOnly),
-                    disabled: Boolean(readOnly)                
+                    disabled: Boolean(readOnly),
+                    max: moment(new Date()).format('YYYY-MM-DD')                
                   }}
                   margin = 'dense'
                   label="Production Date"
@@ -442,7 +484,44 @@ const DetailsEdit = props => {
 
             <Grid
                     item
-                    md={4}
+                    md={3}
+                    xs={12}
+                  >
+                  <TextField
+                    fullWidth
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                    inputProps={{
+                      readOnly: Boolean(readOnly),
+                      disabled: Boolean(readOnly)                                      
+                    }}
+                    value = {values.origin_country}
+                    margin = 'dense'
+                    label="Bull Origin Country"
+                    name="origin_country"                
+                    onChange={handleChange}
+                    variant="outlined" 
+                    required 
+                    select                    
+                    SelectProps={{ native: true }}  
+                  >
+                    <option value=""></option>
+                    {countries.map(country => (
+                          <option                    
+                            value={country.id}
+                          >
+                            {country.name}
+                          </option>
+                        ))
+                    }           
+                  </TextField>
+              </Grid>
+              
+
+            <Grid
+                    item
+                    md={3}
                     xs={12}
                   >
                   <TextField
@@ -455,6 +534,7 @@ const DetailsEdit = props => {
                       disabled: Boolean(readOnly)                
                     }}
                     margin = 'dense'
+                    required
                     label="Specification"
                     name="specification_id"
                     onChange={handleChange}  

@@ -3,12 +3,13 @@ import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import {Card, CardContent, CardHeader, Grid,Divider, TextField,colors,Button,CardActions} from '@material-ui/core';
-import {getLookups,postStraw}   from '../../../../../../utils/API';
-import {endpoint_lookup,endpoint_straw_add} from '../../../../../../configs/endpoints';
+import {getLookups,postStraw,getServiceProviders,getCountries}   from '../../../../../../utils/API';
+import {endpoint_lookup,endpoint_straw_add,endpoint_service_provider,endpoint_countries} from '../../../../../../configs/endpoints';
 import authContext from '../../../../../../contexts/AuthContext';
 import {Sidebar} from '../index';
 import SuccessSnackbar from '../../../../../../components/SuccessSnackbar';
 import ErrorSnackbar from '../../../../../../components/ErrorSnackbar';
+import moment from 'moment';
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -32,9 +33,32 @@ const DetailsEdit = props => {
   const [specifications, setSpecification] = useState([]);
   const [breeds, setBreeds] = useState([]);
   const [breedCompositions, setBreedCompositions] = useState([]);
+  const [service_providers, setServiceProviders] = useState([]);
+  const [countries, setCountries] = useState([]);
+  const option  =  0;
  
   useEffect(() => {
-    let mounted_lookup = true;    
+    let mounted_lookup = true; 
+    let mounted_sp = true;  
+    let mounted_countries = true;
+
+    (async  (endpoint) => {     
+      await  getCountries(endpoint)
+      .then(response => {                        
+        if (mounted_countries) {            
+          setCountries(response.payload);                 
+        }
+      });
+    })(endpoint_countries); 
+    
+    (async  (endpoint,org_id,option) => {     
+      await  getServiceProviders(endpoint,org_id,option)
+      .then(response => {                        
+        if (mounted_sp) {            
+          setServiceProviders(response.payload);                 
+        }
+      });
+    })(endpoint_service_provider,organization_id,option); 
 
     (async  (endpoint,id) => {     
         await  getLookups(endpoint,id)
@@ -69,13 +93,16 @@ const DetailsEdit = props => {
         });
       })(endpoint_lookup,'201,8,14'); 
     return () => {
-      mounted_lookup = false;      
+      mounted_lookup = false;  
+      mounted_sp = false;
+      mounted_countries = false;  
     };    
-  }, []);  
+  }, [organization_id]);  
 
-  if (!breeds || !breedCompositions || !specifications) {
+  if (!breeds || !breedCompositions || !specifications || !service_providers || !countries) {
     return null;
   }
+
 
     const handleChange = event => {
     event.persist();
@@ -145,9 +172,22 @@ const DetailsEdit = props => {
                     name="semen_source"                
                     onChange={handleChange}
                     variant="outlined" 
-                    required                     
-                />
+                    required 
+                    select                    
+                    SelectProps={{ native: true }}  
+                  >
+                    <option value=""></option>
+                    {service_providers.map(service_provider => (
+                          <option                    
+                            value={service_provider.id}
+                          >
+                            {service_provider.name}
+                          </option>
+                        ))
+                    }           
+                  </TextField>
               </Grid>
+              
               <Grid
                     item
                     md={3}
@@ -265,6 +305,7 @@ const DetailsEdit = props => {
                     margin = 'dense'
                     label="Breed of Bull"
                     name="breed"
+                    required
                     onChange={handleChange}                    
                     default = ""                              
                     select
@@ -340,20 +381,54 @@ const DetailsEdit = props => {
                   InputLabelProps={{
                     shrink: true,
                   }} 
+                  inputProps={{                        
+                    max: moment(new Date()).format('YYYY-MM-DD')                 
+                  }}                  
+                  
                   margin = 'dense'
                   label="Production Date"
                   type="date"
-                  name="production_date"
-                  defaultValue = {new Date()}
+                  name="production_date"                 
                   onChange={handleChange}
                   variant="outlined" 
                   required   
                 />
-            </Grid>  
+            </Grid> 
+            <Grid
+                    item
+                    md={3}
+                    xs={12}
+                  >
+                  <TextField
+                    fullWidth
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                    margin = 'dense'
+                    label="Bull Origin Country"
+                    name="origin_country"                
+                    onChange={handleChange}
+                    variant="outlined" 
+                    required 
+                    select                    
+                    SelectProps={{ native: true }}  
+                  >
+                    <option value=""></option>
+                    {countries.map(country => (
+                          <option                    
+                            value={country.id}
+                          >
+                            {country.name}
+                          </option>
+                        ))
+                    }           
+                  </TextField>
+              </Grid>
+               
 
             <Grid
                     item
-                    md={6}
+                    md={3}
                     xs={12}
                   >
                   <TextField
@@ -364,7 +439,8 @@ const DetailsEdit = props => {
                     margin = 'dense'
                     label="Specification"
                     name="specification"
-                    onChange={handleChange}                   
+                    onChange={handleChange}  
+                    required                 
                     default = ""                              
                     select                    
                     SelectProps={{ native: true }}                    
