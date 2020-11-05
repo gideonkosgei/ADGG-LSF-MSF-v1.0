@@ -30,7 +30,7 @@ const Edit = props => {
   return (
     <Page
       className={classes.root}
-      title="Profile"
+      title="Insemination"
     >
     <Card>
         <CardContent>

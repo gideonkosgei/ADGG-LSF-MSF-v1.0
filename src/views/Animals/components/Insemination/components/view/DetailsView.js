@@ -13,6 +13,7 @@ import CustomToolbar from "../CustomToolbar";
 import { Link as RouterLink } from 'react-router-dom';
 import OpenInNewIcon from '@material-ui/icons/OpenInNew';
 
+
 const useStyles = makeStyles(theme => ({
   root: {},
   saveButton: {
@@ -29,6 +30,8 @@ const DetailsView = props => {
   const classes = useStyles();  
   const [values, setValues] = useState([]);
   const animal_id  = localStorage.getItem('animal_id');
+  const animal_tag  = sessionStorage.getItem('animal_tag');
+  const animal_name  = sessionStorage.getItem('animal_name');
 
   useEffect(() => {     
     let mounted = true;
@@ -52,7 +55,7 @@ const DetailsView = props => {
   }
 
     const columns = [
-    { name: "event_id",label: "Event ID",options: {filter: false,sort: true,display:true}},
+    { name: "event_id",label: "Event ID",options: {filter: false,sort: false,display:false}},
     { name: "ai_date",label: "AI Date",options: {filter: false,sort: true,display:true}},    
     { name: "type_of_ai",label: "AI Type",options: {filter: false,sort: true,display:true}},
     { name: "semen_batch",label: "Batch",options: {filter: false,sort: true,display:true}},    
@@ -109,8 +112,8 @@ const DetailsView = props => {
     <Card
       {...rest}
       className={clsx(classes.root, className)}
-    >
-        <CardHeader title="Insemination Details" />
+    > 
+        <CardHeader  title= {`INSEMINATION - ${animal_name}(${animal_tag})`} />
         <Divider />
         <CardContent> 
           <Grid container spacing={1} justify="center">            
@@ -125,7 +128,7 @@ const DetailsView = props => {
                     <div className={classes.inner}>
                       <MuiThemeProvider>                
                         <MUIDataTable
-                          title = ""
+                          title = {`INSEMINATION - ${animal_name}(${animal_tag})`}
                           data={values}
                           columns={columns}
                           options={options}

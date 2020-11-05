@@ -3,12 +3,13 @@ import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import {Card, CardContent, CardHeader, Grid,Divider, TextField,colors,Button,CardActions } from '@material-ui/core';
-import {getLookups,postInsemination}   from '../../../../../../utils/API';
-import {endpoint_lookup,endpoint_insemination_add} from '../../../../../../configs/endpoints';
+import {getLookups,postInsemination,getAgents}   from '../../../../../../utils/API';
+import {endpoint_lookup,endpoint_insemination_add,endpoint_agent} from '../../../../../../configs/endpoints';
 import authContext from '../../../../../../contexts/AuthContext';
 import {Sidebar} from '../index';
 import SuccessSnackbar from '../../../../../../components/SuccessSnackbar';
 import ErrorSnackbar from '../../../../../../components/ErrorSnackbar';
+import moment from 'moment';
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -25,7 +26,7 @@ const DetailsEdit = props => {
   const {className, ...rest } = props; 
   const [openSnackbarSuccess, setopenSnackbarSuccess] = useState(false);
   const [openSnackbarError, setopenSnackbarError] = useState(false);
-  const [ {user_id} ] = useContext(authContext);
+  const [ {user_id,organization_id} ] = useContext(authContext);
   const classes = useStyles();
 
   const [values, setValues] = useState({ });
@@ -35,11 +36,25 @@ const DetailsEdit = props => {
   const [bull_breeds, setBullBreeds] = useState([]);
   const [semen_types, setSemenTypes] = useState([]);
   const [ai_types, setAiTypes] = useState([]);
-  
+  const [agents, setAgents] = useState([]);
+  const option  =  0;
   const animal_id  = localStorage.getItem('animal_id');
+  const animal_tag  = sessionStorage.getItem('animal_tag');
+  const animal_name  = sessionStorage.getItem('animal_name');
 
   useEffect(() => {   
     let mounted_lookup = true;
+    let mounted_agents = true;
+
+    (async  (endpoint,org_id,option) => {     
+      await  getAgents(endpoint,org_id,option)
+      .then(response => {                        
+        if (mounted_agents) {            
+          setAgents(response.payload);                 
+        }
+      });
+    })(endpoint_agent,organization_id,option); 
+
     (async  (endpoint,id) => {     
         await  getLookups(endpoint,id)
         .then(response => {       
@@ -96,12 +111,13 @@ const DetailsEdit = props => {
       })(endpoint_lookup,'8,14,71,72,73,74');
       
     return () => {
-      mounted_lookup = false;     
+      mounted_lookup = false;  
+      mounted_agents = false;     
     };
-  }, []);   
+  }, [organization_id]);   
 
 
-  if (!breed_compositions || !body_scores || !semen_sources ||!bull_breeds || !semen_types || !ai_types) {
+  if (!breed_compositions || !body_scores || !semen_sources ||!bull_breeds || !semen_types || !ai_types || !agents) {
     return null;
   }
 
@@ -144,7 +160,7 @@ const DetailsEdit = props => {
       className={clsx(classes.root, className)}
     >
       
-        <CardHeader title="New Insemination Details" />
+       <CardHeader  title= {`NEW INSEMINATION RECORD - ${animal_name}(${animal_tag})`} /> 
         <Divider />
         <CardContent> 
           <Grid container spacing={1} justify="center">            
@@ -169,6 +185,10 @@ const DetailsEdit = props => {
                       InputLabelProps={{
                         shrink: true,
                       }}
+                      inputProps={{                        
+                        max: moment(new Date()).format('YYYY-MM-DD')                 
+                      }}                     
+                      defaultValue = {moment(new Date()).format('YYYY-MM-DD')}
                       required
                       margin = 'dense'
                       label = "AI Service Date"
@@ -311,24 +331,6 @@ const DetailsEdit = props => {
                   </Grid>
 
                   <Grid
-                      item
-                      md={3}
-                      xs={12}
-                    >
-                    <TextField
-                      fullWidth                    
-                      InputLabelProps={{
-                        shrink: true                      
-                      }}                                       
-                      margin = 'dense'
-                      label="Other Semen Source"
-                      name="other_Semen_source"
-                      onChange={handleChange}
-                      variant="outlined"
-                    />                      
-                  </Grid>
-                  
-                  <Grid
                     item
                     md={3}
                     xs={12}
@@ -360,23 +362,7 @@ const DetailsEdit = props => {
                     }           
                   </TextField>
                   </Grid> 
-                  <Grid
-                    item
-                    md={3}
-                    xs={12}
-                  >
-                   <TextField
-                    fullWidth
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-                    margin = 'dense'
-                    label="Other Bull Breed"
-                    name="other_breed_of_bull"
-                    onChange={handleChange}                                        
-                    variant="outlined"
-                  />                    
-                  </Grid> 
+                  
                   <Grid
                     item
                     md={3}
@@ -479,26 +465,6 @@ const DetailsEdit = props => {
                     variant="outlined"                                                 
                   />
                 </Grid>
-                  
-                <Grid
-                    item
-                    md={3}
-                    xs={12}
-                  >
-                  <TextField
-                    fullWidth
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-                    margin = 'dense'
-                    label="Cow weight(kg)"
-                    name="cow_weight"                
-                    onChange={handleChange}
-                    variant="outlined"  
-                    type="number"
-                />
-              </Grid>
-
                   <Grid
                     item
                     md={3}
@@ -510,12 +476,22 @@ const DetailsEdit = props => {
                       shrink: true,
                     }}
                     margin = 'dense'
-                    label="Field Agent"
+                    label="AI Tech"
                     name="field_agent_id"                
                     onChange={handleChange}
-                    variant="outlined"  
-                    
-                />
+                    variant="outlined" select
+                    SelectProps={{ native: true }} 
+                  >
+                    <option value=""></option>
+                    {agents.map(agent => (
+                          <option                    
+                            value={agent.id}
+                          >
+                            {agent.name}
+                          </option>
+                        ))
+                    }           
+                  </TextField>
               </Grid>
             
               </Grid>

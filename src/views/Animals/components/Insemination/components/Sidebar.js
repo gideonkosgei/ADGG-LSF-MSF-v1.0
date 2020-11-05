@@ -3,12 +3,11 @@ import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import {Card, CardContent,Tooltip,IconButton,Link } from '@material-ui/core';
-import PrintIcon from '@material-ui/icons/Print';
-import VisibilityIcon from '@material-ui/icons/Visibility';
+import ListIcon from '@material-ui/icons/List';
 import AddIcon from '@material-ui/icons/Add';
 import { Link as RouterLink } from 'react-router-dom';
 import HomeIcon from '@material-ui/icons/Home';
-import BarChartIcon from '@material-ui/icons/BarChart';
+
 
 
 const useStyles = makeStyles(theme => ({
@@ -31,7 +30,7 @@ const Sidebar = props => {
         <Tooltip  title="view">              
           <IconButton aria-label="view" size="small" >
             <Link component = {RouterLink} to = {`/management/insemination/view/${animal_id}`}>
-              <VisibilityIcon /> 
+              <ListIcon /> 
             </Link>
           </IconButton> 
         </Tooltip>         
@@ -39,20 +38,6 @@ const Sidebar = props => {
           <IconButton aria-label="add" size="small" >
             <Link component = {RouterLink} to={`/management/insemination/add/${animal_id}`}>
               <AddIcon /> 
-            </Link>
-          </IconButton> 
-        </Tooltip>
-        <Tooltip  title="graph">              
-          <IconButton aria-label="graph" size="small" >          
-            <Link component = {RouterLink} to={`/management/insemination/charts/${animal_id}`}>
-              <BarChartIcon /> 
-            </Link>
-          </IconButton> 
-        </Tooltip>      
-        <Tooltip  title="print">              
-          <IconButton aria-label="print" size="small" >
-            <Link component = {RouterLink} to="/management/milking/">
-              <PrintIcon /> 
             </Link>
           </IconButton> 
         </Tooltip>

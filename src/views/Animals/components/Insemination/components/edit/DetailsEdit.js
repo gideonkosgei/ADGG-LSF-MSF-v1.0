@@ -40,6 +40,8 @@ const DetailsEdit = props => {
   const [readOnly, setReadOnly] = useState(true);
   const [openMetadata, setMetadata] = useState(false);   
   const event_id  = localStorage.getItem('insemination_event_id');   
+  const animal_tag  = sessionStorage.getItem('animal_tag');
+  const animal_name  = sessionStorage.getItem('animal_name');
  
 
   useEffect(() => {   
@@ -173,8 +175,7 @@ const DetailsEdit = props => {
       {...rest}
       className={clsx(classes.root, className)}
     >
-      
-        <CardHeader title= { readOnly ? `View Insemination Event Record  #${localStorage.getItem('animal_id')}`:`Edit Insemination Event Record  #${localStorage.getItem('animal_id')}` } />
+      <CardHeader  title= { readOnly ? `INSEMINATION - ${animal_name}(${animal_tag})` :`EDIT INSEMINATION RECORD - ${animal_name}(${animal_tag})`} />
         <Divider />
         <CardContent> 
           <Grid container spacing={1} justify="center">            

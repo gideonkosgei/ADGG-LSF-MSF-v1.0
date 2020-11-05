@@ -44,7 +44,6 @@ const DetailsEdit = props => {
   const [agents, setAgents] = useState([]);
   const option  =  0;
 
-
   useEffect(() => {   
     let mounted_lookup = true;
     let mounted_pd = true;  
@@ -132,9 +131,7 @@ const DetailsEdit = props => {
     });
   };
 
-  console.log(values);
-
-
+  
   const handleSubmit = event => {
     event.preventDefault();
     (async  (endpoint,id,values,user_id) => {     
@@ -457,7 +454,7 @@ const DetailsEdit = props => {
                     name="field_agent_id"                
                     onChange={handleChange}
                     variant="outlined"  
-                    value = {values.field_agent_id}default = ""                              
+                    value = {values.field_agent_id} default = ""                              
                     select
                     SelectProps={{ native: true }}                    
                     
