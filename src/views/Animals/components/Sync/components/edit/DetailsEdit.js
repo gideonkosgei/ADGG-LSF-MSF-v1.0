@@ -126,7 +126,9 @@ const DetailsEdit = props => {
       
     return () => {
       mounted_lookup = false;
-      mounted_sync = false;          
+      mounted_sync = false;  
+      mounted_sp = false;  
+      mounted_agents = false;       
     };
   }, [event_id,organization_id]);  
 

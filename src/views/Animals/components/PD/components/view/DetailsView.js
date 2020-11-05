@@ -31,6 +31,8 @@ const DetailsView = props => {
   const classes = useStyles();  
   const [values, setValues] = useState([]);
   const animal_id  = localStorage.getItem('animal_id');
+  const animal_tag  = sessionStorage.getItem('animal_tag');
+  const animal_name  = sessionStorage.getItem('animal_name');
 
   useEffect(() => {     
     let mounted = true;
@@ -112,7 +114,7 @@ const DetailsView = props => {
       {...rest}
       className={clsx(classes.root, className)}
     >
-        <CardHeader title="Pregnancy Diagnosis Details" />
+        <CardHeader title= {`PREGNANCY DIAGNOSIS - ${animal_name}(${animal_tag}) `}/>
         <Divider />
         <CardContent> 
           <Grid container spacing={1} justify="center">            
@@ -127,7 +129,7 @@ const DetailsView = props => {
                     <div className={classes.inner}>
                       <MuiThemeProvider>                
                         <MUIDataTable
-                          title = ""
+                          title = {`PREGNANCY DIAGNOSIS - ${animal_name}(${animal_tag})`}
                           data={values}
                           columns={columns}
                           options={options}

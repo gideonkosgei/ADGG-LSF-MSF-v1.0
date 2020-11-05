@@ -426,7 +426,7 @@ export const getPdByEventId =  function (config,id) {
 export const postPd =  function (config,animal_id,values,user_id) { 
 
   let {cost,exam_time,service_date,pd_stage,pd_results,pd_method,body_score,field_agent_id,exam_date} = values;
-  cost = (typeof cost === 'undefined')? '0':cost.replace('','0');  
+  cost = (typeof cost === 'undefined')? null:cost.replace('','0');  
   pd_stage = (typeof pd_stage === 'undefined')? '0':pd_stage.replace('','0');
   field_agent_id = (typeof field_agent_id === 'undefined')? '0':field_agent_id.replace('','0');
   body_score = (typeof body_score === 'undefined')? '0':body_score.replace('','0');
@@ -435,6 +435,8 @@ export const postPd =  function (config,animal_id,values,user_id) {
   service_date = (typeof service_date === 'undefined')? moment(new Date()).format('YYYY-MM-DD'):service_date;  
   exam_date = (typeof exam_date === 'undefined')? moment(new Date()).format('YYYY-MM-DD'):exam_date;  
   exam_time = (typeof exam_time === 'undefined')? moment(new Date()).format('HH:mm:ss'):exam_time;  
+  
+  pd_stage = (parseInt(pd_results) === 2 )? null : pd_stage;
   
   const body = {
     "animal_id": animal_id,
@@ -449,6 +451,8 @@ export const postPd =  function (config,animal_id,values,user_id) {
     "field_agent_id": field_agent_id,
     "created_by": user_id
   };
+
+  
  
   const options = {
     url:`${config.url}`,
