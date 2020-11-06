@@ -3,8 +3,8 @@ import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import {Card, CardContent, CardHeader, Grid,Divider, TextField,colors,Button,CardActions } from '@material-ui/core';
-import {getLookups,postInsemination,getAgents}   from '../../../../../../utils/API';
-import {endpoint_lookup,endpoint_insemination_add,endpoint_agent} from '../../../../../../configs/endpoints';
+import {getLookups,postInsemination,getAgents,getStraws,getCountries,getServiceProviders}   from '../../../../../../utils/API';
+import {endpoint_lookup,endpoint_insemination_add,endpoint_agent,endpoint_straw,endpoint_countries,endpoint_service_provider} from '../../../../../../configs/endpoints';
 import authContext from '../../../../../../contexts/AuthContext';
 import {Sidebar} from '../index';
 import SuccessSnackbar from '../../../../../../components/SuccessSnackbar';
@@ -32,7 +32,7 @@ const DetailsEdit = props => {
   const [values, setValues] = useState({ });
   const [body_scores, setBodyScores] = useState([]);
   const [breed_compositions, setBreedCompositions] = useState([]);
-  const [semen_sources, setSemenSources] = useState([]);
+  const [semen_sources, setSemenSources] = useState([]); 
   const [bull_breeds, setBullBreeds] = useState([]);
   const [semen_types, setSemenTypes] = useState([]);
   const [ai_types, setAiTypes] = useState([]);
@@ -41,10 +41,53 @@ const DetailsEdit = props => {
   const animal_id  = localStorage.getItem('animal_id');
   const animal_tag  = sessionStorage.getItem('animal_tag');
   const animal_name  = sessionStorage.getItem('animal_name');
+  const [straws, setStraws] = useState([]);
+  const [countries, setCountries] = useState([]);
+
+  const [strawSemenBatch, setStrawSemenBatch] =  useState(null);  
+  const [strawSemenType, setStrawSemenType] =  useState(null);
+  const [strawSemenSource, setStrawSemenSource] =  useState(null);
+  const [strawBullBreed, setStrawBullBreed] =  useState(null);
+  const [strawBullBreedComposition, setStrawBullBreedComposition] =  useState(null);
+  const [strawBullOriginCountry, setStrawBullOriginCountry] =  useState(null);
+
+  const option_straw  =  0;
+  const sp_option  =  0;
+  const is_active = 1;   
 
   useEffect(() => {   
     let mounted_lookup = true;
     let mounted_agents = true;
+    let mounted_straw = true;
+    let mounted_countries = true;
+    let mounted_sp = true;
+
+    (async  (endpoint,org_id,option) => {     
+      await  getServiceProviders(endpoint,org_id,option)
+      .then(response => {                        
+        if (mounted_sp) {            
+          setSemenSources(response.payload);                 
+        }
+      });
+    })(endpoint_service_provider,organization_id,sp_option); 
+
+    (async  (endpoint) => {     
+      await  getCountries(endpoint)
+      .then(response => {                        
+        if (mounted_countries) {            
+          setCountries(response.payload);                 
+        }
+      });
+    })(endpoint_countries); 
+
+      (async  (endpoint,org_id,option,is_active) => {     
+        await  getStraws(endpoint,org_id,option,is_active)
+        .then(response => {                        
+          if (mounted_straw) {            
+            setStraws(response.payload);                 
+          }
+        });
+      })(endpoint_straw,organization_id,option_straw,is_active); 
 
     (async  (endpoint,org_id,option) => {     
       await  getAgents(endpoint,org_id,option)
@@ -62,8 +105,7 @@ const DetailsEdit = props => {
 
             const data = response.payload[0];                        
             let lookup_body_scores = [];
-            let lookup_breed_compositions = [];
-            let lookup_semen_sources = [];
+            let lookup_breed_compositions = [];          
             let lookup_semen_types = [];
             let lookup_ai_types = [];
             let lookup_breed = [];         
@@ -79,13 +121,9 @@ const DetailsEdit = props => {
                 lookup_breed_compositions.push(data[i]);
               }  
 
-              //semen sources
-              if(data[i].list_type_id === 74){                
-                lookup_semen_sources.push(data[i]);
-              } 
 
               //semen types
-              if(data[i].list_type_id === 73){                
+              if(data[i].list_type_id === 201){                
                 lookup_semen_types.push(data[i]);
               } 
 
@@ -101,25 +139,28 @@ const DetailsEdit = props => {
             }  
 
             setBodyScores(lookup_body_scores);
-            setBreedCompositions(lookup_breed_compositions);
-            setSemenSources(lookup_semen_sources);
+            setBreedCompositions(lookup_breed_compositions);         
             setBullBreeds(lookup_breed);
             setSemenTypes(lookup_semen_types);
             setAiTypes(lookup_ai_types);
           }
         });
-      })(endpoint_lookup,'8,14,71,72,73,74');
+      })(endpoint_lookup,'8,14,71,72,201');
       
     return () => {
       mounted_lookup = false;  
-      mounted_agents = false;     
+      mounted_agents = false;   
+      mounted_straw = false; 
+      mounted_countries = false; 
+      mounted_sp = false;         
     };
   }, [organization_id]);   
 
 
-  if (!breed_compositions || !body_scores || !semen_sources ||!bull_breeds || !semen_types || !ai_types || !agents) {
+  if (!breed_compositions || !body_scores || !semen_sources ||!bull_breeds || !semen_types || !ai_types || !agents || !straws || !countries ) {
     return null;
   }
+
 
     const handleChange = event => {
     event.persist();
@@ -128,8 +169,22 @@ const DetailsEdit = props => {
       [event.target.name]:event.target.type === 'checkbox' ? event.target.checked: event.target.value  
           
     });
+
+    if (event.target.name ==='straw_id'){
+      for (let i =0 ; i<straws.length; i++){
+        if(straws[i].id=== parseInt(event.target.value)){
+          setStrawSemenBatch(straws[i].batch_number);
+          setStrawSemenType(straws[i].specification_id);
+          setStrawSemenSource(straws[i].semen_source_id);
+          setStrawBullBreed(straws[i].breed_id);
+          setStrawBullBreedComposition(straws[i].breed_composition_id);
+          setStrawBullOriginCountry(straws[i].origin_country);
+        }
+     }
+   }
   };
 
+  
 
   const handleSubmit = event => {
     event.preventDefault();
@@ -187,8 +242,8 @@ const DetailsEdit = props => {
                       }}
                       inputProps={{                        
                         max: moment(new Date()).format('YYYY-MM-DD')                 
-                      }}                     
-                      defaultValue = {moment(new Date()).format('YYYY-MM-DD')}
+                      }}                    
+                      
                       required
                       margin = 'dense'
                       label = "AI Service Date"
@@ -230,7 +285,6 @@ const DetailsEdit = props => {
                     }           
                   </TextField>
                 </Grid>
-
                 <Grid
                     item
                     md={3}
@@ -240,34 +294,59 @@ const DetailsEdit = props => {
                     fullWidth
                     InputLabelProps={{
                       shrink: true,
+                    }}
+                    margin = 'dense'
+                    required
+                    label="Straw ID"
+                    name="straw_id"                
+                    onChange={handleChange}
+                    variant="outlined"  
+                    default = ""                              
+                    select                    
+                    SelectProps={{ native: true }}                  
+                   
+                  >
+                    <option value=""></option>
+                    {straws.map(straw => (
+                          <option                    
+                            value={straw.id}
+                          >
+                            {straw.straw_id}
+                          </option>
+                        ))
+                    }           
+                  </TextField>
+              </Grid> 
+              {
+               isNaN(values.straw_id)  || values.straw_id === ''  ? null : 
+                <Grid
+                    item
+                    md={3}
+                    xs={12}
+                  >
+                  <TextField
+                    fullWidth
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+
+                    inputProps={{
+                      readOnly: true,
+                      disabled: true                
                     }}
                     margin = 'dense'
                     label="Semen Batch"
                     name="semen_batch"                
                     onChange={handleChange}
                     variant="outlined"  
+                    value = {strawSemenBatch}
                     
                 />
               </Grid>
-
-                <Grid
-                    item
-                    md={3}
-                    xs={12}
-                  >
-                  <TextField
-                    fullWidth
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-                    margin = 'dense'
-                    label="Straw ID"
-                    name="straw_id"                
-                    onChange={handleChange}
-                    variant="outlined"  
-                    
-                />
-              </Grid>                  
+             }
+             {
+             isNaN(values.straw_id) || values.straw_id ===''   ? null : 
+                
                   <Grid
                       item
                       md={3}
@@ -277,11 +356,18 @@ const DetailsEdit = props => {
                       fullWidth                    
                       InputLabelProps={{
                         shrink: true                      
-                      }}                                       
+                      }}  
+                      
+                      inputProps={{
+                        readOnly: true,
+                        disabled: true                
+                      }}
+
                       margin = 'dense'
                       label="Straw Semen Type"
                       name="straw_semen_type"
-                      onChange={handleChange}                                                
+                      onChange={handleChange} 
+                      value = {strawSemenType}                                               
                       select
                       // eslint-disable-next-line react/jsx-sort-props
                       SelectProps={{ native: true }}                    
@@ -298,6 +384,10 @@ const DetailsEdit = props => {
                       }           
                     </TextField>
                   </Grid>
+                  }
+                  {
+                    isNaN(values.straw_id)  || values.straw_id === ''  ? null : 
+                  
                   <Grid
                       item
                       md={3}
@@ -308,6 +398,12 @@ const DetailsEdit = props => {
                       InputLabelProps={{
                         shrink: true,
                       }}
+
+                      inputProps={{
+                        readOnly: true,
+                        disabled: true                
+                      }}
+
                       margin = 'dense'
                       label="Semen Source"
                       name="source_of_semen"
@@ -317,19 +413,22 @@ const DetailsEdit = props => {
                       // eslint-disable-next-line react/jsx-sort-props
                       SelectProps={{ native: true }}                    
                       variant="outlined"
+                      value = {strawSemenSource}
                     >
                       <option value=""></option>
                       {semen_sources.map(semen_source => (
                             <option                    
                               value={semen_source.id}
                             >
-                              {semen_source.value}
+                              {semen_source.acronym}
                             </option>
                           ))
                       }           
                     </TextField>
                   </Grid>
-
+                  }
+                  {
+                  isNaN(values.straw_id)  || values.straw_id === ''  ? null : 
                   <Grid
                     item
                     md={3}
@@ -339,6 +438,10 @@ const DetailsEdit = props => {
                     fullWidth
                     InputLabelProps={{
                       shrink: true,
+                    }}
+                    inputProps={{
+                      readOnly: true,
+                      disabled: true                
                     }}
                     margin = 'dense'
                     label="Bull Breed"
@@ -350,6 +453,7 @@ const DetailsEdit = props => {
                     // eslint-disable-next-line react/jsx-sort-props
                     SelectProps={{ native: true }}                    
                     variant="outlined"
+                    value = {strawBullBreed}
                   >
                     <option value=""></option>
                     {bull_breeds.map(bull_breed => (
@@ -362,7 +466,9 @@ const DetailsEdit = props => {
                     }           
                   </TextField>
                   </Grid> 
-                  
+                  }
+                  {
+                    isNaN(values.straw_id)  || values.straw_id === ''  ? null : 
                   <Grid
                     item
                     md={3}
@@ -372,6 +478,10 @@ const DetailsEdit = props => {
                     fullWidth
                     InputLabelProps={{
                       shrink: true,
+                    }}
+                    inputProps={{
+                      readOnly: true,
+                      disabled: true                
                     }}
                     margin = 'dense'
                     label="Bull Breed Composition"
@@ -383,6 +493,7 @@ const DetailsEdit = props => {
                     // eslint-disable-next-line react/jsx-sort-props
                     SelectProps={{ native: true }}                    
                     variant="outlined"
+                    value = {strawBullBreedComposition}
                   >
                     <option value=""></option>
                     {breed_compositions.map(breed_composition => (
@@ -395,7 +506,9 @@ const DetailsEdit = props => {
                     }           
                   </TextField>
                   </Grid>
-                 
+                   }
+                   {
+                     isNaN(values.straw_id)  || values.straw_id === ''  ? null : 
                   <Grid
                     item
                     md={3}
@@ -406,14 +519,33 @@ const DetailsEdit = props => {
                     InputLabelProps={{
                       shrink: true,
                     }}
+
+                    inputProps={{
+                      readOnly: true,
+                      disabled: true                
+                    }}
                     margin = 'dense'
                     label="Bull Origin Country"
                     name="origin_country_bull"                
                     onChange={handleChange}
                     variant="outlined"  
-                    
-                />
+                    select                    
+                    SelectProps={{ native: true }}  
+                    value = {strawBullOriginCountry}
+                  >
+                    <option value=""></option>
+                    {countries.map(country => (
+                          <option                    
+                            value={country.id}
+                          >
+                            {country.name}
+                          </option>
+                        ))
+                    }           
+                  </TextField>
               </Grid>
+                   }
+                   
                   <Grid
                         item
                         md={3}
@@ -446,6 +578,7 @@ const DetailsEdit = props => {
                         }           
                       </TextField>
                       </Grid> 
+                   
                   <Grid
                   item
                   md={3}
@@ -476,6 +609,7 @@ const DetailsEdit = props => {
                       shrink: true,
                     }}
                     margin = 'dense'
+                    required
                     label="AI Tech"
                     name="field_agent_id"                
                     onChange={handleChange}
