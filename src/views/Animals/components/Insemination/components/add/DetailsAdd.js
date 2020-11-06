@@ -613,7 +613,8 @@ const DetailsEdit = props => {
                     label="AI Tech"
                     name="field_agent_id"                
                     onChange={handleChange}
-                    variant="outlined" select
+                    variant="outlined" 
+                    select
                     SelectProps={{ native: true }} 
                   >
                     <option value=""></option>
