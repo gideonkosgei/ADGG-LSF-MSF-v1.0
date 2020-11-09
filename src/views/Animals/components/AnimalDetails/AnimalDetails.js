@@ -3,14 +3,15 @@ import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import {Button, Card,CardActions, CardContent, CardHeader, Grid,Divider, TextField,colors,IconButton } from '@material-ui/core';
-import {getLookups,getHerds,postAnimalRegistration}   from '../../../../utils/API';
-import {endpoint_lookup,endpoint_herd,endpoint_animal_add} from '../../../../configs/endpoints';
+import {getLookups,getHerds,postAnimalRegistration,getCountries}   from '../../../../utils/API';
+import {endpoint_lookup,endpoint_herd,endpoint_animal_add,endpoint_countries} from '../../../../configs/endpoints';
 import authContext from '../../../../contexts/AuthContext';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import SettingsApplicationsIcon from '@material-ui/icons/SettingsApplications';
 import SearchIcon from '@material-ui/icons/Search';
 import SuccessSnackbar from '../../../../components/SuccessSnackbar';
-import ErrorSnackbar from '../../../../components/ErrorSnackbar';    
+import ErrorSnackbar from '../../../../components/ErrorSnackbar';   
+import moment from 'moment'; 
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -41,10 +42,21 @@ const AnimalDetails = props => {
   const [herds, setHerds] = useState([]);
   const [entryTypes, setEntryTypes] = useState([]);
   const [deformaties, setDeformaties] = useState([]);
+  const [countries, setCountries] = useState([]);
 
   useEffect(() => {   
     let mounted_lookup = true;
     let mounted_herds = true;
+    let mounted_countries = true;
+
+    (async  (endpoint) => {     
+      await  getCountries(endpoint)
+      .then(response => {                        
+        if (mounted_countries) {            
+          setCountries(response.payload);                 
+        }
+      });
+    })(endpoint_countries); 
 
     (async  (endpoint,id) => {     
         await  getLookups(endpoint,id)
@@ -122,11 +134,12 @@ const AnimalDetails = props => {
       
     return () => {
       mounted_lookup = false;
-      mounted_herds  = false
+      mounted_herds  = false;
+      mounted_countries  = false;      
     };
   }, [organization_id]); 
 
-  if (!animal_types || !main_breeds || !breed_composition || !gender || !colors || !sire_types || !entryTypes || !deformaties) {
+  if (!countries || !animal_types || !main_breeds || !breed_composition || !gender || !colors || !sire_types || !entryTypes || !deformaties) {
     return null;
   }
 
@@ -163,6 +176,8 @@ const AnimalDetails = props => {
     })(endpoint_animal_add,organization_id,values,user_id);    
   };
 
+ 
+
   return (
     <Card
       {...rest}
@@ -187,6 +202,9 @@ const AnimalDetails = props => {
                 InputLabelProps={{
                   shrink: true,
                 }}
+                inputProps={{                        
+                  max: moment(new Date()).format('YYYY-MM-DD')                 
+                }} 
                 margin = 'dense'
                 label="Registration Date"
                 type="date"
@@ -209,6 +227,9 @@ const AnimalDetails = props => {
                 InputLabelProps={{
                   shrink: true,
                 }}
+                inputProps={{                        
+                  max: moment(new Date()).format('YYYY-MM-DD')                 
+                }}   
                 margin = 'dense'
                 label="Entry Date"
                 type="date"
@@ -377,9 +398,22 @@ const AnimalDetails = props => {
                 name="country_of_origin"
                 onChange={handleChange}
                 variant="outlined"
-              />
+                select                
+                SelectProps={{ native: true }}  
+              >
+                <option value=""></option>
+                {countries.map(country => (
+                      <option                    
+                        value={country.id}
+                      >
+                        {country.name}
+                      </option>
+                    ))
+                }           
+              </TextField>
             </Grid>
 
+            { parseInt(values.entry_type) === 1 ?
             <Grid
               item
               md={2}
@@ -398,8 +432,7 @@ const AnimalDetails = props => {
                 type = "number"
               />
             </Grid>
-            
-            
+            :null }
             <Grid
               item
               md={2}
@@ -451,7 +484,6 @@ const AnimalDetails = props => {
               
               </TextField>
             </Grid>
-
             <Grid
               item
               md={2}
@@ -462,6 +494,9 @@ const AnimalDetails = props => {
                 InputLabelProps={{
                   shrink: true,
                 }}
+                inputProps={{                        
+                  max: moment(new Date()).format('YYYY-MM-DD')                 
+                }} 
                 margin = 'dense'
                 label="DOB"
                 type="date"
@@ -537,7 +572,7 @@ const AnimalDetails = props => {
                 }               
               </TextField>
             </Grid>
-
+            { parseInt(values.color) === -66 ?
             <Grid
               item
               md={2}
@@ -555,6 +590,7 @@ const AnimalDetails = props => {
                 variant="outlined"
               />
             </Grid>
+            :null}
             
 
 
@@ -588,6 +624,7 @@ const AnimalDetails = props => {
                 }              
               </TextField>
             </Grid>
+            { parseInt(values.main_breed) === -66 ?
             <Grid
               item
               md={2}
@@ -605,6 +642,7 @@ const AnimalDetails = props => {
                 variant="outlined"
               />
             </Grid>
+            : null }
             <Grid
               item
               md={2}
@@ -635,7 +673,7 @@ const AnimalDetails = props => {
                 }              
               </TextField>
             </Grid>
-            
+            { parseInt(values.secondary_breed) === -66 ?
             <Grid
               item
               md={2}
@@ -653,6 +691,7 @@ const AnimalDetails = props => {
                 variant="outlined"
               />
             </Grid>
+            :null }
             
             <Grid
               item

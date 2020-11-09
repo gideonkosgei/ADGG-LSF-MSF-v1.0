@@ -3,13 +3,14 @@ import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import {Button, Card,CardActions, CardContent, CardHeader,Tooltip, Grid,Divider, TextField,colors,Box,Switch ,Typography} from '@material-ui/core';
-import {getLookups,getHerds,putAnimalDetails,getAnimal}   from '../../../../../../utils/API';
-import {endpoint_lookup,endpoint_herd,endpoint_animal_update,endpoint_animal} from '../../../../../../configs/endpoints';
+import {getLookups,getHerds,putAnimalDetails,getAnimal,getCountries}   from '../../../../../../utils/API';
+import {endpoint_lookup,endpoint_herd,endpoint_animal_update,endpoint_animal,endpoint_countries} from '../../../../../../configs/endpoints';
 import authContext from '../../../../../../contexts/AuthContext';
 import SuccessSnackbar from '../../../../../../components/SuccessSnackbar';   
 import ErrorSnackbar from '../../../../../../components/ErrorSnackbar';
 import {AnimalDetailsMetaData}  from '../../../Modal';
 import OpenInNewIcon from '@material-ui/icons/OpenInNew';
+import moment from 'moment'; 
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -47,6 +48,7 @@ const DetailsEdit = props => {
   const [readOnly, setReadOnly] = useState(true);
   const animal_id  = localStorage.getItem('animal_id');
   const [openMetadata, setMetadata] = useState(false);
+  const [countries, setCountries] = useState([]);
 
   sessionStorage.setItem('animal_tag', values.tag_id);
   sessionStorage.setItem('animal_name', values.animal_name); 
@@ -56,6 +58,16 @@ const DetailsEdit = props => {
     let mounted_lookup = true;
     let mounted_herds = true;
     let mounted_animal_details = true;
+    let mounted_countries = true;
+
+    (async  (endpoint) => {     
+      await  getCountries(endpoint)
+      .then(response => {                        
+        if (mounted_countries) {            
+          setCountries(response.payload);                 
+        }
+      });
+    })(endpoint_countries); 
 
     (async  (endpoint,id) => {     
         await  getLookups(endpoint,id)
@@ -145,10 +157,11 @@ const DetailsEdit = props => {
       mounted_lookup = false;
       mounted_herds  = false;
       mounted_animal_details = false;
+      mounted_countries = false;
     };
   }, [organization_id,animal_id]); 
 
-  if (!values || !animal_types || !main_breeds || !breed_composition || !gender || !colors || !sire_types || !entryTypes || !deformaties) {
+  if (!countries || !values || !animal_types || !main_breeds || !breed_composition || !gender || !colors || !sire_types || !entryTypes || !deformaties) {
     return null;
   }
 
@@ -224,8 +237,10 @@ const DetailsEdit = props => {
                 }}
                 inputProps={{
                   readOnly: Boolean(readOnly),
-                  disabled: Boolean(readOnly)                
+                  disabled: Boolean(readOnly),
+                  max: moment(new Date()).format('YYYY-MM-DD')               
                 }}
+                
                 id = 'reg_date'
                 margin = 'dense'
                 label="Registration Date"
@@ -252,7 +267,8 @@ const DetailsEdit = props => {
                 }}
                 inputProps={{
                   readOnly: Boolean(readOnly),
-                  disabled: Boolean(readOnly)                
+                  disabled: Boolean(readOnly),
+                  max: moment(new Date()).format('YYYY-MM-DD')                
                 }}
                 margin = 'dense'
                 label="Entry Date"
@@ -434,10 +450,21 @@ const DetailsEdit = props => {
                 name="country_of_origin"
                 onChange={handleChange}
                 variant="outlined"
-                value = {values.country_of_origin}
-              />
+                value = {values.country_of_origin}select                
+                SelectProps={{ native: true }}  
+              >
+                <option value=""></option>
+                {countries.map(country => (
+                      <option                    
+                        value={country.id}
+                      >
+                        {country.name}
+                      </option>
+                    ))
+                }           
+              </TextField>
             </Grid>
-
+            { parseInt(values.entry_type) === 1 ?
             <Grid
               item
               md={2}
@@ -462,6 +489,7 @@ const DetailsEdit = props => {
                 value = {values.purchase_cost}
               />
             </Grid>
+            :null}
             
             
             <Grid
@@ -542,7 +570,8 @@ const DetailsEdit = props => {
 
                 inputProps={{
                   readOnly: Boolean(readOnly),
-                  disabled: Boolean(readOnly)                
+                  disabled: Boolean(readOnly),
+                  max: moment(new Date()).format('YYYY-MM-DD')                
                 }}
 
                 margin = 'dense'
@@ -633,7 +662,7 @@ const DetailsEdit = props => {
                 }               
               </TextField>
             </Grid>
-
+            { parseInt(values.color) === -66 ?
             <Grid
               item
               md={2}
@@ -658,6 +687,7 @@ const DetailsEdit = props => {
                 value = {values.color_other}
               />
             </Grid>
+            :null }
             <Grid
               item
               md={3}
@@ -695,6 +725,7 @@ const DetailsEdit = props => {
                 }              
               </TextField>
             </Grid>
+            { parseInt(values.main_breed) === -66 ?
             <Grid
               item
               md={2}
@@ -719,6 +750,8 @@ const DetailsEdit = props => {
                 value = {values.main_breed_other}
               />
             </Grid>
+            :null}
+            
             <Grid
               item
               md={2}
@@ -756,6 +789,7 @@ const DetailsEdit = props => {
                 }              
               </TextField>
             </Grid>
+            { parseInt(values.secondary_breed) === -66 ?
             
             <Grid
               item
@@ -781,6 +815,7 @@ const DetailsEdit = props => {
                 value = {values.secondary_breed_other}
               />
             </Grid>
+            :null}
             
             <Grid
               item
