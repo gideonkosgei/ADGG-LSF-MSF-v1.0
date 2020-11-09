@@ -3,11 +3,12 @@ import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import {Card, CardContent, CardHeader, Grid,Divider, TextField,colors,Button,CardActions } from '@material-ui/core';
-import {getLookups,postExit}   from '../../../../../../utils/API';
-import {endpoint_lookup,endpoint_exit_add} from '../../../../../../configs/endpoints';
+import {getLookups,postExit,getCountries,getAdminUnits}   from '../../../../../../utils/API';
+import {endpoint_lookup,endpoint_exit_add,endpoint_countries,endpoint_admin_units} from '../../../../../../configs/endpoints';
 import authContext from '../../../../../../contexts/AuthContext';
 import SuccessSnackbar from '../../../../../../components/SuccessSnackbar';
 import ErrorSnackbar from '../../../../../../components/ErrorSnackbar';
+import moment from 'moment';
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -31,9 +32,76 @@ const DetailsEdit = props => {
   const [exitTypes, setExitTypes] = useState([]);  
   
   const animal_id  = localStorage.getItem('animal_id');
+  const animal_tag  = sessionStorage.getItem('animal_tag');
+  const animal_name  = sessionStorage.getItem('animal_name');
+
+  const [countries, setCountries] = useState([]);
+  const [regions, setRegions] = useState([]);
+  const [districts, setDistricts] = useState([]);
+  const [wards, setWards] = useState([]);
+  const [villages, setVillages] = useState([]);
+
+  async function adminUnits (endpoint,unit,option){    
+    
+    await  getAdminUnits(endpoint,unit,option)
+    .then(response => {
+
+      if(option ===1){ 
+        if(isNaN(unit)){
+          setRegions([]);
+        } else {
+          setRegions(response.payload[0]); 
+        }
+        
+        setDistricts([]);
+        setWards([]);
+        setVillages([]);
+      }
+
+      if(option ===2){  
+
+        if(isNaN(unit)){
+          setDistricts([]);
+        } else {
+          setDistricts(response.payload[0]); 
+        } 
+          setWards([]);
+          setVillages([]);
+        }
+
+      if(option ===3){
+        if(isNaN(unit)){
+          setWards([]);
+        } else {
+          setWards(response.payload[0]); 
+        } 
+        setVillages([]);
+      }
+      if(option ===4){   
+        if(isNaN(unit)){
+          setVillages([]);
+        } else {
+          setVillages(response.payload[0]); 
+        }     
+       
+      }
+      
+    });
+  };
 
   useEffect(() => {   
     let mounted_lookup = true;
+    let mounted_countries = true;
+
+    (async  (endpoint) => {     
+      await  getCountries(endpoint)
+      .then(response => {                        
+        if (mounted_countries) {            
+          setCountries(response.payload);                 
+        }
+      });
+    })(endpoint_countries); 
+    
     (async  (endpoint,id) => {     
         await  getLookups(endpoint,id)
         .then(response => {       
@@ -54,22 +122,39 @@ const DetailsEdit = props => {
       })(endpoint_lookup,'82');
       
     return () => {
-      mounted_lookup = false;     
+      mounted_lookup = false;
+      mounted_countries  = false;    
     };
   }, []);   
 
-
-  if (!exitTypes) {
+  if (!exitTypes || !countries) {
     return null;
   }
+
+ 
 
     const handleChange = event => {
     event.persist();
     setValues({
       ...values,
-      [event.target.name]:event.target.type === 'checkbox' ? event.target.checked: event.target.value  
-          
+      [event.target.name]:event.target.type === 'checkbox' ? event.target.checked: event.target.value
     });
+
+    if (event.target.name === 'new_country'){
+      adminUnits(endpoint_admin_units,parseInt(event.target.value),1);
+    }  
+    
+    if (event.target.name === 'new_region'){     
+      adminUnits(endpoint_admin_units,parseInt(event.target.value),2);      
+    } 
+
+    if (event.target.name === 'new_district'){     
+      adminUnits(endpoint_admin_units,parseInt(event.target.value),3);      
+    } 
+
+    if (event.target.name === 'new_ward'){     
+      adminUnits(endpoint_admin_units,parseInt(event.target.value),4);      
+    } 
   };
 
 
@@ -96,13 +181,18 @@ const DetailsEdit = props => {
     setopenSnackbarError(false);
   };
 
+  let showNewFarmerLocationFields = 
+  (isNaN(parseInt(values.disposal_reason))|| parseInt(values.disposal_reason) === 1 || parseInt(values.disposal_reason) === 3 ||   parseInt(values.disposal_reason) === 4 ||
+  parseInt(values.disposal_reason) === 5 ||   parseInt(values.disposal_reason) === 7 ||
+  parseInt(values.disposal_reason) === 8 ||   parseInt(values.disposal_reason) === 9 ||
+  parseInt(values.disposal_reason) === 10 ) ? false : true;
+
   return (
     <Card
       {...rest}
       className={clsx(classes.root, className)}
     >
-      
-        <CardHeader title="New Exit/Disposal Details" />
+      <CardHeader  title= {`EXIT/DISPOSAL - ${animal_name}(${animal_tag})`} />
         <Divider />
         <CardContent> 
           <Grid container spacing={1} justify="center">  
@@ -124,6 +214,9 @@ const DetailsEdit = props => {
                       InputLabelProps={{
                         shrink: true,
                       }}
+                      inputProps={{                        
+                        max: moment(new Date()).format('YYYY-MM-DD')                 
+                      }} 
                       required
                       margin = 'dense'
                       label = "Exit / Disposal Date"
@@ -166,25 +259,28 @@ const DetailsEdit = props => {
                   </TextField>
                 </Grid>
 
-                <Grid
-                    item
-                    md={3}
-                    xs={12}
-                  >
-                  <TextField
-                    fullWidth
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-                    margin = 'dense'
-                    label="Other Exit Reason"
-                    name="disposal_reason_other"                
-                    onChange={handleChange}
-                    variant="outlined"  
-                    
-                />
-              </Grid>
+                {  parseInt(values.disposal_reason) === -66  ? 
+                  <Grid
+                      item
+                      md={3}
+                      xs={12}
+                    >
+                    <TextField
+                      fullWidth
+                      InputLabelProps={{
+                        shrink: true,
+                      }}
+                      margin = 'dense'
+                      label="Other Exit Reason"
+                      name="disposal_reason_other"                
+                      onChange={handleChange}
+                      variant="outlined" 
+                      />
+                    </Grid>
+                    : null 
+                }
 
+              {  parseInt(values.disposal_reason) === -66  || parseInt(values.disposal_reason) ===1 || parseInt(values.disposal_reason) ===2  || parseInt(values.disposal_reason) ===6? 
                 <Grid
                     item
                     md={3}
@@ -204,7 +300,9 @@ const DetailsEdit = props => {
                     
                 />
               </Grid> 
-
+              : null
+              }
+              { showNewFarmerLocationFields ? 
                <Grid
                   item
                   md={3}
@@ -223,7 +321,10 @@ const DetailsEdit = props => {
                     variant="outlined"                                                 
                   />
                 </Grid>
+                : null
+              }
 
+              { showNewFarmerLocationFields ?
                 <Grid
                   item
                   md={3}
@@ -242,7 +343,10 @@ const DetailsEdit = props => {
                     variant="outlined"                                                 
                   />
                 </Grid>
+                : null
+              }
 
+              { showNewFarmerLocationFields ?
                 <Grid
                   item
                   md={3}
@@ -261,6 +365,9 @@ const DetailsEdit = props => {
                     variant="outlined"                                                 
                   />
                 </Grid>
+                : null
+              }
+              { showNewFarmerLocationFields ?
 
                 <Grid
                   item
@@ -280,7 +387,9 @@ const DetailsEdit = props => {
                     variant="outlined"                                                 
                   />
                 </Grid>
+                : null    }
 
+                { showNewFarmerLocationFields ?
                 <Grid
                   item
                   md={3}
@@ -296,9 +405,24 @@ const DetailsEdit = props => {
                     label="New Country"
                     name="new_country"                                   
                     onChange={handleChange}                   
-                    variant="outlined"                                                 
-                  />
+                    variant="outlined"  
+                    select                    
+                    SelectProps={{ native: true }} 
+                  >
+                    <option value=""></option>
+                    {countries.map(country => (
+                          <option                    
+                            value={country.id}
+                          >
+                            {country.name}
+                          </option>
+                        ))
+                    }           
+                  </TextField>
                 </Grid>
+                 : null    }
+
+                { showNewFarmerLocationFields ?
                 <Grid
                   item
                   md={3}
@@ -314,9 +438,23 @@ const DetailsEdit = props => {
                     label="New Region"
                     name="new_region"                                   
                     onChange={handleChange}                   
-                    variant="outlined"                                                 
-                  />
+                    variant="outlined" 
+                    select                    
+                    SelectProps={{ native: true }} 
+                  >
+                    <option value=""></option>
+                    {regions.map(region => (
+                          <option                    
+                            value={region.id}
+                          >
+                            {region.name}
+                          </option>
+                        ))
+                    }           
+                  </TextField>
                 </Grid>
+                : null    }
+                { showNewFarmerLocationFields ?
                 <Grid
                   item
                   md={3}
@@ -332,10 +470,56 @@ const DetailsEdit = props => {
                     label="New District"
                     name="new_district"                                   
                     onChange={handleChange}                   
-                    variant="outlined"                                                 
-                  />
-                </Grid>                
-              
+                    variant="outlined" 
+                    select                    
+                    SelectProps={{ native: true }} 
+                  >
+                    <option value=""></option>
+                    {districts.map(district => (
+                          <option                    
+                            value={district.id}
+                          >
+                            {district.name}
+                          </option>
+                        ))
+                    }           
+                  </TextField>
+                </Grid>    
+                 : null    } 
+
+                 { showNewFarmerLocationFields ? 
+                <Grid
+                    item
+                    md={3}
+                    xs={12}
+                  >
+                  <TextField
+                    fullWidth
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                    margin = 'dense'
+                    label="New Ward"
+                    name="new_ward"                
+                    onChange={handleChange}
+                    variant="outlined" 
+                    select                    
+                    SelectProps={{ native: true }} 
+                  >
+                    <option value=""></option>
+                    {wards.map(ward => (
+                          <option                    
+                            value={ward.id}
+                          >
+                            {ward.name}
+                          </option>
+                        ))
+                    }           
+                  </TextField>
+              </Grid>
+                : null    }  
+
+                 { showNewFarmerLocationFields ? 
                 <Grid
                     item
                     md={3}
@@ -350,30 +534,22 @@ const DetailsEdit = props => {
                     label="New Village"
                     name="new_village"                
                     onChange={handleChange}
-                    variant="outlined"  
-                   
-                />
-              </Grid>
-
-                  <Grid
-                    item
-                    md={3}
-                    xs={12}
+                    variant="outlined"
+                    select                    
+                    SelectProps={{ native: true }} 
                   >
-                  <TextField
-                    fullWidth
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-                    margin = 'dense'
-                    label="Field Agent"
-                    name="field_agent_id"                
-                    onChange={handleChange}
-                    variant="outlined"  
-                    
-                />
+                    <option value=""></option>
+                    {villages.map(village => (
+                          <option                    
+                            value={village.id}
+                          >
+                            {village.name}
+                          </option>
+                        ))
+                    }           
+                  </TextField>
               </Grid>
-            
+                : null    }
               </Grid>
           </CardContent>
           <Divider />

@@ -28,9 +28,11 @@ export const endpoint_countries = {
   headers: headers   
 };  
 
-//counties
-export const endpoint_counties = {
-  url: `${api}/admin-units/country/`,
+  
+
+//get admin units
+export const endpoint_admin_units = {
+  url: `${api}/admin-units/`,
   method: 'GET',
   headers: headers   
 };  

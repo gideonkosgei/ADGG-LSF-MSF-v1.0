@@ -71,10 +71,10 @@ export const getCountries =  function (config) {
 });       
 }
 
-// get counties
-export const getCounties =  function (config,country_id) {   
+// get admin units
+export const getAdminUnits =  function (config,unit,option) {   
   const options = {
-    url:`${config.url}${country_id}`,
+    url:`${config.url}${unit}/${option}`,
     method: config.method,
     headers: config.headers    
   }  
@@ -88,55 +88,7 @@ export const getCounties =  function (config,country_id) {
 }
 
 
-// get sub counties
-export const getSubCounties =  function (config,country_id,county_id) {   
-  const options = {
-    url:`${config.url}${country_id}/county/${county_id}`,  
-    method: config.method,
-    headers: config.headers    
-  }  
-  return new Promise((resolve, reject) => {
-    axios(options)
-    .then(res => {        
-        resolve(res.data);
-    })
-    .catch(err => reject(err));
-});       
-}
 
-
-// get wards
-export const getWards =  function (config,country_id,county_id,sub_county_id) {   
-  const options = {
-    url:`${config.url}${country_id}/county/${county_id}/sub-county/${sub_county_id}`,  
-    method: config.method,
-    headers: config.headers    
-  }  
-  return new Promise((resolve, reject) => {
-    axios(options)
-    .then(res => {        
-        resolve(res.data);
-    })
-    .catch(err => reject(err));
-});       
-}
-
-
-// get villages
-export const getVillages =  function (config,country_id,county_id,sub_county_id,ward_id) {   
-  const options = {
-    url:`${config.url}${country_id}/county/${county_id}/sub-county/${sub_county_id}/ward/${ward_id}`,  
-    method: config.method,
-    headers: config.headers    
-  }  
-  return new Promise((resolve, reject) => {
-    axios(options)
-    .then(res => {        
-        resolve(res.data);
-    })
-    .catch(err => reject(err));
-});       
-}
 
 // get clients
 export const getClients =  function (config,organisation_id) {   
@@ -1136,11 +1088,10 @@ export const putAgents =  function (config,values,user_id,record_id) {
 // add new exit event
 export const postExit =  function (config,animal_id,values,user_id) {  
 
-  let {disposal_amount,disposal_reason,disposal_reason_other,exit_date,field_agent_id,new_breeder_name,new_breeder_phone_no,new_country,new_district,new_farmer_name,new_farmer_phone_no,new_region,new_village} = values;
+  let {disposal_amount,disposal_reason,disposal_reason_other,exit_date,new_breeder_name,new_breeder_phone_no,new_country,new_district,new_farmer_name,new_farmer_phone_no,new_region,new_village} = values;
   
   disposal_amount = (typeof disposal_amount === 'undefined')? '0':disposal_amount.replace('','0');  
-  disposal_reason = (typeof disposal_reason === 'undefined')? '0':disposal_reason.replace('','0');
-  field_agent_id = (typeof field_agent_id === 'undefined')? '0':field_agent_id.replace('','0');
+  disposal_reason = (typeof disposal_reason === 'undefined')? '0':disposal_reason.replace('','0'); 
   disposal_reason_other = (typeof disposal_reason_other === 'undefined')? '':disposal_reason_other;
   new_breeder_name = (typeof new_breeder_name === 'undefined')? '':new_breeder_name;
   new_breeder_phone_no = (typeof new_breeder_phone_no === 'undefined')? '':new_breeder_phone_no;
@@ -1166,7 +1117,7 @@ export const postExit =  function (config,animal_id,values,user_id) {
         "new_farmer_phone_number": new_farmer_phone_no,
         "new_region": new_region,
         "new_village": new_village,
-        "field_agent_id": field_agent_id,
+        "field_agent_id": null,
         "created_by": user_id
   };
  
