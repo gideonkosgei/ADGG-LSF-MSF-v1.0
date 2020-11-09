@@ -1088,7 +1088,7 @@ export const putAgents =  function (config,values,user_id,record_id) {
 // add new exit event
 export const postExit =  function (config,animal_id,values,user_id) {  
 
-  let {disposal_amount,disposal_reason,disposal_reason_other,exit_date,new_breeder_name,new_breeder_phone_no,new_country,new_district,new_farmer_name,new_farmer_phone_no,new_region,new_village} = values;
+  let {disposal_amount,disposal_reason,disposal_reason_other,exit_date,new_breeder_name,new_breeder_phone_no,new_country,new_district,new_farmer_name,new_farmer_phone_no,new_region,new_ward,new_village} = values;
   
   disposal_amount = (typeof disposal_amount === 'undefined')? '0':disposal_amount.replace('','0');  
   disposal_reason = (typeof disposal_reason === 'undefined')? '0':disposal_reason.replace('','0'); 
@@ -1100,6 +1100,7 @@ export const postExit =  function (config,animal_id,values,user_id) {
   new_country = (typeof new_country === 'undefined')? '0':new_country.replace('','0');
   new_district = (typeof new_district === 'undefined')? '0':new_district.replace('','0');
   new_region = (typeof new_region === 'undefined')? '0':new_region.replace('','0');
+  new_ward = (typeof new_ward === 'undefined')? '0':new_ward.replace('','0');
   new_village = (typeof new_village === 'undefined')? '0':new_village.replace('','0');
   exit_date = (typeof exit_date === 'undefined')? moment(new Date()).format('YYYY-MM-DD'):exit_date;   
 
@@ -1116,6 +1117,7 @@ export const postExit =  function (config,animal_id,values,user_id) {
         "new_farmer_name":new_farmer_name,
         "new_farmer_phone_number": new_farmer_phone_no,
         "new_region": new_region,
+        "new_ward": new_ward,
         "new_village": new_village,
         "field_agent_id": null,
         "created_by": user_id

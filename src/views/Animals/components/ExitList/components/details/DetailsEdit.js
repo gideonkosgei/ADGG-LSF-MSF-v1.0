@@ -89,7 +89,7 @@ const DetailsEdit = props => {
       {...rest}
       className={clsx(classes.root, className)}
     >         
-        <CardHeader title = {`Exit / Disposal Record Details  #${values.animal_id}`} />
+        <CardHeader title = {`Exit / Disposal Record Details`} />
         <Divider />
         <CardContent> 
           <Grid container spacing={1} justify="center">            
@@ -473,16 +473,14 @@ const DetailsEdit = props => {
                       disabled: Boolean(readOnly)                
                     }}
                     margin = 'dense'
-                    label="New Village"
-                    name="new_village"                
-                    
+                    label="New Ward"
+                    name="new_ward" 
                     variant="outlined"  
-                    value = {values.new_village}
-                   
+                    value = {values.new_ward}
                 />
               </Grid>
 
-                  <Grid
+                <Grid
                     item
                     md={3}
                     xs={12}
@@ -497,15 +495,16 @@ const DetailsEdit = props => {
                       disabled: Boolean(readOnly)                
                     }}
                     margin = 'dense'
-                    label="Field Agent"
-                    name="field_agent_id"                
+                    label="New Village"
+                    name="new_village"                
                     
-                    variant="outlined" 
-                    value = {values.field_agent_id} 
-                    
+                    variant="outlined"  
+                    value = {values.new_village}
+                   
                 />
               </Grid>
-            
+
+               
               </Grid>
           </CardContent>
           <Divider />
