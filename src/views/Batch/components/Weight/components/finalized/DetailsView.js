@@ -9,11 +9,6 @@ import {Sidebar} from '../sidebar';
 import MUIDataTable from "mui-datatables";
 import {MuiThemeProvider } from '@material-ui/core/styles';
 import PerfectScrollbar from 'react-perfect-scrollbar';
-import CustomToolbar from "./CustomToolbar";
-
-
-
-
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -81,12 +76,7 @@ const DetailsView = props => {
        padding: "none" ,         
        size: "small",
      };
-   },
-   customToolbar: () => {
-    return (
-      <CustomToolbar />
-    );
-  }  
+   }
   };
 
   return (
@@ -94,7 +84,7 @@ const DetailsView = props => {
       {...rest}
       className={clsx(classes.root, className)}
     >
-        <CardHeader title= "POSTED MILK RECORDS"/>
+        <CardHeader title= "POSTED WEIGHT & GROWTH RECORDS"/>
         <Divider />
         <CardContent> 
           <Grid container spacing={1} justify="center">            
@@ -109,7 +99,7 @@ const DetailsView = props => {
                     <div className={classes.inner}>
                       <MuiThemeProvider>                
                         <MUIDataTable
-                          title = "POSTED MILK RECORDS"
+                          title = "POSTED WEIGHT & GROWTH RECORDS"
                           data={values}
                           columns={columns}
                           options={options}

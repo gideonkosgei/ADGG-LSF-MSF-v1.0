@@ -2,9 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import { Card,CardContent, colors } from '@material-ui/core';
-
 import { Page } from 'components';
-import {default as HomeDetails} from './HomeDetails';
+import {default as DetailsView} from './DetailsView';
+
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -22,27 +22,27 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const Home = props => { 
-  const classes = useStyles();
-  localStorage.setItem('paramater_limit_id', parseInt(props.match.params.id));
- 
+const Edit = props => { 
+  const classes = useStyles(); 
+  const uuid = props.match.params.uuid; 
   return (
     <Page
       className={classes.root}
-      title="Batch Processes"
+      title="weight template"
     >
     <Card>
-        <CardContent>            
-            <HomeDetails/>
+        <CardContent> 
+            <DetailsView uuid = {uuid}/>
         </CardContent>
-    </Card>     
+    </Card>
+     
    </Page>
   );
 };
 
-Home.propTypes = {
+Edit.propTypes = {
   history: PropTypes.object.isRequired,
   match: PropTypes.object.isRequired
 };
 
-export default Home;
+export default Edit;

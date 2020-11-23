@@ -572,6 +572,70 @@ const routes = [
         exact: true,
         component: lazy(() => import('views/Batch/components/Milking/components/view'))        
       },  
+
+      /*
+        Weight & Growth Batch Processes
+      */
+
+      {
+        path: '/batch-process/weight/home',
+        exact: true,
+        component: lazy(() => import('views/Batch/components/Weight/components/home'))        
+      },  
+
+       // Add New Batch processes Routes
+       {
+        path: '/batch-process/weight/add',
+        exact: true,
+        component: lazy(() => import('views/Batch/components/Weight/components/add'))        
+      }, 
+      // Deleted  batches
+      {
+        path: '/batch-process/weight/deleted',
+        exact: true,
+        component: lazy(() => import('views/Batch/components/Weight/components/deleted'))        
+      }, 
+      //Posted Batches
+      {
+        path: '/batch-process/weight/posted',
+        exact: true,
+        component: lazy(() => import('views/Batch/components/Weight/components/posted'))        
+      }, 
+      {
+        path: '/batch-process/weight/finalized/:uuid',
+        exact: true,
+        component: lazy(() => import('views/Batch/components/Weight/components/finalized'))        
+      },
+
+      // weight template
+      {
+        path: '/batch-process/weight/template',
+        exact: true,
+        component: lazy(() => import('views/Batch/components/Weight/components/weight_list'))        
+      }, 
+       // Batch processes Routes
+       {
+        path: '/batch-process/weight/home',
+        exact: true,
+        component: lazy(() => import('views/Batch'))        
+      },  
+       // Batch processes - view processing queue
+       {
+        path: '/batch-process/weight/stage/:step',
+        exact: true,
+        component: lazy(() => import('views/Batch/components/Weight/components/view'))        
+      },  
+      // Batch processes Routes subsequent Steps
+      {
+        path: '/batch-process/weight/add/:uuid',
+        exact: true,
+        component: lazy(() => import('views/Batch/components/Weight/components/add'))        
+      },
+
+
+
+
+
        
       
       {

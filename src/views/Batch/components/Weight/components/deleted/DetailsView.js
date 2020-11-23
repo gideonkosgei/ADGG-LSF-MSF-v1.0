@@ -9,7 +9,6 @@ import {Sidebar} from '../sidebar';
 import MUIDataTable from "mui-datatables";
 import {MuiThemeProvider } from '@material-ui/core/styles';
 import PerfectScrollbar from 'react-perfect-scrollbar';
-import CustomToolbar from "./CustomToolbar";
 import { Link as RouterLink } from 'react-router-dom';
 import OpenInNewIcon from '@material-ui/icons/OpenInNew';
 import authContext from '../../../../../../contexts/AuthContext'
@@ -43,8 +42,7 @@ const DetailsView = props => {
     let mounted = true;
       (async  (endpoint,org_id,user_id) => {     
         await  getBatchMilkingDiscarded(endpoint,org_id,user_id)
-        .then(response => {
-          console.log(response);                        
+        .then(response => {                                  
           if (mounted) {                       
             setValues(response.payload);                 
           }
@@ -81,7 +79,7 @@ const DetailsView = props => {
         return (
           <Link
               component={RouterLink}
-              to = {`/batch-process/milking-records/add/${tableMeta.rowData[0]}`}              
+              to = {`/batch-process/weight/add/${tableMeta.rowData[0]}`}              
           >
             <OpenInNewIcon/>
           </Link>
@@ -106,12 +104,7 @@ const DetailsView = props => {
        padding: "none" ,         
        size: "small",
      };
-   },
-   customToolbar: () => {
-    return (
-      <CustomToolbar />
-    );
-  }  
+   }
   };
 
   return (

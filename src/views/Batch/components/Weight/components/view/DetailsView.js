@@ -3,13 +3,12 @@ import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import {Card, CardContent, CardHeader, Grid,Divider,colors,Link } from '@material-ui/core';
-import {getBatchMilkingDiscarded}   from '../../../../../../utils/API';
-import {endpoint_batch_milk_discarded_records} from '../../../../../../configs/endpoints';
+import {getBatchMilkingUnprocessed}   from '../../../../../../utils/API';
+import {endpoint_batch_milk_validation_un_processed_view} from '../../../../../../configs/endpoints';
 import {Sidebar} from '../sidebar';
 import MUIDataTable from "mui-datatables";
 import {MuiThemeProvider } from '@material-ui/core/styles';
 import PerfectScrollbar from 'react-perfect-scrollbar';
-import CustomToolbar from "./CustomToolbar";
 import { Link as RouterLink } from 'react-router-dom';
 import OpenInNewIcon from '@material-ui/icons/OpenInNew';
 import authContext from '../../../../../../contexts/AuthContext'
@@ -33,23 +32,18 @@ const DetailsView = props => {
   const [values, setValues] = useState([]);  
   const [ {organization_id} ] = useContext(authContext);
   const [ {user_id} ] = useContext(authContext);
-
   
   localStorage.removeItem('batch_upload_uuid');
-
-
-
   useEffect(() => {     
     let mounted = true;
-      (async  (endpoint,org_id,user_id) => {     
-        await  getBatchMilkingDiscarded(endpoint,org_id,user_id)
-        .then(response => {
-          console.log(response);                        
+      (async  (endpoint,org_id,step,user_id) => {     
+        await  getBatchMilkingUnprocessed(endpoint,org_id,step,user_id)
+        .then(response => {                        
           if (mounted) {                       
             setValues(response.payload);                 
           }
         });
-      })(endpoint_batch_milk_discarded_records,organization_id,user_id); 
+      })(endpoint_batch_milk_validation_un_processed_view,organization_id,step,user_id); 
       
     return () => {
       mounted = false;
@@ -60,6 +54,8 @@ const DetailsView = props => {
   if (!values) {
     return null;
   }
+
+
 
 
     const columns = [
@@ -81,7 +77,7 @@ const DetailsView = props => {
         return (
           <Link
               component={RouterLink}
-              to = {`/batch-process/milking-records/add/${tableMeta.rowData[0]}`}              
+              to = {`/batch-process/weight/add/${tableMeta.rowData[0]}`}              
           >
             <OpenInNewIcon/>
           </Link>
@@ -106,12 +102,7 @@ const DetailsView = props => {
        padding: "none" ,         
        size: "small",
      };
-   },
-   customToolbar: () => {
-    return (
-      <CustomToolbar />
-    );
-  }  
+   }
   };
 
   return (
@@ -119,7 +110,7 @@ const DetailsView = props => {
       {...rest}
       className={clsx(classes.root, className)}
     >
-        <CardHeader title= "Batch processes - Milking"/>
+        <CardHeader title= "Batch processes - Weight & Growth"/>
         <Divider />
         <CardContent> 
           <Grid container spacing={1} justify="center">            
@@ -134,7 +125,7 @@ const DetailsView = props => {
                     <div className={classes.inner}>
                       <MuiThemeProvider>                
                         <MUIDataTable
-                          title = "BATCH LISTING - DISCARDED BATCHES"
+                          title = "BATCH LISTING - UNFINALIZED"
                           data={values}
                           columns={columns}
                           options={options}

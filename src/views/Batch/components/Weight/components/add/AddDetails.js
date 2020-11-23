@@ -77,7 +77,7 @@ const AddDetails = props => {
       {...rest}
       className={clsx(classes.root, className)}
     >
-        <CardHeader title="Batch Processes - Milking" />
+        <CardHeader title="BATCH PROCESSES - WEIGHT & GROWTH" />
         <Divider />
         <CardContent> 
           <Grid container spacing={1} justify="center">            

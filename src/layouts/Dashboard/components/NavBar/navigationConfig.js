@@ -95,9 +95,37 @@ export default [
         icon: ListAltIcon, 
         children: [
           {
+            title: 'Animal Reg Batch',
+            href: '/batch-process/milking-records/home',                     
+          },
+          {
             title: 'Milking Batch',
             href: '/batch-process/milking-records/home',                     
-          }
+          },
+          {
+            title: 'Weight & Growth Batch',
+            href: '/batch-process/weight/home',                     
+          },
+          {
+            title: 'PD Batch',
+            href: '/batch-process/milking-records/home',                     
+          },
+          {
+            title: 'Insemination Batch',
+            href: '/batch-process/milking-records/home',                     
+          },
+          {
+            title: 'Exit/Disposal Batch',
+            href: '/batch-process/milking-records/home',                     
+          },
+          {
+            title: 'Synchronization Batch',
+            href: '/batch-process/milking-records/home',                     
+          },
+          {
+            title: 'Calving Batch',
+            href: '/batch-process/milking-records/home',                     
+          },
         ]     
       },
      

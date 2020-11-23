@@ -5,7 +5,7 @@ import { makeStyles } from '@material-ui/styles';
 import {Card, CardContent, CardHeader, Grid,Divider,colors,Link } from '@material-ui/core';
 import {getBatchMilkingPosted}   from '../../../../../../utils/API';
 import {endpoint_batch_milk_posted_records} from '../../../../../../configs/endpoints';
-import {Sidebar} from '../../../sidebar';
+import {Sidebar} from '../sidebar';
 import MUIDataTable from "mui-datatables";
 import {MuiThemeProvider } from '@material-ui/core/styles';
 import PerfectScrollbar from 'react-perfect-scrollbar';

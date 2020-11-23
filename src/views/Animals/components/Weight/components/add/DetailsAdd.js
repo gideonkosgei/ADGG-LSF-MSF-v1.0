@@ -98,6 +98,17 @@ const DetailsEdit = props => {
     mature_heart_girth_limits_max_value = mature_heart_girth_limits[0].max_value;    
   }
 
+  //validate heart Girth
+  let mature_body_length_limits = limitParameters.filter(obj=>obj.category==='mature_body_length_limits');
+  let mature_body_length_limits_status = false;
+  let mature_body_length_limits_min_value = 0;
+  let mature_body_length_limits_max_value = 0;
+  if(mature_body_length_limits.length > 0){
+    mature_body_length_limits_status = mature_body_length_limits[0].is_active_id;  
+    mature_body_length_limits_min_value = mature_body_length_limits[0].min_value;
+    mature_body_length_limits_max_value = mature_body_length_limits[0].max_value;    
+  }
+
     const handleChange = event => {
     event.persist();
     setValues({
@@ -188,11 +199,12 @@ const DetailsEdit = props => {
                       shrink: true,
                     }}
 
-                    inputProps={{                                           
-                      min: 0,
-                      max: 1000,
+                    
+                    inputProps={{                        
+                      min: (mature_body_length_limits_status)? mature_body_length_limits_min_value : "any",
+                      max: (mature_body_length_limits_status)? mature_body_length_limits_max_value : "any",
                       step: "any"               
-                    }}  
+                    }}
                     
                     //required
                     margin = 'dense'
