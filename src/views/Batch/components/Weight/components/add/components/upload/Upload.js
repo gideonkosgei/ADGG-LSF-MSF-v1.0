@@ -6,7 +6,7 @@ import { makeStyles} from '@material-ui/styles';
 import {Card, CardContent,Grid,Divider,Button,CardActions,Input} from '@material-ui/core';
 import authContext from '../../../../../../../../contexts/AuthContext';
 import {postBatchUploadMilking}   from '../../../../../../../../utils/API';
-import {endpoint_batch_milking_upload} from '../../../../../../../../configs/endpoints';
+import {endpoint_batch_weight_upload} from '../../../../../../../../configs/endpoints';
 import './style/app.css';
 import SuccessSnackbar from '../../../../../../../../components/SuccessSnackbar';
 import ErrorSnackbar from '../../../../../../../../components/ErrorSnackbar';
@@ -83,7 +83,6 @@ const Upload = props => {
   const openFileBrowser = () => {
     fileInput.current.click();
   } 
-
   const handleSubmit = event => {
     const batch_uuid = uuid();
     localStorage.setItem("batch_upload_uuid", batch_uuid);
@@ -94,13 +93,13 @@ const Upload = props => {
         setopenSnackbarSuccess(true);
         var delayInMilliseconds = 1000; //1 second        
         setTimeout(function() {
-          window.location.replace(`/batch-process/milking-records/add/${batch_uuid}`);
+          window.location.replace(`/batch-process/weight/add/${batch_uuid}`);
         }, delayInMilliseconds);
         document.forms["event"].reset();
       }).catch((err) => {        
         setopenSnackbarError(true); 
       });
-    })(endpoint_batch_milking_upload,rows,cols,user_id,organization_id,batch_uuid);    
+    })(endpoint_batch_weight_upload,rows,cols,user_id,organization_id,batch_uuid);    
   };
 
   const handleSnackbarSuccessClose = () => {

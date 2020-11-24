@@ -2124,6 +2124,8 @@ export const postBatchUploadMilking =  function (config,rows,cols,user_id,org_id
     data: body  
   };
 
+  console.log(options);
+
 return new Promise((resolve, reject) => {
   axios(options)
   .then(res => {           

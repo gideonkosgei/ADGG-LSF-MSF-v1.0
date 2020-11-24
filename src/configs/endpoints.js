@@ -409,6 +409,13 @@ export const endpoint_batch_milking_upload = {
   headers: headers   
 };
 
+//upload Batch weight & growth Records
+export const endpoint_batch_weight_upload = {
+  url: `${api}/batches/weight/upload`,
+  method: 'POST',
+  headers: headers   
+};
+
 
 // view milking batched on validation queue
 export const endpoint_batch_milk_validation_view = {
