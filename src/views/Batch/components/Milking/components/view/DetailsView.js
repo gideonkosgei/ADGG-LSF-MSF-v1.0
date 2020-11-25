@@ -3,8 +3,8 @@ import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import {Card, CardContent, CardHeader, Grid,Divider,colors,Link } from '@material-ui/core';
-import {getBatchMilkingUnprocessed}   from '../../../../../../utils/API';
-import {endpoint_batch_milk_validation_un_processed_view} from '../../../../../../configs/endpoints';
+import {getBatchUnprocessed}   from '../../../../../../utils/API';
+import {endpoint_batch_validation_un_processed_view} from '../../../../../../configs/endpoints';
 import {Sidebar} from '../sidebar';
 import MUIDataTable from "mui-datatables";
 import {MuiThemeProvider } from '@material-ui/core/styles';
@@ -37,14 +37,14 @@ const DetailsView = props => {
   localStorage.removeItem('batch_upload_uuid');
   useEffect(() => {     
     let mounted = true;
-      (async  (endpoint,org_id,step,user_id) => {     
-        await  getBatchMilkingUnprocessed(endpoint,org_id,step,user_id)
+      (async  (endpoint,type,org_id,step,user_id) => {     
+        await  getBatchUnprocessed(endpoint,type,org_id,step,user_id)
         .then(response => {                        
           if (mounted) {                       
             setValues(response.payload);                 
           }
         });
-      })(endpoint_batch_milk_validation_un_processed_view,organization_id,step,user_id); 
+      })(endpoint_batch_validation_un_processed_view,1,organization_id,step,user_id); 
       
     return () => {
       mounted = false;

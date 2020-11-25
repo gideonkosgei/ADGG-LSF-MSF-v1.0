@@ -424,15 +424,22 @@ export const endpoint_batch_milk_validation_view = {
   headers: headers   
 };
 
-export const endpoint_batch_milk_validation_un_processed_view= {
-  url: `${api}/batches/milking/`,
+// view weight batched on validation queue
+export const endpoint_batch_weight_validation_view = {
+  url: `${api}/batches/weight/validation/`,
   method: 'GET',
   headers: headers   
 };
 
-//deleted milking batches
-export const endpoint_batch_milk_discarded_records= {
-  url: `${api}/batches/deleted/milking/`,
+export const endpoint_batch_validation_un_processed_view= {
+  url: `${api}/batches/view/`,
+  method: 'GET',
+  headers: headers   
+};
+
+//deleted  batches
+export const endpoint_batch_discarded_records= {
+  url: `${api}/batches/deleted/`,
   method: 'GET',
   headers: headers   
 };

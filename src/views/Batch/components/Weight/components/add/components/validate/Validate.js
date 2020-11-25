@@ -3,8 +3,8 @@ import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import {Card, CardContent,Grid,colors,CardActions,Box,Button } from '@material-ui/core';
-import {getBatchMilkingUnprocessed,batchProcessMilkingActions}   from '../../../../../../../../utils/API';
-import {endpoint_batch_milk_validation_un_processed_view,endpoint_batch_milk_actions} from '../../../../../../../../configs/endpoints';
+import {getBatchUnprocessed,batchProcessMilkingActions}   from '../../../../../../../../utils/API';
+import {endpoint_batch_validation_un_processed_view,endpoint_batch_milk_actions} from '../../../../../../../../configs/endpoints';
 
 import MUIDataTable from "mui-datatables";
 import {MuiThemeProvider } from '@material-ui/core/styles';
@@ -47,14 +47,14 @@ const Validate = props => {
 
   useEffect(() => {     
     let mounted = true;
-      (async  (endpoint,org_id,step,user_id) => {     
-        await  getBatchMilkingUnprocessed(endpoint,org_id,step,user_id)
+      (async  (endpoint,type,org_id,step,user_id) => {     
+        await  getBatchUnprocessed(endpoint,type,org_id,step,user_id)
         .then(response => {                        
           if (mounted) {                       
             setValues(response.payload);
           }
         });
-      })(endpoint_batch_milk_validation_un_processed_view,organization_id,step,user_id); 
+      })(endpoint_batch_validation_un_processed_view,2,organization_id,step,user_id); 
       
     return () => {
       mounted = false;
@@ -136,16 +136,16 @@ const Validate = props => {
   const handleErrorLogClose = () => {
     setErrorLog(false);
   };
- 
 
     const columns = [      
     { name: "record_id",label: "record_id",options: {filter: false,sort: false,display:false}},
     { name: "uuid",label: "uuid",options: {filter: false,sort: false,display:false}},
     { name: "animal_id",label: "Animal ID",options: {filter: true,sort: true, display:true}},
-    { name: "milk_date",label: "Milk Date",options: {filter: true,sort: true, display:true}},
-    { name: "amount_morning",label: "Morning(ltrs)",options: {filter: true,sort: true, display:true}},
-    { name: "amount_noon",label: "Noon(ltrs)",options: {filter: true,sort: true, display:true}},
-    { name: "amount_afternoon",label: "Afternoon(ltrs)",options: {filter: true,sort: true, display:true}},
+    { name: "weight_date",label: "Weight Date",options: {filter: true,sort: true, display:true}},
+    { name: "body_length",label: "Body Length",options: {filter: true,sort: true, display:true}},
+    { name: "heart_girth",label: "Heart Girth",options: {filter: true,sort: true, display:true}},
+    { name: "body_weight",label: "Body Weight",options: {filter: true,sort: true, display:true}},
+    { name: "body_score",label: "Body Score",options: {filter: true,sort: true, display:true}},
     { name: "record_status",label: "Status",options: {filter: true,sort: true, display:true}},      
     { name: "",
       options: {

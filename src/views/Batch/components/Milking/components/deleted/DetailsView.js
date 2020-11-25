@@ -3,8 +3,8 @@ import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import {Card, CardContent, CardHeader, Grid,Divider,colors,Link } from '@material-ui/core';
-import {getBatchMilkingDiscarded}   from '../../../../../../utils/API';
-import {endpoint_batch_milk_discarded_records} from '../../../../../../configs/endpoints';
+import {getBatchDiscarded}   from '../../../../../../utils/API';
+import {endpoint_batch_discarded_records} from '../../../../../../configs/endpoints';
 import {Sidebar} from '../sidebar';
 import MUIDataTable from "mui-datatables";
 import {MuiThemeProvider } from '@material-ui/core/styles';
@@ -41,15 +41,14 @@ const DetailsView = props => {
 
   useEffect(() => {     
     let mounted = true;
-      (async  (endpoint,org_id,user_id) => {     
-        await  getBatchMilkingDiscarded(endpoint,org_id,user_id)
-        .then(response => {
-          console.log(response);                        
+      (async  (endpoint,type,org_id,user_id) => {     
+        await  getBatchDiscarded(endpoint,type,org_id,user_id)
+        .then(response => {    
           if (mounted) {                       
             setValues(response.payload);                 
           }
         });
-      })(endpoint_batch_milk_discarded_records,organization_id,user_id); 
+      })(endpoint_batch_discarded_records,1,organization_id,user_id); 
       
     return () => {
       mounted = false;

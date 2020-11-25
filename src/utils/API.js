@@ -2144,9 +2144,23 @@ export const getBatchMilkingValidation =  function (config,uuid) {
     method: config.method,
     headers: config.headers  
   } 
+  return new Promise((resolve, reject) => {
+    axios(options)
+    .then(res => {             
+        resolve(res.data);
+    })
+    .catch(err => reject(err));
+  });       
+};
 
 
-
+// view milking batched on validation queue
+export const getBatchWeightValidation =  function (config,uuid) {   
+  const options = {
+    url:`${config.url}${uuid}`,
+    method: config.method,
+    headers: config.headers  
+  } 
   return new Promise((resolve, reject) => {
     axios(options)
     .then(res => {             
@@ -2158,14 +2172,14 @@ export const getBatchMilkingValidation =  function (config,uuid) {
 
 
 
+
 // view milking batched on un-processed validation queue
-export const getBatchMilkingUnprocessed =  function (config,org_id,step,user_id) {   
+export const getBatchUnprocessed =  function (config,type,org_id,step,user_id) {   
   const options = {
-    url:`${config.url}${org_id}/${step}/${user_id}`,
+    url:`${config.url}${type}/${org_id}/${step}/${user_id}`,
     method: config.method,
     headers: config.headers  
   } 
-
   return new Promise((resolve, reject) => {
     axios(options)
     .then(res => {             
@@ -2192,13 +2206,13 @@ export const getBatchMilkingTemplate =  function (config,org_id) {
 };
 
 
-// view milking discarded batches
-export const getBatchMilkingDiscarded =  function (config,org_id,user_id) {   
+// view  discarded batches
+export const getBatchDiscarded =  function (config,type,org_id,user_id) {   
   const options = {
-    url:`${config.url}${org_id}/${user_id}`,
+    url:`${config.url}${type}/${org_id}/${user_id}`,
     method: config.method,
     headers: config.headers  
-  }  
+  }    
   return new Promise((resolve, reject) => {
     axios(options)
     .then(res => {             
