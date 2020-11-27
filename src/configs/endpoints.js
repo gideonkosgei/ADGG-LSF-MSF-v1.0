@@ -444,16 +444,16 @@ export const endpoint_batch_discarded_records= {
   headers: headers   
 };
 
-//posted milking batches
-export const endpoint_batch_milk_posted_records= {
-  url: `${api}/batches/posted/milking/`,
+//posted  batches
+export const endpoint_batch_posted_records= {
+  url: `${api}/batches/posted/`,
   method: 'GET',
   headers: headers   
 };
 
-// batch process - milking actions
-export const endpoint_batch_milk_actions= {
-  url: `${api}/batches/milking/action`,
+// batch process -  actions (progress/discard/validate)
+export const endpoint_batch_actions= {
+  url: `${api}/batches/action`,
   method: 'POST',
   headers: headers   
 };

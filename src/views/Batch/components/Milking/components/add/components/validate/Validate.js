@@ -3,8 +3,8 @@ import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import {Card, CardContent,Grid,colors,CardActions,Box,Button } from '@material-ui/core';
-import {getBatchUnprocessed,batchProcessMilkingActions}   from '../../../../../../../../utils/API';
-import {endpoint_batch_validation_un_processed_view,endpoint_batch_milk_actions} from '../../../../../../../../configs/endpoints';
+import {getBatchUnprocessed,batchProcessActions}   from '../../../../../../../../utils/API';
+import {endpoint_batch_validation_un_processed_view,endpoint_batch_actions} from '../../../../../../../../configs/endpoints';
 
 import MUIDataTable from "mui-datatables";
 import {MuiThemeProvider } from '@material-ui/core/styles';
@@ -66,7 +66,7 @@ const Validate = props => {
   const handleValidate = event => {
     event.preventDefault(); 
     (async  (_endpoint,_uuid,_action,_user_id) => { 
-      await  batchProcessMilkingActions(_endpoint,_uuid,_action,_user_id)
+      await  batchProcessActions(_endpoint,_uuid,_action,_user_id)
       .then(() => {  
         setopenSnackbarSuccess(true);         
         var delayInMilliseconds = 1000; //1 second
@@ -77,13 +77,13 @@ const Validate = props => {
       }).catch(() => {
         setopenSnackbarError(true); 
       });
-    })(endpoint_batch_milk_actions,uuid,1,user_id);    
+    })(endpoint_batch_actions,uuid,1,user_id);    
   };
 
   const handleDiscard = event => {   
     event.preventDefault(); 
     (async  (_endpoint,_uuid,_action,_user_id) => { 
-      await  batchProcessMilkingActions(_endpoint,_uuid,_action,_user_id)
+      await  batchProcessActions(_endpoint,_uuid,_action,_user_id)
       .then(() => {  
         setopenSnackbarSuccess(true);         
         var delayInMilliseconds = 1000; //1 second
@@ -94,14 +94,14 @@ const Validate = props => {
       }).catch(() => {
         setopenSnackbarError(true); 
       });
-    })(endpoint_batch_milk_actions,uuid,2,user_id);    
+    })(endpoint_batch_actions,uuid,2,user_id);    
   };
 
 
   const handleProgressToPostingQueue = event => {   
     event.preventDefault(); 
     (async  (_endpoint,_uuid,_action,_user_id) => { 
-      await  batchProcessMilkingActions(_endpoint,_uuid,_action,_user_id)
+      await  batchProcessActions(_endpoint,_uuid,_action,_user_id)
       .then(() => {  
         setopenSnackbarSuccess(true);         
         var delayInMilliseconds = 1000; //1 second
@@ -112,7 +112,7 @@ const Validate = props => {
       }).catch(() => {
         setopenSnackbarError(true); 
       });
-    })(endpoint_batch_milk_actions,uuid,3,user_id);    
+    })(endpoint_batch_actions,uuid,3,user_id);    
   };
 
 

@@ -3,8 +3,8 @@ import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import {Card, CardContent, CardHeader, Grid,Divider,colors,Link } from '@material-ui/core';
-import {getBatchMilkingPosted}   from '../../../../../../utils/API';
-import {endpoint_batch_milk_posted_records} from '../../../../../../configs/endpoints';
+import {getBatchPosted}   from '../../../../../../utils/API';
+import {endpoint_batch_posted_records} from '../../../../../../configs/endpoints';
 import {Sidebar} from '../sidebar';
 import MUIDataTable from "mui-datatables";
 import {MuiThemeProvider } from '@material-ui/core/styles';
@@ -31,21 +31,20 @@ const DetailsView = props => {
   const classes = useStyles();  
   const [values, setValues] = useState([]);  
   const [ {organization_id} ] = useContext(authContext);
-  const [ {user_id} ] = useContext(authContext);
-  
+  const [ {user_id} ] = useContext(authContext);  
   localStorage.removeItem('batch_upload_uuid');
 
 
   useEffect(() => {     
     let mounted = true;
-      (async  (endpoint,org_id,user_id) => {     
-        await  getBatchMilkingPosted(endpoint,org_id,user_id)
+      (async  (endpoint,type,org_id,user_id) => {     
+        await  getBatchPosted(endpoint,type,org_id,user_id)
         .then(response => {                               
           if (mounted) {                       
             setValues(response.payload);                 
           }
         });
-      })(endpoint_batch_milk_posted_records,organization_id,user_id); 
+      })(endpoint_batch_posted_records,2,organization_id,user_id); 
       
     return () => {
       mounted = false;           
