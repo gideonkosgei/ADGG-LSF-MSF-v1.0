@@ -417,16 +417,9 @@ export const endpoint_batch_weight_upload = {
 };
 
 
-// view milking batched on validation queue
-export const endpoint_batch_milk_validation_view = {
-  url: `${api}/batches/milking/validation/`,
-  method: 'GET',
-  headers: headers   
-};
-
-// view weight batched on validation queue
-export const endpoint_batch_weight_validation_view = {
-  url: `${api}/batches/weight/validation/`,
+// view  batched on validation queue
+export const endpoint_batch_validation_view = {
+  url: `${api}/batches/validation/`,
   method: 'GET',
   headers: headers   
 };
@@ -458,8 +451,8 @@ export const endpoint_batch_actions= {
   headers: headers   
 };
 
-export const endpoint_batch_milk_errors= {
-  url: `${api}/batches/milking/errors/`,
+export const endpoint_batch_errors= {
+  url: `${api}/batches/errors/`,
   method: 'GET',
   headers: headers   
 };

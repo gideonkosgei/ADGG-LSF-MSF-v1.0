@@ -4,12 +4,9 @@ import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import { Modal,Card,CardContent, CardActions, TableContainer,Typography,Button, colors,Table,TableHead,TableBody,TableRow,TableCell} from '@material-ui/core';
-import {getBatchMilkValidationErrors}  from '../../../../../../../../utils/API';
-import {endpoint_batch_milk_errors} from '../../../../../../../../configs/endpoints';
+import {getBatchValidationErrors}  from '../../../../../../../../utils/API';
+import {endpoint_batch_errors} from '../../../../../../../../configs/endpoints';
 import Paper from '@material-ui/core/Paper';
-
-
-
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -49,15 +46,14 @@ const useStyles = makeStyles(theme => ({
 
   useEffect(() => {     
     let mounted = true;
-      (async  (endpoint,id) => {     
-        await  getBatchMilkValidationErrors(endpoint,id)
+      (async  (endpoint,id,type) => {     
+        await  getBatchValidationErrors(endpoint,id,type)
         .then(response => {                        
           if (mounted) {                       
             setValues(response.payload);
           }
         });
-      })(endpoint_batch_milk_errors,record_id); 
-      
+      })(endpoint_batch_errors,record_id,1);       
 
       
     return () => {

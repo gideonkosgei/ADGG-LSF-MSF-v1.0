@@ -3,8 +3,8 @@ import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import {Card, CardContent, CardHeader, Grid,Divider,colors } from '@material-ui/core';
-import {getBatchMilkingValidation}   from '../../../../../../utils/API';
-import {endpoint_batch_milk_validation_view} from '../../../../../../configs/endpoints';
+import {getBatchValidation}   from '../../../../../../utils/API';
+import {endpoint_batch_validation_view} from '../../../../../../configs/endpoints';
 import {Sidebar} from '../sidebar';
 import MUIDataTable from "mui-datatables";
 import {MuiThemeProvider } from '@material-ui/core/styles';
@@ -34,7 +34,7 @@ const DetailsView = props => {
   useEffect(() => {     
     let mounted = true;
       (async  (endpoint,batch_uuid) => {     
-        await  getBatchMilkingValidation(endpoint,batch_uuid)
+        await  getBatchValidation(endpoint,batch_uuid)
         .then(response => {                             
           if (mounted) { 
             if(response.payload.length>0){                       
@@ -42,7 +42,7 @@ const DetailsView = props => {
             }              
           }
         });
-      })(endpoint_batch_milk_validation_view,uuid);       
+      })(endpoint_batch_validation_view,uuid);       
     return () => {
       mounted = false;           
     };

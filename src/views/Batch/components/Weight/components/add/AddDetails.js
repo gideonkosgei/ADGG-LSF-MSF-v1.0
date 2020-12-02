@@ -3,8 +3,8 @@ import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import {Card, CardContent, CardHeader, Grid,Divider,colors,Stepper,Step,StepLabel,Typography} from '@material-ui/core';
-import {getBatchWeightValidation}   from '../../../../../../utils/API';
-import {endpoint_batch_weight_validation_view} from '../../../../../../configs/endpoints';
+import {getBatchValidation}   from '../../../../../../utils/API';
+import {endpoint_batch_validation_view} from '../../../../../../configs/endpoints';
 import {Sidebar} from '../sidebar/index';
 import {Upload,Validate,Post} from './components';
 
@@ -53,7 +53,7 @@ const AddDetails = props => {
   useEffect(() => {     
     let mounted = true;
       (async  (endpoint,batch_uuid) => {     
-        await  getBatchWeightValidation(endpoint,batch_uuid)
+        await  getBatchValidation(endpoint,batch_uuid)
         .then(response => {                             
           if (mounted) { 
             if(response.payload.length>0){                       
@@ -62,7 +62,7 @@ const AddDetails = props => {
             }              
           }
         });
-      })(endpoint_batch_weight_validation_view,batch_upload_uuid);       
+      })(endpoint_batch_validation_view,batch_upload_uuid);       
     return () => {
       mounted = false;           
     };

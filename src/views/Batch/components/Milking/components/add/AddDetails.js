@@ -3,8 +3,8 @@ import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import {Card, CardContent, CardHeader, Grid,Divider,colors,Stepper,Step,StepLabel,Typography} from '@material-ui/core';
-import {getBatchMilkingValidation}   from '../../../../../../utils/API';
-import {endpoint_batch_milk_validation_view} from '../../../../../../configs/endpoints';
+import {getBatchValidation}   from '../../../../../../utils/API';
+import {endpoint_batch_validation_view} from '../../../../../../configs/endpoints';
 import {Sidebar} from '../sidebar/index';
 import {Upload,Validate,Post} from './components';
 
@@ -53,16 +53,16 @@ const AddDetails = props => {
   useEffect(() => {     
     let mounted = true;
       (async  (endpoint,batch_uuid) => {     
-        await  getBatchMilkingValidation(endpoint,batch_uuid)
+        await  getBatchValidation(endpoint,batch_uuid)
         .then(response => {                             
-          if (mounted) { 
+          if (mounted) {             
             if(response.payload.length>0){                       
               setValues(response.payload); 
               setActiveStep(response.payload[0].step_id); 
             }              
           }
         });
-      })(endpoint_batch_milk_validation_view,batch_upload_uuid);       
+      })(endpoint_batch_validation_view,batch_upload_uuid);       
     return () => {
       mounted = false;           
     };

@@ -2124,8 +2124,6 @@ export const postBatchUploadMilking =  function (config,rows,cols,user_id,org_id
     data: body  
   };
 
-  console.log(options);
-
 return new Promise((resolve, reject) => {
   axios(options)
   .then(res => {           
@@ -2137,13 +2135,14 @@ return new Promise((resolve, reject) => {
 }
 
 
-// view milking batched on validation queue
-export const getBatchMilkingValidation =  function (config,uuid) {   
+// view  batched on validation queue
+export const getBatchValidation =  function (config,uuid) {   
   const options = {
     url:`${config.url}${uuid}`,
     method: config.method,
     headers: config.headers  
-  } 
+  }   
+  
   return new Promise((resolve, reject) => {
     axios(options)
     .then(res => {             
@@ -2154,21 +2153,6 @@ export const getBatchMilkingValidation =  function (config,uuid) {
 };
 
 
-// view milking batched on validation queue
-export const getBatchWeightValidation =  function (config,uuid) {   
-  const options = {
-    url:`${config.url}${uuid}`,
-    method: config.method,
-    headers: config.headers  
-  } 
-  return new Promise((resolve, reject) => {
-    axios(options)
-    .then(res => {             
-        resolve(res.data);
-    })
-    .catch(err => reject(err));
-  });       
-};
 
 
 
@@ -2179,7 +2163,7 @@ export const getBatchUnprocessed =  function (config,type,org_id,step,user_id) {
     url:`${config.url}${type}/${org_id}/${step}/${user_id}`,
     method: config.method,
     headers: config.headers  
-  } 
+  }  
   return new Promise((resolve, reject) => {
     axios(options)
     .then(res => {             
@@ -2213,6 +2197,7 @@ export const getBatchDiscarded =  function (config,type,org_id,user_id) {
     method: config.method,
     headers: config.headers  
   }    
+ 
   return new Promise((resolve, reject) => {
     axios(options)
     .then(res => {             
@@ -2230,7 +2215,7 @@ export const getBatchPosted =  function (config,type,org_id,user_id) {
     method: config.method,
     headers: config.headers  
   }  
-  console.log(options);
+  
   return new Promise((resolve, reject) => {
     axios(options)
     .then(res => {             
@@ -2257,8 +2242,6 @@ export const batchProcessActions =  function (config,uuid,action,user_id) {
     data: body  
   };
 
-  console.log(options);
-
 return new Promise((resolve, reject) => {
   axios(options)
   .then(res => {           
@@ -2272,9 +2255,9 @@ return new Promise((resolve, reject) => {
 
 
 // view milking batch validation errors
-export const getBatchMilkValidationErrors =   function (config,id) {   
+export const getBatchValidationErrors =   function (config,id,type) {   
   const options = {
-    url:`${config.url}${id}`,
+    url:`${config.url}${id}/${type}`,
     method: config.method,
     headers: config.headers  
   }; 

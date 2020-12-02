@@ -3,8 +3,8 @@ import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import {Card, CardContent, CardHeader, Grid,Divider,colors } from '@material-ui/core';
-import {getBatchMilkingValidation}   from '../../../../../../utils/API';
-import {endpoint_batch_milk_validation_view} from '../../../../../../configs/endpoints';
+import {getBatchValidation}   from '../../../../../../utils/API';
+import {endpoint_batch_validation_view} from '../../../../../../configs/endpoints';
 import {Sidebar} from '../sidebar';
 import MUIDataTable from "mui-datatables";
 import {MuiThemeProvider } from '@material-ui/core/styles';
@@ -29,7 +29,7 @@ const DetailsView = props => {
   useEffect(() => {     
     let mounted = true;
       (async  (endpoint,batch_uuid) => {     
-        await  getBatchMilkingValidation(endpoint,batch_uuid)
+        await  getBatchValidation(endpoint,batch_uuid)
         .then(response => {                             
           if (mounted) { 
             if(response.payload.length>0){                       
@@ -37,7 +37,7 @@ const DetailsView = props => {
             }              
           }
         });
-      })(endpoint_batch_milk_validation_view,uuid);       
+      })(endpoint_batch_validation_view,uuid);       
     return () => {
       mounted = false;           
     };
@@ -47,19 +47,15 @@ const DetailsView = props => {
     return null;
   }
 
- 
+    
     const columns = [
       { name: "uuid",label: "uuid",options: {filter: false,sort: false,display:false}},
       { name: "animal_id",label: "Animal",options: {filter: true,sort: true, display:true}},
-      { name: "milk_date",label: "Milk Date",options: {filter: true,sort: true, display:true}},
-      { name: "amount_morning",label: "Morning",options: {filter: true,sort: true, display:true}},
-      { name: "amount_noon",label: "Noon",options: {filter: true,sort: true, display:true}},
-      { name: "amount_afternoon",label: "Afternoon",options: {filter: true,sort: true, display:true}},
-      { name: "lactation_id",label: "Lact ID",options: {filter: true,sort: true, display:true}},
-      { name: "lactation_number",label: "Lact No",options: {filter: true,sort: true, display:true}},
-      { name: "days_in_milk",label: "Days in Milk",options: {filter: true,sort: true, display:true}},
-      { name: "test_day_no",label: "Test Day",options: {filter: true,sort: true, display:true}} 
-    
+      { name: "weight_date",label: "Weight Date",options: {filter: true,sort: true, display:true}},
+      { name: "body_length",label: "Body Length",options: {filter: true,sort: true, display:true}},
+      { name: "heart_girth",label: "Heart Girth",options: {filter: true,sort: true, display:true}},
+      { name: "body_weight",label: "Body Weight",options: {filter: true,sort: true, display:true}},
+      { name: "body_score",label: "Body Score",options: {filter: true,sort: true, display:true}}
   ];
 
   
