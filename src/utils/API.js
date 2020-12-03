@@ -2151,12 +2151,6 @@ export const getBatchValidation =  function (config,uuid) {
     .catch(err => reject(err));
   });       
 };
-
-
-
-
-
-
 // view milking batched on un-processed validation queue
 export const getBatchUnprocessed =  function (config,type,org_id,step,user_id) {   
   const options = {

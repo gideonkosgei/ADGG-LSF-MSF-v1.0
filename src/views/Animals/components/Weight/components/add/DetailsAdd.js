@@ -76,6 +76,8 @@ const DetailsEdit = props => {
     return null;
   }
 
+
+
   // validate weight
   let mature_weight_limits = limitParameters.filter(obj=>obj.category==='mature_weight_limits');
   let mature_weight_limits_status = false;
@@ -98,8 +100,8 @@ const DetailsEdit = props => {
     mature_heart_girth_limits_max_value = mature_heart_girth_limits[0].max_value;    
   }
 
-  //validate heart Girth
-  let mature_body_length_limits = limitParameters.filter(obj=>obj.category==='mature_body_length_limits');
+  //validate body length
+  let mature_body_length_limits = limitParameters.filter(obj=>obj.category==='mature_body_length');
   let mature_body_length_limits_status = false;
   let mature_body_length_limits_min_value = 0;
   let mature_body_length_limits_max_value = 0;
