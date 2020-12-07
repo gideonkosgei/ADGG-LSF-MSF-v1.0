@@ -416,6 +416,13 @@ export const endpoint_batch_weight_upload = {
   headers: headers   
 };
 
+//upload Batch PD Records
+export const endpoint_batch_pd_upload = {
+  url: `${api}/batches/pd/upload`,
+  method: 'POST',
+  headers: headers   
+};
+
 
 // view  batched on validation queue
 export const endpoint_batch_validation_view = {

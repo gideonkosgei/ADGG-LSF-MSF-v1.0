@@ -5,8 +5,8 @@ import {OutTable, ExcelRenderer} from 'react-excel-renderer';
 import { makeStyles} from '@material-ui/styles';
 import {Card, CardContent,Grid,Divider,Button,CardActions,Input} from '@material-ui/core';
 import authContext from '../../../../../../../../contexts/AuthContext';
-import {postBatchUploadMilking}   from '../../../../../../../../utils/API';
-import {endpoint_batch_weight_upload} from '../../../../../../../../configs/endpoints';
+import {postBatchUpload}   from '../../../../../../../../utils/API';
+import {endpoint_batch_pd_upload} from '../../../../../../../../configs/endpoints';
 import './style/app.css';
 import SuccessSnackbar from '../../../../../../../../components/SuccessSnackbar';
 import ErrorSnackbar from '../../../../../../../../components/ErrorSnackbar';
@@ -88,18 +88,18 @@ const Upload = props => {
     localStorage.setItem("batch_upload_uuid", batch_uuid);
     event.preventDefault();
     (async  (endpoint,rows,cols,user_id,org_id,uuid) => {     
-      await  postBatchUploadMilking(endpoint,rows,cols,user_id,org_id,uuid)
+      await  postBatchUpload(endpoint,rows,cols,user_id,org_id,uuid)
       .then(() => {  
         setopenSnackbarSuccess(true);
         var delayInMilliseconds = 1000; //1 second        
         setTimeout(function() {
-          window.location.replace(`/batch-process/weight/add/${batch_uuid}`);
+          window.location.replace(`/batch-process/pd/add/${batch_uuid}`);
         }, delayInMilliseconds);
         document.forms["event"].reset();
       }).catch((err) => {        
         setopenSnackbarError(true); 
       });
-    })(endpoint_batch_weight_upload,rows,cols,user_id,organization_id,batch_uuid);    
+    })(endpoint_batch_pd_upload,rows,cols,user_id,organization_id,batch_uuid);    
   };
 
   const handleSnackbarSuccessClose = () => {

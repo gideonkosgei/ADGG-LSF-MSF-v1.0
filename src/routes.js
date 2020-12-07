@@ -632,6 +632,64 @@ const routes = [
         component: lazy(() => import('views/Batch/components/Weight/components/add'))        
       },
 
+      /*
+        PD Batch Processes
+      */
+     {
+        path: '/batch-process/pd/home',
+        exact: true,
+        component: lazy(() => import('views/Batch/components/PD/components/home'))        
+      },  
+
+       // Add New Batch processes Routes
+       {
+        path: '/batch-process/pd/add',
+        exact: true,
+        component: lazy(() => import('views/Batch/components/PD/components/add'))        
+      }, 
+      // Deleted  batches
+      {
+        path: '/batch-process/pd/deleted',
+        exact: true,
+        component: lazy(() => import('views/Batch/components/PD/components/deleted'))        
+      }, 
+      //Posted Batches
+      {
+        path: '/batch-process/pd/posted',
+        exact: true,
+        component: lazy(() => import('views/Batch/components/PD/components/posted'))        
+      }, 
+      {
+        path: '/batch-process/pd/finalized/:uuid',
+        exact: true,
+        component: lazy(() => import('views/Batch/components/PD/components/finalized'))        
+      },
+
+      
+       // Batch processes Routes
+       {
+        path: '/batch-process/pd/home',
+        exact: true,
+        component: lazy(() => import('views/Batch'))        
+      },  
+       // Batch processes - view processing queue
+       {
+        path: '/batch-process/pd/stage/:step',
+        exact: true,
+        component: lazy(() => import('views/Batch/components/PD/components/view'))        
+      },  
+      // Batch processes Routes subsequent Steps
+      {
+        path: '/batch-process/pd/add/:uuid',
+        exact: true,
+        component: lazy(() => import('views/Batch/components/PD/components/add'))        
+      },
+
+
+
+
+
+
 
 
 

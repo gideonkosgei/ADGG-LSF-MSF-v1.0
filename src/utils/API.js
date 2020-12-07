@@ -2106,8 +2106,8 @@ return new Promise((resolve, reject) => {
 }
 
 
-//Batch upload - miking
-export const postBatchUploadMilking =  function (config,rows,cols,user_id,org_id,uuid) {  
+//Batch upload
+export const postBatchUpload =  function (config,rows,cols,user_id,org_id,uuid) {  
  
   const body = {          
     "rows": rows, 
@@ -2123,7 +2123,7 @@ export const postBatchUploadMilking =  function (config,rows,cols,user_id,org_id
     headers: config.headers,
     data: body  
   };
-
+  
 return new Promise((resolve, reject) => {
   axios(options)
   .then(res => {           

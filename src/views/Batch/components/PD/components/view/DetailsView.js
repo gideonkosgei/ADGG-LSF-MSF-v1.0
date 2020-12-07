@@ -43,7 +43,7 @@ const DetailsView = props => {
             setValues(response.payload);                 
           }
         });
-      })(endpoint_batch_validation_un_processed_view,2,organization_id,step,user_id); 
+      })(endpoint_batch_validation_un_processed_view,3,organization_id,step,user_id); 
       
     return () => {
       mounted = false;
@@ -77,7 +77,7 @@ const DetailsView = props => {
         return (
           <Link
               component={RouterLink}
-              to = {`/batch-process/weight/add/${tableMeta.rowData[0]}`}              
+              to = {`/batch-process/pd/add/${tableMeta.rowData[0]}`}              
           >
             <OpenInNewIcon/>
           </Link>

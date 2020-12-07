@@ -47,7 +47,7 @@ const DetailsView = props => {
             setValues(response.payload);                 
           }
         });
-      })(endpoint_batch_discarded_records,2,organization_id,user_id); 
+      })(endpoint_batch_discarded_records,3,organization_id,user_id); 
       
     return () => {
       mounted = false;           

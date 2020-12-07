@@ -108,7 +108,7 @@ export default [
           },
           {
             title: 'PD Batch',
-            href: '/batch-process/milking-records/home',                     
+            href: '/batch-process/pd/home',                     
           },
           {
             title: 'Insemination Batch',
