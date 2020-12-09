@@ -99,13 +99,16 @@ const Post = props => {
     setopenSnackbarError(false);
   };
     const columns = [
-    { name: "uuid",label: "uuid",options: {filter: false,sort: false,display:false}},
-    { name: "animal_id",label: "Animal",options: {filter: true,sort: true, display:true}},
-    { name: "weight_date",label: "Weight Date",options: {filter: true,sort: true, display:true}},
-    { name: "body_length",label: "Body Length",options: {filter: true,sort: true, display:true}},
-    { name: "heart_girth",label: "Heart Girth",options: {filter: true,sort: true, display:true}},
-    { name: "body_weight",label: "Body Weight",options: {filter: true,sort: true, display:true}},
-    { name: "body_score",label: "Body Score",options: {filter: true,sort: true, display:true}},         
+      { name: "record_id",label: "record_id",options: {filter: false,sort: false,display:false}},
+      { name: "uuid",label: "uuid",options: {filter: false,sort: false,display:false}},
+      { name: "animal_id",label: "Animal ID",options: {filter: true,sort: true, display:true}},
+      { name: "exam_date",label: "Exam Date",options: {filter: true,sort: true, display:true}},
+      { name: "pd_method",label: "PD Method",options: {filter: true,sort: true, display:true}},
+      { name: "pd_result",label: "PD Results",options: {filter: true,sort: true, display:true}},
+      { name: "pd_stage",label: "PD Stage",options: {filter: true,sort: true, display:true}},
+      { name: "pd_cost",label: "Cost",options: {filter: true,sort: true, display:true}},
+      { name: "body_condition",label: "B. Score",options: {filter: true,sort: true, display:true}},
+      { name: "record_status",label: "Status",options: {filter: true,sort: true, display:true}},         
     { name: "",
       options: {
       filter: false,

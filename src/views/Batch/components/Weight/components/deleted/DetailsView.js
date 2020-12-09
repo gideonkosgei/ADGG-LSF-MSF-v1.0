@@ -111,7 +111,7 @@ const DetailsView = props => {
       {...rest}
       className={clsx(classes.root, className)}
     >
-        <CardHeader title= "Batch processes - Milking"/>
+        <CardHeader title= "Batch processes - Weight & Growth"/>
         <Divider />
         <CardContent> 
           <Grid container spacing={1} justify="center">            

@@ -40,7 +40,7 @@ const Sidebar = props => {
 
         <Tooltip  title="view Pending">              
           <IconButton aria-label="pending" size="small" >
-            <Link component = {RouterLink} to = {`/batch-process/pd/stage/2`}>
+            <Link component = {RouterLink} to = {`/batch-process/pd/stage/3`}>
               <PlaylistPlayIcon /> 
             </Link>
           </IconButton> 

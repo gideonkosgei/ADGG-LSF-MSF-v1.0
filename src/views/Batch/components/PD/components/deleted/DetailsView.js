@@ -78,7 +78,7 @@ const DetailsView = props => {
         return (
           <Link
               component={RouterLink}
-              to = {`/batch-process/weight/add/${tableMeta.rowData[0]}`}              
+              to = {`/batch-process/pd/add/${tableMeta.rowData[0]}`}              
           >
             <OpenInNewIcon/>
           </Link>
@@ -111,7 +111,7 @@ const DetailsView = props => {
       {...rest}
       className={clsx(classes.root, className)}
     >
-        <CardHeader title= "Batch processes - Milking"/>
+        <CardHeader title= "Batch processes - PD"/>
         <Divider />
         <CardContent> 
           <Grid container spacing={1} justify="center">            

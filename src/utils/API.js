@@ -2123,7 +2123,7 @@ export const postBatchUpload =  function (config,rows,cols,user_id,org_id,uuid) 
     headers: config.headers,
     data: body  
   };
-  
+
 return new Promise((resolve, reject) => {
   axios(options)
   .then(res => {           
@@ -2190,7 +2190,7 @@ export const getBatchDiscarded =  function (config,type,org_id,user_id) {
     url:`${config.url}${type}/${org_id}/${user_id}`,
     method: config.method,
     headers: config.headers  
-  }    
+  } 
  
   return new Promise((resolve, reject) => {
     axios(options)
@@ -2254,7 +2254,7 @@ export const getBatchValidationErrors =   function (config,id,type) {
     url:`${config.url}${id}/${type}`,
     method: config.method,
     headers: config.headers  
-  }; 
+  };  
 
   return new Promise((resolve, reject) => {
     axios(options)

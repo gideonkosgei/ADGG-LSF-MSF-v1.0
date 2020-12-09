@@ -56,7 +56,7 @@ const useStyles = makeStyles(theme => ({
             setValues(response.payload);
           }
         });
-      })(endpoint_batch_errors,record_id,2);
+      })(endpoint_batch_errors,record_id,3);
       
     return () => {
       mounted = false;
