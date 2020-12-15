@@ -2124,6 +2124,8 @@ export const postBatchUpload =  function (config,rows,cols,user_id,org_id,uuid) 
     data: body  
   };
 
+
+
 return new Promise((resolve, reject) => {
   axios(options)
   .then(res => {           
@@ -2141,8 +2143,8 @@ export const getBatchValidation =  function (config,uuid) {
     url:`${config.url}${uuid}`,
     method: config.method,
     headers: config.headers  
-  }   
-  
+  }  
+
   return new Promise((resolve, reject) => {
     axios(options)
     .then(res => {             
@@ -2151,13 +2153,14 @@ export const getBatchValidation =  function (config,uuid) {
     .catch(err => reject(err));
   });       
 };
-// view milking batched on un-processed validation queue
+// view  batched on un-processed validation queue
 export const getBatchUnprocessed =  function (config,type,org_id,step,user_id) {   
   const options = {
     url:`${config.url}${type}/${org_id}/${step}/${user_id}`,
     method: config.method,
     headers: config.headers  
   }  
+  
   return new Promise((resolve, reject) => {
     axios(options)
     .then(res => {             

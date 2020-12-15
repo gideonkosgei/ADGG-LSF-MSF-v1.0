@@ -6,7 +6,7 @@ import { makeStyles} from '@material-ui/styles';
 import {Card, CardContent,Grid,Divider,Button,CardActions,Input} from '@material-ui/core';
 import authContext from '../../../../../../../../contexts/AuthContext';
 import {postBatchUpload}   from '../../../../../../../../utils/API';
-import {endpoint_batch_pd_upload} from '../../../../../../../../configs/endpoints';
+import {endpoint_batch_exit_upload} from '../../../../../../../../configs/endpoints';
 import './style/app.css';
 import SuccessSnackbar from '../../../../../../../../components/SuccessSnackbar';
 import ErrorSnackbar from '../../../../../../../../components/ErrorSnackbar';
@@ -94,13 +94,13 @@ const Upload = props => {
         setopenSnackbarSuccess(true);
         var delayInMilliseconds = 1000; //1 second        
         setTimeout(function() {
-          window.location.replace(`/batch-process/pd/add/${batch_uuid}`);
+          window.location.replace(`/batch-process/exit/add/${batch_uuid}`);
         }, delayInMilliseconds);
         document.forms["event"].reset();
       }).catch((err) => {        
         setopenSnackbarError(true); 
       });
-    })(endpoint_batch_pd_upload,rows,cols,user_id,organization_id,batch_uuid);    
+    })(endpoint_batch_exit_upload,rows,cols,user_id,organization_id,batch_uuid);    
   };
 
   const handleSnackbarSuccessClose = () => {

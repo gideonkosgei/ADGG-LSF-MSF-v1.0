@@ -116,7 +116,7 @@ export default [
           },
           {
             title: 'Exit/Disposal Batch',
-            href: '/batch-process/milking-records/home',                     
+            href: '/batch-process/exit/home',                     
           },
           {
             title: 'Synchronization Batch',

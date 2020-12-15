@@ -46,18 +46,16 @@ const DetailsView = props => {
   if (!values) {
     return null;
   }
+
     
     const columns = [
       { name: "uuid",label: "uuid",options: {filter: false,sort: false,display:false}},
       { name: "animal_id",label: "Animal ID",options: {filter: true,sort: true, display:true}},
-      { name: "exam_date",label: "Exam Date",options: {filter: true,sort: true, display:true}},
-      { name: "pd_method",label: "PD Method",options: {filter: true,sort: true, display:true}},
-      { name: "pd_result",label: "PD Results",options: {filter: true,sort: true, display:true}},
-      { name: "pd_stage",label: "PD Stage",options: {filter: true,sort: true, display:true}},
+      { name: "exit_date",label: "Exit Date",options: {filter: true,sort: true, display:true}},
+      { name: "disposal_reason",label: "Exit Reason",options: {filter: true,sort: true, display:true}},
+      { name: "disposal_amount",label: "Disposal Amount",options: {filter: true,sort: true, display:true}},
       { name: "record_status",label: "Status",options: {filter: true,sort: true, display:true}}
   ];
-
-  
   const options = {       
     filter: true,
     rowsPerPage: 5,       
@@ -79,7 +77,7 @@ const DetailsView = props => {
       {...rest}
       className={clsx(classes.root, className)}
     >
-        <CardHeader title= "POSTED WEIGHT & GROWTH RECORDS"/>
+        <CardHeader title= "POSTED EXIT & DISPOSAL RECORDS"/>
         <Divider />
         <CardContent> 
           <Grid container spacing={1} justify="center">            
@@ -94,7 +92,7 @@ const DetailsView = props => {
                     <div className={classes.inner}>
                       <MuiThemeProvider>                
                         <MUIDataTable
-                          title = "POSTED WEIGHT & GROWTH RECORDS"
+                          title = "POSTED EXIT & DISPOSAL RECORDS RECORDS"
                           data={values}
                           columns={columns}
                           options={options}

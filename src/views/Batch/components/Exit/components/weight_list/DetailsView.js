@@ -1,10 +1,11 @@
-import React, { useState,useEffect } from 'react';
+import React, { useState,useEffect,useContext } from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import {Card, CardContent, CardHeader, Grid,Divider,colors } from '@material-ui/core';
-import {getBatchValidation}   from '../../../../../../utils/API';
-import {endpoint_batch_validation_view} from '../../../../../../configs/endpoints';
+import {getBatchMilkingTemplate}   from '../../../../../../utils/API';
+import {endpoint_batch_milk_template} from '../../../../../../configs/endpoints';
+import authContext from '../../../../../../contexts/AuthContext';
 import {Sidebar} from '../sidebar';
 import MUIDataTable from "mui-datatables";
 import {MuiThemeProvider } from '@material-ui/core/styles';
@@ -25,11 +26,12 @@ const DetailsView = props => {
   const {className,uuid, ...rest } = props; 
   const classes = useStyles();  
   const [values, setValues] = useState([]); 
+  const [ {organization_id} ] = useContext(authContext);
 
   useEffect(() => {     
     let mounted = true;
-      (async  (endpoint,batch_uuid) => {     
-        await  getBatchValidation(endpoint,batch_uuid)
+      (async  (endpoint,org) => {     
+        await  getBatchMilkingTemplate(endpoint,org)
         .then(response => {                             
           if (mounted) { 
             if(response.payload.length>0){                       
@@ -37,24 +39,23 @@ const DetailsView = props => {
             }              
           }
         });
-      })(endpoint_batch_validation_view,uuid);       
+      })(endpoint_batch_milk_template,organization_id);       
     return () => {
       mounted = false;           
     };
-  }, [uuid]); 
+  }, [organization_id]); 
 
   if (!values) {
     return null;
   }
-    
+ 
     const columns = [
-      { name: "uuid",label: "uuid",options: {filter: false,sort: false,display:false}},
-      { name: "animal_id",label: "Animal ID",options: {filter: true,sort: true, display:true}},
-      { name: "exam_date",label: "Exam Date",options: {filter: true,sort: true, display:true}},
-      { name: "pd_method",label: "PD Method",options: {filter: true,sort: true, display:true}},
-      { name: "pd_result",label: "PD Results",options: {filter: true,sort: true, display:true}},
-      { name: "pd_stage",label: "PD Stage",options: {filter: true,sort: true, display:true}},
-      { name: "record_status",label: "Status",options: {filter: true,sort: true, display:true}}
+      { name: "Milk_Date",label: "Milk_Date",options: {filter: false,sort: false,display:true}},
+      { name: "Animal_ID",label: "Animal_ID",options: {filter: true,sort: true, display:true}},
+      { name: "Amount_Morning",label: "Amount_Morning",options: {filter: true,sort: true, display:true}},
+      { name: "Amount_Noon",label: "Amount_Noon",options: {filter: true,sort: true, display:true}},
+      { name: "Amount_Afternoon",label: "Amount_Afternoon",options: {filter: true,sort: true, display:true}}    
+    
   ];
 
   
@@ -71,7 +72,7 @@ const DetailsView = props => {
        padding: "none" ,         
        size: "small",
      };
-   }
+   }   
   };
 
   return (
@@ -79,7 +80,7 @@ const DetailsView = props => {
       {...rest}
       className={clsx(classes.root, className)}
     >
-        <CardHeader title= "POSTED WEIGHT & GROWTH RECORDS"/>
+        <CardHeader title= "BATCH - WEIGHT & GROWTH TEMPLATE"/>
         <Divider />
         <CardContent> 
           <Grid container spacing={1} justify="center">            
@@ -94,7 +95,7 @@ const DetailsView = props => {
                     <div className={classes.inner}>
                       <MuiThemeProvider>                
                         <MUIDataTable
-                          title = "POSTED WEIGHT & GROWTH RECORDS"
+                          title = "BATCH - WEIGHT & GROWTH TEMPLATE"
                           data={values}
                           columns={columns}
                           options={options}
