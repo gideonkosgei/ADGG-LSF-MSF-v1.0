@@ -423,6 +423,14 @@ export const endpoint_batch_pd_upload = {
   headers: headers   
 };
 
+//upload Batch AI Records
+export const endpoint_batch_ai_upload = {
+  url: `${api}/batches/ai/upload`,
+  method: 'POST',
+  headers: headers   
+};
+
+
 //upload Batch Exit & Disposal Records
 export const endpoint_batch_exit_upload = {
   url: `${api}/batches/exit/upload`,

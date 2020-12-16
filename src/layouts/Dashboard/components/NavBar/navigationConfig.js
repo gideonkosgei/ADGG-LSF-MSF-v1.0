@@ -112,7 +112,7 @@ export default [
           },
           {
             title: 'Insemination Batch',
-            href: '/batch-process/milking-records/home',                     
+            href: '/batch-process/ai/home',                     
           },
           {
             title: 'Exit/Disposal Batch',

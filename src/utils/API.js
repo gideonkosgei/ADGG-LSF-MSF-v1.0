@@ -2160,6 +2160,7 @@ export const getBatchUnprocessed =  function (config,type,org_id,step,user_id) {
     method: config.method,
     headers: config.headers  
   }  
+ 
   
   return new Promise((resolve, reject) => {
     axios(options)
@@ -2238,6 +2239,8 @@ export const batchProcessActions =  function (config,uuid,action,user_id) {
     headers: config.headers,
     data: body  
   };
+
+
 
 return new Promise((resolve, reject) => {
   axios(options)
