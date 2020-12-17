@@ -430,6 +430,13 @@ export const endpoint_batch_ai_upload = {
   headers: headers   
 };
 
+//upload Batch sync Records
+export const endpoint_batch_sync_upload = {
+  url: `${api}/batches/sync/upload`,
+  method: 'POST',
+  headers: headers   
+};
+
 
 //upload Batch Exit & Disposal Records
 export const endpoint_batch_exit_upload = {

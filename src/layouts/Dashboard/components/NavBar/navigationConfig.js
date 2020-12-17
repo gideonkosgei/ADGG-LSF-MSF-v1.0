@@ -120,7 +120,7 @@ export default [
           },
           {
             title: 'Synchronization Batch',
-            href: '/batch-process/milking-records/home',                     
+            href: '/batch-process/sync/home',                     
           },
           {
             title: 'Calving Batch',

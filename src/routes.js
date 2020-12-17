@@ -795,7 +795,7 @@ const routes = [
 
 
   
-    /*
+      /*
         AI Batch Processes
       */
      {
@@ -844,6 +844,58 @@ const routes = [
       path: '/batch-process/ai/add/:uuid',
       exact: true,
       component: lazy(() => import('views/Batch/components/AI/components/add'))        
+    },
+
+    
+      /*
+        Sync Batch Processes
+      */
+     {
+      path: '/batch-process/sync/home',
+      exact: true,
+      component: lazy(() => import('views/Batch/components/Sync/components/home'))        
+    },  
+
+     // Add New Batch processes Routes
+     {
+      path: '/batch-process/sync/add',
+      exact: true,
+      component: lazy(() => import('views/Batch/components/Sync/components/add'))        
+    }, 
+    // Deleted  batches
+    {
+      path: '/batch-process/sync/deleted',
+      exact: true,
+      component: lazy(() => import('views/Batch/components/Sync/components/deleted'))        
+    }, 
+    //Posted Batches
+    {
+      path: '/batch-process/sync/posted',
+      exact: true,
+      component: lazy(() => import('views/Batch/components/Sync/components/posted'))        
+    }, 
+    {
+      path: '/batch-process/sync/finalized/:uuid',
+      exact: true,
+      component: lazy(() => import('views/Batch/components/Sync/components/finalized'))        
+    },
+     // Batch processes Routes
+     {
+      path: '/batch-process/sync/home',
+      exact: true,
+      component: lazy(() => import('views/Batch'))        
+    },  
+     // Batch processes - view processing queue
+     {
+      path: '/batch-process/sync/stage/:step',
+      exact: true,
+      component: lazy(() => import('views/Batch/components/Sync/components/view'))        
+    },  
+    // Batch processes Routes subsequent Steps
+    {
+      path: '/batch-process/sync/add/:uuid',
+      exact: true,
+      component: lazy(() => import('views/Batch/components/Sync/components/add'))        
     },
 
 

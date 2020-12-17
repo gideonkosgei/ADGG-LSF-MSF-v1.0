@@ -2124,8 +2124,6 @@ export const postBatchUpload =  function (config,rows,cols,user_id,org_id,uuid) 
     data: body  
   };
 
-
-
 return new Promise((resolve, reject) => {
   axios(options)
   .then(res => {           
@@ -2135,7 +2133,6 @@ return new Promise((resolve, reject) => {
     reject(err));
 });       
 }
-
 
 // view  batched on validation queue
 export const getBatchValidation =  function (config,uuid) {   
