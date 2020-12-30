@@ -3,7 +3,8 @@ import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import { Card,CardContent, colors } from '@material-ui/core';
 import { Page } from 'components';
-import {default as DetailsView} from './DetailsView';
+import {default as AddDetails} from './AddDetails';
+
 
 
 const useStyles = makeStyles(theme => ({
@@ -22,17 +23,22 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const Edit = props => { 
+const Add = props => { 
   const classes = useStyles(); 
-  const uuid = props.match.params.uuid; 
+
+  if(typeof props.match.params.uuid != 'undefined'){
+    localStorage.setItem("batch_upload_uuid", props.match.params.uuid);
+  }
+
+
   return (
     <Page
       className={classes.root}
-      title="Posted Synchronization Records"
+      title="Batch Processes"
     >
     <Card>
-        <CardContent> 
-            <DetailsView uuid = {uuid}/>
+        <CardContent>
+            <AddDetails/>
         </CardContent>
     </Card>
      
@@ -40,9 +46,9 @@ const Edit = props => {
   );
 };
 
-Edit.propTypes = {
+Add.propTypes = {
   history: PropTypes.object.isRequired,
   match: PropTypes.object.isRequired
 };
 
-export default Edit;
+export default Add;

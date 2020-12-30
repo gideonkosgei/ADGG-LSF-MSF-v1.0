@@ -437,6 +437,14 @@ export const endpoint_batch_sync_upload = {
   headers: headers   
 };
 
+//upload Batch animal registration Records
+export const endpoint_batch_animal_upload = {
+  url: `${api}/batches/animal/upload`,
+  method: 'POST',
+  headers: headers   
+};
+
+
 
 //upload Batch Exit & Disposal Records
 export const endpoint_batch_exit_upload = {

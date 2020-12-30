@@ -28,7 +28,7 @@ const Edit = props => {
   return (
     <Page
       className={classes.root}
-      title="posted Insemination records"
+      title="Posted Synchronization records"
     >
     <Card>
         <CardContent> 

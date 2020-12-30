@@ -2141,6 +2141,7 @@ export const getBatchValidation =  function (config,uuid) {
     method: config.method,
     headers: config.headers  
   }  
+  console.log(options);
 
   return new Promise((resolve, reject) => {
     axios(options)
@@ -2229,13 +2230,13 @@ export const batchProcessActions =  function (config,uuid,action,user_id) {
 	  "uuid":uuid, 
 	  "user":user_id  
   };
-
   const options = {
     url:`${config.url}`, 
     method: config.method,
     headers: config.headers,
     data: body  
   };
+  console.log(options);
 
 
 

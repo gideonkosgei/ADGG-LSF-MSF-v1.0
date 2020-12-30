@@ -53,7 +53,7 @@ const Validate = props => {
             setValues(response.payload);
           }
         });
-      })(endpoint_batch_validation_un_processed_view,6,organization_id,step,user_id); 
+      })(endpoint_batch_validation_un_processed_view,8,organization_id,step,user_id); 
       
     return () => {
       mounted = false;
@@ -139,13 +139,13 @@ const Validate = props => {
     const columns = [      
     { name: "record_id",label: "record_id",options: {filter: false,sort: false,display:false}},
     { name: "uuid",label: "uuid",options: {filter: false,sort: false,display:false}},
-    { name: "animal_id",label: "Animal ID",options: {filter: true,sort: true, display:true}},
-    { name: "sync_date",label: "Sync Date",options: {filter: true,sort: true, display:true}},
-    { name: "sync_number",label: "Sync Number",options: {filter: true,sort: true, display:true}},
-    { name: "hormone_type",label: "Hormone Type",options: {filter: true,sort: true, display:true}},
-    { name: "hormone_source",label: "Source",options: {filter: true,sort: true, display:true}},
-    { name: "admin_name",label: "Admin",options: {filter: true,sort: true, display:true}},
-    { name: "cost",label: "Cost",options: {filter: true,sort: true, display:true}},    
+    { name: "tag_id",label: "Tag ID",options: {filter: true,sort: true, display:true}},
+    { name: "animal_name",label: "Name",options: {filter: true,sort: true, display:true}},
+    { name: "dob",label: "DOB",options: {filter: true,sort: true, display:true}},
+    { name: "animal_type",label: "Animal Type",options: {filter: true,sort: true, display:true}},
+    { name: "main_breed",label: "Breed",options: {filter: true,sort: true, display:true}},
+    { name: "color",label: "color",options: {filter: true,sort: true, display:true}},
+   // { name: "breed_composition",label: "B.Composition",options: {filter: true,sort: true, display:true}},    
     { name: "record_status",label: "Status",options: {filter: true,sort: true, display:true}},      
     { name: "",
       options: {

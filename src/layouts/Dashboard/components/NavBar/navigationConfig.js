@@ -95,15 +95,15 @@ export default [
         icon: ListAltIcon, 
         children: [
           {
-            title: 'Animal Reg Batch',
+            title: 'Animal Reg',
+            href: '/batch-process/animal/home',                     
+          },
+          {
+            title: 'Milking ',
             href: '/batch-process/milking-records/home',                     
           },
           {
-            title: 'Milking Batch',
-            href: '/batch-process/milking-records/home',                     
-          },
-          {
-            title: 'Weight & Growth Batch',
+            title: 'Weight & Growth ',
             href: '/batch-process/weight/home',                     
           },
           {
@@ -111,19 +111,19 @@ export default [
             href: '/batch-process/pd/home',                     
           },
           {
-            title: 'Insemination Batch',
+            title: 'Insemination ',
             href: '/batch-process/ai/home',                     
           },
           {
-            title: 'Exit/Disposal Batch',
+            title: 'Exit/Disposal ',
             href: '/batch-process/exit/home',                     
           },
           {
-            title: 'Synchronization Batch',
+            title: 'Synchronization ',
             href: '/batch-process/sync/home',                     
           },
           {
-            title: 'Calving Batch',
+            title: 'Calving ',
             href: '/batch-process/milking-records/home',                     
           },
         ]     

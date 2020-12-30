@@ -24,15 +24,15 @@ const useStyles = makeStyles(theme => ({
 
 const Edit = props => { 
   const classes = useStyles(); 
-  const uuid = props.match.params.uuid; 
+  const current_step = props.match.params.step;
   return (
     <Page
       className={classes.root}
-      title="Posted Synchronization Records"
+      title="Posted Animal Reg records"
     >
     <Card>
         <CardContent> 
-            <DetailsView uuid = {uuid}/>
+            <DetailsView step = {current_step}/>
         </CardContent>
     </Card>
      
