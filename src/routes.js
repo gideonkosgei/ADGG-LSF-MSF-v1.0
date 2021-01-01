@@ -898,6 +898,64 @@ const routes = [
       component: lazy(() => import('views/Batch/components/Animal/components/add'))        
     },
 
+
+    
+      /*
+        Calving Batch Processes
+      */
+     {
+      path: '/batch-process/calving/home',
+      exact: true,
+      component: lazy(() => import('views/Batch/components/Calving/components/home'))        
+    },  
+
+     // Add New Batch processes Routes
+     {
+      path: '/batch-process/calving/add',
+      exact: true,
+      component: lazy(() => import('views/Batch/components/Calving/components/add'))        
+    }, 
+    // Deleted  batches
+    {
+      path: '/batch-process/calving/deleted',
+      exact: true,
+      component: lazy(() => import('views/Batch/components/Calving/components/deleted'))        
+    }, 
+    //Posted Batches
+    {
+      path: '/batch-process/calving/posted',
+      exact: true,
+      component: lazy(() => import('views/Batch/components/Calving/components/posted'))        
+    }, 
+    {
+      path: '/batch-process/calving/finalized/:uuid',
+      exact: true,
+      component: lazy(() => import('views/Batch/components/Calving/components/finalized'))        
+    },
+     // Batch processes Routes
+     {
+      path: '/batch-process/calving/home',
+      exact: true,
+      component: lazy(() => import('views/Batch'))        
+    },  
+     // Batch processes - view processing queue
+     {
+      path: '/batch-process/calving/stage/:step',
+      exact: true,
+      component: lazy(() => import('views/Batch/components/Calving/components/view'))        
+    },  
+    // Batch processes Routes subsequent Steps
+    {
+      path: '/batch-process/calving/add/:uuid',
+      exact: true,
+      component: lazy(() => import('views/Batch/components/Calving/components/add'))        
+    },
+
+
+
+
+
+
     /*
         Sync Batch Processes
       */

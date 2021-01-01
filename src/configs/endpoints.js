@@ -444,6 +444,12 @@ export const endpoint_batch_animal_upload = {
   headers: headers   
 };
 
+//upload Batch calving Records
+export const endpoint_batch_calving_upload = {
+  url: `${api}/batches/calving/upload`,
+  method: 'POST',
+  headers: headers   
+};
 
 
 //upload Batch Exit & Disposal Records

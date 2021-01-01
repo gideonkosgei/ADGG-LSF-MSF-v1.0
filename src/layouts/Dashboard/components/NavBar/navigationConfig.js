@@ -124,7 +124,7 @@ export default [
           },
           {
             title: 'Calving ',
-            href: '/batch-process/milking-records/home',                     
+            href: '/batch-process/calving/home',                     
           },
         ]     
       },
