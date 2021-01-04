@@ -187,7 +187,49 @@ export default [
             ] 
           }         
         ]
-      },        
+      }, 
+      {
+        title: 'Reports',
+        href: '/reports',
+        icon: SettingsIcon,
+        children: [
+          {
+            title: 'Events',
+            href: '/events',
+            children: [
+              {
+                title: 'Milking',
+                href: '/reports/events/milking'
+              },
+              {
+                title: 'Weight & Growth',
+                href: '/reports/events/weight'
+              },
+              {
+                title: 'Insemination',
+                href: '/reports/events/ai'
+              },
+              {
+                title: 'Calving',
+                href: '/reports/events/calving'
+              },
+              {
+                title: 'PD',
+                href: '/reports/events/pd'
+              },
+              {
+                title: 'Sync',
+                href: '/reports/events/sync'
+              },
+              {
+                title: 'Exit & Disposal',
+                href: '/reports/events/exit'
+              },
+            ]
+          },         
+         
+        ]
+      },       
       {
         title: 'Downloads',
         href: '/downloads',

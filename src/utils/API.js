@@ -206,13 +206,13 @@ export const getHerds =  function (config,id) {
 });       
 }
 
-// get weight & growth Deatials
-export const getWeights =  function (config,id) {   
-  const options = {
-    url:`${config.url}'${id}'`,
-    method: config.method,
-    headers: config.headers  
-  }  
+// get weight & growth Detaills
+  export const getWeights =  function (config,id,option) {   
+    const options = {
+      url:`${config.url}${id}/${option}`,
+      method: config.method,
+      headers: config.headers  
+    }  
  
   return new Promise((resolve, reject) => {
     axios(options)
@@ -341,12 +341,12 @@ export const getWeightSummaries =  function (config,animal_id,year) {
 }
 
 // get PD events 
-export const getPD =  function (config,id) {   
-  const options = {
-    url:`${config.url}'${id}'`,
-    method: config.method,
-    headers: config.headers  
-  }  
+  export const getPD =  function (config,id,option) {   
+    const options = {
+      url:`${config.url}${id}/${option}`,
+      method: config.method,
+      headers: config.headers  
+    }  
  
   return new Promise((resolve, reject) => {
     axios(options)
@@ -470,12 +470,12 @@ export const updatePd =  function (config,event_id,values,user_id) {
 }
 
 // get sync events 
-export const getSync =  function (config,id) {   
-  const options = {
-    url:`${config.url}'${id}'`,
-    method: config.method,
-    headers: config.headers  
-  }  
+  export const getSync =  function (config,id,option) {   
+    const options = {
+      url:`${config.url}${id}/${option}`,
+      method: config.method,
+      headers: config.headers  
+    }  
  
   return new Promise((resolve, reject) => {
     axios(options)
@@ -637,9 +637,9 @@ export const updateSync =  function (config,event_id,values,user_id) {
 }
 
 // get Insemination events 
-export const getInsemination =  function (config,id) {   
+export const getInsemination =  function (config,id,option) {   
   const options = {
-    url:`${config.url}'${id}'`,
+    url:`${config.url}${id}/${option}`,
     method: config.method,
     headers: config.headers  
   }  
@@ -773,12 +773,12 @@ export const getExit =  function (config,id) {
 
 
 // get Exit events 
-export const getExitList =  function (config,id) {   
-  const options = {
-    url:`${config.url}'${id}'`,
-    method: config.method,
-    headers: config.headers  
-  }  
+  export const getExitList =  function (config,id) {   
+    const options = {
+      url:`${config.url}${id}`,
+      method: config.method,
+      headers: config.headers  
+    }  
  
   return new Promise((resolve, reject) => {
     axios(options)
@@ -1212,9 +1212,9 @@ export const updateExit =  function (config,event_id,values,user_id) {
 
 
 // get calving events 
-export const getCalving =  function (config,id) {   
+export const getCalving =  function (config,id,option) {   
   const options = {
-    url:`${config.url}'${id}'`,
+    url:`${config.url}${id}/${option}`,
     method: config.method,
     headers: config.headers  
   }  
@@ -1398,9 +1398,9 @@ export const updateCalving =  function (config,event_id,values,user_id) {
 
 
 // get Milking events 
-export const getMilking =  function (config,id) {   
+export const getMilking =  function (config,id,option) {   
   const options = {
-    url:`${config.url}'${id}'`,
+    url:`${config.url}${id}/${option}`,
     method: config.method,
     headers: config.headers  
   }  
@@ -2141,7 +2141,7 @@ export const getBatchValidation =  function (config,uuid) {
     method: config.method,
     headers: config.headers  
   }  
-  console.log(options);
+ 
 
   return new Promise((resolve, reject) => {
     axios(options)
@@ -2236,9 +2236,6 @@ export const batchProcessActions =  function (config,uuid,action,user_id) {
     headers: config.headers,
     data: body  
   };
-  console.log(options);
-
-
 
 return new Promise((resolve, reject) => {
   axios(options)

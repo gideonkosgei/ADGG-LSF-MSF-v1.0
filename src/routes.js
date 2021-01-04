@@ -1007,6 +1007,44 @@ const routes = [
       component: lazy(() => import('views/Batch/components/Sync/components/add'))        
     },
 
+    //reports
+    {
+      path: '/reports/events/milking',
+      exact: true,
+      component: lazy(() => import('views/Reports/components/Events/components/milking/'))        
+    },
+    {
+      path: '/reports/events/weight',
+      exact: true,
+      component: lazy(() => import('views/Reports/components/Events/components/weight/'))        
+    },
+    {
+      path: '/reports/events/ai',
+      exact: true,
+      component: lazy(() => import('views/Reports/components/Events/components/ai/'))        
+    },
+    {
+      path: '/reports/events/calving',
+      exact: true,
+      component: lazy(() => import('views/Reports/components/Events/components/calving/'))        
+    },
+    {
+      path: '/reports/events/pd',
+      exact: true,
+      component: lazy(() => import('views/Reports/components/Events/components/pd/'))        
+    },
+    {
+      path: '/reports/events/sync',
+      exact: true,
+      component: lazy(() => import('views/Reports/components/Events/components/sync/'))        
+    },
+    {
+      path: '/reports/events/exit',
+      exact: true,
+      component: lazy(() => import('views/Reports/components/Events/components/exit/'))        
+    },
+
+
 
 
 

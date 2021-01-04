@@ -1,15 +1,14 @@
-import React, { useState,useEffect } from 'react';
+import React, { useState,useEffect,useContext } from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
-import {Card, CardContent, CardHeader, Grid,Divider,colors,Link } from '@material-ui/core';
-import {getMilking}   from '../../../../../../utils/API';
-import {endpoint_milking} from '../../../../../../configs/endpoints';
-import {Sidebar} from '../index';
+import {Card, CardContent, CardHeader, Grid,Divider,colors,Link} from '@material-ui/core';
+import {getInsemination}   from '../../../../../../utils/API';
+import {endpoint_insemination} from '../../../../../../configs/endpoints';
+import authContext from '../../../../../../contexts/AuthContext';
 import MUIDataTable from "mui-datatables";
 import {MuiThemeProvider } from '@material-ui/core/styles';
 import PerfectScrollbar from 'react-perfect-scrollbar';
-import CustomToolbar from "../CustomToolbar";
 import { Link as RouterLink } from 'react-router-dom';
 import OpenInNewIcon from '@material-ui/icons/OpenInNew';
 
@@ -23,45 +22,48 @@ const useStyles = makeStyles(theme => ({
     }
   }
 }));
-
 const DetailsView = props => {
   const {className, ...rest } = props; 
   const classes = useStyles();  
   const [values, setValues] = useState([]);
-  const animal_id  = localStorage.getItem('animal_id');
-  const animal_tag  = sessionStorage.getItem('animal_tag');
-  const animal_name  = sessionStorage.getItem('animal_name');
+  const [ {organization_id}  ] = useContext(authContext);
 
   useEffect(() => {     
     let mounted = true;
       (async  (endpoint,id,option) => {     
-        await  getMilking(endpoint,id,option)
+        await  getInsemination(endpoint,id,option)
         .then(response => {                        
           if (mounted) {            
             setValues(response.payload[0]);                 
           }
         });
-      })(endpoint_milking,animal_id,0); 
+      })(endpoint_insemination,organization_id,1); 
       
     return () => {
-      mounted = false;
-           
+      mounted = false;           
     };
-  }, [animal_id]); 
+  }, [organization_id]); 
 
   if (!values) {
     return null;
   }  
-
+  
+ 
     const columns = [
-    { name: "event_id",label: "Event ID",options: {filter: false,sort: false,display:false}}, 
-    { name: "milk_date",label: "Milk Date",options: {filter: false,sort: true,display:true}}, 
-    { name: "lactation_id",label: "Lactation ID",options: {filter: false,sort: true,display:true}}, 
-    { name: "testday_no",label: "Test Day",options: {filter: false,sort: true,display:true}},   
-    { name: "days_in_milk",label: "Days in Milk",options: {filter: false,sort: true,display:true}},
-    { name: "milk_am_litres",label: "Milk(am)(ltr)",options: {filter: false,sort: true,display:true}},    
-    { name: "milk_mid_day",label: "Milk(midday)(ltr)",options: {filter: true,sort: true, display:true}},
-    { name: "milk_pm_litres",label: "Milk(pm)(ltr)",options: {filter: false,sort: true,display:true}},
+      { name: "event_id",label: "Event ID",options: {filter: false,sort: false,display:false}},
+      { name: "animal_id",label: "Animal ID",options: {filter: true,sort: true,display:true}}, 
+      { name: "tag_id",label: "Tag",options: {filter: true,sort: true,display:true}}, 
+      { name: "animal_name",label: "Name",options: {filter: true,sort: true,display:true}}, 
+      { name: "ai_date",label: "AI Date",options: {filter: false,sort: true,display:true}},    
+      { name: "type_of_ai",label: "AI Type",options: {filter: false,sort: true,display:true}},
+      //{ name: "semen_batch",label: "Batch",options: {filter: false,sort: true,display:true}},    
+      { name: "straw_id_scan_sire_code",label: "Straw ID",options: {filter: true,sort: true, display:true}},
+      { name: "source_of_semen",label: "Semen Source",options: {filter: false,sort: true,display:true}},
+      { name: "straw_semen_type",label: "Semen Type",options: {filter: true,sort: true,display:true}},
+      //{ name: "country_of_sire_bull_origin",label: "Bull Origin",options: {filter: true,sort: true,display:true}},
+      { name: "breed_of_the_bull",label: "Bull Breed",options: {filter: true,sort: true,display:true}},     
+      { name: "breed_composition_of_bull",label: "Breed Comp.",options: {filter: true,sort: true,display:true}},
+      
     { name: "",
       options: {
       filter: false,
@@ -70,19 +72,16 @@ const DetailsView = props => {
       customBodyRender: (value, tableMeta, updateValue) => {        
         return (
           <Link
-              component={RouterLink}
-              to = {`/management/milking/edit/${tableMeta.rowData[0]}`}              
+              component={RouterLink}             
+              to = {`/management/insemination/edit/${tableMeta.rowData[0]}`}              
           >
             <OpenInNewIcon/>
           </Link>          
         );
       }
     }
-  }         
-  ];
-  
-
-  
+  }    
+  ];   
   const options = {       
     filter: true,
     rowsPerPage: 5,       
@@ -96,35 +95,27 @@ const DetailsView = props => {
        padding: "none" ,         
        size: "small",
      };
-   },
-   customToolbar: () => {
-    return (
-      <CustomToolbar />
-    );
-  }  
+   }
   };
 
   return (
     <Card
       {...rest}
       className={clsx(classes.root, className)}
-    >        
-        <CardHeader title= {`MILKING RECORDS  - ${animal_name}(${animal_tag}) `}/>  
+    >
+        <CardHeader title="INSEMINATION REPORT" />
         <Divider />
         <CardContent> 
           <Grid container spacing={1} justify="center">            
-          <Grid item  xs={1} >  
-            <Sidebar animal_id = {animal_id}/>
-          </Grid> 
-          <Grid item xs={11}>
+         
+          <Grid item xs={12}>
               <Card> 
-                <CardContent> 
-                 
+                <CardContent>                 
                   <PerfectScrollbar>
                     <div className={classes.inner}>
                       <MuiThemeProvider>                
                         <MUIDataTable
-                          title = ""
+                          title = "AGGREGATED INSEMINATION RECORDS"
                           data={values}
                           columns={columns}
                           options={options}
