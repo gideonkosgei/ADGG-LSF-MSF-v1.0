@@ -105,7 +105,8 @@ const Post = props => {
     { name: "body_length",label: "Body Length",options: {filter: true,sort: true, display:true}},
     { name: "heart_girth",label: "Heart Girth",options: {filter: true,sort: true, display:true}},
     { name: "body_weight",label: "Body Weight",options: {filter: true,sort: true, display:true}},
-    { name: "body_score",label: "Body Score",options: {filter: true,sort: true, display:true}},         
+    { name: "body_score",label: "Body Score",options: {filter: true,sort: true, display:true}}, 
+    { name: "record_status",label: "Status",options: {filter: true,sort: true, display:true}},        
     { name: "",
       options: {
       filter: false,
@@ -160,7 +161,7 @@ const Post = props => {
           </Box>   
           <Box>      
             {
-            values[0].batch_status_id ===3 ?            
+            values[0].batch_status_id ===3 || (values[0].batch_status_id ===2 &&   values[0].successful_records > 0)?         
             <form onSubmit={handlePostRecords}>                
               <Button
                 className={classes.saveButton}               

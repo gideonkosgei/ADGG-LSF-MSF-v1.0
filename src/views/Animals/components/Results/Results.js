@@ -38,7 +38,9 @@ const Results = props => {
   const classes = useStyles(); 
 
   const columns = [
-    { name: "animal_id",label: "id",options: {filter: false,sort: false,display:false}},     
+    { name: "animal_id",label: "id",options: {filter: false,sort: false,display:false}}, 
+    { name: "registration_date",label: "Reg Date",options: {filter: false,sort: true, display:true,hint:'Registration Date'}} ,
+    { name: "animal_id",label: "ID",options: {filter: false,sort: true,display:true}},    
     { name: "tag_id",label: "Tag",options: {filter: false,sort: true,display:true}},
     { name: "animal_name",label: "Name",options: {filter: false,sort: true,display:true}},   
     { name: "herd_name",label: "Herd",options: {filter: true,sort: true,}},
@@ -46,8 +48,7 @@ const Results = props => {
     { name: "sex_id",label: "sex_id",options: {filter: false,sort: true,display:false}},
     { name: "sex",label: "Sex",options: {filter: true,sort: true,display:true}},    
     { name: "farm_id",label: "farm_id",options: {filter: false,sort: true,display:false}},    
-    { name: "animalType",label: "Type",options: {filter: true,sort: true, display:true}},
-    { name: "registration_date",label: "Reg Date",options: {filter: false,sort: true, display:true,hint:'Registration Date'}} ,
+    { name: "animalType",label: "Type",options: {filter: true,sort: true, display:true}},   
     { name: "dateofBirth",label: "DOB",options: {filter: false,sort: true, display:true}} ,  
     { name: "main_breed",label: "Breed",options: {filter: true,sort: true, display:true}},  
     { name: "breedComposition",label: "Breed Comp",options: {filter: false,sort: false, display:true, hint:'Breed Composition'}},

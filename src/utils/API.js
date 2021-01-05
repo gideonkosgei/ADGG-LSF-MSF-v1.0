@@ -146,7 +146,8 @@ export const getAnimalsOrg =  function (config,organisation_id,status) {
     url:`${config.url}${organisation_id}/${status}`,
     method: config.method,
     headers: config.headers  
-  }  
+  } 
+
   return new Promise((resolve, reject) => {
     axios(options)
     .then(res => {          
@@ -2141,6 +2142,8 @@ export const getBatchValidation =  function (config,uuid) {
     method: config.method,
     headers: config.headers  
   }  
+
+
  
 
   return new Promise((resolve, reject) => {
@@ -2158,11 +2161,10 @@ export const getBatchUnprocessed =  function (config,type,org_id,step,user_id) {
     method: config.method,
     headers: config.headers  
   }  
- 
   
   return new Promise((resolve, reject) => {
     axios(options)
-    .then(res => {             
+    .then(res => {            
         resolve(res.data);
     })
     .catch(err => reject(err));

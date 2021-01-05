@@ -164,7 +164,7 @@ const Post = props => {
           </Box>   
           <Box>      
             {
-            values[0].batch_status_id ===3 ?            
+            values[0].batch_status_id ===3 || (values[0].batch_status_id ===2 &&   values[0].successful_records > 0)?            
             <form onSubmit={handlePostRecords}>                
               <Button
                 className={classes.saveButton}               

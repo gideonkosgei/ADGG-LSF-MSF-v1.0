@@ -224,7 +224,20 @@ const Validate = props => {
                       </Button>
                     </form>  
                       : 
-                      values[0].batch_status_id ===2 ? null:
+                      values[0].batch_status_id ===2 ?
+                      values[0].successful_records > 0 ?
+                      <form onSubmit={handleProgressToPostingQueue}>
+                        <Button
+                          className={classes.saveButton}
+                          type="submit"
+                          variant="contained"
+                          hidden = "true"                               
+                        >
+                            Progress only successful Records
+                        </Button>
+                      </form>
+                      :null 
+                      :
                       <form onSubmit={handleProgressToPostingQueue}>
                         <Button
                           className={classes.saveButton}

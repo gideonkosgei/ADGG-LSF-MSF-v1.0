@@ -226,8 +226,11 @@ export default [
                 href: '/reports/events/exit'
               },
             ]
-          },         
-         
+          },
+          {
+            title: 'Animal Registration',
+            href: '/management/animals'
+          },          
         ]
       },       
       {
