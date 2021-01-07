@@ -3,8 +3,8 @@ import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import {Card, CardContent,Grid,colors,CardActions,Box,Button } from '@material-ui/core';
-import {getBatchUnprocessed,batchProcessActions}   from '../../../../../../../../utils/API';
-import {endpoint_batch_validation_un_processed_view,endpoint_batch_actions} from '../../../../../../../../configs/endpoints';
+import {batchProcessActions}   from '../../../../../../../../utils/API';
+import {endpoint_batch_actions} from '../../../../../../../../configs/endpoints';
 import MUIDataTable from "mui-datatables";
 import {MuiThemeProvider } from '@material-ui/core/styles';
 import PerfectScrollbar from 'react-perfect-scrollbar';
@@ -26,9 +26,7 @@ const useStyles = makeStyles(theme => ({
 
 const Post = props => {
   const {className,step,UploadedRecords, ...rest } = props; 
-  const classes = useStyles();  
-  const [values, setValues] = useState(UploadedRecords);  
-  const [ {organization_id} ] = useContext(authContext);
+  const classes = useStyles(); 
   const [ {user_id} ] = useContext(authContext);
   const [openSnackbarSuccess, setopenSnackbarSuccess] = useState(false);
   const [openSnackbarError, setopenSnackbarError] = useState(false);
@@ -36,26 +34,16 @@ const Post = props => {
   const uuid= localStorage.getItem('batch_upload_uuid');
   localStorage.removeItem('batch_upload_uuid');
 
-  useEffect(() => {     
-    let mounted = true;
-      (async  (endpoint,type,org_id,step,user_id) => {     
-        await  getBatchUnprocessed(endpoint,type,org_id,step,user_id)
-        .then(response => {                        
-          if (mounted) {                       
-            setValues(response.payload);
-          }
-        });
-      })(endpoint_batch_validation_un_processed_view,2,organization_id,step,user_id); 
-      
-    return () => {
-      mounted = false;
-           
-    };
-  }, [organization_id,step,user_id]); 
+  let values = [];
 
-  if (!values) {
-    return null;
-  }   
+  for (let i = 0; i<UploadedRecords.length;i++){
+    if (UploadedRecords[i].record_status_id === 2){
+      values.push(UploadedRecords[i]);
+    }
+  }
+
+useEffect(() => {  
+}, []);
 
   const handlePostRecords = event => {
     event.preventDefault(); 
