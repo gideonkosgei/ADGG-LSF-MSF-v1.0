@@ -15,6 +15,8 @@ import authContext from '../../../../../../../../contexts/AuthContext';
 import SuccessSnackbar from '../../../../../../../../components/SuccessSnackbar';
 import ErrorSnackbar from '../../../../../../../../components/ErrorSnackbar';
 import {ErrorDetails} from '../errorDetailsModal';
+import {Details} from '../DetailsModal';
+import ErrorOutlineIcon from '@material-ui/icons/ErrorOutline';
 
 
 const useStyles = makeStyles(theme => ({
@@ -38,6 +40,7 @@ const Validate = props => {
   const [openSnackbarError, setopenSnackbarError] = useState(false);
   const [openErrorLog, setErrorLog] = useState(false); 
   const [record_id, setRecordID] = useState();    
+  const [openDetails, setDetails] = useState(false);
 
   
   const uuid= localStorage.getItem('batch_upload_uuid');
@@ -135,6 +138,15 @@ const Validate = props => {
   const handleErrorLogClose = () => {
     setErrorLog(false);
   };
+
+  const handleDetailsOpen = (record_id) => { 
+    setRecordID(record_id);
+    setDetails(true);
+  };
+
+  const handleDetailsClose = () => {
+    setDetails(false);
+  };
   
     const columns = [      
     { name: "record_id",label: "record_id",options: {filter: false,sort: false,display:false}},
@@ -155,13 +167,30 @@ const Validate = props => {
       display:true,   
       customBodyRender: (value, tableMeta, updateValue) => {         
         return (                              
-          <Button onClick = {() => handleErrorLogOpen(tableMeta.rowData[0])}>            
-          <OpenInNewIcon className={classes.buttonIcon} />                
+          <Button onClick = {() => handleDetailsOpen(tableMeta.rowData[0])}>            
+          < OpenInNewIcon className={classes.buttonIcon} />                
           </Button>
         );
       }
     }
-}    
+    
+    },
+    { name: "",
+      options: {
+      filter: false,
+      sort: false,  
+      empty:true, 
+      display:true,        
+      customBodyRender: (value, tableMeta, updateValue) => {         
+        return (                              
+          <Button onClick = {() => handleErrorLogOpen(tableMeta.rowData[0])}>            
+          <ErrorOutlineIcon className={classes.buttonIcon} />                
+          </Button>
+        );
+      }
+    }
+    
+    }   
   ];
 
   
@@ -280,6 +309,13 @@ const Validate = props => {
                         record_id={record_id}
                         onClose={handleErrorLogClose}
                         open={openErrorLog}    
+                />
+
+                <Details
+                        record_id={record_id}
+                        data = {values}
+                        onClose={handleDetailsClose}
+                        open={openDetails}    
                 />
               </Card> 
           </Grid>

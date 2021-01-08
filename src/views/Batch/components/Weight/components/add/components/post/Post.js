@@ -12,6 +12,8 @@ import CustomToolbar from "./CustomToolbar";
 import authContext from '../../../../../../../../contexts/AuthContext';
 import SuccessSnackbar from '../../../../../../../../components/SuccessSnackbar';
 import ErrorSnackbar from '../../../../../../../../components/ErrorSnackbar';
+import {Details} from '../DetailsModal';
+import OpenInNewIcon from '@material-ui/icons/OpenInNew';
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -30,6 +32,9 @@ const Post = props => {
   const [ {user_id} ] = useContext(authContext);
   const [openSnackbarSuccess, setopenSnackbarSuccess] = useState(false);
   const [openSnackbarError, setopenSnackbarError] = useState(false);
+
+  const [record_id, setRecordID] = useState();   
+  const [openDetails, setDetails] = useState(false); 
   
   const uuid= localStorage.getItem('batch_upload_uuid');
   localStorage.removeItem('batch_upload_uuid');
@@ -85,6 +90,15 @@ const Post = props => {
   const handleSnackbarErrorClose = () => {
     setopenSnackbarError(false);
   };
+
+  const handleDetailsOpen = (record_id) => { 
+    setRecordID(record_id);
+    setDetails(true);
+  };
+
+  const handleDetailsClose = () => {
+    setDetails(false);
+  };
     const columns = [
     { name: "uuid",label: "uuid",options: {filter: false,sort: false,display:false}},
     { name: "animal_id",label: "Animal",options: {filter: true,sort: true, display:true}},
@@ -98,9 +112,19 @@ const Post = props => {
       options: {
       filter: false,
       sort: false,  
-      empty:true  
+      empty:true, 
+      display:true,   
+      customBodyRender: (value, tableMeta, updateValue) => {         
+        return (                              
+          <Button onClick = {() => handleDetailsOpen(tableMeta.rowData[0])}>            
+          < OpenInNewIcon className={classes.buttonIcon} />                
+          </Button>
+        );
+      }
     }
-}    
+    
+    }
+   
   ];
 
   
@@ -188,7 +212,14 @@ const Post = props => {
           <ErrorSnackbar
             onClose={handleSnackbarErrorClose}
             open={openSnackbarError}
-          />       
+          />  
+
+          <Details
+            record_id={record_id}
+            data = {values}
+            onClose={handleDetailsClose}
+            open={openDetails}    
+           />     
           </Card> 
           </Grid>
         </Grid>
