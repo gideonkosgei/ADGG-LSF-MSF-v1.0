@@ -2141,10 +2141,7 @@ export const getBatchValidation =  function (config,uuid) {
     url:`${config.url}${uuid}`,
     method: config.method,
     headers: config.headers  
-  }  
-
-
- 
+  } 
 
   return new Promise((resolve, reject) => {
     axios(options)
@@ -2161,6 +2158,7 @@ export const getBatchUnprocessed =  function (config,type,org_id,step,user_id) {
     method: config.method,
     headers: config.headers  
   }  
+  console.log(options);
   
   return new Promise((resolve, reject) => {
     axios(options)

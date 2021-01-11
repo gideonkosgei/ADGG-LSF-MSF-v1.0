@@ -41,8 +41,6 @@ const Validate = props => {
   const [openErrorLog, setErrorLog] = useState(false); 
   const [record_id, setRecordID] = useState();   
   const [openDetails, setDetails] = useState(false); 
-
-  
   const uuid= localStorage.getItem('batch_upload_uuid');
   localStorage.removeItem('batch_upload_uuid');
   
@@ -67,6 +65,8 @@ const Validate = props => {
   if (!values) {
     return null;
   }  
+
+  console.log(UploadedRecords);
 
   const handleValidate = event => {
     event.preventDefault(); 
@@ -308,7 +308,7 @@ const Validate = props => {
                 />
                 <Details
                         record_id={record_id}
-                        data = {values}
+                        data = {UploadedRecords}
                         onClose={handleDetailsClose}
                         open={openDetails}    
                 />
