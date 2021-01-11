@@ -66,7 +66,6 @@ const Validate = props => {
     return null;
   }  
 
-  console.log(UploadedRecords);
 
   const handleValidate = event => {
     event.preventDefault(); 
