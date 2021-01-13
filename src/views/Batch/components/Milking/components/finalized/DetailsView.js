@@ -2,7 +2,7 @@ import React, { useState,useEffect } from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
-import {Card, CardContent, CardHeader, Grid,Divider,colors } from '@material-ui/core';
+import {Card, CardContent, CardHeader, Grid,Divider,colors,Button } from '@material-ui/core';
 import {getBatchValidation}   from '../../../../../../utils/API';
 import {endpoint_batch_validation_view} from '../../../../../../configs/endpoints';
 import {Sidebar} from '../sidebar';
@@ -10,10 +10,8 @@ import MUIDataTable from "mui-datatables";
 import {MuiThemeProvider } from '@material-ui/core/styles';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import CustomToolbar from "./CustomToolbar";
-
-
-
-
+import {Details} from '../add/components/DetailsModal';
+import OpenInNewIcon from '@material-ui/icons/OpenInNew';
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -30,6 +28,8 @@ const DetailsView = props => {
   const {className,uuid, ...rest } = props; 
   const classes = useStyles();  
   const [values, setValues] = useState([]); 
+  const [record_id, setRecordID] = useState();   
+  const [openDetails, setDetails] = useState(false);
 
   useEffect(() => {     
     let mounted = true;
@@ -52,8 +52,18 @@ const DetailsView = props => {
     return null;
   }
 
+  const handleDetailsOpen = (record_id) => { 
+    setRecordID(record_id);
+    setDetails(true);
+  };
+
+  const handleDetailsClose = () => {
+    setDetails(false);
+  };
+
  
     const columns = [
+      { name: "record_id",label: "Record Id",options: {filter: false,sort: false, display:false}},
       { name: "uuid",label: "uuid",options: {filter: false,sort: false,display:false}},
       { name: "animal_id",label: "Animal",options: {filter: true,sort: true, display:true}},
       { name: "milk_date",label: "Milk Date",options: {filter: true,sort: true, display:true}},
@@ -63,7 +73,23 @@ const DetailsView = props => {
       { name: "lactation_id",label: "Lact ID",options: {filter: true,sort: true, display:true}},
       { name: "lactation_number",label: "Lact No",options: {filter: true,sort: true, display:true}},
       { name: "days_in_milk",label: "Days in Milk",options: {filter: true,sort: true, display:true}},
-      { name: "test_day_no",label: "Test Day",options: {filter: true,sort: true, display:true}} 
+      { name: "test_day_no",label: "Test Day",options: {filter: true,sort: true, display:true}},
+      { name: "",
+      options: {
+      filter: false,
+      sort: false,  
+      empty:true, 
+      display:true,   
+      customBodyRender: (value, tableMeta, updateValue) => {         
+        return (                              
+          <Button onClick = {() => handleDetailsOpen(tableMeta.rowData[0])}>            
+          < OpenInNewIcon className={classes.buttonIcon} />                
+          </Button>
+        );
+      }
+    }
+    
+    }
     
   ];
 
@@ -122,6 +148,12 @@ const DetailsView = props => {
           </Grid>
         </Grid>
         </CardContent> 
+        <Details
+            record_id={record_id}
+            data = {values}
+            onClose={handleDetailsClose}
+            open={openDetails}    
+           />  
     </Card>
   );
 };

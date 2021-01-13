@@ -85,7 +85,7 @@ const useStyles = makeStyles(theme => ({
         className={clsx(classes.root, className)}
       >      
           <CardContent> 
-          <CardHeader title= "Milk & Growth Record"/>
+          <CardHeader title= "Weight & Growth Record"/>
            <Divider />
              
             <PerfectScrollbar>

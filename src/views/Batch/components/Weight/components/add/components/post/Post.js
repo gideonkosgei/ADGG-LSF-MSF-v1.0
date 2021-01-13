@@ -14,8 +14,7 @@ import SuccessSnackbar from '../../../../../../../../components/SuccessSnackbar'
 import ErrorSnackbar from '../../../../../../../../components/ErrorSnackbar';
 import {Details} from '../DetailsModal';
 import OpenInNewIcon from '@material-ui/icons/OpenInNew';
-import ErrorOutlineIcon from '@material-ui/icons/ErrorOutline';
-import {ErrorDetails} from '../errorDetailsModal';
+
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -37,7 +36,7 @@ const Post = props => {
 
   const [record_id, setRecordID] = useState();   
   const [openDetails, setDetails] = useState(false); 
-  const [openErrorLog, setErrorLog] = useState(false);
+ 
   
   const uuid= localStorage.getItem('batch_upload_uuid');
   localStorage.removeItem('batch_upload_uuid');
@@ -50,11 +49,7 @@ const Post = props => {
       }
     }    
     useEffect(() => {  
-    }, []); 
-
-    
-
-  
+    }, []);
  
   const handlePostRecords = event => {
     event.preventDefault(); 
@@ -98,14 +93,7 @@ const Post = props => {
     setopenSnackbarError(false);
   };
 
-  const handleErrorLogOpen = (record_id) => { 
-    setRecordID(record_id);
-    setErrorLog(true);
-  };
-
-  const handleErrorLogClose = () => {
-    setErrorLog(false);
-  };
+  
 
   const handleDetailsOpen = (record_id) => { 
     setRecordID(record_id);
@@ -115,8 +103,10 @@ const Post = props => {
   const handleDetailsClose = () => {
     setDetails(false);
   };
+
+
     const columns = [
-    { name: "animal_id",label: "Animal",options: {filter: false,sort: false, display:false}},
+    { name: "record_id",label: "Record Id",options: {filter: false,sort: false, display:false}},
     { name: "uuid",label: "uuid",options: {filter: false,sort: false,display:false}},
     { name: "animal_id",label: "Animal",options: {filter: true,sort: true, display:true}},
     { name: "weight_date",label: "Weight Date",options: {filter: true,sort: true, display:true}},
@@ -141,24 +131,9 @@ const Post = props => {
     }
     
     },
-    { name: "",
-      options: {
-      filter: false,
-      sort: false,  
-      empty:true, 
-      display:true,        
-      customBodyRender: (value, tableMeta, updateValue) => {         
-        return (                              
-          <Button onClick = {() => handleErrorLogOpen(tableMeta.rowData[0])}>            
-          <ErrorOutlineIcon className={classes.buttonIcon} />                
-          </Button>
-        );
-      }
-    }
-    
-    }  
    
   ];
+
 
   
   const options = {       
@@ -247,11 +222,7 @@ const Post = props => {
             open={openSnackbarError}
           />  
 
-          <ErrorDetails
-            record_id={record_id}
-            onClose={handleErrorLogClose}
-            open={openErrorLog}    
-          />
+          
 
           <Details
             record_id={record_id}

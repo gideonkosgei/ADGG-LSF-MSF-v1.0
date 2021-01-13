@@ -15,6 +15,8 @@ import ErrorSnackbar from '../../../../../../../../components/ErrorSnackbar';
 import {Details} from '../DetailsModal';
 import OpenInNewIcon from '@material-ui/icons/OpenInNew';
 
+
+
 const useStyles = makeStyles(theme => ({
   root: {},
   saveButton: {
@@ -34,6 +36,7 @@ const Post = props => {
   const [openSnackbarError, setopenSnackbarError] = useState(false);
   const [record_id, setRecordID] = useState();   
   const [openDetails, setDetails] = useState(false); 
+
   
   const uuid= localStorage.getItem('batch_upload_uuid');
   localStorage.removeItem('batch_upload_uuid');
@@ -98,6 +101,9 @@ useEffect(() => {
   const handleDetailsClose = () => {
     setDetails(false);
   };
+
+  
+
    
     const columns = [
       { name: "record_id",label: "record_id",options: {filter: false,sort: false,display:false}},
@@ -124,7 +130,7 @@ useEffect(() => {
       }
     }
     
-    },      
+    }   
    
   ];
 
@@ -215,12 +221,15 @@ useEffect(() => {
             open={openSnackbarError}
           />
 
+          
+
           <Details
-              record_id={record_id}
-              data = {values}
-              onClose={handleDetailsClose}
-              open={openDetails}    
-          />       
+            record_id={record_id}
+            data = {values}
+            onClose={handleDetailsClose}
+            open={openDetails}    
+           />  
+
           </Card> 
           </Grid>
         </Grid>
