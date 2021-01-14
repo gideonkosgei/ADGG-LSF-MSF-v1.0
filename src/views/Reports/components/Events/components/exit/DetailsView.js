@@ -51,10 +51,10 @@ const DetailsView = props => {
  
     const columns = [
       { name: "event_id",label: "Event ID",options: {filter: false,sort: false,display:false}},
+      { name: "disposal_date",label: "Exit Date",options: {filter: false,sort: true,display:true}}, 
       { name: "animal_id",label: "Animal ID",options: {filter: true,sort: true,display:true}}, 
       { name: "tag_id",label: "Tag",options: {filter: true,sort: true,display:true}}, 
-      { name: "name",label: "Name",options: {filter: true,sort: true,display:true}},     
-      { name: "disposal_date",label: "Exit Date",options: {filter: false,sort: true,display:true}},      
+      { name: "name",label: "Name",options: {filter: true,sort: true,display:true}},
       { name: "disposal_reason",label: "Exit Reason",options: {filter: false,sort: true,display:true}},    
       { name: "disposal_reason_other",label: "Other Exit Reason",options: {filter: true,sort: true, display:true}},    
       { name: "disposal_amount",label: "Disposal Amount",options: {filter: true,sort: true,display:true}},    

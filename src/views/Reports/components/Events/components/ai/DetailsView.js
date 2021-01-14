@@ -49,12 +49,12 @@ const DetailsView = props => {
   }  
   
  
-    const columns = [
+    const columns = [      
       { name: "event_id",label: "Event ID",options: {filter: false,sort: false,display:false}},
+      { name: "ai_date",label: "AI Date",options: {filter: false,sort: true,display:true}},
       { name: "animal_id",label: "Animal ID",options: {filter: true,sort: true,display:true}}, 
       { name: "tag_id",label: "Tag",options: {filter: true,sort: true,display:true}}, 
-      { name: "animal_name",label: "Name",options: {filter: true,sort: true,display:true}}, 
-      { name: "ai_date",label: "AI Date",options: {filter: false,sort: true,display:true}},    
+      { name: "animal_name",label: "Name",options: {filter: true,sort: true,display:true}},           
       { name: "type_of_ai",label: "AI Type",options: {filter: false,sort: true,display:true}},
       //{ name: "semen_batch",label: "Batch",options: {filter: false,sort: true,display:true}},    
       { name: "straw_id_scan_sire_code",label: "Straw ID",options: {filter: true,sort: true, display:true}},

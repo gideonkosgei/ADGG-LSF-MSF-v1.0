@@ -50,11 +50,11 @@ const DetailsView = props => {
   
  
     const columns = [
-      { name: "Event_ID",label: "Event ID",options: {filter: false,sort: true,display:true}},      
+      { name: "Event_ID",label: "Event ID",options: {filter: false,sort: false,display:false}}, 
+      { name: "event_date",label: "Weight Date",options: {filter: false,sort: true,display:true}},     
       { name: "animal_id",label: "Animal ID",options: {filter: true,sort: true,display:true}}, 
       { name: "tag_id",label: "Tag",options: {filter: true,sort: true,display:true}}, 
-      { name: "animal_name",label: "Name",options: {filter: true,sort: true,display:true}}, 
-      { name: "event_date",label: "Weight Date",options: {filter: false,sort: true,display:true}},
+      { name: "animal_name",label: "Name",options: {filter: true,sort: true,display:true}},      
       { name: "body_length",label: "Body Length",options: {filter: false,sort: true,display:true}},
       { name: "heart_girth",label: "Heart Girth",options: {filter: true,sort: true, display:true}},
       { name: "weight_kg",label: "Weight(kg)",options: {filter: true,sort: true, display:true}},

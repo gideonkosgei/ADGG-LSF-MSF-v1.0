@@ -51,10 +51,10 @@ const DetailsView = props => {
  
     const columns = [
       { name: "event_id",label: "Event ID",options: {filter: false,sort: false,display:false}}, 
+      { name: "milk_date",label: "Milk Date",options: {filter: false,sort: true,display:true}}, 
       { name: "animal_id",label: "Animal ID",options: {filter: true,sort: true,display:true}}, 
       { name: "tag_id",label: "Tag",options: {filter: true,sort: true,display:true}}, 
-      { name: "animal_name",label: "Name",options: {filter: true,sort: true,display:true}}, 
-      { name: "milk_date",label: "Milk Date",options: {filter: false,sort: true,display:true}}, 
+      { name: "animal_name",label: "Name",options: {filter: true,sort: true,display:true}},      
       { name: "lactation_id",label: "Lactation ID",options: {filter: false,sort: true,display:true}}, 
       { name: "testday_no",label: "Test Day",options: {filter: false,sort: true,display:true}},   
       { name: "days_in_milk",label: "Days in Milk",options: {filter: false,sort: true,display:true}},

@@ -52,10 +52,10 @@ const DetailsView = props => {
  
     const columns = [
     { name: "event_id",label: "Event ID",options: {filter: false,sort: false,display:false}}, 
+    { name: "sync_date",label: "Sync Date",options: {filter: false,sort: true,display:true}}, 
     { name: "animal_id",label: "Animal ID",options: {filter: true,sort: true,display:true}}, 
     { name: "tag_id",label: "Tag",options: {filter: true,sort: true,display:true}}, 
-    { name: "animal_name",label: "Name",options: {filter: true,sort: true,display:true}}, 
-    { name: "sync_date",label: "Sync Date",options: {filter: false,sort: true,display:true}},    
+    { name: "animal_name",label: "Name",options: {filter: true,sort: true,display:true}},        
     { name: "sync_number",label: "Sync Number",options: {filter: false,sort: true,display:true}},
     { name: "hormone_type",label: "Hormone",options: {filter: true,sort: true, display:true}},
     { name: "hormone_source",label: "H. Source",options: {filter: false,sort: true,display:true}},
