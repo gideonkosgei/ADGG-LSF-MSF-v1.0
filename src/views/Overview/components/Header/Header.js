@@ -17,8 +17,10 @@ const useStyles = makeStyles(theme => ({
     marginRight: theme.spacing(1)
   },
   image: {
-    width: '100%',
-    maxHeight: 400
+    Media: {
+      height: '100%',
+      width: '100%'
+    }
   }
 }));
 
@@ -76,7 +78,7 @@ const Header = props => {
             <img
               alt="Cover"
               className={classes.image}
-              src="/images/undraw_growth_analytics_8btt.svg"
+              src="/images/kalro.jpg"
             />
           </Grid>
         </Hidden>

@@ -12,6 +12,7 @@ import DashboardIcon from '@material-ui/icons/DashboardOutlined';
 import HomeIcon from '@material-ui/icons/HomeOutlined';
 import ListAltIcon from '@material-ui/icons/ListAlt';
 import SupervisorAccountIcon from '@material-ui/icons/SupervisorAccount';
+import LibraryBooksIcon from '@material-ui/icons/LibraryBooks';
 //import LockOpenIcon from '@material-ui/icons/LockOpenOutlined';
 //import MailIcon from '@material-ui/icons/MailOutlined';
 //import PresentToAllIcon from '@material-ui/icons/PresentToAll';
@@ -191,7 +192,7 @@ export default [
       {
         title: 'Reports',
         href: '/reports',
-        icon: SettingsIcon,
+        icon: LibraryBooksIcon,
         children: [
           {
             title: 'Events',
