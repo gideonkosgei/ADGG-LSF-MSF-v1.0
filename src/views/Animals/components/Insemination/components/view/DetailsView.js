@@ -35,14 +35,14 @@ const DetailsView = props => {
 
   useEffect(() => {     
     let mounted = true;
-      (async  (endpoint,id) => {     
-        await  getInsemination(endpoint,id)
+      (async  (endpoint,id,option) => {     
+        await  getInsemination(endpoint,id,option)
         .then(response => {                        
           if (mounted) {            
             setValues(response.payload[0]);                 
           }
         });
-      })(endpoint_insemination,animal_id); 
+      })(endpoint_insemination,animal_id,0); 
       
     return () => {
       mounted = false;

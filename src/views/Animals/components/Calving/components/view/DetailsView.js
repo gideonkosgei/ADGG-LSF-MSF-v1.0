@@ -32,14 +32,14 @@ const DetailsView = props => {
 
   useEffect(() => {     
     let mounted = true;
-      (async  (endpoint,id) => {     
-        await  getCalving(endpoint,id)
+      (async  (endpoint,id,option) => {     
+        await  getCalving(endpoint,id,option)
         .then(response => {                        
           if (mounted) {            
             setValues(response.payload[0]);                 
           }
         });
-      })(endpoint_calving,animal_id); 
+      })(endpoint_calving,animal_id,0); 
       
     return () => {
       mounted = false;

@@ -35,14 +35,14 @@ const DetailsView = props => {
 
     useEffect(() => {     
     let mounted = true;
-      (async  (endpoint,id) => {     
-        await  getWeights(endpoint,id)
+      (async  (endpoint,id,option) => {     
+        await  getWeights(endpoint,id,option)
         .then(response => {               
           if (mounted) {            
             setValues(response.payload[0]);                 
           }
         });
-      })(endpoint_weight,animal_id);
+      })(endpoint_weight,animal_id,0);
       
     return () => {
       mounted = false;
@@ -53,7 +53,6 @@ const DetailsView = props => {
   if (!values) {
     return null;
   }
-  
 
   const columns = [
     { name: "Event_ID",label: "Event ID",options: {filter: false,sort: true,display:true}},    

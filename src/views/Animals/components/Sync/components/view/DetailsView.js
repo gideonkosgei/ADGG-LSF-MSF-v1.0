@@ -34,14 +34,14 @@ const DetailsView = props => {
 
   useEffect(() => {     
     let mounted = true;
-      (async  (endpoint,id) => {     
-        await  getSync(endpoint,id)
+      (async  (endpoint,id,option) => {     
+        await  getSync(endpoint,id,option)
         .then(response => {                        
           if (mounted) {            
             setValues(response.payload[0]);                 
           }
         });
-      })(endpoint_sync,animal_id); 
+      })(endpoint_sync,animal_id,0); 
       
     return () => {
       mounted = false;
