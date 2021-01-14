@@ -2,7 +2,7 @@ import React, { useState,useEffect } from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
-import {Card, CardContent,Tooltip,IconButton,Link } from '@material-ui/core';
+import {Card, CardContent,Tooltip,IconButton,Link,Button } from '@material-ui/core';
 import ExitToAppRoundedIcon from '@material-ui/icons/ExitToAppRounded';
 import SpeedRoundedIcon from '@material-ui/icons/SpeedRounded';
 import LocalHospitalRoundedIcon from '@material-ui/icons/LocalHospitalRounded';
@@ -11,10 +11,11 @@ import PregnantWomanRoundedIcon from '@material-ui/icons/PregnantWomanRounded';
 import ChildCareRoundedIcon from '@material-ui/icons/ChildCareRounded';
 import PetsIcon from '@material-ui/icons/Pets';
 import ColorizeIcon from '@material-ui/icons/Colorize';
-import OpacityIcon from '@material-ui/icons/Opacity';
+import PermIdentityIcon from '@material-ui/icons/PermIdentity';
 import { Link as RouterLink } from 'react-router-dom';
 import {getEventSetup}   from '../../../../utils/API';
 import {endpoint_event_setup} from '../../../../configs/endpoints';
+import LocalDrinkIcon from '@material-ui/icons/LocalDrink';
 
 const useStyles = makeStyles(theme => ({
   root: {}, 
@@ -50,100 +51,148 @@ const Header = props => {
       {...rest}
       className={clsx(classes.root, className)}    >       
         <CardContent> 
+
         {values.bio_data ?
-          <Tooltip  title="Animal Details">              
-            <IconButton aria-label="details" size="large" >
-              <Link component = {RouterLink} to = {`/management/details/edit/${animal_id}`}>
-                <PetsIcon /> 
-              </Link> 
-            </IconButton> 
-          </Tooltip>
+            <Tooltip  title="Animal Details">   
+              <Button
+                color="default"
+                className={classes.button}
+                startIcon={<PermIdentityIcon />}
+              >
+                <Link style={{ textDecoration: 'none',textTransform: 'none' }} component = {RouterLink} to = {`/management/details/edit/${animal_id}`}>
+                  Bio
+                </Link>
+              </Button>
+            </Tooltip>   
           : null 
         }
 
-        {values.milking ?              
-          <Tooltip  title="Milking">              
-            <IconButton aria-label="milking" size="large" >
-              <Link component = {RouterLink} to = {`/management/milking/view/${animal_id}`}>
-                <OpacityIcon /> 
-              </Link>
-            </IconButton> 
-          </Tooltip>
+        {values.milking ? 
+          <Tooltip  title="Milking">   
+          <Button
+            color="default"
+            className={classes.button}
+            startIcon={<LocalDrinkIcon />}
+          >
+            <Link style={{ textDecoration: 'none',textTransform: 'none' }} component = {RouterLink} to = {`/management/milking/view/${animal_id}`}>
+              Milking
+            </Link>
+          </Button>
+        </Tooltip> 
           : null 
         }
          
         {values.health ?  
-          <Tooltip  title="Health Events">              
-            <IconButton aria-label="delete" size="large" >
-              <Link component = {RouterLink} to="/management/health/">
-                <LocalHospitalRoundedIcon /> 
-              </Link>
-            </IconButton> 
-          </Tooltip>
+
+          <Tooltip  title="Health Events">   
+          <Button
+            color="default"
+            className={classes.button}
+            startIcon={<LocalHospitalRoundedIcon />}
+          >
+            <Link style={{ textDecoration: 'none',textTransform: 'none' }} component = {RouterLink} to = {`/management/health`}>
+              Health
+            </Link>
+          </Button>
+          </Tooltip>           
           : null 
         }
 
         {values.pd ?   
-          <Tooltip  title="Pregnancy Diagnosis">              
-            <IconButton aria-label="pd" size="large" >
-              <Link component = {RouterLink} to = {`/management/pd/view/${animal_id}`}>              
-                <PregnantWomanRoundedIcon /> 
-              </Link>
-            </IconButton> 
-          </Tooltip>
+
+        <Tooltip  title="Pregnancy Diagnosis">   
+          <Button
+            color="default"
+            className={classes.button}
+            startIcon={<PregnantWomanRoundedIcon />}
+          >
+            <Link style={{ textDecoration: 'none',textTransform: 'none' }} component = {RouterLink} to = {`/management/pd/view/${animal_id}`}>
+              PD
+            </Link>
+          </Button>
+        </Tooltip> 
+
+         
+          
            : null 
         }
 
-        {values.calving ?
-          <Tooltip  title="calving">              
-            <IconButton aria-label="calving" size="large" >
-              <Link component = {RouterLink} to = {`/management/calving/view/${animal_id}`}> 
-                <ChildCareRoundedIcon /> 
-              </Link>
-            </IconButton> 
-          </Tooltip>
-          : null 
-        }
+        <Tooltip  title="Calving">   
+          <Button
+            color="default"
+            className={classes.button}
+            startIcon={<ChildCareRoundedIcon />}
+          >
+            <Link style={{ textDecoration: 'none',textTransform: 'none' }} component = {RouterLink} to = {`/management/calving/view/${animal_id}`}>
+              Calving
+            </Link>
+          </Button>
+        </Tooltip> 
+
+        
 
         {values.insemination ?
-          <Tooltip  title="Inseminations">              
-            <IconButton aria-label="insemination" size="large" >
-              <Link component = {RouterLink} to = {`/management/insemination/view/${animal_id}`}>
-               <ColorizeIcon /> 
-              </Link>
-            </IconButton> 
-          </Tooltip>
+        <Tooltip  title="Inseminations">   
+          <Button
+            color="default"
+            className={classes.button}
+            startIcon={<ColorizeIcon />}
+          >
+            <Link style={{ textDecoration: 'none',textTransform: 'none' }} component = {RouterLink} to = {`/management/insemination/view/${animal_id}`}>
+              Insemination
+            </Link>
+          </Button>
+        </Tooltip>          
           : null 
         }
 
-        {values.sync ?          
-          <Tooltip  title="Synchronization Events">              
-            <IconButton aria-label="delete" size="large" >
-              <Link component = {RouterLink} to = {`/management/sync/view/${animal_id}`}>
-               <SyncRoundedIcon /> 
-              </Link>
-            </IconButton> 
-          </Tooltip> 
+        {values.sync ?
+        <Tooltip  title="Synchronization">   
+          <Button
+            color="default"
+            className={classes.button}
+            startIcon={<SyncRoundedIcon />}
+          >
+            <Link style={{ textDecoration: 'none',textTransform: 'none' }} component = {RouterLink} to = {`/management/sync/view/${animal_id}`}>
+              Sync
+            </Link>
+          </Button>
+        </Tooltip>
+
+          
           : null 
         }             
         {values.exit ?
-          <Tooltip  title="Exits">              
-            <IconButton aria-label="delete" size="large" >
-              <Link component = {RouterLink} to= {`/management/exit/add/${animal_id}`}>
-                <ExitToAppRoundedIcon /> 
-              </Link>              
-            </IconButton> 
-          </Tooltip> 
+
+        <Tooltip  title="Exit & Disposal">   
+          <Button
+            color="default"
+            className={classes.button}
+            startIcon={<ExitToAppRoundedIcon />}
+          >
+            <Link style={{ textDecoration: 'none',textTransform: 'none' }} component = {RouterLink} to = {`/management/exit/view/${animal_id}`}>
+              Exit
+            </Link>
+          </Button>
+        </Tooltip>
+          
           : null 
         } 
         {values.weight ?
-          <Tooltip  title="Weights & Growth">              
-            <IconButton aria-label="delete" size="large" >
-              <Link component = {RouterLink} to = {`/management/weight/view/${animal_id}`}>
-                <SpeedRoundedIcon /> 
+
+          <Tooltip  title="Weights & Growth">   
+            <Button
+              color="default"
+              className={classes.button}
+              startIcon={<SpeedRoundedIcon />}
+            >
+              <Link style={{ textDecoration: 'none',textTransform: 'none' }} component = {RouterLink} to = {`/management/weight/view/${animal_id}`}>
+                Weight
               </Link>
-            </IconButton> 
+            </Button>
           </Tooltip>
+
+          
           : null 
          } 
          {     /*
