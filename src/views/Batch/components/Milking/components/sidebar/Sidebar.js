@@ -8,7 +8,6 @@ import { Link as RouterLink } from 'react-router-dom';
 import HomeIcon from '@material-ui/icons/Home';
 import PlaylistPlayIcon from '@material-ui/icons/PlaylistPlay';
 import PlaylistAddCheckIcon from '@material-ui/icons/PlaylistAddCheck';
-import CloudDownloadIcon from '@material-ui/icons/CloudDownload';
 import DeleteIcon from '@material-ui/icons/Delete';
 
 
@@ -62,13 +61,8 @@ const Sidebar = props => {
           </IconButton> 
         </Tooltip>        
                    
-        <Tooltip  title="download template">              
-          <IconButton aria-label="download" size="small" >
-            <Link component = {RouterLink} to="/batch-process/milking-list">
-              <CloudDownloadIcon /> 
-            </Link>
-          </IconButton> 
-        </Tooltip>
+       
+
       </CardContent> 
     </Card>
   );

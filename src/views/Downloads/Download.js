@@ -28,7 +28,7 @@ const Download = props => {
   return (
     <Page
       className={classes.root}
-      title="Profile"
+      title="Downloads"
     >
     <Card>
         <CardContent>            
