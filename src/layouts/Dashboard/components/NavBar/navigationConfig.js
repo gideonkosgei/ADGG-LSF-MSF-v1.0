@@ -165,7 +165,11 @@ export default [
               {
                 title: 'Local Settings',
                 href: '/settings/parameters/local-settings'
-              },   
+              },
+              {
+                title: 'Logo Upload',
+                href: '/settings/parameters/local-settings'
+              },    
               {
                 title: 'Events Matrix',
                 href: '/settings/parameters/events-matrix'
