@@ -165,11 +165,7 @@ export default [
               {
                 title: 'Local Settings',
                 href: '/settings/parameters/local-settings'
-              },
-              {
-                title: 'Logo Upload',
-                href: '/settings/parameters/local-settings'
-              },    
+              },                 
               {
                 title: 'Events Matrix',
                 href: '/settings/parameters/events-matrix'
@@ -254,7 +250,11 @@ export default [
           {
             title: 'Background Processes',
             href: '/background-processes/org'                     
-          }
+          },
+          {
+            title: 'farm/org logo',
+            href: '/administration/upload-logo'
+          }, 
         ]  
          
 

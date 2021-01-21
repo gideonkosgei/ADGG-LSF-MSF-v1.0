@@ -513,6 +513,11 @@ const routes = [
         exact: true,
         component: lazy(() => import('views/Administration/components/Organization/components/edit'))        
       },
+      {
+        path: '/administration/upload-logo',
+        exact: true,
+        component: lazy(() => import('views/Administration/components/SystemUploads'))        
+      },
 
       // BACKGROUND-PROCESS VIEW
       {
@@ -525,6 +530,9 @@ const routes = [
         exact: true,
         component: lazy(() => import('views/Administration/components/BackgroundProcesses/components/edit'))        
       }, 
+      
+
+      //uploads
 
       // Batch processes Routes
       {
