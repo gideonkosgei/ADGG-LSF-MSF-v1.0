@@ -710,6 +710,14 @@ export const endpoint_background_process_edit = {
 }
 
 
+// Analytics - Lactation Table
+export const endpoint_lactation_table = {
+  url: `${api}/stats/lactation-table/`,
+  method: 'GET',
+  headers: headers   
+}
+
+
 
 
 

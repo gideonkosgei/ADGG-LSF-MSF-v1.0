@@ -15,6 +15,7 @@ import { Link as RouterLink } from 'react-router-dom';
 import {getEventSetup}   from '../../../../utils/API';
 import {endpoint_event_setup} from '../../../../configs/endpoints';
 import LocalDrinkIcon from '@material-ui/icons/LocalDrink';
+import TrendingUpRoundedIcon from '@material-ui/icons/TrendingUp';
 
 const useStyles = makeStyles(theme => ({
   root: {}, 
@@ -227,15 +228,22 @@ const Header = props => {
               </Link>
             </IconButton> 
           </Tooltip>
+          */
 
-          <Tooltip  title="Analytics">              
-            <IconButton aria-label="analytics" size="large" >
-              <Link component = {RouterLink} to="/management/analytics/">
-                <TrendingUpRoundedIcon /> 
-              </Link>
-            </IconButton> 
-          </Tooltip>  
-         */}         
+         <Tooltip  title="Trends">   
+         <Button
+           color="default"
+           className={classes.button}
+           startIcon={<TrendingUpRoundedIcon />}
+         >
+           <Link style={{ textDecoration: 'none',textTransform: 'none' }} component = {RouterLink} to = {`/management/analytics/${animal_id}`}>
+           Trends
+           </Link>
+         </Button>
+       </Tooltip>
+         
+          
+         }         
         </CardContent> 
     </Card>
   );

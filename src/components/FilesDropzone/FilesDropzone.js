@@ -69,15 +69,27 @@ const FilesDropzone = props => {
   const [files, setFiles] = useState([]);
 
   const handleDrop = useCallback(acceptedFiles => {
-    setFiles(files => [...files].concat(acceptedFiles));
+    console.log(acceptedFiles.length);
+    if (acceptedFiles.length === 0) {
+      return;
+    } else if(acceptedFiles.length > 1){ // here i am checking on the number of files
+     // return notify('maxImages'); // here i am using react toaster to get some notifications. don't need to use it 
+      return alert('More than one');
+    }else {
+      setFiles(files => [...files].concat(acceptedFiles));
+    }
   }, []);
 
   const handleRemoveAll = () => {
     setFiles([]);
   };
-
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
-    onDrop: handleDrop
+    onDrop: handleDrop,
+    maxFiles: 1,
+    minSize : 0,
+    maxSize : 10485760, // max size to be 10 MB
+    multiple : false,
+    accept : "image/png, image/jpeg, image/JPG"
   });
 
   return (
@@ -112,7 +124,7 @@ const FilesDropzone = props => {
             color="textSecondary"
             variant="body1"
           >
-            Drop files here or click <Link underline="always">browse</Link>{' '}
+            Drop file here or click <Link underline="always">browse</Link>{' '}
             thorough your machine
           </Typography>
         </div>

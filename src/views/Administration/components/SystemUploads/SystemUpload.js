@@ -1,16 +1,7 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/styles';
-import { Button } from '@material-ui/core';
-
 import { Page } from 'components';
-import {
-  Header,
-  AboutAuthor,
-  AboutProject,
-  Preferences,
-  ProjectCover,
-  ProjectDetails
-} from './components';
+import {Header, ProjectCover} from './components';
 
 const useStyles = makeStyles(theme => ({
   root: {

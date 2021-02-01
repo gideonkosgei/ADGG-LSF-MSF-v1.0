@@ -116,8 +116,6 @@ const ChartDetails = props => {
     </Card>
   );
 };
-
-
 ChartDetails.propTypes = {
   className: PropTypes.string,
   //profile: PropTypes.object.isRequired

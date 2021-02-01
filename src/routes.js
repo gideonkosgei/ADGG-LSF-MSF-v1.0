@@ -150,17 +150,17 @@ const routes = [
         exact: true,
         component: lazy(() => import('views/Animals/components/Details/components/edit'))
       },    
-      {
-        path: '/management/animal/trends/:id',
+     /* { // this should be removed
+        path: '/management/animal/trendss/:id',
         exact: true,
         component: lazy(() => import('views/Animals/components/Analytics'))
-      },     
-          
-     /* {
-        path: '/management/analytics/',
+      }, */   
+                 
+     {
+        path: '/management/analytics/:id',
         exact: true,
         component: lazy(() => import('views/Animals/components/Analytics'))
-      },*/
+      },
       /*{
         path: '/management/calender/',
         exact: true,

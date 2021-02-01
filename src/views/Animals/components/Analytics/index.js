@@ -1,1 +1,3 @@
-export { default } from './AnimalEditView';
+export { default } from './Chart';
+export { default  as Header} from '../Header';
+

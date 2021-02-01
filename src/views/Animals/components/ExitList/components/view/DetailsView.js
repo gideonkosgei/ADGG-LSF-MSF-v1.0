@@ -113,8 +113,7 @@ const DetailsView = props => {
           </Grid> 
           <Grid item xs={11}>
               <Card> 
-                <CardContent> 
-                 
+                <CardContent>                  
                   <PerfectScrollbar>
                     <div className={classes.inner}>
                       <MuiThemeProvider>                
