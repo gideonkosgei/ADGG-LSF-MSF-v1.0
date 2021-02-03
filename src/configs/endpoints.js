@@ -717,6 +717,20 @@ export const endpoint_lactation_table = {
   headers: headers   
 }
 
+// Analytics - Lactation Curve
+export const endpoint_lactation_curve = {
+  url: `${api}/stats/lactation-curve/`,
+  method: 'GET',
+  headers: headers   
+}
+
+// Analytics -parity
+export const endpoint_parity = {
+  url: `${api}/stats/parity/`,
+  method: 'GET',
+  headers: headers   
+}
+
 
 
 

@@ -93,7 +93,7 @@ const LactationTable = props => {
     >
       <CardHeader
         action={<GenericMoreButton />}
-        title="LACTATION DETAILS"
+        title="LACTATION SUMMARY"
       />
       <Divider />
       <CardContent className={classes.content}>

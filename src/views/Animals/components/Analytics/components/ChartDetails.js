@@ -4,6 +4,8 @@ import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import {Card, CardContent, CardHeader, Grid,Divider,colors} from '@material-ui/core';
 import {default as LactationTable} from './LactationTable';
+import {default as LactationCurve} from './LactationCurve';
+import {default as Parity} from './Parity';
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -25,36 +27,30 @@ const ChartDetails = props => {
   useEffect(() => {     
   }, []); 
 
- 
-
   return (
     <Card
       {...rest}
       className={clsx(classes.root, className)}
     >           
-        <CardHeader title= {`${animal_name}(${animal_tag}) `}/> 
+      <CardHeader title= {`${animal_name}(${animal_tag}) `}/> 
         <Divider />
         <CardContent> 
-          <Grid container spacing={1} justify="center">            
-          
-          <Grid item xs={12}>                    
-
-            <Grid container spacing={1} >              
-              <Grid item  xs={9} >  
-                <LactationTable />
-              </Grid>               
-            </Grid> 
-
-         </Grid>
+          <Grid container spacing={1} justify="center">                           
+                <Grid item  xs={9} >  
+                  <LactationTable />
+                </Grid>  
+                <Grid item  xs={3} >  
+                  <Parity />
+                </Grid>                  
+                <Grid item  xs={12} >  
+                  <LactationCurve/>
+                </Grid>
           </Grid>
-        </CardContent>               
-        
+        </CardContent>  
     </Card>
   );
 };
 ChartDetails.propTypes = {
-  className: PropTypes.string,
-  //profile: PropTypes.object.isRequired
+  className: PropTypes.string  
 };
-
 export default ChartDetails;

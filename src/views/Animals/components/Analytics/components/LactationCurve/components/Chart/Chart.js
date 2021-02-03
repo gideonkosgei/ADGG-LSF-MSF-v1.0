@@ -82,7 +82,7 @@ const Chart = props => {
             min: 0,
             maxTicksLimit: 7,
             callback: value => {
-              return value > 0 ? value + 'cm' : value;
+              return value > 0 ? value + 'Ltrs' : value;
             }
           }
         }
@@ -104,10 +104,10 @@ const Chart = props => {
       callbacks: {
         title: () => {},
         label: tooltipItem => {
-          let label = `length: ${tooltipItem.yLabel}`;
+          let label = `Total Milk : ${tooltipItem.yLabel}`;
 
           if (tooltipItem.yLabel > 0) {
-            label += 'cm';
+            label += 'Ltrs';
           }
 
           return label;

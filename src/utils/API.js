@@ -2521,6 +2521,42 @@ export const getlactationTable =  function (config,animal_id) {
 }
 
 
+// Analytics Lactation curve 
+export const getlactationCurveData =  function (config,animal_id) {   
+  const options = {
+    url:`${config.url}${animal_id}`,
+    method: config.method,
+    headers: config.headers  
+  }  
+  return new Promise((resolve, reject) => {
+    axios(options)
+    .then(res => {          
+        resolve(res.data);
+    })
+    .catch(err => reject(err));
+});       
+}
+
+
+// Analytics Lactation curve 
+export const getParity =  function (config,animal_id) {   
+  const options = {
+    url:`${config.url}${animal_id}`,
+    method: config.method,
+    headers: config.headers  
+  }  
+  return new Promise((resolve, reject) => {
+    axios(options)
+    .then(res => {          
+        resolve(res.data);
+    })
+    .catch(err => reject(err));
+});       
+}
+
+
+
+
 export const getAnnualMilkPerformance =  function (config,organisation_id) {   
   const options = {
     url:`${config.url}${organisation_id}`,
