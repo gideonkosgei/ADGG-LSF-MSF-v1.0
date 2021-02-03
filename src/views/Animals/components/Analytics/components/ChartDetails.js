@@ -5,7 +5,7 @@ import { makeStyles } from '@material-ui/styles';
 import {Card, CardContent, CardHeader, Grid,Divider,colors} from '@material-ui/core';
 import {default as LactationTable} from './LactationTable';
 import {default as LactationCurve} from './LactationCurve';
-import {default as Parity} from './Parity';
+
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -36,12 +36,9 @@ const ChartDetails = props => {
         <Divider />
         <CardContent> 
           <Grid container spacing={1} justify="center">                           
-                <Grid item  xs={9} >  
+                <Grid item  xs={12} >  
                   <LactationTable />
-                </Grid>  
-                <Grid item  xs={3} >  
-                  <Parity />
-                </Grid>                  
+                </Grid>                                    
                 <Grid item  xs={12} >  
                   <LactationCurve/>
                 </Grid>

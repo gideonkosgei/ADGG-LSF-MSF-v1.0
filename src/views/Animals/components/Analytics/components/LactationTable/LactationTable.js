@@ -57,14 +57,16 @@ const LactationTable = props => {
   }
 
   const columns = [
-    { name: "lactation_id",label: "Lactation ID",options: {filter: false,sort: true,display:true}},    
+    { name: "lactation_id",label: "Lactation ID",options: {filter: false,sort: true,display:true}},  
+    { name: "parity",label: "Parity",options: {filter: false,sort: true,display:true}},  
     { name: "date_start",label: "Lactation Start",options: {filter: false,sort: true,display:true}},
     { name: "date_end",label: "Lactation End",options: {filter: false,sort: true,display:true}},
     { name: "total_days_in_milk",label: "DIM",options: {filter: false,sort: true,display:true}},
     { name: "total_milk",label: "Total Milk ",options: {filter: false,sort: true,display:true}},
     { name: "avg_daily_milk",label: "Avg Daily Milk",options: {filter: false,sort: true,display:true}},    
     { name: "max_milk_amount",label: "Max Milk",options: {filter: false,sort: true, display:true}},    
-    { name: "min_milk_amount",label: "Min Milk",options: {filter: false,sort: true,display:true}}        
+    { name: "min_milk_amount",label: "Min Milk",options: {filter: false,sort: true,display:true}},
+    { name: "calving_interval",label: "Calving Interval",options: {filter: false,sort: true,display:true}}         
   ];
 
   const options = {  
