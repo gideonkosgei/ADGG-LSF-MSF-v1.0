@@ -176,6 +176,21 @@ const routes = [
         exact: true,
         component: lazy(() => import('views/Animals/components/Health'))
       },
+      {
+        path: '/management/health/hoof-health/add/:id',
+        exact: true,
+        component: lazy(() => import('views/Animals/components/Health/components/HoofHealth/components/add'))          
+      },
+      {
+        path: '/management/health/hoof-treatment/add/:id',
+        exact: true,
+        component: lazy(() => import('views/Animals/components/Health/components/HoofTreatment/components/add'))          
+      },
+      {
+        path: '/management/health/injury/add/:id',
+        exact: true,
+        component: lazy(() => import('views/Animals/components/Health/components/Injury/components/add'))          
+      },
      /* {
         path: '/management/notifications/',
         exact: true,

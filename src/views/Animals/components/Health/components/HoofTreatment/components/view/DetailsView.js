@@ -125,7 +125,7 @@ const DetailsView = props => {
                     <div className={classes.inner}>
                       <MuiThemeProvider>                
                         <MUIDataTable
-                          title = {`ECF - ${animal_name}(${animal_tag})`}
+                          title = {`HOOF TREATMENT - ${animal_name}(${animal_tag})`}
                           data={values}
                           columns={columns}
                           options={options}
@@ -146,5 +146,4 @@ DetailsView.propTypes = {
   className: PropTypes.string,
   //profile: PropTypes.object.isRequired
 };
-
 export default DetailsView;

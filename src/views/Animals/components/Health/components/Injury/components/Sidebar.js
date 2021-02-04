@@ -35,7 +35,7 @@ const Sidebar = props => {
         </Tooltip>         
         <Tooltip  title="Add New">              
           <IconButton aria-label="add" size="small" >
-            <Link component = {RouterLink} to={`/management/pd/add/${animal_id}`}>
+            <Link component = {RouterLink} to={`/management/health/injury/add/${animal_id}`}>
               <AddIcon /> 
             </Link>
           </IconButton> 

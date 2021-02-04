@@ -3,12 +3,12 @@ import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import {Card, CardContent, CardHeader, Grid,Divider, TextField,colors,Button,CardActions } from '@material-ui/core';
-import {getLookups,postPd,getAgents}   from '../../../../../../utils/API';
-import {endpoint_lookup,endpoint_pd_add,endpoint_agent} from '../../../../../../configs/endpoints';
-import authContext from '../../../../../../contexts/AuthContext';
+import {getLookups,postPd,getAgents}   from '../../../../../../../../utils/API';
+import {endpoint_lookup,endpoint_pd_add,endpoint_agent} from '../../../../../../../../configs/endpoints';
+import authContext from '../../../../../../../../contexts/AuthContext';
 import {Sidebar} from '../index';
-import SuccessSnackbar from '../../../../../../components/SuccessSnackbar';
-import ErrorSnackbar from '../../../../../../components/ErrorSnackbar';
+import SuccessSnackbar from '../../../../../../../../components/SuccessSnackbar';
+import ErrorSnackbar from '../../../../../../../../components/ErrorSnackbar';
 import moment from 'moment';
 
 
@@ -30,10 +30,8 @@ const DetailsEdit = props => {
   const [ {user_id,organization_id} ] = useContext(authContext);
   const classes = useStyles();
   const [values, setValues] = useState({ });  
-  const [body_scores, setBodyScores] = useState([]);
-  const [pd_methods, setPdMethods] = useState([]);
-  const [pd_stages, setPdStages] = useState([]);
-  const [pd_results, setPdResults] = useState([]);
+  const [digital_dermatitis_options, setDigitalDermatitis] = useState([]);
+  const [hoof_health_options, setHoofHealth] = useState([]);
   const [agents, setAgents] = useState([]);
   const option  =  0;
   
@@ -58,41 +56,26 @@ const DetailsEdit = props => {
         await  getLookups(endpoint,id)
         .then(response => {       
           if (mounted_lookup) { 
-            const data = response.payload[0];            
-            let lookup_body_scores = [];
-            let lookup_pd_methods = [];
-            let lookup_pd_results = [];
-            let lookup_pd_stages = [];
+            const data = response.payload[0];  
+            let lookup_digital_dermatitis = [];  
+            let lookup_hoof_health = []; 
 
-
-            for (let i = 0; i< data.length; i++){              
-              //Body Score
-              if(data[i].list_type_id === 71){                
-                lookup_body_scores.push(data[i]);
+            for (let i = 0; i< data.length; i++){ 
+               //Digital Dermatitis
+               if(data[i].list_type_id === 95){                
+                lookup_digital_dermatitis.push(data[i]);
               } 
 
-              //PD methods
-              if(data[i].list_type_id === 80){                
-                lookup_pd_methods.push(data[i]);
-              }  
-              //PD results
-              if(data[i].list_type_id === 78){                
-                lookup_pd_results.push(data[i]);
-              } 
-
-              //PD stages
-              if(data[i].list_type_id === 79){                
-                lookup_pd_stages.push(data[i]);
-              }               
+              //Hoof Health
+              if(data[i].list_type_id === 96){                
+                lookup_hoof_health.push(data[i]);
+              }                           
             }  
-                   
-            setBodyScores(lookup_body_scores);
-            setPdMethods(lookup_pd_methods);
-            setPdResults(lookup_pd_results);
-            setPdStages(lookup_pd_stages);            
+            setDigitalDermatitis(lookup_digital_dermatitis);
+            setHoofHealth(lookup_hoof_health);     
           }
         });
-      })(endpoint_lookup,'71,80,78,79');
+      })(endpoint_lookup,'95,96');
       
     return () => {
       mounted_lookup = false;  
@@ -100,7 +83,7 @@ const DetailsEdit = props => {
     };
   }, [organization_id]);  
 
-  if (!body_scores || !pd_methods || !pd_stages ||!pd_results || !agents) {
+  if ( !agents ||!digital_dermatitis_options || !hoof_health_options) {
     return null;
   }
 
@@ -143,7 +126,7 @@ const DetailsEdit = props => {
       {...rest}
       className={clsx(classes.root, className)}
     >
-        <CardHeader title= {`NEW PREGNANCY DIAGNOSIS RECORD - ${animal_name}(${animal_tag}) `}/>  
+        <CardHeader title= {`NEW INJURY RECORD - ${animal_name}(${animal_tag}) `}/>  
         <Divider />
         <CardContent> 
           <Grid container spacing={1} justify="center">            
@@ -172,59 +155,17 @@ const DetailsEdit = props => {
                       inputProps={{                        
                         max: moment(new Date()).format('YYYY-MM-DD')                 
                       }}                     
-                      defaultValue = {moment(new Date()).format('YYYY-MM-DD')}
-                      required
+                      defaultValue = {moment(new Date()).format('YYYY-MM-DD')}                      
                       margin = 'dense'
-                      label="Examination Date"
+                      required
+                      label="Injury Date"
                       type="date"
-                      name="exam_date"                      
+                      name="date_injured"                      
                       onChange={handleChange}
                       variant="outlined"
                     />
                   </Grid>
-                  <Grid
-                    item
-                    md={3}
-                    xs={12}
-                  >
-                    <TextField
-                      fullWidth
-                      InputLabelProps={{
-                        shrink: true,
-                      }}
-                      defaultValue = {moment(new Date()).format('HH:MM')}
-                      required
-                      margin = 'dense'
-                      label="Examination Time"
-                      type="time"
-                      name="exam_time"                      
-                      onChange={handleChange}
-                      variant="outlined"                      
-                                  
-                    />
-                  </Grid>
-                  <Grid
-                      item
-                      md={3}
-                      xs={12}
-                  >
-                    <TextField
-                      fullWidth
-                      InputLabelProps={{
-                        shrink: true,
-                      }}
-                      inputProps={{                        
-                        max: moment(new Date()).format('YYYY-MM-DD')                 
-                      }} 
-                      required
-                      margin = 'dense'
-                      label="Service Date"
-                      type="date"
-                      name="service_date"                      
-                      onChange={handleChange}
-                      variant="outlined"
-                    />
-                  </Grid>
+              
                   <Grid
                     item
                     md={3}
@@ -236,24 +177,23 @@ const DetailsEdit = props => {
                       shrink: true,
                     }}
                     margin = 'dense'
-                    label="PD Method"
-                    name="pd_method"
-                    onChange={handleChange}
-                    required
+                    label="Injury Type"
+                    name="injury_type"
+                    onChange={handleChange}                   
                     default = ""                              
-                    select
-                    // eslint-disable-next-line react/jsx-sort-props
+                    select                    
                     SelectProps={{ native: true }}                    
                     variant="outlined"
                   >
                     <option value=""></option>
-                    {pd_methods.map(method => (
-                          <option                    
-                            value={method.id}
-                          >
-                            {method.value}
-                          </option>
-                        ))
+                    {
+                      digital_dermatitis_options.map(x => (
+                        <option                    
+                          value={x.id}
+                        >
+                          {x.value}
+                        </option>
+                      ))
                     }           
                   </TextField>
                 </Grid>
@@ -268,30 +208,26 @@ const DetailsEdit = props => {
                         shrink: true,
                       }}
                       margin = 'dense'
-                      label="PD Result"
-                      name="pd_results"
-                      onChange={handleChange}
-                      required
+                      label="Other Injury Type"
+                      name="injury_type_other"
+                      onChange={handleChange}                     
                       default = ""                              
-                      select
-                      // eslint-disable-next-line react/jsx-sort-props
+                      select                      
                       SelectProps={{ native: true }}                    
                       variant="outlined"
                     >
                       <option value=""></option>
-                      {pd_results.map(result => (
+                      {hoof_health_options.map(x => (
                             <option                    
-                              value={result.id}
+                              value={x.id}
                             >
-                              {result.value}
+                              {x.value}
                             </option>
                           ))
                       }           
                     </TextField>
                   </Grid>
-                  {  
-                   isNaN(values.pd_results) || values.pd_results ==='' || parseInt(values.pd_results) === 2? null :        
-                   
+                  
                   <Grid
                     item
                     md={3}
@@ -303,26 +239,25 @@ const DetailsEdit = props => {
                       shrink: true                      
                     }}                                       
                     margin = 'dense'
-                    label="PD Stage"
-                    name="pd_stage"
+                    label="Service Provider"
+                    name="injury_service_provider"
                     onChange={handleChange}                                                
-                    select
-                    // eslint-disable-next-line react/jsx-sort-props
+                    select                    
                     SelectProps={{ native: true }}                    
                     variant="outlined"
                   >
                     <option value=""></option>
-                    {pd_stages.map(stage => (
+                    {hoof_health_options.map(x => (
                           <option                    
-                            value={stage.id}
+                            value={x.id}
                           >
-                            {stage.value}
+                            {x.value}
                           </option>
                         ))
                     }           
                   </TextField>
                 </Grid>
-                }
+                
                   <Grid
                     item
                     md={3}
@@ -334,49 +269,121 @@ const DetailsEdit = props => {
                       shrink: true,
                     }}
                     margin = 'dense'
-                    label="Body Score"
-                    name="body_score"
-                    onChange={handleChange}
-                    //required
+                    label="Drugs Cost"
+                    name="injury_drug_cost"
+                    onChange={handleChange}                   
                     default = ""                              
-                    select
-                    // eslint-disable-next-line react/jsx-sort-props
+                    select                   
                     SelectProps={{ native: true }}                    
                     variant="outlined"
                   >
                     <option value=""></option>
-                    {body_scores.map(score => (
+                    {hoof_health_options.map(x => (
                           <option                    
-                            value={score.id}
+                            value={x.id}
                           >
-                            {score.id}
+                            {x.value}
                           </option>
                         ))
                     }           
                   </TextField>
-                  </Grid>                
+                  </Grid>  
+
+
                   <Grid
-                  item
-                  md={3}
-                  xs={12}
-                >
-                  <TextField
+                    item
+                    md={3}
+                    xs={12}
+                  >
+                   <TextField
                     fullWidth
                     InputLabelProps={{
                       shrink: true,
                     }}
-                    //required
                     margin = 'dense'
-                    label="Cost"
-                    name="cost"                                   
-                    onChange={handleChange}
-                    type="number"
-                    variant="outlined"                                                 
-                  />
-                </Grid>
-                 
-                  
+                    label="Service Cost"
+                    name="injury_service_cost"
+                    onChange={handleChange}                    
+                    default = ""                              
+                    select                   
+                    SelectProps={{ native: true }}                    
+                    variant="outlined"
+                  >
+                    <option value=""></option>
+                    {hoof_health_options.map(x => (
+                          <option                    
+                            value={x.id}
+                          >
+                            {x.value}
+                          </option>
+                        ))
+                    }           
+                  </TextField>
+                  </Grid> 
+
                   <Grid
+                    item
+                    md={3}
+                    xs={12}
+                  >
+                   <TextField
+                    fullWidth
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                    margin = 'dense'
+                    label="Animal Status"
+                    name="injury_cow_status"
+                    onChange={handleChange}                   
+                    default = ""                              
+                    select                    
+                    SelectProps={{ native: true }}                    
+                    variant="outlined"
+                  >
+                    <option value=""></option>
+                    {hoof_health_options.map(x => (
+                          <option                    
+                            value={x.id}
+                          >
+                            {x.value}
+                          </option>
+                        ))
+                    }           
+                  </TextField>
+                  </Grid> 
+
+                  <Grid
+                    item
+                    md={3}
+                    xs={12}
+                  >
+                   <TextField
+                    fullWidth
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                    margin = 'dense'
+                    label="Animal Status Other"
+                    name="injury_cow_status_other"
+                    onChange={handleChange}                   
+                    default = ""                              
+                    select                   
+                    SelectProps={{ native: true }}                    
+                    variant="outlined"
+                  >
+                    <option value=""></option>
+                    {hoof_health_options.map(x => (
+                          <option                    
+                            value={x.id}
+                          >
+                            {x.value}
+                          </option>
+                        ))
+                    }           
+                  </TextField>
+                  </Grid> 
+
+              <Grid
                     item
                     md={3}
                     xs={12}
@@ -387,12 +394,11 @@ const DetailsEdit = props => {
                       shrink: true,
                     }}
                     margin = 'dense'
-                    label="PD Admin"
+                    label="Examinar"
                     name="field_agent_id"                
                     onChange={handleChange}
                     default = ""                              
-                    select
-                    // eslint-disable-next-line react/jsx-sort-props
+                    select                   
                     SelectProps={{ native: true }}                    
                     variant="outlined"
                   >
