@@ -171,6 +171,11 @@ const routes = [
         exact: true,
         component: lazy(() => import('views/Animals/components/Health'))
       },
+      {
+        path: '/management/health/:tab',
+        exact: true,
+        component: lazy(() => import('views/Animals/components/Health'))
+      },
      /* {
         path: '/management/notifications/',
         exact: true,
@@ -229,7 +234,7 @@ const routes = [
         exact: true,
         component: lazy(() => import('views/Animals/components/ExitList/components/details'))
       },
-      {
+     /* {
         path: '/management/health/view/:id',
         exact: true,
         component: lazy(() => import('views/Animals/components/Health'))
@@ -243,7 +248,7 @@ const routes = [
         path: '/management/health/edit/:id',
         exact: true,
         component: lazy(() => import('views/Animals/components/Health/components/edit'))
-      },
+      },*/
       {
         path: '/management/sync/view/:id',
         exact: true,
