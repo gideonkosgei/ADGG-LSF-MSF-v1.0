@@ -1,9 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
-import { colors } from '@material-ui/core';
+import { colors,Card,CardContent } from '@material-ui/core';
 import { Page } from 'components';
 import {default as DetailsView} from './DetailsView';
+import {default as Header} from '../../../../../Header/index';
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -24,12 +25,19 @@ const useStyles = makeStyles(theme => ({
 const Edit = props => { 
   const classes = useStyles(); 
   return (
-    <Page
-      className={classes.root}
-      title="Hoof Health"
-    >
-      <DetailsView/>
-   </Page>
+      <Page
+        className={classes.root}
+        title="Hoof Health"
+      >
+      <Card>
+          <CardContent>
+              <Header />
+              <br/>
+              <DetailsView/>
+          </CardContent>
+      </Card>
+      
+    </Page>
   );
 };
 

@@ -2749,6 +2749,22 @@ export const postHoofHealth =  function (config,animal_id,values,user_id) {
   });       
 }
 
+// get hoof health 
+export const getHoofHealth =  function (config,id,option) {   
+  const options = {
+    url:`${config.url}${id}/${option}`,
+    method: config.method,
+    headers: config.headers  
+  }  
+  return new Promise((resolve, reject) => {
+    axios(options)
+    .then(res => {          
+        resolve(res.data);
+    })
+    .catch(err => reject(err));
+  });       
+}
+
 
 
 

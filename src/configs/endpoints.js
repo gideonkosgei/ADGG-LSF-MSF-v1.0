@@ -724,11 +724,17 @@ export const endpoint_lactation_curve = {
   headers: headers   
 }
 
-// create hoof health event
-//post insemination event
+// Post hoof health event
 export const endpoint_hoof_health_add = {
   url: `${api}/events/hoof-health`,
   method: 'POST',
+  headers: headers   
+};
+
+//Get all hoof health Records
+export const endpoint_hoof_health_get = {
+  url: `${api}/events/hoof-health/`,
+  method: 'GET',
   headers: headers   
 };
 
