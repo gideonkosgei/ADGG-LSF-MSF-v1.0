@@ -26,7 +26,7 @@ const Edit = props => {
   return (
     <Page
       className={classes.root}
-      title="ECF"
+      title="parasite infection"
     >
       <DetailsView/>
    </Page>

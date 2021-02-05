@@ -191,6 +191,11 @@ const routes = [
         exact: true,
         component: lazy(() => import('views/Animals/components/Health/components/Injury/components/add'))          
       },
+      {
+        path: '/management/health/parasite-infection/add/:id',
+        exact: true,
+        component: lazy(() => import('views/Animals/components/Health/components/ParasiteInfection/components/add'))          
+      },
      /* {
         path: '/management/notifications/',
         exact: true,

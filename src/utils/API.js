@@ -2704,6 +2704,51 @@ return new Promise((resolve, reject) => {
 });       
 }
 
+//post hoof health event record
+export const postHoofHealth =  function (config,animal_id,values,user_id) {  
+  let {other_hoof_problems,Swelling_of_coronet,digital_dermatitis,field_agent_id,heel_horn_erosion,horizontal_horn_fissure,interdigital_hyperplasia,interdigital_phlegmon,scissor_claws,vertical_horn_fissure,exam_date} = values; 
+  other_hoof_problems = (typeof other_hoof_problems === 'undefined')? null:other_hoof_problems;  
+  Swelling_of_coronet = (typeof Swelling_of_coronet === 'undefined')? null:Swelling_of_coronet;
+  field_agent_id = (typeof field_agent_id === 'undefined')? null:field_agent_id.replace('','0');  
+  digital_dermatitis = (typeof digital_dermatitis === 'undefined')? null:digital_dermatitis;
+  heel_horn_erosion = (typeof heel_horn_erosion === 'undefined')? null:heel_horn_erosion;
+  horizontal_horn_fissure = (typeof horizontal_horn_fissure === 'undefined')? null:horizontal_horn_fissure;
+  interdigital_hyperplasia = (typeof interdigital_hyperplasia === 'undefined')? null:interdigital_hyperplasia;
+  interdigital_phlegmon = (typeof interdigital_phlegmon === 'undefined')? null:interdigital_phlegmon;
+  scissor_claws = (typeof scissor_claws === 'undefined')? null:scissor_claws;
+  vertical_horn_fissure = (typeof vertical_horn_fissure === 'undefined')? null:vertical_horn_fissure; 
+  exam_date = (typeof exam_date === 'undefined')? moment(new Date()).format('YYYY-MM-DD'):exam_date; 
+  
+  const body = {
+    "animal_id": animal_id,
+    "exam_date": exam_date,
+    "other_hoof_problems": other_hoof_problems,
+    "Swelling_of_coronet" : Swelling_of_coronet,
+    "digital_dermatitis": digital_dermatitis,
+    "heel_horn_erosion": heel_horn_erosion,
+    "horizontal_horn_fissure": horizontal_horn_fissure,
+    "interdigital_hyperplasia": interdigital_hyperplasia,
+    "interdigital_phlegmon": interdigital_phlegmon,
+    "scissor_claws": scissor_claws,
+    "vertical_horn_fissure": vertical_horn_fissure, 
+    "field_agent_id": field_agent_id,
+    "created_by": user_id
+  }; 
+  const options = {
+    url:`${config.url}`,
+    method: config.method,
+    headers: config.headers,
+    data: body  
+  };   
+  return new Promise((resolve, reject) => {
+    axios(options)
+    .then(res => {           
+        resolve(res.data);
+    })    
+    .catch(err => reject(err));
+  });       
+}
+
 
 
 

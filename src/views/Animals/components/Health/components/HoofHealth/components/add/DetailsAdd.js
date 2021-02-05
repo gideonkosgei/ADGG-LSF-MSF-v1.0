@@ -3,8 +3,8 @@ import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import {Card, CardContent, CardHeader, Grid,Divider, TextField,colors,Button,CardActions } from '@material-ui/core';
-import {getLookups,postPd,getAgents}   from '../../../../../../../../utils/API';
-import {endpoint_lookup,endpoint_pd_add,endpoint_agent} from '../../../../../../../../configs/endpoints';
+import {getLookups,postHoofHealth,getAgents}   from '../../../../../../../../utils/API';
+import {endpoint_lookup,endpoint_hoof_health_add,endpoint_agent} from '../../../../../../../../configs/endpoints';
 import authContext from '../../../../../../../../contexts/AuthContext';
 import {Sidebar} from '../index';
 import SuccessSnackbar from '../../../../../../../../components/SuccessSnackbar';
@@ -105,7 +105,7 @@ const DetailsEdit = props => {
   const handleSubmit = event => {
     event.preventDefault();
     (async  (endpoint,id,values,user_id) => {     
-      await  postPd(endpoint,id,values,user_id)
+      await  postHoofHealth(endpoint,id,values,user_id)
       .then(() => {  
         setopenSnackbarSuccess(true); 
         setValues({});        
@@ -113,7 +113,7 @@ const DetailsEdit = props => {
       }).catch(() => {        
         setopenSnackbarError(true); 
       });
-    })(endpoint_pd_add,animal_id,values,user_id);    
+    })(endpoint_hoof_health_add,animal_id,values,user_id);    
   };
   
   
@@ -159,8 +159,7 @@ const DetailsEdit = props => {
                       }}
                       inputProps={{                        
                         max: moment(new Date()).format('YYYY-MM-DD')                 
-                      }}                     
-                      defaultValue = {moment(new Date()).format('YYYY-MM-DD')}                      
+                      }}                  
                       margin = 'dense'
                       required
                       label="Examination Date"
@@ -213,8 +212,8 @@ const DetailsEdit = props => {
                         shrink: true,
                       }}
                       margin = 'dense'
-                      label="interdigital_hyperplasia"
-                      name="Interdigital hyperplasia"
+                      label="Interdigital Hyperplasia"
+                      name="interdigital_hyperplasia"                      
                       onChange={handleChange}                     
                       default = ""                              
                       select                      
@@ -433,7 +432,7 @@ const DetailsEdit = props => {
                     }}                   
                     margin = 'dense'
                     label="Other hoof problems"
-                    name="Other_hoof_problems"                                   
+                    name="other_hoof_problems"                                   
                     onChange={handleChange}                    
                     variant="outlined"   
                     multiline 
