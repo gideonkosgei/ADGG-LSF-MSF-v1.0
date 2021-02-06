@@ -731,6 +731,12 @@ export const endpoint_hoof_health_add = {
   headers: headers   
 };
 
+export const endpoint_hoof_health_edit = {
+  url: `${api}/events/hoof-health/`,
+  method: 'PUT',
+  headers: headers   
+};
+
 //Get all hoof health Records
 export const endpoint_hoof_health_get = {
   url: `${api}/events/hoof-health/`,

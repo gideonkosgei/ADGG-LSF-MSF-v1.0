@@ -3,7 +3,7 @@ import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import {Card, CardContent, CardHeader, Grid,Divider, TextField,colors,Button,CardActions } from '@material-ui/core';
-import {getLookups,postHoofHealth,getAgents}   from '../../../../../../../../utils/API';
+import {getLookups,CreateOrEditHoofHealthRecord,getAgents}   from '../../../../../../../../utils/API';
 import {endpoint_lookup,endpoint_hoof_health_add,endpoint_agent} from '../../../../../../../../configs/endpoints';
 import authContext from '../../../../../../../../contexts/AuthContext';
 import {Sidebar} from '../index';
@@ -105,7 +105,7 @@ const DetailsEdit = props => {
   const handleSubmit = event => {
     event.preventDefault();
     (async  (endpoint,id,values,user_id) => {     
-      await  postHoofHealth(endpoint,id,values,user_id)
+      await  CreateOrEditHoofHealthRecord(endpoint,id,values,user_id)
       .then(() => {  
         setopenSnackbarSuccess(true); 
         setValues({});        
@@ -368,7 +368,7 @@ const DetailsEdit = props => {
                     }}
                     margin = 'dense'
                     label="Swelling of coronet and/or bulb"
-                    name="Swelling_of_coronet"
+                    name="swelling_of_coronet"
                     onChange={handleChange}                   
                     default = ""                              
                     select                   

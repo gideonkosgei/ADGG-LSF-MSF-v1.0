@@ -74,7 +74,7 @@ const DetailsView = props => {
         return (
           <Link
               component={RouterLink}
-              to = {`/management/pd/edit/${tableMeta.rowData[0]}`}              
+              to = {`/management/health/hoof-health/edit/${tableMeta.rowData[0]}`}              
           >
             <OpenInNewIcon/>
           </Link>          

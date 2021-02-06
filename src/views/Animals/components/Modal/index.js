@@ -7,6 +7,7 @@ export { default as EventMilkingMetaData } from './EventMilkingMetaData';
 export { default as EventPdMetaData } from './EventPdMetaData';
 export { default as EventCalvingMetaData } from './EventCalvingMetaData';
 export { default as EventInseminationMetaData } from './EventInseminationMetaData';
+export { default as EventMetaData } from './EventMetaData';
 
 
 

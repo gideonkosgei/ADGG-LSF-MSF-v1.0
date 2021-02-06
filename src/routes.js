@@ -187,6 +187,11 @@ const routes = [
         component: lazy(() => import('views/Animals/components/Health/components/HoofHealth'))          
       },
       {
+        path: '/management/health/hoof-health/edit/:id',
+        exact: true,
+        component: lazy(() => import('views/Animals/components/Health/components/HoofHealth/components/edit'))          
+      },
+      {
         path: '/management/health/hoof-treatment/add/:id',
         exact: true,
         component: lazy(() => import('views/Animals/components/Health/components/HoofTreatment/components/add'))          

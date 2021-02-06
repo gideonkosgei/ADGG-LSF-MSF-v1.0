@@ -4,7 +4,7 @@ import { makeStyles } from '@material-ui/styles';
 import { Card,CardContent, colors } from '@material-ui/core';
 
 import { Page } from 'components';
-import {Header} from '../index';
+import {default as Header} from '../../../../../Header/index';
 import {default as DetailsEdit} from './DetailsEdit';
 
 const useStyles = makeStyles(theme => ({
@@ -25,11 +25,11 @@ const useStyles = makeStyles(theme => ({
 
 const Edit = props => { 
   const classes = useStyles();
-  localStorage.setItem('pd_event_id', parseInt(props.match.params.id)); 
+  sessionStorage.setItem('hoof_health_record_id', parseInt(props.match.params.id)); 
   return (
     <Page
       className={classes.root}
-      title="PD"
+      title="Hoof Health"
     >
     <Card>
         <CardContent>
