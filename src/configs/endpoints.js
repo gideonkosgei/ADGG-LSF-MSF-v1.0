@@ -745,6 +745,29 @@ export const endpoint_hoof_health_get = {
 };
 
 
+// Post animal injury event record
+export const endpoint_injury_add = {
+  url: `${api}/events/injury`,
+  method: 'POST',
+  headers: headers   
+};
+
+// Edit animal injury event record
+export const endpoint_injury_edit = {
+  url: `${api}/events/injury/`,
+  method: 'PUT',
+  headers: headers   
+};
+
+//Get all animal injury event records
+export const endpoint_injury_get = {
+  url: `${api}/events/injury/`,
+  method: 'GET',
+  headers: headers   
+};
+
+
+
 
 
 

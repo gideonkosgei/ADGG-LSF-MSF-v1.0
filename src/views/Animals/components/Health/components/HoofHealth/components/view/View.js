@@ -4,7 +4,7 @@ import { makeStyles } from '@material-ui/styles';
 import { colors,Card,CardContent } from '@material-ui/core';
 import { Page } from 'components';
 import {default as DetailsView} from './DetailsView';
-import {default as Header} from '../../../../../Header/index';
+
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -22,7 +22,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const Edit = props => { 
+const Edit = () => { 
   const classes = useStyles(); 
   return (
       <Page
@@ -30,9 +30,7 @@ const Edit = props => {
         title="Hoof Health"
       >
       <Card>
-          <CardContent>
-              <Header />
-              <br/>
+          <CardContent>                
               <DetailsView/>
           </CardContent>
       </Card>
@@ -45,5 +43,4 @@ Edit.propTypes = {
   history: PropTypes.object.isRequired,
   match: PropTypes.object.isRequired
 };
-
 export default Edit;

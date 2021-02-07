@@ -2766,6 +2766,80 @@ export const getHoofHealth =  function (config,id,option) {
 }
 
 
+//create or update injury event record
+export const CreateOrEditInjuryRecord =  function (config,id,values,user_id) {   
+  let { 
+    field_agent_id,  
+    injury_cow_status, 
+    injury_cow_status_other,
+    injury_drug_cost,
+    injury_service_cost,
+    injury_service_provider,
+    injury_type,
+    injury_type_other,
+    other_service_provider,
+    treatmentDate
+  } = values; 
+
+  field_agent_id = (typeof field_agent_id === 'undefined' || field_agent_id ==='' )? null:field_agent_id;
+  injury_cow_status = (typeof injury_cow_status === 'undefined' || injury_cow_status ==='' )? null:injury_cow_status; 
+  injury_cow_status_other = (typeof injury_cow_status_other === 'undefined' || injury_cow_status_other ==='' )? null:injury_cow_status_other;
+  injury_drug_cost = (typeof injury_drug_cost === 'undefined' || injury_drug_cost ==='' )? null:injury_drug_cost;
+  injury_service_cost = (typeof injury_service_cost === 'undefined' || injury_service_cost ==='' )? null:injury_service_cost;
+  injury_service_provider = (typeof injury_service_provider === 'undefined' || injury_service_provider ==='' )? null:injury_service_provider;
+  injury_type = (typeof injury_type === 'undefined' || injury_type ==='' )? null:injury_type;
+  injury_type_other = (typeof injury_type_other === 'undefined' || injury_type_other ==='' )? null:injury_type_other;
+  other_service_provider = (typeof other_service_provider === 'undefined' || other_service_provider ==='' )? null:other_service_provider;
+  treatmentDate = (typeof treatmentDate === 'undefined' || treatmentDate ==='' )?  moment(new Date()).format('YYYY-MM-DD'):treatmentDate;
+    
+  const body = {
+    "id": id, // this can be an animal id or an event record id
+    "treatmentDate": treatmentDate,
+    "injury_type": injury_type,
+    "injury_type_other" : injury_type_other,
+    "injury_service_provider": injury_service_provider,
+    "other_service_provider": other_service_provider,
+    "injury_service_cost": injury_service_cost,
+    "injury_drug_cost": injury_drug_cost,
+    "injury_cow_status": injury_cow_status,
+    "injury_cow_status_other": injury_cow_status_other,     
+    "field_agent_id": field_agent_id,
+    "user_id": user_id 
+  };  
+ 
+  const options = {
+    url: config.method === 'POST' ? config.url :`${config.url}${id}`,
+    method: config.method,
+    headers: config.headers,
+    data: body  
+  }; 
+ 
+  return new Promise((resolve, reject) => {
+    axios(options)
+    .then(res => {           
+        resolve(res.data);
+    })    
+    .catch(err => reject(err));
+  });       
+}
+
+// get injury records 
+export const getInjury =  function (config,id,option) {   
+  const options = {
+    url:`${config.url}${id}/${option}`,
+    method: config.method,
+    headers: config.headers  
+  }  
+  return new Promise((resolve, reject) => {
+    axios(options)
+    .then(res => {          
+        resolve(res.data);
+    })
+    .catch(err => reject(err));
+  });       
+}
+
+
 
 
 

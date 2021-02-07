@@ -64,7 +64,6 @@ const DetailsView = props => {
     { name: "vertical_horn_fissure",label: "V Horn Fissure",options: {filter: true,sort: true,display:true}},
     { name: "swelling_of_coronet",label: "Swelling Coronet",options: {filter: true,sort: true,display:true}}, 
     { name: "heel_horn_erosion",label: "Heel/Horn Erosion",options: {filter: true,sort: true,display:true}},  
-    //{ name: "created_by",label: "Created By",options: {filter: true,sort: true,display:true}}
     { name: "",
       options: {
       filter: false,
