@@ -202,6 +202,16 @@ const routes = [
         component: lazy(() => import('views/Animals/components/Health/components/Injury/components/add'))          
       },
       {
+        path: '/management/health/injury/view/:id',
+        exact: true,
+        component: lazy(() => import('views/Animals/components/Health/components/Injury'))  
+      },
+      {
+        path: '/management/health/injury/edit/:id',
+        exact: true,
+        component: lazy(() => import('views/Animals/components/Health/components/Injury/components/edit'))          
+      },
+      {
         path: '/management/health/parasite-infection/add/:id',
         exact: true,
         component: lazy(() => import('views/Animals/components/Health/components/ParasiteInfection/components/add'))          

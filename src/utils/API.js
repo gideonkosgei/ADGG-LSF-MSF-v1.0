@@ -2829,7 +2829,7 @@ export const getInjury =  function (config,id,option) {
     url:`${config.url}${id}/${option}`,
     method: config.method,
     headers: config.headers  
-  }  
+  }   
   return new Promise((resolve, reject) => {
     axios(options)
     .then(res => {          

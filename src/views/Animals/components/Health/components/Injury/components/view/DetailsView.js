@@ -3,8 +3,8 @@ import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import {Card, CardContent, Grid,colors,Link } from '@material-ui/core';
-import {getPD}   from '../../../../../../../../utils/API';
-import {endpoint_pd} from '../../../../../../../../configs/endpoints';
+import {getInjury}   from '../../../../../../../../utils/API';
+import {endpoint_injury_get} from '../../../../../../../../configs/endpoints';
 import {Sidebar} from '../index';
 import MUIDataTable from "mui-datatables";
 import {MuiThemeProvider } from '@material-ui/core/styles';
@@ -35,13 +35,13 @@ const DetailsView = props => {
   useEffect(() => {     
     let mounted = true;
       (async  (endpoint,id,option) => {     
-        await  getPD(endpoint,id,option)
+        await  getInjury(endpoint,id,option)
         .then(response => {                        
           if (mounted) {            
-            setValues(response.payload[0]);                 
+            setValues(response.payload);                 
           }
         });
-      })(endpoint_pd,animal_id,0);
+      })(endpoint_injury_get,animal_id,0);
       
     return () => {
       mounted = false;
@@ -52,18 +52,16 @@ const DetailsView = props => {
   if (!values) {
     return null;
   }
+  
  
   const columns = [
     { name: "event_id",label: "Event ID",options: {filter: false,sort: false,display:false}},
-    { name: "examination_date",label: "Date Examined",options: {filter: false,sort: true,display:true}},
-    //{ name: "time_examined",label: "Time Examined",options: {filter: true,sort: true, display:true}},
-    { name: "pd_method",label: "Method",options: {filter: false,sort: true,display:true}},
-    { name: "pd_result",label: "Results",options: {filter: true,sort: true, display:true}},
-    { name: "pd_stage",label: "Stage",options: {filter: false,sort: true,display:true}},
-    { name: "body_condition_score_id",label: "Body Condition",options: {filter: true,sort: true,display:true}},
-    { name: "cost",label: "cost",options: {filter: true,sort: true,display:true}},     
-    { name: "date_created",label: "Date Created",options: {filter: true,sort: true,display:true}}, 
-    //{ name: "created_by",label: "Created By",options: {filter: true,sort: true,display:true}}
+    { name: "treatment_date",label: "Treatment Date",options: {filter: false,sort: true,display:true}},   
+    { name: "injury_type",label: "Injury Type",options: {filter: false,sort: true,display:true}},
+    { name: "health_status",label: "Health Status",options: {filter: true,sort: true, display:true}},
+    { name: "service_provider",label: "Service Provider",options: {filter: false,sort: true,display:true}},
+    { name: "service_cost",label: "Service Cost",options: {filter: true,sort: true,display:true}},
+    { name: "drugs_cost",label: "Drugs Cost",options: {filter: true,sort: true,display:true}},        
     { name: "",
       options: {
       filter: false,
@@ -73,7 +71,7 @@ const DetailsView = props => {
         return (
           <Link
               component={RouterLink}
-              to = {`/management/pd/edit/${tableMeta.rowData[0]}`}              
+              to = {`/management/health/injury/edit/${tableMeta.rowData[0]}`}              
           >
             <OpenInNewIcon/>
           </Link>          
@@ -83,6 +81,8 @@ const DetailsView = props => {
   }
     
   ];
+
+  console.log(values);
 
   
   const options = {       
