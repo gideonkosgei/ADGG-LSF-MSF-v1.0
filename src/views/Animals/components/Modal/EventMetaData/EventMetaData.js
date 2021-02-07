@@ -35,7 +35,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const EventMetaData = props => {
-  const { open, onClose, pdDetails, className, ...rest } = props;
+  const { open, onClose, Details, className, ...rest } = props;
   const classes = useStyles(); 
 
   if (!open) {
@@ -65,9 +65,9 @@ const EventMetaData = props => {
                 <TextField
                   fullWidth                 
                   margin = 'dense'
-                  label="Event ID"
+                  label="Record ID"
                   name="id" 
-                  value = {pdDetails.event_id} 
+                  value = {Details.event_id} 
                   variant="outlined"
                   InputLabelProps={{
                     shrink: true,
@@ -88,7 +88,7 @@ const EventMetaData = props => {
                   margin = 'dense'
                   label="Animal ID"
                   name="id" 
-                  value = {pdDetails.animal_id} 
+                  value = {Details.animal_id} 
                   variant="outlined"
                   InputLabelProps={{
                     shrink: true,
@@ -109,7 +109,7 @@ const EventMetaData = props => {
                   margin = 'dense'
                   label="Creation Date"
                   name="creation_date" 
-                  value = {pdDetails.created_at} 
+                  value = {Details.created_at} 
                   variant="outlined"
                   InputLabelProps={{
                     shrink: true,
@@ -134,7 +134,7 @@ const EventMetaData = props => {
                   margin = 'dense'
                   label="Created By"
                   name="created_by"                  
-                  value={pdDetails.created_by}
+                  value={Details.created_by}
                   variant="outlined"
                   InputLabelProps={{
                     shrink: true,
@@ -155,7 +155,7 @@ const EventMetaData = props => {
                   margin = 'dense'
                   label="Last Update Date"
                   name="update_date"                  
-                  value = {pdDetails.updated_at} 
+                  value = {Details.updated_at} 
                   variant="outlined"
                   InputLabelProps={{
                     shrink: true,
@@ -176,7 +176,7 @@ const EventMetaData = props => {
                   margin = 'dense'
                   label="Last Update By"
                   name="updated_by"                  
-                  value={pdDetails.updated_by}
+                  value={Details.updated_by}
                   variant="outlined"
                   InputLabelProps={{
                     shrink: true,

@@ -592,7 +592,7 @@ const DetailsEdit = props => {
           open={openSnackbarError}
         />
         <EventMetaData
-                pdDetails={values}
+                Details={values}
                 onClose={handleMetadataClose}
                 open={openMetadata}
         /> 
