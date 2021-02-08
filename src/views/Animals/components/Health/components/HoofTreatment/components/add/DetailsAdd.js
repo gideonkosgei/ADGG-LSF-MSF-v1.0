@@ -2,9 +2,9 @@ import React, { useState,useEffect,useContext } from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
-import {Card, CardContent, CardHeader, Grid,Divider, TextField,colors,Button,CardActions } from '@material-ui/core';
-import {getLookups,postPd,getAgents}   from '../../../../../../../../utils/API';
-import {endpoint_lookup,endpoint_pd_add,endpoint_agent} from '../../../../../../../../configs/endpoints';
+import {Card, CardContent, CardHeader, Grid,Divider, TextField,colors,Button,CardActions} from '@material-ui/core';
+import {getLookups,CreateOrEditHoofTreatmentRecord,getAgents}   from '../../../../../../../../utils/API';
+import {endpoint_lookup,endpoint_hoof_treatment_add,endpoint_agent} from '../../../../../../../../configs/endpoints';
 import authContext from '../../../../../../../../contexts/AuthContext';
 import {Sidebar} from '../index';
 import SuccessSnackbar from '../../../../../../../../components/SuccessSnackbar';
@@ -30,9 +30,14 @@ const DetailsEdit = props => {
   const [ {user_id,organization_id} ] = useContext(authContext);
   const classes = useStyles();
   const [values, setValues] = useState({ });  
-  const [digital_dermatitis_options, setDigitalDermatitis] = useState([]);
-  const [hoof_health_options, setHoofHealth] = useState([]);
+  
+  const [healthStatus, setHealthStatus] = useState([]);
+  const [healthProvider, setHealthProvider] = useState([]);
+  const [hoofProblem, setHoofProblem] = useState([]);
+  const [hoofTreatment, setHoofTreatment] = useState([]);
   const [agents, setAgents] = useState([]);
+
+
   const option  =  0;
   
   const animal_id  = localStorage.getItem('animal_id');
@@ -56,31 +61,44 @@ const DetailsEdit = props => {
         await  getLookups(endpoint,id)
         .then(response => {       
           if (mounted_lookup) { 
-            const data = response.payload[0];  
-            let lookup_digital_dermatitis = [];  
-            let lookup_hoof_health = []; 
+            const data = response.payload[0];           
+            let lookup_health_status = [];  
+            let lookup_health_provider = [];
+            let lookup_hoof_problem = []; 
+            let lookup_hoof_treatment = []; 
 
-            for (let i = 0; i< data.length; i++){ 
-               //Digital Dermatitis
-               if(data[i].list_type_id === 95){                
-                lookup_digital_dermatitis.push(data[i]);
+            for (let i = 0; i< data.length; i++){               
+
+              //Health Status
+              if(data[i].list_type_id === 89){                
+                lookup_health_status.push(data[i]);
               } 
 
-              //Hoof Health
-              if(data[i].list_type_id === 96){                
-                lookup_hoof_health.push(data[i]);
+              //Health Provider
+              if(data[i].list_type_id === 47){                
+                lookup_health_provider.push(data[i]);
               } 
+
+              //Health Problem
+              if(data[i].list_type_id === 97){                
+                lookup_hoof_problem.push(data[i]);
+              } 
+
+              //Health Treatment
+              if(data[i].list_type_id === 98){                
+                lookup_hoof_treatment.push(data[i]);
+              }    
 
                           
             }  
-
-            setDigitalDermatitis(lookup_digital_dermatitis);
-            setHoofHealth(lookup_hoof_health);         
-                   
-                  
+           
+            setHealthStatus(lookup_health_status);
+            setHealthProvider(lookup_health_provider); 
+            setHoofProblem(lookup_hoof_problem);
+            setHoofTreatment(lookup_hoof_treatment);                   
           }
         });
-      })(endpoint_lookup,'95,96');
+      })(endpoint_lookup,'47,89,97,98');
       
     return () => {
       mounted_lookup = false;  
@@ -88,7 +106,7 @@ const DetailsEdit = props => {
     };
   }, [organization_id]);  
 
-  if ( !agents ||!digital_dermatitis_options || !hoof_health_options) {
+  if ( !agents ||!healthStatus || !healthProvider|| !hoofProblem || !hoofTreatment) {
     return null;
   }
 
@@ -101,11 +119,10 @@ const DetailsEdit = props => {
     });
   };
 
-
   const handleSubmit = event => {
     event.preventDefault();
     (async  (endpoint,id,values,user_id) => {     
-      await  postPd(endpoint,id,values,user_id)
+      await  CreateOrEditHoofTreatmentRecord(endpoint,id,values,user_id)
       .then(() => {  
         setopenSnackbarSuccess(true); 
         setValues({});        
@@ -113,7 +130,7 @@ const DetailsEdit = props => {
       }).catch(() => {        
         setopenSnackbarError(true); 
       });
-    })(endpoint_pd_add,animal_id,values,user_id);    
+    })(endpoint_hoof_treatment_add,animal_id,values,user_id);    
   };
   
   
@@ -184,6 +201,7 @@ const DetailsEdit = props => {
                     margin = 'dense'
                     label="Hoof Problem"
                     name="hoof_problem"
+                    required
                     onChange={handleChange}                   
                     default = ""                              
                     select                    
@@ -192,7 +210,7 @@ const DetailsEdit = props => {
                   >
                     <option value=""></option>
                     {
-                      digital_dermatitis_options.map(x => (
+                      hoofProblem.map(x => (
                         <option                    
                           value={x.id}
                         >
@@ -207,32 +225,32 @@ const DetailsEdit = props => {
                       md={3}
                       xs={12}
                     >
-                    <TextField
-                      fullWidth
-                      InputLabelProps={{
-                        shrink: true,
-                      }}
-                      margin = 'dense'                      
-                      label="Treatment Type"
-                      name="treatment_type"
-                      onChange={handleChange}                     
-                      default = ""                              
-                      select                      
-                      SelectProps={{ native: true }}                    
-                      variant="outlined"
-                    >
-                      <option value=""></option>
-                      {hoof_health_options.map(x => (
-                            <option                    
-                              value={x.id}
-                            >
-                              {x.value}
-                            </option>
-                          ))
-                      }           
-                    </TextField>
-                  </Grid>
-                  
+                      <TextField
+                        fullWidth
+                        InputLabelProps={{
+                          shrink: true,
+                        }}
+                        margin = 'dense'                      
+                        label="Treatment Type"
+                        name="hoof_treatment_type"
+                        onChange={handleChange}
+                        default = ""                              
+                        select                      
+                        SelectProps={{ native: true }}                    
+                        variant="outlined"
+                        >
+                        <option value=""></option>
+                        {hoofTreatment.map(x => (
+                              <option                    
+                                value={x.id}
+                              >
+                                {x.value}
+                              </option>
+                            ))
+                        }           
+                        </TextField>
+                                    
+                  </Grid>              
                   <Grid
                     item
                     md={3}
@@ -245,22 +263,13 @@ const DetailsEdit = props => {
                     }}                                       
                     margin = 'dense'
                     label="Other Treatment Type"
-                    name="treatment_type_other"
-                    onChange={handleChange}                                                
-                    select                    
-                    SelectProps={{ native: true }}                    
+                    name="hoof_treatment_type_other"
+                    onChange={handleChange} 
                     variant="outlined"
-                  >
-                    <option value=""></option>
-                    {hoof_health_options.map(x => (
-                          <option                    
-                            value={x.id}
-                          >
-                            {x.value}
-                          </option>
-                        ))
-                    }           
-                  </TextField>
+                    multiline
+                    rowsMax ={3}
+                    rows ={1}
+                  />                   
                 </Grid>
                 
                   <Grid
@@ -274,7 +283,7 @@ const DetailsEdit = props => {
                       shrink: true,
                     }}
                     margin = 'dense'
-                    label="Treatment Service Provider"
+                    label="Service Provider"
                     name="hoof_treatment_provider"
                     onChange={handleChange}                   
                     default = ""                              
@@ -283,7 +292,7 @@ const DetailsEdit = props => {
                     variant="outlined"
                   >
                     <option value=""></option>
-                    {hoof_health_options.map(x => (
+                    {healthProvider.map(x => (
                           <option                    
                             value={x.id}
                           >
@@ -292,8 +301,30 @@ const DetailsEdit = props => {
                         ))
                     }           
                   </TextField>
+                  </Grid> 
+                  {  parseInt(values.hoof_treatment_provider) === -66 ?  
+                  <Grid
+                    item
+                    md={3}
+                    xs={12}
+                  >
+                   <TextField
+                    fullWidth
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                    margin = 'dense'
+                    label="Other Service Provider"
+                    name="hoof_treatment_provider_other"
+                    onChange={handleChange} 
+                    variant="outlined"  
+                    multiline
+                    rowsMax ={3}  
+                    rows ={1}              
+                    />
                   </Grid>  
-
+                  : null
+                  }
 
                   <Grid
                     item
@@ -308,22 +339,11 @@ const DetailsEdit = props => {
                     margin = 'dense'
                     label="Drugs Cost"
                     name="treatment_drug_cost"
-                    onChange={handleChange}                    
-                    default = ""                              
-                    select                   
-                    SelectProps={{ native: true }}                    
+                    onChange={handleChange}
                     variant="outlined"
-                  >
-                    <option value=""></option>
-                    {hoof_health_options.map(x => (
-                          <option                    
-                            value={x.id}
-                          >
-                            {x.value}
-                          </option>
-                        ))
-                    }           
-                  </TextField>
+                    type = "number"
+                  />
+                    
                   </Grid> 
 
                   <Grid
@@ -339,22 +359,10 @@ const DetailsEdit = props => {
                     margin = 'dense'
                     label="Service Cost"
                     name="hoof_treatment_service_cost"
-                    onChange={handleChange}                   
-                    default = ""                              
-                    select                    
-                    SelectProps={{ native: true }}                    
+                    onChange={handleChange} 
                     variant="outlined"
-                  >
-                    <option value=""></option>
-                    {hoof_health_options.map(x => (
-                          <option                    
-                            value={x.id}
-                          >
-                            {x.value}
-                          </option>
-                        ))
-                    }           
-                  </TextField>
+                   />
+                    
                   </Grid> 
 
                   <Grid
@@ -368,16 +376,17 @@ const DetailsEdit = props => {
                       shrink: true,
                     }}
                     margin = 'dense'
-                    label="Cow Status"
-                    name="treatment_cow_status"
+                    label="Animal Status"
+                    name="hoof_treatment_cow_status"
                     onChange={handleChange}                   
                     default = ""                              
                     select                   
                     SelectProps={{ native: true }}                    
                     variant="outlined"
                   >
-                    <option value=""></option>
-                    {hoof_health_options.map(x => (
+                    <option value=""></option>  
+
+                    {healthStatus.map(x => (
                           <option                    
                             value={x.id}
                           >
@@ -388,6 +397,7 @@ const DetailsEdit = props => {
                   </TextField>
                   </Grid> 
 
+                  {  parseInt(values.hoof_treatment_cow_status) === -66 ?
                   <Grid
                     item
                     md={3}
@@ -399,25 +409,17 @@ const DetailsEdit = props => {
                       shrink: true,
                     }}
                     margin = 'dense'
-                    label="Cow Status Other"
-                    name="cow_status_other"
-                    onChange={handleChange}                    
-                    default = ""                              
-                    select                    
-                    SelectProps={{ native: true }}                    
-                    variant="outlined"
-                  >
-                    <option value=""></option>
-                    {hoof_health_options.map(x => (
-                          <option                    
-                            value={x.id}
-                          >
-                            {x.value}
-                          </option>
-                        ))
-                    }           
-                  </TextField>
+                    label="Other Animal Status"
+                    name="hoof_treatment_cow_status_other"
+                    onChange={handleChange}   
+                    variant="outlined"                 
+                    multiline
+                    rowsMax ={3}  
+                    rows ={1}              
+                    />
                   </Grid> 
+                   : null
+                  }
 
                 
                   <Grid

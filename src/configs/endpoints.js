@@ -789,6 +789,29 @@ export const endpoint_parasite_infection_get = {
 };
 
 
+// Post Hoof Treatment event record
+export const endpoint_hoof_treatment_add = {
+  url: `${api}/events/hoof-treatment`,
+  method: 'POST',
+  headers: headers   
+};
+
+// Edit parasite infection event record
+export const endpoint_hoof_treatment_edit = {
+  url: `${api}/events/hoof-treatment/`,
+  method: 'PUT',
+  headers: headers   
+};
+
+//Get all parasite infection event records
+export const endpoint_hoof_treatment_get = {
+  url: `${api}/events/hoof-treatment/`,
+  method: 'GET',
+  headers: headers   
+};
+
+
+
 
 
 

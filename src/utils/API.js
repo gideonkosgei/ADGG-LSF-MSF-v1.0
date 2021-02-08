@@ -2916,6 +2916,87 @@ export const getParasiteInfection =  function (config,id,option) {
 }
 
 
+//create or update Hoof Treatment event record
+export const CreateOrEditHoofTreatmentRecord =  function (config,id,values,user_id) {  
+   
+  let { 
+    field_agent_id,  
+    treatment_date,
+    hoof_problem,
+    hoof_treatment_type,
+    hoof_treatment_type_other,
+    hoof_treatment_provider,
+    hoof_treatment_provider_other,
+    hoof_treatment_drug_cost,
+    hoof_treatment_service_cost,
+    hoof_treatment_cow_status,
+    hoof_treatment_cow_status_other
+  } = values;    
+  
+  field_agent_id = (typeof field_agent_id === 'undefined' || field_agent_id ==='' )? null:field_agent_id;
+  hoof_problem = (typeof hoof_problem === 'undefined' || hoof_problem ==='' )? null:hoof_problem; 
+  hoof_treatment_type = (typeof hoof_treatment_type === 'undefined' || hoof_treatment_type ==='' )? null:hoof_treatment_type;
+  hoof_treatment_type_other = (typeof hoof_treatment_type_other === 'undefined' || hoof_treatment_type_other ==='' )? null:hoof_treatment_type_other;
+  hoof_treatment_provider = (typeof hoof_treatment_provider === 'undefined' || hoof_treatment_provider ==='' )? null:hoof_treatment_provider;
+  hoof_treatment_provider_other = (typeof hoof_treatment_provider_other === 'undefined' || hoof_treatment_provider_other ==='' )? null:hoof_treatment_provider_other;
+  hoof_treatment_drug_cost = (typeof hoof_treatment_drug_cost === 'undefined' || hoof_treatment_drug_cost ==='' )? null:hoof_treatment_drug_cost;
+  hoof_treatment_service_cost = (typeof hoof_treatment_service_cost === 'undefined' || hoof_treatment_service_cost ==='' )? null:hoof_treatment_service_cost;
+  hoof_treatment_cow_status = (typeof hoof_treatment_cow_status === 'undefined' || hoof_treatment_cow_status ==='' )? null:hoof_treatment_cow_status;
+  hoof_treatment_cow_status_other = (typeof hoof_treatment_cow_status_other === 'undefined' || hoof_treatment_cow_status_other ==='' )? null:hoof_treatment_cow_status_other;
+  treatment_date = (typeof treatment_date === 'undefined' || treatment_date ==='' )?  moment(new Date()).format('YYYY-MM-DD'):treatment_date;
+
+    
+  const body = {
+    "id": id, // this can be an animal id or an event record id
+    "treatment_date": treatment_date,
+    "hoof_problem": hoof_problem,
+    "hoof_treatment_type" : hoof_treatment_type,
+    "hoof_treatment_type_other": hoof_treatment_type_other,
+    "hoof_treatment_provider": hoof_treatment_provider,
+    "hoof_treatment_provider_other": hoof_treatment_provider_other,
+    "hoof_treatment_drug_cost": hoof_treatment_drug_cost,
+    "hoof_treatment_service_cost": hoof_treatment_service_cost,
+    "hoof_treatment_cow_status": hoof_treatment_cow_status, 
+    "hoof_treatment_cow_status_other": hoof_treatment_cow_status_other,    
+    "field_agent_id": field_agent_id,
+    "user_id": user_id 
+  };  
+ 
+  const options = {
+    url: config.method === 'POST' ? config.url :`${config.url}${id}`,
+    method: config.method,
+    headers: config.headers,
+    data: body  
+  }; 
+
+  console.log(options);
+ 
+  return new Promise((resolve, reject) => {
+    axios(options)
+    .then(res => {           
+        resolve(res.data);
+    })    
+    .catch(err => reject(err));
+  });       
+}
+
+// get Hoof Treatmentrecords 
+export const getHoofTreatment =  function (config,id,option) {   
+  const options = {
+    url:`${config.url}${id}/${option}`,
+    method: config.method,
+    headers: config.headers  
+  }   
+  return new Promise((resolve, reject) => {
+    axios(options)
+    .then(res => {          
+        resolve(res.data);
+    })
+    .catch(err => reject(err));
+  });       
+}
+
+
 
 
 
