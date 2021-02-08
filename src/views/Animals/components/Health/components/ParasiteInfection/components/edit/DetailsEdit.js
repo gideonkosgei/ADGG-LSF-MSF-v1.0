@@ -3,8 +3,8 @@ import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import {Card, CardContent, CardHeader, Grid,Divider, TextField,colors,Button,CardActions,Box,Switch ,Typography,Tooltip } from '@material-ui/core';
-import {getLookups,updatePd,getPdByEventId,getAgents}   from '../../../../../../../../utils/API';
-import {endpoint_lookup,endpoint_pd_update,endpoint_pd_specific,endpoint_agent} from '../../../../../../../../configs/endpoints';
+import {getLookups,CreateOrEditParasiteInfectionRecord,getParasiteInfection,getAgents}   from '../../../../../../../../utils/API';
+import {endpoint_lookup,endpoint_parasite_infection_edit,endpoint_parasite_infection_get,endpoint_agent} from '../../../../../../../../configs/endpoints';
 import authContext from '../../../../../../../../contexts/AuthContext';
 import {Sidebar} from '../index';
 import SuccessSnackbar from '../../../../../../../../components/SuccessSnackbar';
@@ -30,23 +30,23 @@ const DetailsEdit = props => {
   const [openSnackbarError, setopenSnackbarError] = useState(false);
   const [ {user_id,organization_id} ] = useContext(authContext);
   const classes = useStyles();
-  const [values, setValues] = useState({ });  
-  const [body_scores, setBodyScores] = useState([]);
-  const [pd_methods, setPdMethods] = useState([]);
-  const [pd_stages, setPdStages] = useState([]);
-  const [pd_results, setPdResults] = useState([]);
+  const [values, setValues] = useState({ });
+
   const [readOnly, setReadOnly] = useState(true);
   const [openMetadata, setMetadata] = useState(false);  
-  const event_id  = localStorage.getItem('pd_event_id'); 
+  const record_id  = localStorage.getItem('parasite_infection_record_id'); 
   const animal_tag  = sessionStorage.getItem('animal_tag');
   const animal_name  = sessionStorage.getItem('animal_name');
   const [agents, setAgents] = useState([]);
+  const [healthStatus, setHealthStatus] = useState([]);
+  const [healthProvider, setHealthProvider] = useState([]);
+  const [parasiteTypes, setParasiteTypes] = useState([]);
   const option  =  0;
 
   useEffect(() => {   
     let mounted_lookup = true;
-    let mounted_pd = true;  
     let mounted_agents = true;
+    let mounted_values = true;
 
     (async  (endpoint,org_id,option) => {     
       await  getAgents(endpoint,org_id,option)
@@ -58,66 +58,56 @@ const DetailsEdit = props => {
     })(endpoint_agent,organization_id,option); 
 
     (async  (endpoint,id) => {     
-        await  getLookups(endpoint,id)
-        .then(response => {       
-          if (mounted_lookup) { 
-            const data = response.payload[0];            
-            let lookup_body_scores = [];
-            let lookup_pd_methods = [];
-            let lookup_pd_results = [];
-            let lookup_pd_stages = [];
+      await  getLookups(endpoint,id)
+      .then(response => {       
+        if (mounted_lookup) { 
+          const data = response.payload[0];  
+          let lookup_health_status = [];  
+          let lookup_health_provider = [];
+          let lookup_parasite_types= []; 
 
-
-            for (let i = 0; i< data.length; i++){              
-              //Body Score
-              if(data[i].list_type_id === 71){                
-                lookup_body_scores.push(data[i]);
+          for (let i = 0; i< data.length; i++){ 
+              //Health Status
+              if(data[i].list_type_id === 89){                
+                lookup_health_status.push(data[i]);
               } 
 
-              //PD methods
-              if(data[i].list_type_id === 80){                
-                lookup_pd_methods.push(data[i]);
-              }  
-              //PD results
-              if(data[i].list_type_id === 78){                
-                lookup_pd_results.push(data[i]);
-              } 
+              //Health Provider
+              if(data[i].list_type_id === 47){                
+                lookup_health_provider.push(data[i]);
+              }   
+              
+              //Parasite Types
+              if(data[i].list_type_id === 90){                
+                lookup_parasite_types.push(data[i]);
+              }                    
+          }  
+          setHealthStatus(lookup_health_status);
+          setHealthProvider(lookup_health_provider);
+          setParasiteTypes(lookup_parasite_types);     
+        }
+      });
+    })(endpoint_lookup,'89,47,90'); 
 
-              //PD stages
-              if(data[i].list_type_id === 79){                
-                lookup_pd_stages.push(data[i]);
-              }               
-            }  
-                   
-            setBodyScores(lookup_body_scores);
-            setPdMethods(lookup_pd_methods);
-            setPdResults(lookup_pd_results);
-            setPdStages(lookup_pd_stages);            
-          }
-        });
-      })(endpoint_lookup,'71,80,78,79');
-
-      (async  (endpoint,id) => {             
-        await  getPdByEventId(endpoint,id)
-        .then(response => {       
-          if (mounted_pd) { 
-            const data = response.payload[0][0];   
-            console.log(data);                    
-            setValues(data);                         
-          }
-        });
-      })(endpoint_pd_specific,event_id);
+    (async  (endpoint,id,option) => {     
+      await  getParasiteInfection(endpoint,id,option)
+      .then(response => {                        
+        if (mounted_values) {            
+          setValues(response.payload[0]);                 
+        }
+      });
+    })(endpoint_parasite_infection_get,record_id,2);
       
 
       
     return () => {
       mounted_lookup = false;  
-      mounted_pd = false;   
+      mounted_values = false;   
       mounted_agents = false;  
     };
-  }, [event_id,organization_id]);  
+  }, [record_id,organization_id]);  
 
-  if (!body_scores || !pd_methods || !pd_stages ||!pd_results ||!values || !agents) {
+  if (!healthStatus || !healthProvider|| !parasiteTypes ||!values || !agents) {
     return null;
   }
 
@@ -129,20 +119,18 @@ const DetailsEdit = props => {
           
     });
   };
-
   
   const handleSubmit = event => {
     event.preventDefault();
     (async  (endpoint,id,values,user_id) => {     
-      await  updatePd(endpoint,id,values,user_id)
+      await  CreateOrEditParasiteInfectionRecord(endpoint,id,values,user_id)
       .then(() => {  
         setopenSnackbarSuccess(true);         
       }).catch(() => {        
         setopenSnackbarError(true); 
       });
-    })(endpoint_pd_update,event_id,values,user_id);    
-  };
-  
+    })(endpoint_parasite_infection_edit,record_id,values,user_id);    
+  };  
   
   const handleSnackbarSuccessClose = () => {
     setopenSnackbarSuccess(false);
@@ -168,7 +156,7 @@ const DetailsEdit = props => {
       {...rest}
       className={clsx(classes.root, className)}
     >
-       <CardHeader  title= { readOnly ? `PREGNANCY DIAGNOSIS - ${animal_name}(${animal_tag})` :`EDIT PREGNANCY DIAGNOSIS - ${animal_name}(${animal_tag})`} />
+       <CardHeader  title= { readOnly ? `PARASITE INFECTION - ${animal_name}(${animal_tag})` :`EDIT PARASITE INFECTION - ${animal_name}(${animal_tag})`} />
         <Divider />
         <CardContent> 
           <Grid container spacing={1} justify="center">            
@@ -178,12 +166,11 @@ const DetailsEdit = props => {
           <Grid item xs={11}>
             <Card> 
             <form id ='event' onSubmit={handleSubmit} >
-              <CardContent>        
+              <CardContent> 
               <Grid
                 container
                 spacing={4}
               > 
-
                   <Grid
                       item
                       md={3}
@@ -194,71 +181,21 @@ const DetailsEdit = props => {
                       InputLabelProps={{
                         shrink: true,
                       }}
-                      inputProps={{
-                        readOnly: Boolean(readOnly),
-                        disabled: Boolean(readOnly),
-                        max: moment(new Date()).format('YYYY-MM-DD')               
-                      }}
-                      required
+                      inputProps={{  
+                        readOnly: true,
+                        disabled: true,                      
+                        max: moment(new Date()).format('YYYY-MM-DD')                 
+                      }}                   
                       margin = 'dense'
-                      label="Examination Date"
+                      required
+                      label="Date Of Treatment"
                       type="date"
-                      name="exam_date"                      
+                      name="parasite_date" 
+                      value = {values.parasite_date}                      
                       onChange={handleChange}
                       variant="outlined"
-                      value = {values.exam_date}
                     />
-                  </Grid>
-                  <Grid
-                    item
-                    md={3}
-                    xs={12}
-                  >
-                    <TextField
-                      fullWidth
-                      InputLabelProps={{
-                        shrink: true,
-                      }}
-                      inputProps={{
-                        readOnly: Boolean(readOnly),
-                        disabled: Boolean(readOnly)                
-                      }}
-                      required
-                      margin = 'dense'
-                      label="Examination Time"
-                      type="time"
-                      name="exam_time"                      
-                      onChange={handleChange}
-                      variant="outlined"  
-                      value = {values.exam_time}                    
-                                  
-                    />
-                  </Grid>
-                  <Grid
-                      item
-                      md={3}
-                      xs={12}
-                  >
-                    <TextField
-                      fullWidth
-                      InputLabelProps={{
-                        shrink: true,
-                      }}
-                      inputProps={{
-                        readOnly: Boolean(readOnly),
-                        disabled: Boolean(readOnly),
-                        max: moment(new Date()).format('YYYY-MM-DD')              
-                      }}
-                      required
-                      margin = 'dense'
-                      label="Service Date"
-                      type="date"
-                      name="service_date"                      
-                      onChange={handleChange}
-                      variant="outlined"
-                      value = {values.service_date}
-                    />
-                  </Grid>
+                  </Grid>              
                   <Grid
                     item
                     md={3}
@@ -271,31 +208,32 @@ const DetailsEdit = props => {
                     }}
                     inputProps={{
                       readOnly: Boolean(readOnly),
-                      disabled: Boolean(readOnly)                
+                      disabled: Boolean(readOnly)                                   
                     }}
                     margin = 'dense'
-                    label="PD Method"
-                    name="pd_method"
-                    onChange={handleChange}
+                    label="Parasite Type"
+                    name="parasite_type"
                     required
+                    value = {values.parasite_type} 
+                    onChange={handleChange}                   
                     default = ""                              
-                    select
-                    // eslint-disable-next-line react/jsx-sort-props
+                    select                    
                     SelectProps={{ native: true }}                    
                     variant="outlined"
-                    value = {values.pd_method}
                   >
                     <option value=""></option>
-                    {pd_methods.map(method => (
-                          <option                    
-                            value={method.id}
-                          >
-                            {method.value}
-                          </option>
-                        ))
+                    {
+                      parasiteTypes.map(x => (
+                        <option                    
+                          value={x.id}
+                        >
+                          {x.value}
+                        </option>
+                      ))
                     }           
                   </TextField>
                 </Grid>
+                {  parseInt(values.parasite_type) === -66 ? 
                   <Grid
                       item
                       md={3}
@@ -308,34 +246,54 @@ const DetailsEdit = props => {
                       }}
                       inputProps={{
                         readOnly: Boolean(readOnly),
-                        disabled: Boolean(readOnly)                
+                        disabled: Boolean(readOnly)                                   
                       }}
                       margin = 'dense'
-                      label="PD Result"
-                      name="pd_results"
+                      label="Other Parasite Type"
+                      name="parasite_type_other"
+                      value = {values.parasite_type_other} 
                       onChange={handleChange}
-                      required
-                      default = ""                              
-                      select
-                      // eslint-disable-next-line react/jsx-sort-props
-                      SelectProps={{ native: true }}                    
                       variant="outlined"
-                      value = {values.pd_results}
-                    >
-                      <option value=""></option>
-                      {pd_results.map(result => (
-                            <option                    
-                              value={result.id}
-                            >
-                              {result.value}
-                            </option>
-                          ))
-                      }           
-                    </TextField>
-                  </Grid>
-                  {  
-                   isNaN(values.pd_results) || values.pd_results ==='' || parseInt(values.pd_results) === 2? null :        
-                   <Grid
+                    />
+                  </Grid> 
+                  : null
+                }                 
+                  <Grid
+                    item
+                    md={3}
+                    xs={12}
+                  >
+                  <TextField
+                    fullWidth                    
+                    InputLabelProps={{
+                      shrink: true                      
+                    }}
+                    inputProps={{
+                      readOnly: Boolean(readOnly),
+                      disabled: Boolean(readOnly)                                   
+                    }}                                       
+                    margin = 'dense'
+                    label="Service Provider"
+                    name="parasite_provider"
+                    value = {values.parasite_provider} 
+                    onChange={handleChange}                                                
+                    select                    
+                    SelectProps={{ native: true }}                    
+                    variant="outlined"
+                  >
+                    <option value=""></option>
+                    {healthProvider.map(x => (
+                          <option                    
+                            value={x.id}
+                          >
+                            {x.value}
+                          </option>
+                        ))
+                    }           
+                  </TextField>
+                </Grid>
+                {  parseInt(values.parasite_provider) === -66 ? 
+                <Grid
                     item
                     md={3}
                     xs={12}
@@ -347,30 +305,20 @@ const DetailsEdit = props => {
                     }} 
                     inputProps={{
                       readOnly: Boolean(readOnly),
-                      disabled: Boolean(readOnly)                
+                      disabled: Boolean(readOnly)                                   
                     }}                                      
                     margin = 'dense'
-                    label="PD Stage"
-                    name="pd_stage"
-                    onChange={handleChange}                                                
-                    select
-                    // eslint-disable-next-line react/jsx-sort-props
-                    SelectProps={{ native: true }}                    
+                    label="Other Service Provider"
+                    name="parasite_provider_other"
+                    value = {values.parasite_provider_other} 
+                    onChange={handleChange}
                     variant="outlined"
-                    value = {values.pd_stage}
-                  >
-                    <option value=""></option>
-                    {pd_stages.map(stage => (
-                          <option                    
-                            value={stage.id}
-                          >
-                            {stage.value}
-                          </option>
-                        ))
-                    }           
-                  </TextField>
+                  />
+                    
                 </Grid>
+                    : null
                   }
+                
                   <Grid
                     item
                     md={3}
@@ -383,58 +331,105 @@ const DetailsEdit = props => {
                     }}
                     inputProps={{
                       readOnly: Boolean(readOnly),
-                      disabled: Boolean(readOnly)                
+                      disabled: Boolean(readOnly)                                   
                     }}
                     margin = 'dense'
-                    label="Body Score"
-                    name="body_score"
-                    onChange={handleChange}
-                    //required
-                    default = ""                              
-                    select
-                    // eslint-disable-next-line react/jsx-sort-props
-                    SelectProps={{ native: true }}                    
+                    type = 'number'
+                    label="Drugs Cost"
+                    name="parasite_drug_cost"
+                    value = {values.parasite_drug_cost} 
+                    onChange={handleChange} 
                     variant="outlined"
-                    value = {values.body_score}
-                  >
-                    <option value=""></option>
-                    {body_scores.map(score => (
-                          <option                    
-                            value={score.id}
-                          >
-                            {score.id}
-                          </option>
-                        ))
-                    }           
-                  </TextField>
-                  </Grid>                
+                  />
+                    
+                  </Grid>  
                   <Grid
-                  item
-                  md={3}
-                  xs={12}
-                >
-                  <TextField
+                    item
+                    md={3}
+                    xs={12}
+                  >
+                   <TextField
                     fullWidth
                     InputLabelProps={{
                       shrink: true,
                     }}
                     inputProps={{
                       readOnly: Boolean(readOnly),
-                      disabled: Boolean(readOnly)                
+                      disabled: Boolean(readOnly)                                   
                     }}
-                    //required
                     margin = 'dense'
-                    label="Cost"
-                    name="cost"                                   
-                    onChange={handleChange}
-                    type="number"
-                    variant="outlined"   
-                    value = {values.cost}                                              
+                    label="Service Cost"
+                    name="parasite_service_cost"
+                    value = {values.parasite_service_cost} 
+                    onChange={handleChange}  
+                    variant="outlined"
                   />
-                </Grid>
-                 
-                  
+                    
+                  </Grid> 
+
                   <Grid
+                    item
+                    md={3}
+                    xs={12}
+                  >
+                   <TextField
+                    fullWidth
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                    inputProps={{
+                      readOnly: Boolean(readOnly),
+                      disabled: Boolean(readOnly)                                   
+                    }}
+                    margin = 'dense'
+                    label="Animal Status"
+                    name="parasite_cow_status"
+                    required
+                    value = {values.parasite_cow_status} 
+                    onChange={handleChange}                   
+                    default = ""                              
+                    select                    
+                    SelectProps={{ native: true }}                    
+                    variant="outlined"
+                  >
+                    <option value=""></option>
+                    {healthStatus.map(x => (
+                          <option                    
+                            value={x.id}
+                          >
+                            {x.value}
+                          </option>
+                        ))
+                    }           
+                  </TextField>
+                  </Grid> 
+                  {  parseInt(values.parasite_cow_status) === -66 ? 
+                  <Grid
+                    item
+                    md={3}
+                    xs={12}
+                  >
+                   <TextField
+                    fullWidth
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                    inputProps={{
+                      readOnly: Boolean(readOnly),
+                      disabled: Boolean(readOnly)                                   
+                    }}
+                    margin = 'dense'
+                    label="Animal Status Other"
+                    name="parasite_cow_status_other"
+                    value = {values.parasite_cow_status_other} 
+                    onChange={handleChange}
+                    variant="outlined"
+                  />
+                   
+                  </Grid> 
+                      : null
+                  }
+              <Grid
                     item
                     md={3}
                     xs={12}
@@ -446,17 +441,17 @@ const DetailsEdit = props => {
                     }}
                     inputProps={{
                       readOnly: Boolean(readOnly),
-                      disabled: Boolean(readOnly)                
+                      disabled: Boolean(readOnly)                                   
                     }}
                     margin = 'dense'
-                    label="PD Admin"
-                    name="field_agent_id"                
-                    onChange={handleChange}
-                    variant="outlined"  
-                    value = {values.field_agent_id} default = ""                              
-                    select
-                    SelectProps={{ native: true }}                    
-                    
+                    label="Examinar"
+                    name="field_agent_id"   
+                    value = {values.field_agent_id}              
+                    onChange={handleChange}                                      
+                    variant="outlined"
+                    default = ""                              
+                    select                   
+                    SelectProps={{ native: true }} 
                   >
                     <option value=""></option>
                     {agents.map(agent => (
@@ -468,10 +463,13 @@ const DetailsEdit = props => {
                         ))
                     }           
                   </TextField>
+                    
               </Grid>
             
               </Grid>
-          </CardContent>
+         
+
+              </CardContent>
           <Divider />
           <CardActions>          
           <Box flexGrow={1}>

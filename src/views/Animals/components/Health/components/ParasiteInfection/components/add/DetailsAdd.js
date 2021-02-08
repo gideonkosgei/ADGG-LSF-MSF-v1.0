@@ -183,6 +183,7 @@ const DetailsEdit = props => {
                     margin = 'dense'
                     label="Parasite Type"
                     name="parasite_type"
+                    required
                     onChange={handleChange}                   
                     default = ""                              
                     select                    
@@ -325,6 +326,7 @@ const DetailsEdit = props => {
                     margin = 'dense'
                     label="Animal Status"
                     name="parasite_cow_status"
+                    required
                     onChange={handleChange}                   
                     default = ""                              
                     select                    
