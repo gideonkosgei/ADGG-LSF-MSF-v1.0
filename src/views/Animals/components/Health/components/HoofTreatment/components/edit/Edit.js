@@ -25,11 +25,11 @@ const useStyles = makeStyles(theme => ({
 
 const Edit = props => { 
   const classes = useStyles();
-  localStorage.setItem('pd_event_id', parseInt(props.match.params.id)); 
+  sessionStorage.setItem('hoof_treatment_record_id', parseInt(props.match.params.id)); 
   return (
     <Page
       className={classes.root}
-      title="PD"
+      title="Hoof Treatment"
     >
     <Card>
         <CardContent>

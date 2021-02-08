@@ -2967,9 +2967,7 @@ export const CreateOrEditHoofTreatmentRecord =  function (config,id,values,user_
     method: config.method,
     headers: config.headers,
     data: body  
-  }; 
-
-  console.log(options);
+  };
  
   return new Promise((resolve, reject) => {
     axios(options)
@@ -2986,7 +2984,7 @@ export const getHoofTreatment =  function (config,id,option) {
     url:`${config.url}${id}/${option}`,
     method: config.method,
     headers: config.headers  
-  }   
+  }  
   return new Promise((resolve, reject) => {
     axios(options)
     .then(res => {          

@@ -60,7 +60,8 @@ const DetailsView = props => {
     { name: "parasite_cow_status",label: "Health Status",options: {filter: true,sort: true, display:true}},
     { name: "parasite_provider",label: "Service Provider",options: {filter: false,sort: true,display:true}},
     { name: "parasite_service_cost",label: "Service Cost",options: {filter: true,sort: true,display:true}},
-    { name: "parasite_drug_cost",label: "Drugs Cost",options: {filter: true,sort: true,display:true}}, { name: "",
+    { name: "parasite_drug_cost",label: "Drugs Cost",options: {filter: true,sort: true,display:true}}, 
+    { name: "",
       options: {
       filter: false,
       sort: false,  
@@ -69,7 +70,7 @@ const DetailsView = props => {
         return (
           <Link
               component={RouterLink}
-              to = {`/management/health/parasite-infection/edit/${tableMeta.rowData[0]}`}              
+              to = {`/management/health/hoof-treatment/edit/${tableMeta.rowData[0]}`}              
           >
             <OpenInNewIcon/>
           </Link>          

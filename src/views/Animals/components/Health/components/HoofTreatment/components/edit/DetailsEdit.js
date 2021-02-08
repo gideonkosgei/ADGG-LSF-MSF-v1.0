@@ -3,14 +3,14 @@ import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import {Card, CardContent, CardHeader, Grid,Divider, TextField,colors,Button,CardActions,Box,Switch ,Typography,Tooltip } from '@material-ui/core';
-import {getLookups,updatePd,getPdByEventId,getAgents}   from '../../../../../../utils/API';
-import {endpoint_lookup,endpoint_pd_update,endpoint_pd_specific,endpoint_agent} from '../../../../../../configs/endpoints';
-import authContext from '../../../../../../contexts/AuthContext';
+import {getLookups,updatePd,getPdByEventId,getAgents}   from '../../../../../../../../utils/API';
+import {endpoint_lookup,endpoint_pd_update,endpoint_pd_specific,endpoint_agent} from '../../../../../../../../configs/endpoints';
+import authContext from '../../../../../../../../contexts/AuthContext';
 import {Sidebar} from '../index';
-import SuccessSnackbar from '../../../../../../components/SuccessSnackbar';
-import ErrorSnackbar from '../../../../../../components/ErrorSnackbar';
+import SuccessSnackbar from '../../../../../../../../components/SuccessSnackbar';
+import ErrorSnackbar from '../../../../../../../../components/ErrorSnackbar';
 import OpenInNewIcon from '@material-ui/icons/OpenInNew';
-import {EventPdMetaData}  from '../../../Modal';
+import {EventPdMetaData}  from '../../../../../Modal';
 import moment from 'moment';
 
 
@@ -38,7 +38,7 @@ const DetailsEdit = props => {
   const [pd_results, setPdResults] = useState([]);
   const [readOnly, setReadOnly] = useState(true);
   const [openMetadata, setMetadata] = useState(false);  
-  const event_id  = localStorage.getItem('pd_event_id'); 
+  const event_id  = sessionStorage.getItem('hoof_treatment_record_id'); 
   const animal_tag  = sessionStorage.getItem('animal_tag');
   const animal_name  = sessionStorage.getItem('animal_name');
   const [agents, setAgents] = useState([]);
@@ -102,8 +102,8 @@ const DetailsEdit = props => {
         await  getPdByEventId(endpoint,id)
         .then(response => {       
           if (mounted_pd) { 
-            const data = response.payload[0][0];   
-            console.log(data);                    
+            const data = response.payload[0][0]; 
+                               
             setValues(data);                         
           }
         });

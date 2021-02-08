@@ -191,11 +191,26 @@ const routes = [
         exact: true,
         component: lazy(() => import('views/Animals/components/Health/components/HoofHealth/components/edit'))          
       },
+
       {
         path: '/management/health/hoof-treatment/add/:id',
         exact: true,
         component: lazy(() => import('views/Animals/components/Health/components/HoofTreatment/components/add'))          
       },
+      {
+        path: '/management/health/hoof-treatment/view/:id',
+        exact: true,
+        component: lazy(() => import('views/Animals/components/Health/components/HoofTreatment'))          
+      },
+      {
+        path: '/management/health/hoof-treatment/edit/:id',
+        exact: true,
+        component: lazy(() => import('views/Animals/components/Health/components/HoofTreatment/components/edit'))          
+      },
+
+
+
+
       {
         path: '/management/health/injury/add/:id',
         exact: true,
@@ -227,6 +242,7 @@ const routes = [
         exact: true,
         component: lazy(() => import('views/Animals/components/Health/components/ParasiteInfection'))  
       },
+
      /* {
         path: '/management/notifications/',
         exact: true,

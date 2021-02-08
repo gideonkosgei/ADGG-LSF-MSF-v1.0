@@ -338,12 +338,11 @@ const DetailsEdit = props => {
                     }}
                     margin = 'dense'
                     label="Drugs Cost"
-                    name="treatment_drug_cost"
+                    name="hoof_treatment_drug_cost"
                     onChange={handleChange}
                     variant="outlined"
                     type = "number"
-                  />
-                    
+                  />                    
                   </Grid> 
 
                   <Grid
@@ -361,6 +360,7 @@ const DetailsEdit = props => {
                     name="hoof_treatment_service_cost"
                     onChange={handleChange} 
                     variant="outlined"
+                    type = "number"
                    />
                     
                   </Grid> 
