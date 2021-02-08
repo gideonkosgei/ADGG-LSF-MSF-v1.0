@@ -767,6 +767,29 @@ export const endpoint_injury_get = {
 };
 
 
+// Post parasite infection event record
+export const endpoint_parasite_infection_add = {
+  url: `${api}/events/parasite-infection`,
+  method: 'POST',
+  headers: headers   
+};
+
+// Edit parasite infection event record
+export const endpoint_parasite_infection_edit = {
+  url: `${api}/events/parasite-infection/`,
+  method: 'PUT',
+  headers: headers   
+};
+
+//Get all parasite infection event records
+export const endpoint_parasite_infection_get = {
+  url: `${api}/events/parasite-infection/`,
+  method: 'GET',
+  headers: headers   
+};
+
+
+
 
 
 

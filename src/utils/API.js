@@ -2840,6 +2840,82 @@ export const getInjury =  function (config,id,option) {
 }
 
 
+//create or update parasite infection event record
+export const CreateOrEditParasiteInfectionRecord =  function (config,id,values,user_id) {  
+   
+  let { 
+    field_agent_id,  
+    parasite_date,
+    parasite_type,
+    parasite_type_other,
+    parasite_provider,
+    parasite_provider_other,
+    parasite_drug_cost,
+    parasite_service_cost,
+    parasite_cow_status,
+    parasite_cow_status_other
+  } = values;
+  
+  field_agent_id = (typeof field_agent_id === 'undefined' || field_agent_id ==='' )? null:field_agent_id;
+  parasite_type = (typeof parasite_type === 'undefined' || parasite_type ==='' )? null:parasite_type; 
+  parasite_type_other = (typeof parasite_type_other === 'undefined' || parasite_type_other ==='' )? null:parasite_type_other;
+  parasite_provider = (typeof parasite_provider === 'undefined' || parasite_provider ==='' )? null:parasite_provider;
+  parasite_provider_other = (typeof parasite_provider_other === 'undefined' || parasite_provider_other ==='' )? null:parasite_provider_other;
+  parasite_drug_cost = (typeof parasite_drug_cost === 'undefined' || parasite_drug_cost ==='' )? null:parasite_drug_cost;
+  parasite_service_cost = (typeof parasite_service_cost === 'undefined' || parasite_service_cost ==='' )? null:parasite_service_cost;
+  parasite_cow_status = (typeof parasite_cow_status === 'undefined' || parasite_cow_status ==='' )? null:parasite_cow_status;
+  parasite_cow_status_other = (typeof parasite_cow_status_other === 'undefined' || parasite_cow_status_other ==='' )? null:parasite_cow_status_other;
+  parasite_date = (typeof parasite_date === 'undefined' || parasite_date ==='' )?  moment(new Date()).format('YYYY-MM-DD'):parasite_date;
+
+
+  const body = {
+    "id": id, // this can be an animal id or an event record id
+    "parasite_date": parasite_date,
+    "parasite_type": parasite_type,
+    "parasite_type_other" : parasite_type_other,
+    "parasite_provider": parasite_provider,
+    "parasite_provider_other": parasite_provider_other,
+    "parasite_drug_cost": parasite_drug_cost,
+    "parasite_service_cost": parasite_service_cost,
+    "parasite_cow_status": parasite_cow_status,
+    "parasite_cow_status_other": parasite_cow_status_other,     
+    "field_agent_id": field_agent_id,
+    "user_id": user_id 
+  };  
+ 
+  const options = {
+    url: config.method === 'POST' ? config.url :`${config.url}${id}`,
+    method: config.method,
+    headers: config.headers,
+    data: body  
+  }; 
+ 
+  return new Promise((resolve, reject) => {
+    axios(options)
+    .then(res => {           
+        resolve(res.data);
+    })    
+    .catch(err => reject(err));
+  });       
+}
+
+// get injury records 
+export const getParasiteInfection =  function (config,id,option) {   
+  const options = {
+    url:`${config.url}${id}/${option}`,
+    method: config.method,
+    headers: config.headers  
+  }   
+  return new Promise((resolve, reject) => {
+    axios(options)
+    .then(res => {          
+        resolve(res.data);
+    })
+    .catch(err => reject(err));
+  });       
+}
+
+
 
 
 
