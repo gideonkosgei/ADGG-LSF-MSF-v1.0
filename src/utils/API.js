@@ -2722,7 +2722,7 @@ export const CreateOrEditHoofHealthRecord =  function (config,id,values,user_id)
     "id": id, // this can be an animal id or an event record id
     "exam_date": exam_date,
     "other_hoof_problems": other_hoof_problems,
-    "Swelling_of_coronet" : swelling_of_coronet,
+    "swelling_of_coronet" : swelling_of_coronet,
     "digital_dermatitis": digital_dermatitis,
     "heel_horn_erosion": heel_horn_erosion,
     "horizontal_horn_fissure": horizontal_horn_fissure,
