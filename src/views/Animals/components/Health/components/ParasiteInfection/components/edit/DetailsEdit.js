@@ -3,16 +3,15 @@ import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import {Card, CardContent, CardHeader, Grid,Divider, TextField,colors,Button,CardActions,Box,Switch ,Typography,Tooltip } from '@material-ui/core';
-import {getLookups,updatePd,getPdByEventId,getAgents}   from '../../../../../../utils/API';
-import {endpoint_lookup,endpoint_pd_update,endpoint_pd_specific,endpoint_agent} from '../../../../../../configs/endpoints';
-import authContext from '../../../../../../contexts/AuthContext';
+import {getLookups,updatePd,getPdByEventId,getAgents}   from '../../../../../../../../utils/API';
+import {endpoint_lookup,endpoint_pd_update,endpoint_pd_specific,endpoint_agent} from '../../../../../../../../configs/endpoints';
+import authContext from '../../../../../../../../contexts/AuthContext';
 import {Sidebar} from '../index';
-import SuccessSnackbar from '../../../../../../components/SuccessSnackbar';
-import ErrorSnackbar from '../../../../../../components/ErrorSnackbar';
+import SuccessSnackbar from '../../../../../../../../components/SuccessSnackbar';
+import ErrorSnackbar from '../../../../../../../../components/ErrorSnackbar';
 import OpenInNewIcon from '@material-ui/icons/OpenInNew';
-import {EventPdMetaData}  from '../../../Modal';
+import {EventMetaData}  from '../../../../../Modal';
 import moment from 'moment';
-
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -517,8 +516,8 @@ const DetailsEdit = props => {
           onClose={handleSnackbarErrorClose}
           open={openSnackbarError}
         />
-        <EventPdMetaData
-                pdDetails={values}
+        <EventMetaData
+                Details={values}
                 onClose={handleMetadataClose}
                 open={openMetadata}
         /> 

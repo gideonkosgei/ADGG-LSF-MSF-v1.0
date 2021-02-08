@@ -211,10 +211,21 @@ const routes = [
         exact: true,
         component: lazy(() => import('views/Animals/components/Health/components/Injury/components/edit'))          
       },
+     
       {
         path: '/management/health/parasite-infection/add/:id',
         exact: true,
         component: lazy(() => import('views/Animals/components/Health/components/ParasiteInfection/components/add'))          
+      },
+      {
+        path: '/management/health/parasite-infection/edit/:id',
+        exact: true,
+        component: lazy(() => import('views/Animals/components/Health/components/ParasiteInfection/components/edit'))          
+      },
+      {
+        path: '/management/health/parasite-infection/view/:id',
+        exact: true,
+        component: lazy(() => import('views/Animals/components/Health/components/ParasiteInfection'))  
       },
      /* {
         path: '/management/notifications/',
