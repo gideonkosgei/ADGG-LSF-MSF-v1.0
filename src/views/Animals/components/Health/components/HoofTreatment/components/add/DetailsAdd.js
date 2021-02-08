@@ -176,8 +176,7 @@ const DetailsEdit = props => {
                       }}
                       inputProps={{                        
                         max: moment(new Date()).format('YYYY-MM-DD')                 
-                      }}                     
-                      defaultValue = {moment(new Date()).format('YYYY-MM-DD')}                      
+                      }}                    
                       margin = 'dense'
                       required
                       label="Treatment Date"

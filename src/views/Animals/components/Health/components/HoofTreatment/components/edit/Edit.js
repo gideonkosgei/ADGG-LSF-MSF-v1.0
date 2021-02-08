@@ -4,7 +4,7 @@ import { makeStyles } from '@material-ui/styles';
 import { Card,CardContent, colors } from '@material-ui/core';
 
 import { Page } from 'components';
-import {Header} from '../index';
+import {default as Header} from '../../../../../Header/index';
 import {default as DetailsEdit} from './DetailsEdit';
 
 const useStyles = makeStyles(theme => ({
