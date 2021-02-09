@@ -34,9 +34,9 @@ const DetailsEdit = props => {
   const [healthStatus, setHealthStatus] = useState([]);
   const [healthProvider, setHealthProvider] = useState([]);
   const [vaccineTypes, setVaccineTypes] = useState([]);
-  const [paymentModes, setPaymentModes] = useState([]);
-  const [agents, setAgents] = useState([]);
+  const [paymentModes, setPaymentModes] = useState([]); 
   const [limitParameters, setBodyLimitParameters] = useState([]);  
+  const [agents, setAgents] = useState([]);
   const option  =  0;
   
   const animal_id  = localStorage.getItem('animal_id');
@@ -405,7 +405,7 @@ const DetailsEdit = props => {
                     margin = 'dense'
                     label="Temperature"
                     type="number"
-                    name="Temperature"                      
+                    name="ecf_vaccination_temp"                      
                     onChange={handleChange}
                     variant="outlined" 
                   />

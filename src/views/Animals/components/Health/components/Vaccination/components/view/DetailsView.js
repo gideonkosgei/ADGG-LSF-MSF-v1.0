@@ -34,6 +34,7 @@ const DetailsView = props => {
 
   useEffect(() => {     
     let mounted = true;
+
       (async  (endpoint,id,option) => {     
         await  getVaccination(endpoint,id,option)
         .then(response => {                        
@@ -54,7 +55,7 @@ const DetailsView = props => {
 
   const columns = [
     { name: "event_id",label: "Event ID",options: {filter: false,sort: false,display:false}},
-    { name: "vaccination_date",label: "Vaccination Date",options: {filter: false,sort: true,display:true}},
+    { name: "vacc_vaccine_date",label: "Vaccination Date",options: {filter: false,sort: true,display:true}},
     { name: "vacc_vaccine_type",label: "Vaccine Type",options: {filter: false,sort: true,display:true}},
     { name: "vacc_vaccine_provider",label: "Vaccine Provider",options: {filter: true,sort: true, display:true}},
     { name: "vacc_vaccine_drug_cost",label: "Drug Cost",options: {filter: false,sort: true,display:true}},

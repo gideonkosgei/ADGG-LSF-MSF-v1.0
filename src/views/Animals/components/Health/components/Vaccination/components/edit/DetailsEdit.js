@@ -3,8 +3,8 @@ import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import {Card, CardContent, CardHeader, Grid,Divider, TextField,colors,Button,CardActions,Box,Switch ,Typography,Tooltip } from '@material-ui/core';
-import {getLookups,updatePd,getPdByEventId,getAgents}   from '../../../../../../../../utils/API';
-import {endpoint_lookup,endpoint_pd_update,endpoint_pd_specific,endpoint_agent} from '../../../../../../../../configs/endpoints';
+import {getLookups,CreateOrEditVaccinationRecord,getVaccination,getAgents,getParametersLimitAll}   from '../../../../../../../../utils/API';
+import {endpoint_lookup,endpoint_vaccination_edit,endpoint_vaccination_get,endpoint_agent,endpoint_parameter_limit_all} from '../../../../../../../../configs/endpoints';
 import authContext from '../../../../../../../../contexts/AuthContext';
 import {Sidebar} from '../index';
 import SuccessSnackbar from '../../../../../../../../components/SuccessSnackbar';
@@ -31,22 +31,26 @@ const DetailsEdit = props => {
   const [ {user_id,organization_id} ] = useContext(authContext);
   const classes = useStyles();
   const [values, setValues] = useState({ });  
-  const [body_scores, setBodyScores] = useState([]);
-  const [pd_methods, setPdMethods] = useState([]);
-  const [pd_stages, setPdStages] = useState([]);
-  const [pd_results, setPdResults] = useState([]);
   const [readOnly, setReadOnly] = useState(true);
   const [openMetadata, setMetadata] = useState(false);  
-  const event_id  = localStorage.getItem('pd_event_id'); 
+  const record_id  = sessionStorage.getItem('vaccination_record_id'); 
   const animal_tag  = sessionStorage.getItem('animal_tag');
   const animal_name  = sessionStorage.getItem('animal_name');
   const [agents, setAgents] = useState([]);
+  const [healthStatus, setHealthStatus] = useState([]);
+  const [healthProvider, setHealthProvider] = useState([]);
+  const [vaccineTypes, setVaccineTypes] = useState([]);
+  const [paymentModes, setPaymentModes] = useState([]); 
+  const [limitParameters, setBodyLimitParameters] = useState([]);
   const option  =  0;
 
   useEffect(() => {   
-    let mounted_lookup = true;
-    let mounted_pd = true;  
+    let mounted_lookup = true;  
     let mounted_agents = true;
+    let mounted_vaccination = true;
+    let mounted_limit_parameters = true;
+    
+    
 
     (async  (endpoint,org_id,option) => {     
       await  getAgents(endpoint,org_id,option)
@@ -58,68 +62,90 @@ const DetailsEdit = props => {
     })(endpoint_agent,organization_id,option); 
 
     (async  (endpoint,id) => {     
-        await  getLookups(endpoint,id)
-        .then(response => {       
-          if (mounted_lookup) { 
-            const data = response.payload[0];            
-            let lookup_body_scores = [];
-            let lookup_pd_methods = [];
-            let lookup_pd_results = [];
-            let lookup_pd_stages = [];
+      await  getLookups(endpoint,id)
+      .then(response => {       
+        if (mounted_lookup) { 
+          const data = response.payload[0];  
+          let lookup_health_status = [];  
+          let lookup_health_provider = [];
+          let lookup_vaccine_types = []; 
+          let lookup_payment_modes = []; 
 
 
-            for (let i = 0; i< data.length; i++){              
-              //Body Score
-              if(data[i].list_type_id === 71){                
-                lookup_body_scores.push(data[i]);
+          for (let i = 0; i< data.length; i++){ 
+              //Health Status
+              if(data[i].list_type_id === 89){                
+                lookup_health_status.push(data[i]);
               } 
 
-              //PD methods
-              if(data[i].list_type_id === 80){                
-                lookup_pd_methods.push(data[i]);
-              }  
-              //PD results
-              if(data[i].list_type_id === 78){                
-                lookup_pd_results.push(data[i]);
-              } 
+              //Health Provider
+              if(data[i].list_type_id === 47){                
+                lookup_health_provider.push(data[i]);
+              }   
+              
+              //Parasite Types
+              if(data[i].list_type_id === 88){                
+                lookup_vaccine_types.push(data[i]);
+              }   
 
-              //PD stages
-              if(data[i].list_type_id === 79){                
-                lookup_pd_stages.push(data[i]);
-              }               
-            }  
-                   
-            setBodyScores(lookup_body_scores);
-            setPdMethods(lookup_pd_methods);
-            setPdResults(lookup_pd_results);
-            setPdStages(lookup_pd_stages);            
+               //Payment Modes
+               if(data[i].list_type_id === 85){                
+                lookup_payment_modes.push(data[i]);
+              }                  
+          }  
+          setHealthStatus(lookup_health_status);
+          setHealthProvider(lookup_health_provider);
+          setVaccineTypes(lookup_vaccine_types); 
+          setPaymentModes(lookup_payment_modes);
+       
+        }
+      });
+    })(endpoint_lookup,'89,47,88,85');
+    // get limit parameters for input validation
+    (async  (endpoint) => {             
+      await  getParametersLimitAll(endpoint)
+      .then(response => {       
+        if (mounted_limit_parameters) { 
+          const data = response.payload;                       
+          setBodyLimitParameters(data);                         
+        }
+      });
+    })(endpoint_parameter_limit_all);
+
+      (async  (endpoint,id,option) => {     
+        await  getVaccination(endpoint,id,option)
+        .then(response => {                        
+          if (mounted_vaccination) {            
+            setValues(response.payload[0]);                 
           }
         });
-      })(endpoint_lookup,'71,80,78,79');
-
-      (async  (endpoint,id) => {             
-        await  getPdByEventId(endpoint,id)
-        .then(response => {       
-          if (mounted_pd) { 
-            const data = response.payload[0][0];   
-            console.log(data);                    
-            setValues(data);                         
-          }
-        });
-      })(endpoint_pd_specific,event_id);
-      
-
+      })(endpoint_vaccination_get,record_id,2);
       
     return () => {
       mounted_lookup = false;  
-      mounted_pd = false;   
+      mounted_vaccination = false;   
       mounted_agents = false;  
+      mounted_limit_parameters = false;      
     };
-  }, [event_id,organization_id]);  
+  }, [record_id,organization_id]);  
 
-  if (!body_scores || !pd_methods || !pd_stages ||!pd_results ||!values || !agents) {
+  if (!healthStatus || !healthProvider|| !vaccineTypes || !limitParameters ||!paymentModes ||!values || !agents) {
     return null;
   }
+
+  // validate weight
+  let mature_weight_limits = limitParameters.filter(obj=>obj.category==='mature_weight_limits');
+  let mature_weight_limits_status = false;
+  let mature_weight_limits_min_value = 0;
+  let mature_weight_limits_max_value = 0;
+
+  if(mature_weight_limits.length > 0){
+    mature_weight_limits_status = mature_weight_limits[0].is_active_id;  
+    mature_weight_limits_min_value = mature_weight_limits[0].min_value;
+    mature_weight_limits_max_value = mature_weight_limits[0].max_value;    
+  }
+
+ 
 
     const handleChange = event => {
     event.persist();
@@ -134,13 +160,13 @@ const DetailsEdit = props => {
   const handleSubmit = event => {
     event.preventDefault();
     (async  (endpoint,id,values,user_id) => {     
-      await  updatePd(endpoint,id,values,user_id)
+      await  CreateOrEditVaccinationRecord(endpoint,id,values,user_id)
       .then(() => {  
         setopenSnackbarSuccess(true);         
       }).catch(() => {        
         setopenSnackbarError(true); 
       });
-    })(endpoint_pd_update,event_id,values,user_id);    
+    })(endpoint_vaccination_edit,record_id,values,user_id);    
   };
   
   
@@ -183,7 +209,6 @@ const DetailsEdit = props => {
                 container
                 spacing={4}
               > 
-
                   <Grid
                       item
                       md={3}
@@ -194,71 +219,22 @@ const DetailsEdit = props => {
                       InputLabelProps={{
                         shrink: true,
                       }}
-                      inputProps={{
-                        readOnly: Boolean(readOnly),
-                        disabled: Boolean(readOnly),
-                        max: moment(new Date()).format('YYYY-MM-DD')               
-                      }}
-                      required
+                      inputProps={{ 
+                        readOnly: true,
+                        disabled: true,                      
+                        max: moment(new Date()).format('YYYY-MM-DD')                 
+                      }}  
+                                      
                       margin = 'dense'
-                      label="Examination Date"
+                      required
+                      label="Vaccination Date"
                       type="date"
-                      name="exam_date"                      
+                      name="vacc_vaccine_date"  
+                      value = {values.vacc_vaccine_date}                    
                       onChange={handleChange}
                       variant="outlined"
-                      value = {values.exam_date}
                     />
-                  </Grid>
-                  <Grid
-                    item
-                    md={3}
-                    xs={12}
-                  >
-                    <TextField
-                      fullWidth
-                      InputLabelProps={{
-                        shrink: true,
-                      }}
-                      inputProps={{
-                        readOnly: Boolean(readOnly),
-                        disabled: Boolean(readOnly)                
-                      }}
-                      required
-                      margin = 'dense'
-                      label="Examination Time"
-                      type="time"
-                      name="exam_time"                      
-                      onChange={handleChange}
-                      variant="outlined"  
-                      value = {values.exam_time}                    
-                                  
-                    />
-                  </Grid>
-                  <Grid
-                      item
-                      md={3}
-                      xs={12}
-                  >
-                    <TextField
-                      fullWidth
-                      InputLabelProps={{
-                        shrink: true,
-                      }}
-                      inputProps={{
-                        readOnly: Boolean(readOnly),
-                        disabled: Boolean(readOnly),
-                        max: moment(new Date()).format('YYYY-MM-DD')              
-                      }}
-                      required
-                      margin = 'dense'
-                      label="Service Date"
-                      type="date"
-                      name="service_date"                      
-                      onChange={handleChange}
-                      variant="outlined"
-                      value = {values.service_date}
-                    />
-                  </Grid>
+                  </Grid>              
                   <Grid
                     item
                     md={3}
@@ -271,31 +247,32 @@ const DetailsEdit = props => {
                     }}
                     inputProps={{
                       readOnly: Boolean(readOnly),
-                      disabled: Boolean(readOnly)                
+                      disabled: Boolean(readOnly)                                   
                     }}
                     margin = 'dense'
-                    label="PD Method"
-                    name="pd_method"
-                    onChange={handleChange}
+                    label="Vaccine Type"
+                    name="vacc_vaccine_type"
+                    value = {values.vacc_vaccine_type}
                     required
+                    onChange={handleChange}                   
                     default = ""                              
-                    select
-                    // eslint-disable-next-line react/jsx-sort-props
+                    select                    
                     SelectProps={{ native: true }}                    
                     variant="outlined"
-                    value = {values.pd_method}
                   >
                     <option value=""></option>
-                    {pd_methods.map(method => (
-                          <option                    
-                            value={method.id}
-                          >
-                            {method.value}
-                          </option>
-                        ))
+                    {
+                      vaccineTypes.map(x => (
+                        <option                    
+                          value={x.id}
+                        >
+                          {x.value}
+                        </option>
+                      ))
                     }           
                   </TextField>
                 </Grid>
+                {  parseInt(values.vacc_vaccine_type) === -66 ? 
                   <Grid
                       item
                       md={3}
@@ -308,34 +285,212 @@ const DetailsEdit = props => {
                       }}
                       inputProps={{
                         readOnly: Boolean(readOnly),
-                        disabled: Boolean(readOnly)                
+                        disabled: Boolean(readOnly)                                   
                       }}
                       margin = 'dense'
-                      label="PD Result"
-                      name="pd_results"
+                      label="Other Vaccine Type"
+                      name="vacc_vaccine_type_other"
+                      value = {values.vacc_vaccine_type_other}
                       onChange={handleChange}
-                      required
-                      default = ""                              
-                      select
-                      // eslint-disable-next-line react/jsx-sort-props
-                      SelectProps={{ native: true }}                    
                       variant="outlined"
-                      value = {values.pd_results}
-                    >
-                      <option value=""></option>
-                      {pd_results.map(result => (
-                            <option                    
-                              value={result.id}
-                            >
-                              {result.value}
-                            </option>
-                          ))
-                      }           
-                    </TextField>
+                    />
+                  </Grid> 
+                  : null
+                } 
+
+                {  parseInt(values.vacc_vaccine_type) === 1 ?
+                <>
+                  <Grid
+                    item
+                    md={3}
+                    xs={12}
+                  >
+                    <TextField
+                      fullWidth
+                      InputLabelProps={{
+                        shrink: true,
+                      }} 
+                      inputProps={{
+                        readOnly: Boolean(readOnly),
+                        disabled: Boolean(readOnly)                                   
+                      }}
+                      margin = 'dense'
+                      label="Vial Batch number"                      
+                      name="ecf_vial_batch"   
+                      value = {values.ecf_vial_batch}                   
+                      onChange={handleChange}
+                      variant="outlined" 
+                    />
                   </Grid>
-                  {  
-                   isNaN(values.pd_results) || values.pd_results ==='' || parseInt(values.pd_results) === 2? null :        
-                   <Grid
+                  <Grid
+                  item
+                  md={3}
+                  xs={12}
+                >
+                  <TextField
+                    fullWidth
+                    InputLabelProps={{
+                      shrink: true,
+                    }} 
+                    inputProps={{
+                      readOnly: Boolean(readOnly),
+                      disabled: Boolean(readOnly)                                   
+                    }}
+                    margin = 'dense'
+                    label="Vaccine Dilution Time"
+                    type="time"
+                    name="ecf_dilution_time"
+                    value = {values.ecf_dilution_time}                      
+                    onChange={handleChange}
+                    variant="outlined" 
+                  />
+                </Grid>
+                <Grid
+                  item
+                  md={3}
+                  xs={12}
+                >
+                  <TextField
+                    fullWidth
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                    inputProps={{
+                      readOnly: Boolean(readOnly),
+                      disabled: Boolean(readOnly)                                   
+                    }}
+                    margin = 'dense'
+                    label="Time of FIRST Immunization"
+                    type="time"
+                    name="ecf_first_immunization" 
+                    value = {values.ecf_first_immunization}                     
+                    onChange={handleChange}
+                    variant="outlined" 
+                  />
+                </Grid>
+                <Grid
+                  item
+                  md={3}
+                  xs={12}
+                >
+                  <TextField
+                    fullWidth
+                    InputLabelProps={{
+                      shrink: true,
+                    }}  
+                    inputProps={{
+                      readOnly: Boolean(readOnly),
+                      disabled: Boolean(readOnly)                                   
+                    }}
+                    margin = 'dense'
+                    label="Time of LAST Immunization"
+                    type="time"
+                    name="ecf_last_immunization" 
+                    value = {values.ecf_last_immunization}                     
+                    onChange={handleChange}
+                    variant="outlined" 
+                  />
+                </Grid>
+                <Grid
+                  item
+                  md={3}
+                  xs={12}
+                >
+                  <TextField
+                    fullWidth
+                    InputLabelProps={{
+                      shrink: true,
+                    }} 
+                   
+                    inputProps={{                        
+                      min: (mature_weight_limits_status)? mature_weight_limits_min_value : "any",
+                      max: (mature_weight_limits_status)? mature_weight_limits_max_value : "any",
+                      step: "any",
+                      readOnly: Boolean(readOnly),
+                      disabled: Boolean(readOnly)               
+                    }}
+                    margin = 'dense'
+                    label="Weight(Kgs)"
+                    type="number"
+                    name="ecf_vaccination_weight"  
+                    value = {values.ecf_vaccination_weight}                    
+                    onChange={handleChange}
+                    variant="outlined" 
+                  />
+                </Grid>
+              
+                <Grid
+                  item
+                  md={3}
+                  xs={12}
+                >
+                  <TextField
+                    fullWidth
+                    InputLabelProps={{
+                      shrink: true,
+                    }}    
+                    inputProps={{
+                      readOnly: Boolean(readOnly),
+                      disabled: Boolean(readOnly)                                   
+                    }}               
+                    margin = 'dense'
+                    label="OTC 30% (ml)"
+                    type="number"
+                    name="ecf_vaccination_otc" 
+                    value = {values.ecf_vaccination_otc}                     
+                    onChange={handleChange}
+                    variant="outlined" 
+                  />
+                </Grid>
+              
+                <Grid
+                  item
+                  md={3}
+                  xs={12}
+                >
+                  <TextField
+                    fullWidth
+                    InputLabelProps={{
+                      shrink: true,
+                    }}  
+                    inputProps={{
+                      readOnly: Boolean(readOnly),
+                      disabled: Boolean(readOnly)                                   
+                    }}                 
+                    margin = 'dense'
+                    label="ALB 10% (ml)"
+                    type="number"
+                    name="ecf_vaccination_alb"  
+                    value = {values.ecf_vaccination_alb}                  
+                    onChange={handleChange}
+                    variant="outlined" 
+                  />
+                </Grid>
+              
+                <Grid
+                  item
+                  md={3}
+                  xs={12}
+                >
+                  <TextField
+                    fullWidth
+                    InputLabelProps={{
+                      shrink: true,
+                    }}  
+                    inputProps={{
+                      readOnly: Boolean(readOnly),
+                      disabled: Boolean(readOnly)                                   
+                    }}                 
+                    margin = 'dense'
+                    label="Temperature"
+                    type="number"
+                    name="ecf_vaccination_temp"  
+                    value = {values.ecf_vaccination_temp}                    
+                    onChange={handleChange}
+                    variant="outlined" 
+                  />
+                </Grid>
+                <Grid
                     item
                     md={3}
                     xs={12}
@@ -344,33 +499,132 @@ const DetailsEdit = props => {
                     fullWidth                    
                     InputLabelProps={{
                       shrink: true                      
-                    }} 
+                    }}  
                     inputProps={{
                       readOnly: Boolean(readOnly),
-                      disabled: Boolean(readOnly)                
-                    }}                                      
+                      disabled: Boolean(readOnly)                                   
+                    }}                                     
                     margin = 'dense'
-                    label="PD Stage"
-                    name="pd_stage"
+                    label="Payment Mode"
+                    name="ecf_vaccination_payment_modes"
+                    value = {values.ecf_vaccination_payment_modes}
                     onChange={handleChange}                                                
-                    select
-                    // eslint-disable-next-line react/jsx-sort-props
+                    select                    
                     SelectProps={{ native: true }}                    
                     variant="outlined"
-                    value = {values.pd_stage}
                   >
                     <option value=""></option>
-                    {pd_stages.map(stage => (
+                    {paymentModes.map(x => (
                           <option                    
-                            value={stage.id}
+                            value={x.id}
                           >
-                            {stage.value}
+                            {x.value}
                           </option>
                         ))
                     }           
                   </TextField>
                 </Grid>
+              
+              
+              
+              
+              
+              
+              </>
+
+                : null
+                } 
+                {  parseInt(values.vacc_vaccine_type) === 1 ?
+                null :
+
+                  <Grid
+                    item
+                    md={3}
+                    xs={12}
+                  >
+                  <TextField
+                    fullWidth                    
+                    InputLabelProps={{
+                      shrink: true                      
+                    }}  
+                    inputProps={{
+                      readOnly: Boolean(readOnly),
+                      disabled: Boolean(readOnly)                                   
+                    }}                                     
+                    margin = 'dense'
+                    label="Service Provider"
+                    name="vacc_vaccine_provider"
+                    value = {values.vacc_vaccine_provider}
+                    onChange={handleChange}                                                
+                    select                    
+                    SelectProps={{ native: true }}                    
+                    variant="outlined"
+                  >
+                    <option value=""></option>
+                    {healthProvider.map(x => (
+                          <option                    
+                            value={x.id}
+                          >
+                            {x.value}
+                          </option>
+                        ))
+                    }           
+                  </TextField>
+                </Grid>
+                }
+
+                {  parseInt(values.vacc_vaccine_provider) === -66 && parseInt(values.vacc_vaccine_type) !== 1 ? 
+                <Grid
+                    item
+                    md={3}
+                    xs={12}
+                  >
+                  <TextField
+                    fullWidth                    
+                    InputLabelProps={{
+                      shrink: true                      
+                    }}   
+                    inputProps={{
+                      readOnly: Boolean(readOnly),
+                      disabled: Boolean(readOnly)                                   
+                    }}                                    
+                    margin = 'dense'
+                    label="Other Service Provider"
+                    name="vacc_vaccine_provider_other"
+                    value = {values.vacc_vaccine_provider_other}
+                    onChange={handleChange}
+                    variant="outlined"
+                  />
+                    
+                </Grid>
+                    : null
                   }
+                  {  parseInt(values.vacc_vaccine_type) === 1 ? 
+                   <Grid
+                   item
+                   md={3}
+                   xs={12}
+                 >
+                  <TextField
+                   fullWidth
+                   InputLabelProps={{
+                     shrink: true,
+                   }}
+                   inputProps={{
+                    readOnly: Boolean(readOnly),
+                    disabled: Boolean(readOnly)                                   
+                  }}
+                   margin = 'dense'
+                   label="Vaccination Cost"
+                   name="ecf_vaccination_cost"
+                   value = {values.ecf_vaccination_cost}
+                   onChange={handleChange}  
+                   variant="outlined"
+                 />                    
+                 </Grid> 
+                 :
+                  
+                  <>
                   <Grid
                     item
                     md={3}
@@ -383,58 +637,110 @@ const DetailsEdit = props => {
                     }}
                     inputProps={{
                       readOnly: Boolean(readOnly),
-                      disabled: Boolean(readOnly)                
+                      disabled: Boolean(readOnly)                                   
                     }}
                     margin = 'dense'
-                    label="Body Score"
-                    name="body_score"
-                    onChange={handleChange}
-                    //required
-                    default = ""                              
-                    select
-                    // eslint-disable-next-line react/jsx-sort-props
-                    SelectProps={{ native: true }}                    
+                    type = 'number'
+                    label="Drugs Cost"
+                    name="vacc_vaccine_drug_cost"
+                    value = {values.vacc_vaccine_drug_cost}
+                    onChange={handleChange} 
                     variant="outlined"
-                    value = {values.body_score}
-                  >
-                    <option value=""></option>
-                    {body_scores.map(score => (
-                          <option                    
-                            value={score.id}
-                          >
-                            {score.id}
-                          </option>
-                        ))
-                    }           
-                  </TextField>
-                  </Grid>                
+                  />
+                    
+                  </Grid>  
                   <Grid
-                  item
-                  md={3}
-                  xs={12}
-                >
-                  <TextField
+                    item
+                    md={3}
+                    xs={12}
+                  >
+                   <TextField
                     fullWidth
                     InputLabelProps={{
                       shrink: true,
                     }}
                     inputProps={{
                       readOnly: Boolean(readOnly),
-                      disabled: Boolean(readOnly)                
+                      disabled: Boolean(readOnly)                                   
                     }}
-                    //required
                     margin = 'dense'
-                    label="Cost"
-                    name="cost"                                   
-                    onChange={handleChange}
-                    type="number"
-                    variant="outlined"   
-                    value = {values.cost}                                              
-                  />
-                </Grid>
-                 
-                  
+                    label="Service Cost"
+                    name="vacc_vaccine_service_cost"
+                    value = {values.vacc_vaccine_service_cost}
+                    onChange={handleChange}  
+                    variant="outlined"
+                  />                    
+                  </Grid> 
+                  </>
+                }
+                {  parseInt(values.vacc_vaccine_type) === 1 ? 
+                null:
                   <Grid
+                    item
+                    md={3}
+                    xs={12}
+                  >
+                   <TextField
+                    fullWidth
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                    inputProps={{
+                      readOnly: Boolean(readOnly),
+                      disabled: Boolean(readOnly)                                   
+                    }}
+                    margin = 'dense'
+                    label="Animal Status"
+                    name="vacc_vaccine_cow_status"   
+                    value = {values.vacc_vaccine_cow_status}                
+                    onChange={handleChange}                   
+                    default = ""                              
+                    select                    
+                    SelectProps={{ native: true }}                    
+                    variant="outlined"
+                  >
+                    <option value=""></option>
+                    {healthStatus.map(x => (
+                          <option                    
+                            value={x.id}
+                          >
+                            {x.value}
+                          </option>
+                        ))
+                    }           
+                  </TextField>
+                  </Grid> 
+                }
+                  {  parseInt(values.vacc_vaccine_cow_status) === -66 ? 
+                  <Grid
+                    item
+                    md={3}
+                    xs={12}
+                  >
+                   <TextField
+                    fullWidth
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                    inputProps={{
+                      readOnly: Boolean(readOnly),
+                      disabled: Boolean(readOnly)                                   
+                    }}
+                    margin = 'dense'
+                    label="Animal Status Other"
+                    name="vacc_vaccine_cow_status_other"
+                    value = {values.vacc_vaccine_cow_status_other}
+                    onChange={handleChange}
+                    variant="outlined"
+                  />
+                   
+                  </Grid> 
+                      : null
+                  }
+
+              {  parseInt(values.vacc_vaccine_type) === 1 ?
+              <>
+              <Grid
                     item
                     md={3}
                     xs={12}
@@ -446,17 +752,17 @@ const DetailsEdit = props => {
                     }}
                     inputProps={{
                       readOnly: Boolean(readOnly),
-                      disabled: Boolean(readOnly)                
+                      disabled: Boolean(readOnly)                                   
                     }}
                     margin = 'dense'
-                    label="PD Admin"
-                    name="field_agent_id"                
-                    onChange={handleChange}
-                    variant="outlined"  
-                    value = {values.field_agent_id} default = ""                              
-                    select
-                    SelectProps={{ native: true }}                    
-                    
+                    label="Supervisor Vet Officer"
+                    name="ecf_supervisor" 
+                    value = {values.ecf_supervisor}               
+                    onChange={handleChange}                                      
+                    variant="outlined"
+                    default = ""                              
+                    select                   
+                    SelectProps={{ native: true }} 
                   >
                     <option value=""></option>
                     {agents.map(agent => (
@@ -467,8 +773,46 @@ const DetailsEdit = props => {
                           </option>
                         ))
                     }           
-                  </TextField>
+                  </TextField>                    
               </Grid>
+              <Grid
+              item
+              md={3}
+              xs={12}
+              >
+                  <TextField
+                    fullWidth
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                    inputProps={{
+                      readOnly: Boolean(readOnly),
+                      disabled: Boolean(readOnly)                                   
+                    }}
+                    margin = 'dense'
+                    label="Vaccine Admin"
+                    name="ecf_provider"  
+                    value = {values.ecf_provider}              
+                    onChange={handleChange}                                      
+                    variant="outlined"
+                    default = ""                              
+                    select                   
+                    SelectProps={{ native: true }} 
+                  >
+                    <option value=""></option>
+                    {agents.map(agent => (
+                          <option                    
+                            value={agent.id}
+                          >
+                            {agent.name}
+                          </option>
+                        ))
+                    }           
+                  </TextField>                    
+              </Grid>
+        </>
+              : null
+            }
             
               </Grid>
           </CardContent>

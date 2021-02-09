@@ -788,7 +788,6 @@ export const endpoint_parasite_infection_get = {
   headers: headers   
 };
 
-
 // Post Hoof Treatment event record
 export const endpoint_hoof_treatment_add = {
   url: `${api}/events/hoof-treatment`,
