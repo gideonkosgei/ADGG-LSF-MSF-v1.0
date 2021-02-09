@@ -2,9 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import { Card,CardContent, colors } from '@material-ui/core';
-
 import { Page } from 'components';
-import {Header} from '../index';
+import {default as Header} from '../../../../../Header/index';
 import {default as DetailsAdd} from './DetailsAdd';
 
 const useStyles = makeStyles(theme => ({
@@ -29,7 +28,7 @@ const Edit = props => {
   return (
     <Page
       className={classes.root}
-      title="PD"
+      title="Vaccination"
     >
     <Card>
         <CardContent>

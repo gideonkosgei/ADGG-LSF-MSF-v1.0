@@ -29,17 +29,14 @@ const DetailsEdit = props => {
   const [openSnackbarError, setopenSnackbarError] = useState(false);
   const [ {user_id,organization_id} ] = useContext(authContext);
   const classes = useStyles();
-  const [values, setValues] = useState({ });  
-  
+  const [values, setValues] = useState({ });    
   const [healthStatus, setHealthStatus] = useState([]);
   const [healthProvider, setHealthProvider] = useState([]);
   const [hoofProblem, setHoofProblem] = useState([]);
   const [hoofTreatment, setHoofTreatment] = useState([]);
   const [agents, setAgents] = useState([]);
 
-
-  const option  =  0;
-  
+  const option  =  0;  
   const animal_id  = localStorage.getItem('animal_id');
   const animal_tag  = sessionStorage.getItem('animal_tag');
   const animal_name  = sessionStorage.getItem('animal_name');

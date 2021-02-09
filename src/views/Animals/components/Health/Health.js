@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import { Tabs, Tab, Divider, colors } from '@material-ui/core';
 import { Page } from 'components';
-import {Injury,ECF,ParasiteInfection,HoofHealth,HoofTreatment,Vaccination} from './components';
+import {Injury,ParasiteInfection,HoofHealth,HoofTreatment,Vaccination} from './components';
 import {default as Header} from '../Header/index';
 
 const useStyles = makeStyles(theme => ({
@@ -38,8 +38,7 @@ const Health = props => {
     { value: 'injury', label: 'Injury'},  
     { value: 'parasite-infection', label: 'Parasite Infection'},
     { value: 'hoof-health', label: 'Hoof Health'}, 
-    { value: 'hoof-treatment', label: 'Hoof Treatment'}, 
-    { value: 'ecf', label: 'ECF'}, 
+    { value: 'hoof-treatment', label: 'Hoof Treatment'},    
     { value: 'vaccination', label: 'Vaccination'}
   ];
   
@@ -77,10 +76,8 @@ const Health = props => {
         {tab === 'injury' && <Injury />}       
         {tab === 'parasite-infection' && <ParasiteInfection />}
         {tab === 'hoof-health' && <HoofHealth />}
-        {tab === 'hoof-treatment' && <HoofTreatment />}
-        {tab === 'ecf' && <ECF/>}
+        {tab === 'hoof-treatment' && <HoofTreatment />}       
         {tab === 'vaccination' && <Vaccination />}
-
       </div>
     </Page>
   );

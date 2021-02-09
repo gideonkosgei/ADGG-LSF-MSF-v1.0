@@ -207,9 +207,21 @@ const routes = [
         exact: true,
         component: lazy(() => import('views/Animals/components/Health/components/HoofTreatment/components/edit'))          
       },
-
-
-
+      {
+        path: '/management/health/vaccination/add/:id',
+        exact: true,
+        component: lazy(() => import('views/Animals/components/Health/components/Vaccination/components/add'))          
+      },
+      {
+        path: '/management/health/vaccination/view/:id',
+        exact: true,
+        component: lazy(() => import('views/Animals/components/Health/components/Vaccination'))          
+      },
+      {
+        path: '/management/health/vaccination/edit/:id',
+        exact: true,
+        component: lazy(() => import('views/Animals/components/Health/components/Vaccination/components/edit'))          
+      },
 
       {
         path: '/management/health/injury/add/:id',

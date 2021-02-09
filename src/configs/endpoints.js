@@ -810,6 +810,27 @@ export const endpoint_hoof_treatment_get = {
   headers: headers   
 };
 
+// Post vaccination event record
+export const endpoint_vaccination_add = {
+  url: `${api}/events/vaccination`,
+  method: 'POST',
+  headers: headers   
+};
+
+// Edit vaccination event record
+export const endpoint_vaccination_edit = {
+  url: `${api}/events/vaccination/`,
+  method: 'PUT',
+  headers: headers   
+};
+
+//Get all vaccination event records
+export const endpoint_vaccination_get = {
+  url: `${api}/events/vaccination/`,
+  method: 'GET',
+  headers: headers   
+};
+
 
 
 

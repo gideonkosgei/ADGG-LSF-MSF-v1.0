@@ -1,7 +1,5 @@
-
 export { default as Header } from './Header';
 export { default as Injury } from './Injury';
-export { default as ECF } from './ECF';
 export { default as ParasiteInfection } from './ParasiteInfection';
 export { default as HoofHealth } from './HoofHealth';
 export { default as HoofTreatment } from './HoofTreatment';

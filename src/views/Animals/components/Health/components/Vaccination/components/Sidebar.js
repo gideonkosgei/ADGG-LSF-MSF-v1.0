@@ -21,21 +21,21 @@ const Sidebar = props => {
       <CardContent>                 
       <Tooltip  title="Home">              
           <IconButton aria-label="home" size="small" >
-            <Link component = {RouterLink} to={`/management/pd/view/${animal_id}`}>
+            <Link component = {RouterLink} to={`/management/health/vaccination/view/${animal_id}`}>
               <HomeIcon /> 
             </Link>
           </IconButton> 
         </Tooltip>
         <Tooltip  title="view">              
           <IconButton aria-label="view" size="small" >
-            <Link component = {RouterLink} to = {`/management/pd/view/${animal_id}`}>
+            <Link component = {RouterLink} to = {`/management/health/vaccination/view/${animal_id}`}>
               <ListIcon /> 
             </Link>
           </IconButton> 
         </Tooltip>         
         <Tooltip  title="Add New">              
           <IconButton aria-label="add" size="small" >
-            <Link component = {RouterLink} to={`/management/pd/add/${animal_id}`}>
+            <Link component = {RouterLink} to={`/management/health/vaccination/add/${animal_id}`}>
               <AddIcon /> 
             </Link>
           </IconButton> 

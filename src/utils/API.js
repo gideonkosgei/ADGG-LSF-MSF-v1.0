@@ -2996,6 +2996,125 @@ export const getHoofTreatment =  function (config,id,option) {
 
 
 
+//create or update Hoof vaccination event record
+export const CreateOrEditVaccinationRecord =  function (config,id,values,user_id) {  
+   
+  let { 
+    vacc_vaccine_date,
+    vacc_vaccine_type,
+    vacc_vaccine_type_other,
+    vacc_vaccine_provider,
+    vacc_vaccine_provider_other,
+    vacc_vaccine_drug_cost,
+    vacc_vaccine_service_cost,
+    vacc_vaccine_cow_status,
+    vacc_vaccine_cow_status_other,
+    ecf_supervisor,
+    ecf_provider,
+    ecf_provider_mobile,
+    ecf_vial_batch,
+    ecf_dilution_time,
+    ecf_first_immunization,
+    ecf_last_immunization,
+    ecf_vaccination_weight,
+    ecf_vaccination_otc,
+    ecf_vaccination_alb,
+    ecf_vaccination_temp,
+    ecf_vaccination_payment_modes,
+    ecf_vaccination_cost,
+    ecf_vaccination_is_subsidised,
+    ecf_vaccination_voucher
+  } = values; 
+  
+  vacc_vaccine_date = (typeof vacc_vaccine_date === 'undefined' || vacc_vaccine_date ==='' )?  moment(new Date()).format('YYYY-MM-DD'):vacc_vaccine_date;
+  vacc_vaccine_type = (typeof vacc_vaccine_type === 'undefined' || vacc_vaccine_type ==='' )? null:vacc_vaccine_type;
+  vacc_vaccine_type_other = (typeof vacc_vaccine_type_other === 'undefined' || vacc_vaccine_type_other ==='' )? null:vacc_vaccine_type_other;
+  vacc_vaccine_provider = (typeof vacc_vaccine_provider === 'undefined' || vacc_vaccine_provider ==='' )? null:vacc_vaccine_provider;
+  vacc_vaccine_provider_other = (typeof vacc_vaccine_provider_other === 'undefined' || vacc_vaccine_provider_other ==='' )? null:vacc_vaccine_provider_other;
+  vacc_vaccine_drug_cost = (typeof vacc_vaccine_drug_cost === 'undefined' || vacc_vaccine_drug_cost ==='' )? null:vacc_vaccine_drug_cost;
+  vacc_vaccine_service_cost = (typeof vacc_vaccine_service_cost === 'undefined' || vacc_vaccine_service_cost ==='' )? null:vacc_vaccine_service_cost;
+  vacc_vaccine_cow_status = (typeof vacc_vaccine_cow_status === 'undefined' || vacc_vaccine_cow_status ==='' )? null:vacc_vaccine_cow_status;
+  vacc_vaccine_cow_status_other = (typeof vacc_vaccine_cow_status_other === 'undefined' || vacc_vaccine_cow_status_other ==='' )? null:vacc_vaccine_cow_status_other;
+  ecf_supervisor = (typeof ecf_supervisor === 'undefined' || ecf_supervisor ==='' )? null:ecf_supervisor;
+  ecf_provider = (typeof ecf_provider === 'undefined' || ecf_provider ==='' )? null:ecf_provider;
+  ecf_provider_mobile = (typeof ecf_provider_mobile === 'undefined' || ecf_provider_mobile ==='' )? null:ecf_provider_mobile;
+  ecf_vial_batch = (typeof ecf_vial_batch === 'undefined' || ecf_vial_batch ==='' )? null:ecf_vial_batch;
+  ecf_dilution_time = (typeof ecf_dilution_time === 'undefined' || ecf_dilution_time ==='' )? null:ecf_dilution_time;
+  ecf_first_immunization = (typeof ecf_first_immunization === 'undefined' || ecf_first_immunization ==='' )? null:ecf_first_immunization;
+  ecf_last_immunization = (typeof ecf_last_immunization === 'undefined' || ecf_last_immunization ==='' )? null:ecf_last_immunization;
+  ecf_vaccination_weight = (typeof ecf_vaccination_weight === 'undefined' || ecf_vaccination_weight ==='' )? null:ecf_vaccination_weight;
+  ecf_vaccination_otc = (typeof ecf_vaccination_otc === 'undefined' || ecf_vaccination_otc ==='' )? null:ecf_vaccination_otc;
+  ecf_vaccination_alb = (typeof ecf_vaccination_alb === 'undefined' || ecf_vaccination_alb ==='' )? null:ecf_vaccination_alb;
+  ecf_vaccination_temp = (typeof ecf_vaccination_temp === 'undefined' || ecf_vaccination_temp ==='' )? null:ecf_vaccination_temp;
+  ecf_vaccination_payment_modes = (typeof ecf_vaccination_payment_modes === 'undefined' || ecf_vaccination_payment_modes ==='' )? null:ecf_vaccination_payment_modes;
+  ecf_vaccination_cost = (typeof ecf_vaccination_cost === 'undefined' || ecf_vaccination_cost ==='' )? null:ecf_vaccination_cost;
+  ecf_vaccination_is_subsidised = (typeof ecf_vaccination_is_subsidised === 'undefined' || ecf_vaccination_is_subsidised ==='' )? null:ecf_vaccination_is_subsidised;
+  ecf_vaccination_voucher = (typeof ecf_vaccination_voucher === 'undefined' || ecf_vaccination_voucher ==='' )? null:ecf_vaccination_voucher;
+
+    
+  const body = {
+    "id": id, // this can be an animal id or an event record id
+    "vacc_vaccine_date" : vacc_vaccine_date,
+    "vacc_vaccine_type" :vacc_vaccine_type,
+    "vacc_vaccine_type_other" :vacc_vaccine_type_other,
+    "vacc_vaccine_provider" :vacc_vaccine_provider,
+    "vacc_vaccine_provider_other" :vacc_vaccine_provider_other,
+    "vacc_vaccine_drug_cost" :vacc_vaccine_drug_cost,
+    "vacc_vaccine_service_cost" :vacc_vaccine_service_cost,
+    "vacc_vaccine_cow_status" :vacc_vaccine_cow_status,
+    "vacc_vaccine_cow_status_other" :vacc_vaccine_cow_status_other,
+    "ecf_supervisor" :ecf_supervisor,
+    "ecf_provider" :ecf_provider,
+    "ecf_provider_mobile" :ecf_provider_mobile,
+    "ecf_vial_batch" :ecf_vial_batch,
+    "ecf_dilution_time" :ecf_dilution_time,
+    "ecf_first_immunization" : ecf_first_immunization,
+    "ecf_last_immunization" :ecf_last_immunization,
+    "ecf_vaccination_weight" :ecf_vaccination_weight,
+    "ecf_vaccination_otc" :ecf_vaccination_otc,
+    "ecf_vaccination_alb" :ecf_vaccination_alb,
+    "ecf_vaccination_temp" :ecf_vaccination_temp,
+    "ecf_vaccination_payment_modes" :ecf_vaccination_payment_modes,
+    "ecf_vaccination_cost" :ecf_vaccination_cost,
+    "ecf_vaccination_is_subsidised" :ecf_vaccination_is_subsidised,
+    "ecf_vaccination_voucher" :ecf_vaccination_voucher,     
+    "user_id": user_id 
+  };  
+   
+  const options = {
+    url: config.method === 'POST' ? config.url :`${config.url}${id}`,
+    method: config.method,
+    headers: config.headers,
+    data: body  
+  };
+ 
+  return new Promise((resolve, reject) => {
+    axios(options)
+    .then(res => {           
+        resolve(res.data);
+    })    
+    .catch(err => reject(err));
+  });       
+}
+
+// get Vaccination records 
+export const getVaccination =  function (config,id,option) {   
+  const options = {
+    url:`${config.url}${id}/${option}`,
+    method: config.method,
+    headers: config.headers  
+  }  
+  return new Promise((resolve, reject) => {
+    axios(options)
+    .then(res => {          
+        resolve(res.data);
+    })
+    .catch(err => reject(err));
+  });       
+}
+
+
+
 
 
 

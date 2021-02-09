@@ -125,7 +125,7 @@ const DetailsView = props => {
                     <div className={classes.inner}>
                       <MuiThemeProvider>                
                         <MUIDataTable
-                          title = {`ECF - ${animal_name}(${animal_tag})`}
+                          title = {`Vaccination - ${animal_name}(${animal_tag})`}
                           data={values}
                           columns={columns}
                           options={options}
