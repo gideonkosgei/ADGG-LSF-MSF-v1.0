@@ -3129,6 +3129,24 @@ export const getVaccination =  function (config,id,option) {
 }
 
 
+// add  weight event
+export const getWeightGrowthCurveData =  function (config,option,animal_id) { 
+  const options = {
+    url:`${config.url}${option}/${animal_id}`,
+    method: config.method,
+    headers: config.headers    
+  }    
+  return new Promise((resolve, reject) => {
+    axios(options)
+    .then(res => {           
+        resolve(res.data);
+    })    
+    .catch(err => reject(err));
+  });       
+}
+
+
+
 
 
 

@@ -133,8 +133,6 @@ const DetailsView = props => {
                       </MuiThemeProvider>
                     </div>
                   </PerfectScrollbar> 
-                
-
                 </CardContent>
               </Card> 
           </Grid>
@@ -145,8 +143,7 @@ const DetailsView = props => {
 };
 
 DetailsView.propTypes = {
-  className: PropTypes.string,
-  //profile: PropTypes.object.isRequired
+  className: PropTypes.string 
 };
 
 export default DetailsView;

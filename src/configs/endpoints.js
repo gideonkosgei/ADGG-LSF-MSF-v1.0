@@ -837,6 +837,13 @@ export const endpoint_herd_milking_cow_summary = {
   headers: headers   
 }
 
+//get weight curve data
+export const endpoint_weight_growth_curve = {
+  url: `${api}/stats/weight-growth-curve/`,
+  method: 'GET',
+  headers: headers   
+};
+
 
 
 
