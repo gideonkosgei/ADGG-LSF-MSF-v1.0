@@ -7,8 +7,6 @@ import ListIcon from '@material-ui/icons/List';
 import AddIcon from '@material-ui/icons/Add';
 import { Link as RouterLink } from 'react-router-dom';
 import HomeIcon from '@material-ui/icons/Home';
-import BarChartIcon from '@material-ui/icons/BarChart';
-
 
 const useStyles = makeStyles(theme => ({
   root: {}, 
@@ -40,14 +38,7 @@ const Sidebar = props => {
               <AddIcon /> 
             </Link>
           </IconButton> 
-        </Tooltip>
-        <Tooltip  title="Trends">              
-          <IconButton aria-label="graph" size="small" >          
-            <Link component = {RouterLink} to={`/management/milking/charts/${animal_id}`}>
-              <BarChartIcon /> 
-            </Link>
-          </IconButton> 
-        </Tooltip> 
+        </Tooltip>        
       </CardContent> 
     </Card>
   );
