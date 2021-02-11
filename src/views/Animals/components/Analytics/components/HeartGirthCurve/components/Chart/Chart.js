@@ -20,11 +20,9 @@ const Chart = props => {
   const data = canvas => {
     const ctx = canvas.getContext('2d');
     const gradient = ctx.createLinearGradient(0, 0, 0, 400);
-
     gradient.addColorStop(0, fade(theme.palette.secondary.main, 0.2));
     gradient.addColorStop(0.9, 'rgba(255,255,255,0)');
     gradient.addColorStop(1, 'rgba(255,255,255,0)');
-
     return {
       datasets: [
         {
@@ -61,6 +59,10 @@ const Chart = props => {
           ticks: {
             padding: 20,
             fontColor: theme.palette.text.secondary
+          },
+          scaleLabel: {
+            display: true,
+            labelString: 'MONTH'
           }
         }
       ],
@@ -82,8 +84,12 @@ const Chart = props => {
             min: 0,
             maxTicksLimit: 7,
             callback: value => {
-              return value > 0 ? value + 'cm' : value;
+              return value > 0 ? value + ' cm' : value;
             }
+          },
+          scaleLabel: {
+            display: true,
+            labelString: 'Monthly Average Heart Girth'
           }
         }
       ]
@@ -104,12 +110,11 @@ const Chart = props => {
       callbacks: {
         title: () => {},
         label: tooltipItem => {
-          let label = `length: ${tooltipItem.yLabel}`;
+          let label = `Heart Girth: ${tooltipItem.yLabel}`;
 
           if (tooltipItem.yLabel > 0) {
-            label += 'cm';
+            label += ' (cm)';
           }
-
           return label;
         }
       }
@@ -123,8 +128,7 @@ const Chart = props => {
     >
       <Line
         data={data}
-        options={options}
-        //
+        options={options}       
       />
     </div>
   );
@@ -135,5 +139,4 @@ Chart.propTypes = {
   data: PropTypes.array.isRequired,
   labels: PropTypes.array.isRequired
 };
-
 export default Chart;
