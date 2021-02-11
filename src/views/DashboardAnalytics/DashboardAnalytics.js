@@ -4,12 +4,11 @@ import { Grid } from '@material-ui/core';
 
 import { Page } from 'components';
 import {
-  Header,
-  Overview,
-  AnnualMilkPerformance,
   AnimalCategorySegmentation,
   TopCows,
-  BreedDistribution
+  BreedDistribution,
+  HerdMilkingCowNumbers,
+  HerdAnnualMilkProduction
   /*MostProfitableProducts,
   CustomerActivity,
   LatestOrders*/
@@ -34,17 +33,19 @@ const DashboardAnalytics = () => {
       className={classes.root}
       title="Analytics Dashboard"
     >
-      <Header />
+    
       <Grid
         className={classes.container}
         container
         spacing={3}
-      >
+      >       
         <Grid
           item
+          lg={12}
+          xl={12}
           xs={12}
         >
-          <Overview />
+          <HerdMilkingCowNumbers />
         </Grid>
         <Grid
           item
@@ -52,8 +53,8 @@ const DashboardAnalytics = () => {
           xl={12}
           xs={12}
         >
-          <AnnualMilkPerformance />
-        </Grid>
+          <HerdAnnualMilkProduction />
+        </Grid>      
         <Grid
           item
           lg={3}
@@ -78,6 +79,7 @@ const DashboardAnalytics = () => {
         >
           <BreedDistribution/>
         </Grid>
+        
        
         <Grid
           item

@@ -1,9 +1,8 @@
 import React from 'react';
-import clsx from 'clsx';
 import PropTypes from 'prop-types';
-import { Line } from 'react-chartjs-2';
+import clsx from 'clsx';
+import { Bar } from 'react-chartjs-2';
 import { makeStyles, useTheme } from '@material-ui/styles';
-import { fade } from '@material-ui/core/styles/colorManipulator';
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -12,39 +11,25 @@ const useStyles = makeStyles(() => ({
 }));
 
 const Chart = props => {
-  const { className, data: dataProp, labels, ...rest } = props;
+  const { data: dataProp, labels, className, ...rest } = props;
 
   const classes = useStyles();
   const theme = useTheme();
-
-  const data = canvas => {
-    const ctx = canvas.getContext('2d');
-    const gradient = ctx.createLinearGradient(0, 0, 0, 400);
-
-    gradient.addColorStop(0, fade(theme.palette.secondary.main, 0.2));
-    gradient.addColorStop(0.9, 'rgba(255,255,255,0)');
-    gradient.addColorStop(1, 'rgba(255,255,255,0)');
-
-    return {
-      datasets: [
-        {
-          data: dataProp,
-          backgroundColor: gradient,
-          borderColor: theme.palette.secondary.main,
-          pointBorderColor: '#FFFFFF',
-          pointBorderWidth: 3,
-          pointRadius: 6,
-          pointBackgroundColor: theme.palette.secondary.main
-        }
-      ],
-      labels
-    };
+  const data = {   
+    datasets: [
+      {
+        label: '',
+        backgroundColor: theme.palette.primary.main,
+        data: dataProp.yearly_milking_cows_count
+      }     
+    ],
+    labels
   };
-
   const options = {
     responsive: true,
     maintainAspectRatio: false,
     animation: false,
+    cornerRadius: 20,
     legend: {
       display: false
     },
@@ -54,6 +39,11 @@ const Chart = props => {
     scales: {
       xAxes: [
         {
+          barThickness: 12,
+          maxBarThickness: 10,
+          barPercentage: 0.5,
+          categoryPercentage: 0.5,
+          
           gridLines: {
             display: false,
             drawBorder: false
@@ -64,7 +54,7 @@ const Chart = props => {
           },
           scaleLabel: {
             display: true,
-            labelString: 'Days In Milk'
+            labelString: 'Year'
           }
         }
         
@@ -85,14 +75,14 @@ const Chart = props => {
             fontColor: theme.palette.text.secondary,
             beginAtZero: true,
             min: 0,
-            maxTicksLimit: 7,
+            maxTicksLimit: 5,
             callback: value => {
-              return value > 0 ? value + ' ltrs' : value;
+              return value > 0 ? value + '' : value;
             }
           },
           scaleLabel: {
             display: true,
-            labelString: 'Daily Average Milk'
+            labelString: 'Number Of Cows'
           }
         }
       ]
@@ -113,10 +103,10 @@ const Chart = props => {
       callbacks: {
         title: () => {},
         label: tooltipItem => {
-          let label = `Total Milk : ${tooltipItem.yLabel}`;
+          let label = `${tooltipItem.yLabel}`;
 
           if (tooltipItem.yLabel > 0) {
-            label += ' (ltrs)';
+            label += ' (cows)';
           }
 
           return label;
@@ -130,10 +120,9 @@ const Chart = props => {
       {...rest}
       className={clsx(classes.root, className)}
     >
-      <Line
+      <Bar
         data={data}
         options={options}
-        //
       />
     </div>
   );
@@ -141,7 +130,7 @@ const Chart = props => {
 
 Chart.propTypes = {
   className: PropTypes.string,
-  data: PropTypes.array.isRequired,
+  data: PropTypes.object.isRequired,
   labels: PropTypes.array.isRequired
 };
 

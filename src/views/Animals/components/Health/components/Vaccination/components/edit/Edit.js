@@ -29,7 +29,7 @@ const Edit = props => {
   return (
     <Page
       className={classes.root}
-      title="PD"
+      title="Vaccination"
     >
     <Card>
         <CardContent>

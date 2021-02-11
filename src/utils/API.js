@@ -2553,6 +2553,21 @@ export const getAnnualMilkPerformance =  function (config,organisation_id) {
 });       
 }
 
+export const getHerdMilkingSummary =  function (config,rpt_id,org_id) {   
+  const options = {
+    url:`${config.url}${rpt_id}/${org_id}`,
+    method: config.method,
+    headers: config.headers  
+  }    
+  return new Promise((resolve, reject) => {
+    axios(options)
+    .then(res => {          
+        resolve(res.data);
+    })
+    .catch(err => reject(err));
+});       
+}
+
 export const getStatsBreedsDistribution =  function (config,organisation_id) {   
   const options = {
     url:`${config.url}${organisation_id}`,

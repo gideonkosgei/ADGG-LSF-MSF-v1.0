@@ -24,10 +24,8 @@ class CustomToolbar extends React.Component {
           >
             <IconButton className={classes.iconButton}>
             <AddIcon className={classes.deleteIcon} />
-          </IconButton>
-            
-      </Link>
-          
+          </IconButton>            
+      </Link>          
         </Tooltip>
       </React.Fragment>
     );

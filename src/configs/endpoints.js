@@ -830,6 +830,14 @@ export const endpoint_vaccination_get = {
   headers: headers   
 };
 
+// Herd level Milking Summary
+export const endpoint_herd_milking_cow_summary = {
+  url: `${api}/stats/herd-milking-summary/`,
+  method: 'GET',
+  headers: headers   
+}
+
+
 
 
 

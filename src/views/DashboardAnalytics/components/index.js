@@ -7,4 +7,7 @@ export { default as TopCows } from './TopCows';
 export { default as CustomerActivity } from './CustomerActivity';
 export { default as LatestOrders } from './LatestOrders';
 export { default as BreedDistribution } from './BreedDistribution';
+export { default as HerdMilkingCowNumbers } from './HerdMilkingCowNumbers';
+export { default as HerdAnnualMilkProduction } from './HerdAnnualMilkProduction';
+
 
