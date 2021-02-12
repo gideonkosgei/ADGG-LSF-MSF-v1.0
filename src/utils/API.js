@@ -3129,10 +3129,26 @@ export const getVaccination =  function (config,id,option) {
 }
 
 
-// add  weight event
+// Weight & Growth Data
 export const getWeightGrowthCurveData =  function (config,option,animal_id) { 
   const options = {
     url:`${config.url}${option}/${animal_id}`,
+    method: config.method,
+    headers: config.headers    
+  }    
+  return new Promise((resolve, reject) => {
+    axios(options)
+    .then(res => {           
+        resolve(res.data);
+    })    
+    .catch(err => reject(err));
+  });       
+}
+
+// Animal Health Management
+export const getHealthManagementSummary =  function (config,animal_id) { 
+  const options = {
+    url:`${config.url}${animal_id}`,
     method: config.method,
     headers: config.headers    
   }    

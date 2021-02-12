@@ -717,6 +717,13 @@ export const endpoint_lactation_table = {
   headers: headers   
 }
 
+// Analytics - Health Summary Table
+export const endpoint_health_summary_table = {
+  url: `${api}/stats/health-management-trends/`,
+  method: 'GET',
+  headers: headers   
+}
+
 // Analytics - Lactation Curve
 export const endpoint_lactation_curve = {
   url: `${api}/stats/lactation-curve/`,

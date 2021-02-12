@@ -6,6 +6,7 @@ import {Card, CardContent, CardHeader, Grid,Divider,colors} from '@material-ui/c
 import {default as LactationTable} from './LactationTable';
 import {default as LactationCurve} from './LactationCurve';
 import {default as WeightCurve} from './WeightCurve';
+import {default as HealthManagementSummmaryTable} from './HealthManagementSummmaryTable';
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -35,7 +36,7 @@ const ChartDetails = props => {
       <CardHeader title= {`${animal_name}(${animal_tag}) `}/> 
         <Divider />
         <CardContent> 
-          <Grid container spacing={1} justify="center">                           
+          <Grid container spacing={1}>                           
             <Grid item  xs={12} >  
               <LactationTable />
             </Grid>                                    
@@ -44,6 +45,9 @@ const ChartDetails = props => {
             </Grid>
             <Grid item  xs={12} >  
               <WeightCurve/>
+            </Grid>
+            <Grid item  xs={6} >  
+              <HealthManagementSummmaryTable/>
             </Grid>
           </Grid>
         </CardContent>  
