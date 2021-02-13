@@ -9,6 +9,7 @@ import {endpoint_top_cows} from '../../../../configs/endpoints';
 import {getTopCows}   from '../../../../utils/API';
 import { SeeAllModal } from './components';
 import { GenericMoreButton } from 'components';
+import moment from 'moment';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -38,11 +39,15 @@ const TopCows = props => {
   const [topCows, setTopCows] = useState([]);
   const [ { organization_id }  ] = useContext(authContext); 
   const [openModal, setModal] = useState(false); 
-  const start_date = '2020-01-01';
-  const end_date = '2020-12-30';
+  const curr_year = new Date().getFullYear();
+
+  
   
   useEffect(() => {
-    let mounted = true;   
+    let mounted = true;  
+    const start_date  =  moment(new Date(new Date().getFullYear(), 0, 1)).format('YYYY-MM-DD'); 
+    const end_date  =  moment(new Date(new Date().getFullYear(), 11, 31)).format('YYYY-MM-DD');     
+
     (async  (endpoint,org_id,start_date,end_date)=>{     
       await  getTopCows(endpoint,org_id,start_date,end_date)
        .then(response => {              
@@ -72,7 +77,7 @@ const TopCows = props => {
     >
       <CardHeader
         action={<GenericMoreButton />}
-        title="TOP COWS"
+        title= {`TOP COWS(${curr_year})`}
       />
       <Divider />
       <CardContent className={classes.content}>

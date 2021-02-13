@@ -41,6 +41,19 @@ const DashboardAnalytics = () => {
         container
         spacing={3}
       >       
+         
+        <Grid item  xs={5} >  
+          <HealthManagementSummmaryTable health_summary_option ={2}/>
+        </Grid> 
+        
+        <Grid
+          item
+          lg={7}
+          xl={4}
+          xs={12}
+        >
+          <DueDates/>
+        </Grid>
         <Grid
           item
           lg={12}
@@ -56,18 +69,6 @@ const DashboardAnalytics = () => {
           xs={12}
         >
           <HerdAnnualMilkProduction />
-        </Grid> 
-        <Grid item  xs={5} >  
-          <HealthManagementSummmaryTable health_summary_option ={2}/>
-        </Grid> 
-        
-        <Grid
-          item
-          lg={7}
-          xl={4}
-          xs={12}
-        >
-          <DueDates/>
         </Grid>
        
         <Grid
