@@ -9,5 +9,6 @@ export { default as LatestOrders } from './LatestOrders';
 export { default as BreedDistribution } from './BreedDistribution';
 export { default as HerdMilkingCowNumbers } from './HerdMilkingCowNumbers';
 export { default as HerdAnnualMilkProduction } from './HerdAnnualMilkProduction';
+export { default as DueDates } from './DueDates';
 
 

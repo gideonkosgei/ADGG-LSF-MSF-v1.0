@@ -8,7 +8,8 @@ import {
   TopCows,
   BreedDistribution,
   HerdMilkingCowNumbers,
-  HerdAnnualMilkProduction
+  HerdAnnualMilkProduction,
+  DueDates
   /*MostProfitableProducts,
   CustomerActivity,
   LatestOrders*/
@@ -50,20 +51,25 @@ const DashboardAnalytics = () => {
         </Grid>
         <Grid
           item
-          lg={9}
+          lg={12}
           xl={12}
           xs={12}
         >
           <HerdAnnualMilkProduction />
-        </Grid>      
+        </Grid> 
+        <Grid item  xs={5} >  
+          <HealthManagementSummmaryTable health_summary_option ={2}/>
+        </Grid> 
+        
         <Grid
           item
-          lg={3}
+          lg={7}
           xl={4}
           xs={12}
         >
-          <TopCows />
+          <DueDates/>
         </Grid>
+       
         <Grid
           item
           lg={5}
@@ -80,9 +86,15 @@ const DashboardAnalytics = () => {
         >
           <BreedDistribution/>
         </Grid> 
-        <Grid item  xs={6} >  
-          <HealthManagementSummmaryTable health_summary_option ={2}/>
+        <Grid
+          item
+          lg={4}
+          xl={4}
+          xs={12}
+        >
+          <TopCows />
         </Grid>
+        
       </Grid>
     </Page>
   );

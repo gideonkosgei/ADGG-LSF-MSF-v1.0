@@ -10,6 +10,7 @@ import SuccessSnackbar from '../../../../../../components/SuccessSnackbar';
 import ErrorSnackbar from '../../../../../../components/ErrorSnackbar';
 import {AnimalDetailsMetaData}  from '../../../Modal';
 import OpenInNewIcon from '@material-ui/icons/OpenInNew';
+//import LocationOnIcon from '@material-ui/icons/LocationOn';
 import moment from 'moment'; 
 
 const useStyles = makeStyles(theme => ({
@@ -178,10 +179,7 @@ const DetailsEdit = props => {
   const handleSwitchChange = event => {
     event.persist();
     setReadOnly(!readOnly);   
-  };
-
-
-  
+  };  
 
   const handleSnackbarSuccessClose = () => {
     setopenSnackbarSuccess(false);
@@ -1104,14 +1102,23 @@ const DetailsEdit = props => {
                 Save Changes
               </Button>              
             }                             
-          </Box> 
+          </Box>
+          {/*
           <Box>
-            <Tooltip  title="view Metadata">
+            <Tooltip  title="Location Details">
+              <Button onClick={handleMetadataOpen}>
+                <LocationOnIcon className={classes.buttonIcon} />                
+              </Button>
+            </Tooltip>             
+          </Box> */
+          }
+          
+          <Box>
+            <Tooltip  title="Metadata">
               <Button onClick={handleMetadataOpen}>
                 <OpenInNewIcon className={classes.buttonIcon} />                
               </Button>
-            </Tooltip> 
-              
+            </Tooltip>               
           </Box>  
           <Box> 
               <Typography variant="h6">{ readOnly? "Enable Form" : "Disable Form"} </Typography> 
@@ -1145,8 +1152,7 @@ const DetailsEdit = props => {
 };
 
 DetailsEdit.propTypes = {
-  className: PropTypes.string,
-  //profile: PropTypes.object.isRequired
+  className: PropTypes.string 
 };
 
 export default DetailsEdit;

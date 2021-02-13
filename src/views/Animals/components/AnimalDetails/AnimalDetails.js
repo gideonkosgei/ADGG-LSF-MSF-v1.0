@@ -960,8 +960,7 @@ const AnimalDetails = props => {
 };
 
 AnimalDetails.propTypes = {
-  className: PropTypes.string,
-  //profile: PropTypes.object.isRequired
+  className: PropTypes.string
 };
 
 export default AnimalDetails;

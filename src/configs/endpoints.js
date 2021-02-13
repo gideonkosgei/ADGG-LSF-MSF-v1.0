@@ -717,6 +717,13 @@ export const endpoint_lactation_table = {
   headers: headers   
 }
 
+// Analytics - Due Dates Table
+export const endpoint_due_date = {
+  url: `${api}/stats/due-dates/`,
+  method: 'GET',
+  headers: headers   
+}
+
 // Analytics - Health Summary Table
 export const endpoint_health_summary_table = {
   url: `${api}/stats/health-management-trends/`,
