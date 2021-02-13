@@ -47,7 +47,7 @@ const ChartDetails = props => {
               <WeightCurve/>
             </Grid>
             <Grid item  xs={6} >  
-              <HealthManagementSummmaryTable/>
+              <HealthManagementSummmaryTable health_summary_option ={1}/>
             </Grid>
           </Grid>
         </CardContent>  

@@ -1,14 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import { Card, CardContent, CardHeader, Divider } from '@material-ui/core';
 import {endpoint_health_summary_table} from '../../../../../../configs/endpoints';
 import {getHealthManagementSummary}   from '../../../../../../utils/API';
+import authContext from '../../../../../../contexts/AuthContext';
 import MUIDataTable from "mui-datatables";
 import {MuiThemeProvider } from '@material-ui/core/styles';
 import PerfectScrollbar from 'react-perfect-scrollbar';
-
 import { GenericMoreButton } from 'components';
 
 const useStyles = makeStyles(theme => ({
@@ -33,24 +33,27 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const HealthManagementSummmaryTable = props => {
-  const { className, ...rest } = props;
+  const { className,health_summary_option, ...rest } = props;
   const classes = useStyles();
-  const [values, setValues] = useState([]);
-  const animal_id  = localStorage.getItem('animal_id');
+  const [values, setValues] = useState([]); 
+  const [ { organization_id }  ] = useContext(authContext);
+  let option = health_summary_option;
+  let id = option === 1 ? localStorage.getItem('animal_id'): organization_id;
+ 
   useEffect(() => {
     let mounted = true;   
-    (async  (endpoint,animal_id)=>{     
-      await  getHealthManagementSummary(endpoint,animal_id)
+    (async  (endpoint,option,id)=>{     
+      await  getHealthManagementSummary(endpoint,option,id)
        .then(response => {              
          if (mounted) {
           setValues(response.payload);                           
          }
        });
-     })(endpoint_health_summary_table,animal_id);
+     })(endpoint_health_summary_table,option,id);
     return () => {
       mounted = false;
     };
-  }, [animal_id]);
+  }, [id,option]);
 
   if (!values) {
     return null;
@@ -110,6 +113,7 @@ const HealthManagementSummmaryTable = props => {
   );
 };
 HealthManagementSummmaryTable.propTypes = {
-  className: PropTypes.string
+  className: PropTypes.string,
+  health_summary_option: PropTypes.number
 };
 export default HealthManagementSummmaryTable;

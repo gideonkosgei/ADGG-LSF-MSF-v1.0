@@ -3146,9 +3146,9 @@ export const getWeightGrowthCurveData =  function (config,option,animal_id) {
 }
 
 // Animal Health Management
-export const getHealthManagementSummary =  function (config,animal_id) { 
+export const getHealthManagementSummary =  function (config,option,id) { 
   const options = {
-    url:`${config.url}${animal_id}`,
+    url:`${config.url}${option}/${id}`,
     method: config.method,
     headers: config.headers    
   }    

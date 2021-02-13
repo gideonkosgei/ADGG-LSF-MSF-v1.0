@@ -13,6 +13,7 @@ import {
   CustomerActivity,
   LatestOrders*/
 } from './components';
+import {default as HealthManagementSummmaryTable} from '../Animals/components/Analytics/components/HealthManagementSummmaryTable';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -28,12 +29,12 @@ const useStyles = makeStyles(theme => ({
 const DashboardAnalytics = () => {
   const classes = useStyles();
 
+
   return (
     <Page
       className={classes.root}
       title="Analytics Dashboard"
-    >
-    
+    >    
       <Grid
         className={classes.container}
         container
@@ -78,31 +79,10 @@ const DashboardAnalytics = () => {
           xs={12}
         >
           <BreedDistribution/>
+        </Grid> 
+        <Grid item  xs={6} >  
+          <HealthManagementSummmaryTable health_summary_option ={2}/>
         </Grid>
-        
-       
-        <Grid
-          item
-          lg={8}
-          xs={12}
-        >
-          {/*<LatestOrders />*/}
-        </Grid>
-        <Grid
-          item
-          lg={4}
-          xs={12}
-        >
-         {/* <CustomerActivity />*/}
-        </Grid>
-        <Grid
-          item
-          lg={8}
-          xs={12}
-        >
-         {/* <MostProfitableProducts />*/}
-        </Grid>
-       
       </Grid>
     </Page>
   );

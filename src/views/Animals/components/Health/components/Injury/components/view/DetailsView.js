@@ -81,9 +81,6 @@ const DetailsView = props => {
   }
     
   ];
-
-  console.log(values);
-
   
   const options = {       
     filter: true,
@@ -105,8 +102,6 @@ const DetailsView = props => {
     );
   }  
   };
-
-
   return (
     <Card
       {...rest}
