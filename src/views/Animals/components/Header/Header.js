@@ -7,7 +7,7 @@ import ExitToAppRoundedIcon from '@material-ui/icons/ExitToAppRounded';
 import SpeedRoundedIcon from '@material-ui/icons/SpeedRounded';
 import LocalHospitalRoundedIcon from '@material-ui/icons/LocalHospitalRounded';
 import SyncRoundedIcon from '@material-ui/icons/SyncRounded';
-import PregnantWomanRoundedIcon from '@material-ui/icons/PregnantWomanRounded';
+import SportsBaseballIcon from '@material-ui/icons/SportsBaseball';
 import ChildCareRoundedIcon from '@material-ui/icons/ChildCareRounded';
 import ColorizeIcon from '@material-ui/icons/Colorize';
 import PermIdentityIcon from '@material-ui/icons/PermIdentity';
@@ -104,7 +104,7 @@ const Header = props => {
           <Button
             color="default"
             className={classes.button}
-            startIcon={<PregnantWomanRoundedIcon />}
+            startIcon={<SportsBaseballIcon />}
           >
             <Link style={{ textDecoration: 'none',textTransform: 'none' }} component = {RouterLink} to = {`/management/pd/view/${animal_id}`}>
               PD
