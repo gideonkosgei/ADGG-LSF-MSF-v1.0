@@ -2538,6 +2538,23 @@ export const getDueDateTable =  function (config,org) {
 });       
 }
 
+// Analytics Due Dates table 
+export const getPdActionList =  function (config,org) {   
+  const options = {
+    url:`${config.url}${org}`,
+    method: config.method,
+    headers: config.headers  
+  }    
+  
+  return new Promise((resolve, reject) => {
+    axios(options)
+    .then(res => {          
+        resolve(res.data);
+    })
+    .catch(err => reject(err));
+});       
+}
+
 
 // Analytics Lactation curve 
 export const getlactationCurveData =  function (config,animal_id) {   

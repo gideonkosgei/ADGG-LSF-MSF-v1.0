@@ -724,6 +724,13 @@ export const endpoint_due_date = {
   headers: headers   
 }
 
+// Analytics - PD action List Table
+export const endpoint_pd_action_list = {
+  url: `${api}/stats/pd-action-list/`,
+  method: 'GET',
+  headers: headers   
+}
+
 // Analytics - Health Summary Table
 export const endpoint_health_summary_table = {
   url: `${api}/stats/health-management-trends/`,
