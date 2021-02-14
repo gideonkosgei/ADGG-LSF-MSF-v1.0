@@ -245,13 +245,13 @@ export const getWeightByEventId =   function (config,id) {
 // add bew weight event
 export const postWeight =  function (config,animal_id,values,user_id) {    
   let {body_length,body_score,field_agent_id,heart_girth,weight,weight_date} = values;
-  body_length = (typeof body_length === 'undefined')? '0':body_length.replace('','0');  
-  body_score = (typeof body_score === 'undefined')? '0':body_score.replace('','0');
-  field_agent_id = (typeof field_agent_id === 'undefined')? '0':field_agent_id.replace('','0');
-  heart_girth = (typeof heart_girth === 'undefined')? '0':heart_girth.replace('','0');
-  weight = (typeof weight === 'undefined')? '0':weight.replace('','0');
-  weight_date = (typeof weight_date === 'undefined')? moment(new Date()).format('YYYY-MM-DD'):weight_date;  
- 
+  body_length = (typeof body_length === 'undefined' || body_length ==='' )? null:body_length;  
+  body_score = (typeof body_score === 'undefined' || body_score ==='')? null:body_score;
+  field_agent_id = (typeof field_agent_id === 'undefined' || field_agent_id ==='')? null:field_agent_id;
+  heart_girth = (typeof heart_girth === 'undefined' || heart_girth ==='')? null:heart_girth;
+  weight = (typeof weight === 'undefined' || weight ==='')? null:weight;
+  weight_date = (typeof weight_date === 'undefined' || weight_date ==='')? moment(new Date()).format('YYYY-MM-DD'):weight_date;  
+  
   const body = {
     "animal_id": animal_id,
     "body_length": body_length,
@@ -282,12 +282,12 @@ export const postWeight =  function (config,animal_id,values,user_id) {
 // update weight event
 export const updateWeight =  function (config,event_id,values,user_id) {    
   let {body_length,body_score,field_agent_id,heart_girth,weight,event_date} = values;
-  body_length = (typeof body_length === 'undefined')? '0':body_length.replace('','0');  
-  body_score = (typeof body_score === 'undefined')? '0':body_score.replace('','0');
-  field_agent_id = (typeof field_agent_id === 'undefined')? '0':field_agent_id.replace('','0');
-  heart_girth = (typeof heart_girth === 'undefined')? '0':heart_girth.replace('','0');
-  weight = (typeof weight === 'undefined')? '0':weight.replace('','0');
-  event_date = (typeof event_date === 'undefined')? moment(new Date()).format('YYYY-MM-DD'):event_date;  
+  body_length = (typeof body_length === 'undefined' || body_length ==='' )? null:body_length;  
+  body_score = (typeof body_score === 'undefined' || body_score ==='' )? null:body_score;
+  field_agent_id = (typeof field_agent_id === 'undefined' || field_agent_id ==='' )? null:field_agent_id;
+  heart_girth = (typeof heart_girth === 'undefined' || heart_girth ==='' )? null:heart_girth;
+  weight = (typeof weight === 'undefined' || weight ==='' )? null:weight;
+  event_date = (typeof event_date === 'undefined' || event_date ==='' )? moment(new Date()).format('YYYY-MM-DD'):event_date;  
  
   const body = {    
     "body_length": body_length,
