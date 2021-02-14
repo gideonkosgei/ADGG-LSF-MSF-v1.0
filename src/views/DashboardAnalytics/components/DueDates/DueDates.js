@@ -29,8 +29,7 @@ const useStyles = makeStyles(theme => ({
   },
   actions: {
     justifyContent: 'flex-end'
-  },
-  
+  },  
 }));
 
 const DueDates = props => {
@@ -65,9 +64,8 @@ const DueDates = props => {
     { name: "service_date",label: "Service Date",options: {filter: false,sort: true,display:true}},
     { name: "pd_date",label: "PD Date",options: {filter: false,sort: true,display:true}},
     { name: "gestation",label: "Gestation",options: {filter: false,sort: true,display:true}},
-    { name: "estimated_due_date",label: "E. Due Date",options: {filter: false,sort: true,display:true}}           
-  ];
-  
+    { name: "estimated_due_date",label: "Calving Date",options: {filter: false,sort: true,display:true}}           
+  ];  
 
   const options = {  
     rowsPerPage: 5,       
@@ -95,7 +93,7 @@ const DueDates = props => {
     >
       <CardHeader
         action={<GenericMoreButton />}
-        title="INCALF HEIFERS/COWS EXPECTED DUE DATES"
+        title="ESTIMATED CALVING DATES"
       />
       <Divider />
       <CardContent className={classes.content}>
