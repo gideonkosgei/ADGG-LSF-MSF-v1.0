@@ -63,7 +63,7 @@ const PdActionList = props => {
     { name: "animal_name",label: "Name",options: {filter: false,sort: true,display:true}},
     { name: "insemination_date",label: "Service Date",options: {filter: true,sort: true,display:true}},
     { name: "pd_window",label: "Window",options: {filter: false,sort: true,display:true}},
-    { name: "pd_due_date",label: "Due Date",options: {filter: true,sort: true,display:true}},
+    { name: "pd_due_date",label: "Action Date",options: {filter: true,sort: true,display:true}},
     { name: "days_remaining",label: "Countdown(Days)",options: {filter: false,sort: true,display:true}}           
   ];
   
