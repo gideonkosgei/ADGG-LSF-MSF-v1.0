@@ -3181,12 +3181,12 @@ export const getWeightGrowthCurveData =  function (config,option,animal_id) {
 }
 
 // Animal Health Management
-export const getHealthManagementSummary =  function (config,option,id) { 
+export const getHealthManagementSummary =  function (config,option,id,date_start,date_end) { 
   const options = {
-    url:`${config.url}${option}/${id}`,
+    url:`${config.url}${option}/${id}/${date_start}/${date_end}`,
     method: config.method,
     headers: config.headers    
-  }    
+  } 
   return new Promise((resolve, reject) => {
     axios(options)
     .then(res => {           
@@ -3195,6 +3195,7 @@ export const getHealthManagementSummary =  function (config,option,id) {
     .catch(err => reject(err));
   });       
 }
+
 
 
 
