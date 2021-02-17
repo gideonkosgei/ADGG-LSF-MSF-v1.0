@@ -9,7 +9,6 @@ import authContext from '../../../../../../contexts/AuthContext';
 import MUIDataTable from "mui-datatables";
 import {MuiThemeProvider } from '@material-ui/core/styles';
 import PerfectScrollbar from 'react-perfect-scrollbar';
-import { GenericMoreButton } from 'components';
 import moment from 'moment';
 import { DatePicker } from '@material-ui/pickers';
 import CalendarTodayIcon from '@material-ui/icons/CalendarTodayOutlined';
@@ -18,7 +17,7 @@ const useStyles = makeStyles(theme => ({
   root: {
     display: 'flex',
     flexDirection: 'column',
-    padding: theme.spacing(3)
+    padding: theme.spacing(2)
   },
   content: {
     flexGrow: 1,
@@ -48,10 +47,12 @@ const HealthManagementSummmaryTable = props => {
   const classes = useStyles();
   const [values, setValues] = useState([]); 
   const [ { organization_id }  ] = useContext(authContext);
+
   const [startDate, setStartDate] = useState(moment().subtract(1, 'years'));
   const [endDate, setEndDate] = useState(moment());
   const [selectEdge, setSelectEdge] = useState(null);
   const [calendarDate, setCalendarDate] = useState(moment());
+
   let option = health_summary_option;
   let id = option === 1 ? localStorage.getItem('animal_id'): organization_id;
   
@@ -137,8 +138,7 @@ const HealthManagementSummmaryTable = props => {
       {...rest}
       className={clsx(classes.root, className)}
     >
-      <CardHeader
-        action={<GenericMoreButton />}
+      <CardHeader      
         title="ANIMAL HEALTH SUMMARY"
       />
       <Divider />
@@ -175,7 +175,7 @@ const HealthManagementSummmaryTable = props => {
           </div>
         </PerfectScrollbar> 
       </CardContent>
-      <Divider /> 
+     
       <DatePicker
         maxDate={moment()}
         onAccept={handleCalendarAccept}

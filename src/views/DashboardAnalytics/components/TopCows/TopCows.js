@@ -2,19 +2,22 @@ import React, { useState, useEffect, useContext } from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
-import { Button,Card, CardActions, CardContent, CardHeader, Divider,List, ListItem, ListItemText, Typography } from '@material-ui/core';
-import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
+import { Button,Card, CardContent, CardHeader, Divider,Grid, ButtonGroup } from '@material-ui/core';
 import authContext from '../../../../contexts/AuthContext';
 import {endpoint_top_cows} from '../../../../configs/endpoints';
 import {getTopCows}   from '../../../../utils/API';
-import { SeeAllModal } from './components';
-import { GenericMoreButton } from 'components';
 import moment from 'moment';
+import { DatePicker } from '@material-ui/pickers';
+import CalendarTodayIcon from '@material-ui/icons/CalendarTodayOutlined';
+import MUIDataTable from "mui-datatables";
+import {MuiThemeProvider } from '@material-ui/core/styles';
+import PerfectScrollbar from 'react-perfect-scrollbar';
 
 const useStyles = makeStyles(theme => ({
   root: {
     display: 'flex',
-    flexDirection: 'column'
+    flexDirection: 'column',
+    padding: theme.spacing(2)
   },
   content: {
     flexGrow: 1,
@@ -30,6 +33,14 @@ const useStyles = makeStyles(theme => ({
   },
   arrowForwardIcon: {
     marginLeft: theme.spacing(1)
+  },
+  dates: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  calendarTodayIcon: {
+    marginRight: theme.spacing(1)
   }
 }));
 
@@ -37,79 +48,134 @@ const TopCows = props => {
   const { className, ...rest } = props;
   const classes = useStyles();
   const [topCows, setTopCows] = useState([]);
-  const [ { organization_id }  ] = useContext(authContext); 
-  const [openModal, setModal] = useState(false); 
-  const curr_year = new Date().getFullYear();
-
-  
+  const [ { organization_id }  ] = useContext(authContext);   
+  const [startDate, setStartDate] = useState(moment());  
+  const [selectEdge, setSelectEdge] = useState(null);
+  const [calendarDate, setCalendarDate] = useState(moment());  
   
   useEffect(() => {
-    let mounted = true;  
-    const start_date  =  moment(new Date(new Date().getFullYear(), 0, 1)).format('YYYY-MM-DD'); 
-    const end_date  =  moment(new Date(new Date().getFullYear(), 11, 31)).format('YYYY-MM-DD');     
-
-    (async  (endpoint,org_id,start_date,end_date)=>{     
-      await  getTopCows(endpoint,org_id,start_date,end_date)
+    let mounted = true;   
+    (async  (endpoint,org_id,year)=>{     
+      await  getTopCows(endpoint,org_id,year)
        .then(response => {              
          if (mounted) {
           setTopCows(response.payload);                           
          }
        });
-     })(endpoint_top_cows,organization_id,start_date,end_date);
+     })(endpoint_top_cows,organization_id,moment(startDate).format('YYYY'));
     return () => {
       mounted = false;
     };
-  }, [organization_id]);  
+  }, [organization_id,startDate]); 
 
-  const handleModalOpen = () => {
-    setModal(true);
+  if (!topCows) {
+    return null;
+  } 
+
+  
+  const columns = [
+    { name: "tag_id",label: "Tag ID",options: {filter: false,sort: true,display:true}},  
+    { name: "name",label: "Name",options: {filter: false,sort: true,display:true}},  
+    { name: "average_milk",label: "Average Milk(ltrs)",options: {filter: false,sort: true,display:true}},  
+    { name: "total_milk",label: "Total Milk(ltrs)",options: {filter: false,sort: true,display:true}}           
+  ];
+
+  const options = {  
+    rowsPerPage: 5,       
+    rowsPerPageOptions :[5,10,20,50,100],
+    selectableRows: 'none',      
+    filterType: 'checkbox',
+    responsive: 'stacked',                
+    rowHover: true, 
+    search: false,
+    filter: false,  
+    print: true,
+    viewColumns: false,    
+    setTableProps: () => {
+     return {
+       padding: "none" ,         
+       size: "small",
+     };
+   }    
   };
 
-  const handleModalClose = () => {
-    setModal(false);
+  
+  const handleCalendarOpen = edge => {
+    setSelectEdge(edge);
   };
 
+  const handleCalendarChange = date => {
+    setCalendarDate(date);
+  };
 
+  const handleCalendarClose = () => {
+    setCalendarDate(moment());
+    setSelectEdge(null);
+  };
+
+  const handleCalendarAccept = date => {
+    setCalendarDate(moment());
+
+    if (selectEdge === 'start') {
+      setStartDate(date);      
+    } 
+    setSelectEdge(null);
+  };
+  const open = Boolean(selectEdge); 
   return (
     <Card
       {...rest}
       className={clsx(classes.root, className)}
     >
-      <CardHeader
-        action={<GenericMoreButton />}
-        title= {`TOP COWS(${curr_year})`}
+      <CardHeader       
+        title= {`TOP MILK PRODUCING COWS`}
       />
       <Divider />
       <CardContent className={classes.content}>
-        <List disablePadding>
-          {topCows.slice(0,10).map((topCow, i) => (
-            <ListItem
-              divider={i < topCow.length - 1}
-              key={topCow.id}
-            >              
-              <ListItemText primary={`${topCow.name} (${topCow.tag_id})`} />
-              <Typography variant="subtitle2">{`${topCow.total_milk} ltrs`}</Typography>
-            </ListItem>
-          ))}
-        </List>
-      </CardContent>
-      <Divider />
-      <CardActions className={classes.actions}>
-        <Button
-          color="primary" 
-          onClick={handleModalOpen} 
-          size="small"         
-          variant="text"
+      <br/>
+      <Grid
+          className={classes.dates}
+          item
+          lg={12}
+          xs={12}
         >
-          See all
-          <ArrowForwardIcon className={classes.arrowForwardIcon} />
-        </Button>
-      </CardActions>
-      <SeeAllModal
-        Details={topCows}
-        onClose={handleModalClose}
-        open={openModal}
-      /> 
+            <ButtonGroup variant="contained">
+              <Button onClick={() => handleCalendarOpen('start')}>
+                <CalendarTodayIcon className={classes.calendarTodayIcon} />
+                {startDate.format('YYYY')}
+              </Button>             
+            </ButtonGroup>
+          </Grid>
+          <br/>      
+        
+          <PerfectScrollbar>
+            <div className={classes.inner}>
+              <MuiThemeProvider>                
+                <MUIDataTable
+                  title = ""
+                  data={topCows}
+                  columns={columns}
+                  options={options}
+                />
+              </MuiThemeProvider>
+            </div>
+          </PerfectScrollbar>
+        </CardContent>      
+     
+
+      <DatePicker
+        maxDate={moment()}
+        views={["year"]}
+        animateYearScrolling
+        onAccept={handleCalendarAccept}
+        onChange={handleCalendarChange}
+        onClose={handleCalendarClose}
+        open={open}
+        style={{ display: 'none' }} // Temporal fix to hide the input element
+        value={calendarDate}
+        variant="dialog"
+      />
+
     </Card>
     
   );
