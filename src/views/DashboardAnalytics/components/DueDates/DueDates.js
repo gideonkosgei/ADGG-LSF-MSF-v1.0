@@ -62,8 +62,7 @@ const DueDates = props => {
     { name: "tag_id",label: "Tag ID",options: {filter: false,sort: true,display:true}},  
     { name: "animal_name",label: "Name",options: {filter: false,sort: true,display:true}},
     { name: "service_date",label: "Service Date",options: {filter: false,sort: true,display:true}},
-    { name: "pd_date",label: "PD Date",options: {filter: false,sort: true,display:true}},
-    { name: "gestation",label: "Gestation",options: {filter: false,sort: true,display:true}},
+    { name: "pd_date",label: "PD Date",options: {filter: false,sort: true,display:true}},   
     { name: "estimated_due_date",label: "Calving Date",options: {filter: false,sort: true,display:true}}           
   ];  
 

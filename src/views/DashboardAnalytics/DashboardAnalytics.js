@@ -10,7 +10,7 @@ import {
   HerdMilkingCowNumbers,
   HerdAnnualMilkProduction,
   DueDates,
-  PdActionList
+  PdActionList 
   /*MostProfitableProducts,
   CustomerActivity,
   LatestOrders*/
@@ -41,15 +41,10 @@ const DashboardAnalytics = () => {
         className={classes.container}
         container
         spacing={3}
-      >       
-         
-        <Grid item  xs={5} >  
-          <HealthManagementSummmaryTable health_summary_option ={2}/>
-        </Grid> 
-        
+      >    
         <Grid
           item
-          lg={7}
+          lg={6}
           xl={4}
           xs={12}
         >
@@ -57,12 +52,26 @@ const DashboardAnalytics = () => {
         </Grid>
         <Grid
           item
-          lg={7}
+          lg={6}
           xl={4}
           xs={12}
         >
           <PdActionList/>
         </Grid>
+
+        <Grid item  xs={6} >  
+          <HealthManagementSummmaryTable health_summary_option ={2}/>
+        </Grid> 
+
+        <Grid
+          item
+          lg={6}
+          xl={4}
+          xs={12}
+        >
+          <TopCows />
+        </Grid>
+
         <Grid
           item
           lg={12}
@@ -96,14 +105,7 @@ const DashboardAnalytics = () => {
         >
           <BreedDistribution/>
         </Grid> 
-        <Grid
-          item
-          lg={4}
-          xl={4}
-          xs={12}
-        >
-          <TopCows />
-        </Grid>
+        
         
       </Grid>
     </Page>

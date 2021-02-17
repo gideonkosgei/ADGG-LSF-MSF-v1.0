@@ -10,7 +10,6 @@ import SuccessSnackbar from '../../../../../../components/SuccessSnackbar';
 import ErrorSnackbar from '../../../../../../components/ErrorSnackbar';
 import {AnimalDetailsMetaData}  from '../../../Modal';
 import OpenInNewIcon from '@material-ui/icons/OpenInNew';
-//import LocationOnIcon from '@material-ui/icons/LocationOn';
 import moment from 'moment'; 
 
 const useStyles = makeStyles(theme => ({
