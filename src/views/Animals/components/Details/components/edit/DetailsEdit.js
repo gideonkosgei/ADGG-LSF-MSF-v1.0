@@ -165,7 +165,6 @@ const DetailsEdit = props => {
     return null;
   }
 
-
     const handleChange = event => {
     event.persist();
     setValues({
@@ -574,12 +573,11 @@ const DetailsEdit = props => {
                 margin = 'dense'
                 label="DOB"
                 type="date"
-                name="dob"
-                defaultValue = {new Date()}
+                name="dob"               
                 onChange={handleChange}
                 variant="outlined" 
                 required
-                value = {values.date_of_birth}             
+                value = {values.dob}             
               />
             </Grid>
             <Grid
