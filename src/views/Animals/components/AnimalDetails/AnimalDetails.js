@@ -152,7 +152,7 @@ const AnimalDetails = props => {
       [event.target.name]:event.target.type === 'checkbox' ? event.target.checked: event.target.value  
           
     });
-    //
+    
     if (event.target.name ==='animal_type'){    
       let selectedSex = ( event.target.value === '1'  || event.target.value === '2'  || event.target.value === '4') ? 2 :1;  
       setSex(selectedSex);      
@@ -196,7 +196,8 @@ const AnimalDetails = props => {
             container
             spacing={4}
           >
-             <Grid
+            
+        <Grid
           item
           md={2}
           xs={12}

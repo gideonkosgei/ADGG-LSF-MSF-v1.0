@@ -1683,7 +1683,7 @@ export const postAnimalRegistration =  function (config,org_id,values,user_id) {
     let {
       herd_id,main_breed_other,animal_name,animal_type, breed_composition,breed_composition_details,color,
       color_other,country_of_origin,deformaties,dob,entry_type,hair_sample_id,herd_book_number,
-      main_breed,notes,purchase_cost, secondary_breed, secondary_breed_other,sex,sire_id,dam_id, sire_type,tag_id
+      main_breed,notes,purchase_cost, secondary_breed, secondary_breed_other,sire_id,dam_id, sire_type,tag_id
     } = values;
 
     herd_id = (typeof herd_id === 'undefined' || herd_id ==='')? null:herd_id;
@@ -1705,13 +1705,11 @@ export const postAnimalRegistration =  function (config,org_id,values,user_id) {
     notes =  (typeof notes === 'undefined' || notes ==='')? null:notes;
     purchase_cost =  (typeof purchase_cost === 'undefined' || purchase_cost ==='')? null:purchase_cost;   
     secondary_breed =  (typeof secondary_breed === 'undefined' || secondary_breed ==='')? null:secondary_breed;
-    secondary_breed_other =  (typeof secondary_breed_other === 'undefined' || secondary_breed_other ==='')?null:secondary_breed_other;
-    sex =  (typeof sex === 'undefined' || sex ==='')? null:sex;
     sire_id =  (typeof sire_id === 'undefined' || sire_id ==='')? null:sire_id;
     dam_id =  (typeof dam_id === 'undefined' || dam_id ==='')? null:dam_id;
     sire_type =  (typeof sire_type === 'undefined' || sire_type ==='')? null:sire_type;
     tag_id =  (typeof tag_id === 'undefined' || tag_id ==='')? null:tag_id;
-
+    secondary_breed_other =  (typeof secondary_breed_other === 'undefined' || secondary_breed_other ==='')? null:secondary_breed_other;
 
     
     const body = {
@@ -1721,8 +1719,7 @@ export const postAnimalRegistration =  function (config,org_id,values,user_id) {
       "name": animal_name ,
       "breed_composition": breed_composition ,
       "hair_sample_id": hair_sample_id ,
-      "main_breed": main_breed ,      
-      "sex" :sex,
+      "main_breed": main_breed , 
       "tag_id" : tag_id,
       "breed_combination" :"",
       "notes" : notes,      
@@ -1768,45 +1765,38 @@ export const putAnimalDetails =  function (config,org_id,values,user_id,animal_i
      
   const farm_id = null;
   let {
-    herd_id,main_breed_other,animal_name,animal_type,
-    breed_composition,breed_composition_details,color,
-    color_other,country_of_origin,deformaties,
-    dob,entry_date,entry_type,hair_sample_id,herd_book_number,
-    main_breed,notes,purchase_cost,registration_date, 
-    secondary_breed, secondary_breed_other,sire_id,dam_id,
-    sire_type,tag_prefix,tag_sequence,tag_id
+    herd_id,main_breed_other,animal_name,animal_type, breed_composition,breed_composition_details,color,
+    color_other,country_of_origin,deformaties,dob,entry_type,hair_sample_id,herd_book_number,
+    main_breed,notes,purchase_cost, secondary_breed, secondary_breed_other,sire_id,dam_id, sire_type,tag_id,reg_date,entry_date
   } = values;
 
-  
+  herd_id = (typeof herd_id === 'undefined' || herd_id ==='')? null:parseInt(herd_id);
+  main_breed_other =  (typeof main_breed_other === 'undefined' || main_breed_other ==='')?null:main_breed_other;
+  animal_name =  (typeof animal_name === 'undefined' || animal_name ==='')? null:animal_name; 
+  animal_type =  (typeof animal_type === 'undefined' || animal_type ==='')? null:animal_type; 
+  breed_composition =  (typeof breed_composition === 'undefined' || breed_composition ==='')? null:breed_composition; 
+  breed_composition_details =  (typeof breed_composition_details === 'undefined' || breed_composition_details ==='')? null:breed_composition_details; 
+  color =  (typeof color === 'undefined' || color ==='')? null:color;
+  color_other =  (typeof color_other === 'undefined' || color_other ==='')? null:color_other;
+  country_of_origin =  (typeof country_of_origin === 'undefined' || country_of_origin ==='')? null:country_of_origin;    
+  deformaties =  (typeof deformaties === 'undefined' || deformaties ==='')? null:deformaties; 
+  dob =  (typeof dob === 'undefined' || dob ==='')? moment(new Date()).format('YYYY-MM-DD'):dob;
+  reg_date =  (typeof reg_date === 'undefined' || reg_date ==='')? moment(new Date()).format('YYYY-MM-DD'):reg_date;
+  entry_date =  (typeof entry_date === 'undefined' || entry_date ==='')? moment(new Date()).format('YYYY-MM-DD'):entry_date;  
+  entry_type =  (typeof entry_type === 'undefined' || entry_type ==='')? null:entry_type;
+  hair_sample_id =  (typeof hair_sample_id === 'undefined' || hair_sample_id ==='')? null:hair_sample_id;
+  herd_book_number =  (typeof herd_book_number === 'undefined' || herd_book_number ==='')? null:herd_book_number;  
+  main_breed =  (typeof main_breed === 'undefined' || main_breed ==='')? null:main_breed;
+  main_breed_other =  (typeof main_breed_other === 'undefined' || main_breed_other ==='')? null:main_breed_other;    
+  notes =  (typeof notes === 'undefined' || notes ==='')? null:notes;
+  purchase_cost =  (typeof purchase_cost === 'undefined' || purchase_cost ==='')? null:purchase_cost;   
+  secondary_breed =  (typeof secondary_breed === 'undefined' || secondary_breed ==='')? null:secondary_breed;
+  sire_id =  (typeof sire_id === 'undefined' || sire_id ==='')? null:sire_id;
+  dam_id =  (typeof dam_id === 'undefined' || dam_id ==='')? null:dam_id;
+  sire_type =  (typeof sire_type === 'undefined' || sire_type ==='')? null:sire_type;
+  tag_id =  (typeof tag_id === 'undefined' || tag_id ==='')? null:tag_id;
+  secondary_breed_other =  (typeof secondary_breed_other === 'undefined' || secondary_breed_other ==='')? null:secondary_breed_other;
 
-  herd_id = (typeof herd_id === 'undefined')? null:parseInt(herd_id);
-  main_breed_other =  (typeof main_breed_other === 'undefined')?'':main_breed_other;
-  animal_name =  (typeof animal_name === 'undefined')? '':animal_name; 
-  animal_type =  (typeof animal_type === 'undefined')? null:parseInt(animal_type); 
-  breed_composition =  (typeof breed_composition === 'undefined')? null:parseInt(breed_composition); 
-  breed_composition_details =  (typeof breed_composition_details === 'undefined')? '':breed_composition_details; 
-  color =  (typeof color === 'undefined')? null:parseInt(color);
-  color_other =  (typeof color_other === 'undefined')? '':color_other;
-  country_of_origin =  (typeof country_of_origin === 'undefined')? '':country_of_origin;    
-  deformaties =  (typeof deformaties === 'undefined')? null:parseInt(deformaties); 
-  dob =  (typeof dob === 'undefined')? moment(new Date()).format('YYYY-MM-DD'):dob;
-  entry_date =  (typeof entry_date === 'undefined')? moment(new Date()).format('YYYY-MM-DD'):entry_date; 
-  entry_type =  (typeof entry_type === 'undefined')? null:parseInt(entry_type);
-  hair_sample_id =  (typeof hair_sample_id === 'undefined')? null:hair_sample_id;
-  herd_book_number =  (typeof herd_book_number === 'undefined')? '':herd_book_number;  
-  main_breed =  (typeof main_breed === 'undefined')? null:parseInt(main_breed);
-  main_breed_other =  (typeof main_breed_other === 'undefined')? '':main_breed_other;    
-  notes =  (typeof notes === 'undefined')? '':notes;
-  purchase_cost =  (typeof purchase_cost === 'undefined')? '0':parseFloat(purchase_cost);
-  registration_date =  (typeof registration_date === 'undefined')? moment(new Date()).format('YYYY-MM-DD'):registration_date;
-  secondary_breed =  (typeof secondary_breed === 'undefined')? null:parseInt(secondary_breed);
-  secondary_breed_other =  (typeof secondary_breed_other === 'undefined')? ' ':secondary_breed_other; 
-  sire_id =  (typeof sire_id === 'undefined')? null:sire_id;
-  dam_id =  (typeof dam_id === 'undefined')? null:dam_id;
-  sire_type =  (typeof sire_type === 'undefined')? null:parseInt(sire_type);
-  tag_id =  (typeof tag_id === 'undefined')? '':tag_id;
-  tag_prefix =  (typeof tag_prefix === 'undefined')? '':tag_prefix;
-  tag_sequence =  (typeof tag_sequence === 'undefined')? '':tag_sequence;
 
   
   const body = { 
@@ -1817,12 +1807,10 @@ export const putAnimalDetails =  function (config,org_id,values,user_id,animal_i
     "breed_composition": breed_composition ,
     "hair_sample_id": hair_sample_id ,
     "main_breed": main_breed ,
-    "reg_date": registration_date , 
+    "reg_date": reg_date , 
     "tag_id" : tag_id,
     "breed_combination" :"",
-    "notes" : notes,
-    "tag_prefix" :tag_prefix,
-    "tag_sequence" :tag_sequence,
+    "notes" : notes,   
     "breed_composition_details" :breed_composition_details,
     "color" : color,
     "color_other" :color_other,
@@ -1842,14 +1830,13 @@ export const putAnimalDetails =  function (config,org_id,values,user_id,animal_i
     "org_id" :org_id,
     "farm_id" :farm_id    
   };
-
+  
 const options = {
   url:`${config.url}'${animal_id}'`, 
   method: config.method,
   headers: config.headers,
   data: body  
 };
-
 
 return new Promise((resolve, reject) => {
   axios(options)

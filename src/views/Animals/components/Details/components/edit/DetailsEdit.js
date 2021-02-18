@@ -49,6 +49,7 @@ const DetailsEdit = props => {
   const animal_id  = localStorage.getItem('animal_id');
   const [openMetadata, setMetadata] = useState(false);
   const [countries, setCountries] = useState([]);
+  const [sex, setSex] = useState();
 
   sessionStorage.setItem('animal_tag', values.tag_id);
   sessionStorage.setItem('animal_name', values.animal_name); 
@@ -147,7 +148,8 @@ const DetailsEdit = props => {
         .then(response => {       
           if (mounted_animal_details) { 
             const data = response.payload[0][0];             
-            setValues(data);                         
+            setValues(data);    
+            setSex(data.sex)                     
           }
         });
       })(endpoint_animal,animal_id);
@@ -169,9 +171,13 @@ const DetailsEdit = props => {
     event.persist();
     setValues({
       ...values,
-      [event.target.name]:event.target.type === 'checkbox' ? event.target.checked: event.target.value  
-          
+      [event.target.name]:event.target.type === 'checkbox' ? event.target.checked: event.target.value
     });
+
+    if (event.target.name ==='animal_type'){    
+      let selectedSex = ( event.target.value === '1'  || event.target.value === '2'  || event.target.value === '4') ? 2 :1;  
+      setSex(selectedSex);      
+    }
   };
 
   const handleSwitchChange = event => {
@@ -220,7 +226,36 @@ const DetailsEdit = props => {
         <CardHeader title = {readOnly? `View Animal Details  #${animal_id}` : `Edit Animal Details  #${animal_id}`} />
         <Divider />
         <CardContent>
-          <Grid container spacing={4} >   
+          <Grid container spacing={4} >  
+
+         <Grid
+              item
+              md={3}
+              xs={12}
+            >
+              <TextField
+                fullWidth
+                InputLabelProps={{
+                  shrink: true,
+                }}
+
+                inputProps={{
+                  readOnly:true,
+                  disabled: true,
+                  max: moment(new Date()).format('YYYY-MM-DD')                
+                }}
+
+                margin = 'dense'
+                label="Registration Date"
+                type="date"
+                name="reg_date"               
+                onChange={handleChange}
+                variant="outlined" 
+                required
+                value = {values.dob}             
+              />
+            </Grid>
+
             <Grid
               item
               md={3}
@@ -231,54 +266,27 @@ const DetailsEdit = props => {
                 InputLabelProps={{
                   shrink: true,
                 }}
-                inputProps={{
-                  readOnly: Boolean(readOnly),
-                  disabled: Boolean(readOnly),
-                  max: moment(new Date()).format('YYYY-MM-DD')               
-                }}
-                
-                id = 'reg_date'
-                margin = 'dense'
-                label="Registration Date"
-                type="date"
-                name="registration_date"
-                defaultValue = {new Date()}
-                onChange={handleChange}
-                variant="outlined" 
-                required
-                value = {values.registration_date}
-                             
-              />
-            </Grid>
 
-             <Grid
-              item
-              md={3}
-              xs={12}
-            >
-              <TextField
-                fullWidth
-                InputLabelProps={{
-                  shrink: true,
-                }}
                 inputProps={{
-                  readOnly: Boolean(readOnly),
-                  disabled: Boolean(readOnly),
+                  readOnly: true,
+                  disabled: true,
                   max: moment(new Date()).format('YYYY-MM-DD')                
                 }}
+
                 margin = 'dense'
-                label="Entry Date"
+                label="Entry date"
                 type="date"
-                name="entry_date"
-                defaultValue = {new Date()}
+                name="entry_date"               
                 onChange={handleChange}
                 variant="outlined" 
                 required
-                value = {values.entry_date}                             
+                value = {values.entry_date}             
               />
-            </Grid>    
-
-             <Grid
+            </Grid>
+           
+              
+          
+        <Grid
           item
           md={2}
           xs={12}
@@ -353,55 +361,48 @@ const DetailsEdit = props => {
             }           
           </TextField>
         </Grid>
+        <Grid
+              item
+              md={2}
+              xs={12}
+            >
+              <TextField
+                fullWidth
+                InputLabelProps={{
+                  shrink: true,
+                }}
 
-            
-            <Grid
-              item
-              md={2}
-              xs={12}
-            >
-              <TextField
-                fullWidth
-                InputLabelProps={{
-                  shrink: true,
-                }} 
                 inputProps={{
-                  readOnly: Boolean(readOnly),
-                  disabled: Boolean(readOnly)                
-                }}   
-                margin = 'dense'           
-                label="Tag Prefix "
-                name="tag_prefix"
-                onChange={handleChange}
+                  readOnly: true,
+                  disabled: true              
+                }}
+
+                margin = 'dense'
+                label="Sex"
+                name="sex"
+                onChange={handleChange} 
+                required              
+                select
+                // eslint-disable-next-line react/jsx-sort-props
+                SelectProps={{ native: true }}
+                value = {sex}
                 variant="outlined"
-                value = {values.tag_prefix}
-              />
+              >
+                <option value=""></option>
+                {gender.map( sex => (
+                    <option                      
+                      value={sex.id}
+                    >
+                      {sex.value}
+                    </option>
+                  ))
+                }    
+              
+              </TextField>
             </Grid>
             
-            <Grid
-              item
-              md={2}
-              xs={12}
-            >
-              <TextField
-                fullWidth
-                InputLabelProps={{
-                  shrink: true,
-                }} 
-                inputProps={{
-                  readOnly: Boolean(readOnly),
-                  disabled: Boolean(readOnly)                
-                }}   
-                margin = 'dense'           
-                label="Tag Sequence "
-                name="tag_sequence"
-                onChange={handleChange}                                
-                variant="outlined"  
-                value = {values.tag_sequence}
-              />
-            </Grid>
-            
-            
+
+    
             <Grid
               item
               md={2}
@@ -503,7 +504,7 @@ const DetailsEdit = props => {
                   readOnly: Boolean(readOnly),
                   disabled: Boolean(readOnly)                
                 }}
-
+                required
                 margin = 'dense'
                 label="Animal Name"
                 name="animal_name"
@@ -580,45 +581,7 @@ const DetailsEdit = props => {
                 value = {values.dob}             
               />
             </Grid>
-            <Grid
-              item
-              md={2}
-              xs={12}
-            >
-              <TextField
-                fullWidth
-                InputLabelProps={{
-                  shrink: true,
-                }}
-
-                inputProps={{
-                  readOnly: Boolean(readOnly),
-                  disabled: Boolean(readOnly)                
-                }}
-
-                margin = 'dense'
-                label="Sex"
-                name="sex"
-                onChange={handleChange} 
-                required              
-                select
-                // eslint-disable-next-line react/jsx-sort-props
-                SelectProps={{ native: true }}
-                value = {values.sex}
-                variant="outlined"
-              >
-                <option value=""></option>
-                {gender.map( sex => (
-                    <option                      
-                      value={sex.id}
-                    >
-                      {sex.value}
-                    </option>
-                  ))
-                }    
-              
-              </TextField>
-            </Grid>
+           
             <Grid
               item
               md={2}
@@ -698,13 +661,12 @@ const DetailsEdit = props => {
                   readOnly: Boolean(readOnly),
                   disabled: Boolean(readOnly)                
                 }}
-
                 margin = 'dense'
                 label="Main Breed"
                 name="main_breed"
-                onChange={handleChange}               
-                select
-                // eslint-disable-next-line react/jsx-sort-props
+                onChange={handleChange}   
+                required            
+                select               
                 SelectProps={{ native: true }}                
                 variant="outlined"
                 value = {values.main_breed}
