@@ -43,6 +43,7 @@ const AnimalDetails = props => {
   const [entryTypes, setEntryTypes] = useState([]);
   const [deformaties, setDeformaties] = useState([]);
   const [countries, setCountries] = useState([]);
+  const [sex, setSex] = useState();
 
   useEffect(() => {   
     let mounted_lookup = true;
@@ -151,6 +152,12 @@ const AnimalDetails = props => {
       [event.target.name]:event.target.type === 'checkbox' ? event.target.checked: event.target.value  
           
     });
+    //
+    if (event.target.name ==='animal_type'){    
+      let selectedSex = ( event.target.value === '1'  || event.target.value === '2'  || event.target.value === '4') ? 2 :1;  
+      setSex(selectedSex);      
+    }
+
   };
 
   const handleSnackbarSuccessClose = () => {
@@ -176,8 +183,6 @@ const AnimalDetails = props => {
     })(endpoint_animal_add,organization_id,values,user_id);    
   };
 
- 
-
   return (
     <Card
       {...rest}
@@ -191,57 +196,6 @@ const AnimalDetails = props => {
             container
             spacing={4}
           >
-
-            <Grid
-              item
-              md={2}
-              xs={12}
-            >
-              <TextField
-                fullWidth
-                InputLabelProps={{
-                  shrink: true,
-                }}
-                inputProps={{                        
-                  max: moment(new Date()).format('YYYY-MM-DD')                 
-                }} 
-                margin = 'dense'
-                label="Registration Date"
-                type="date"
-                name="registration_date"
-                defaultValue = {new Date()}
-                onChange={handleChange}
-                variant="outlined" 
-                required
-                             
-              />
-            </Grid>
-
-             <Grid
-              item
-              md={2}
-              xs={12}
-            >
-              <TextField
-                fullWidth
-                InputLabelProps={{
-                  shrink: true,
-                }}
-                inputProps={{                        
-                  max: moment(new Date()).format('YYYY-MM-DD')                 
-                }}   
-                margin = 'dense'
-                label="Entry Date"
-                type="date"
-                name="entry_date"
-                defaultValue = {new Date()}
-                onChange={handleChange}
-                variant="outlined" 
-                required
-                             
-              />
-            </Grid>    
-
              <Grid
           item
           md={2}
@@ -292,10 +246,8 @@ const AnimalDetails = props => {
             onChange={handleChange}
             default = "" 
             required              
-            select
-            // eslint-disable-next-line react/jsx-sort-props
-            SelectProps={{ native: true }}
-            //value={values.timezone}
+            select            
+            SelectProps={{ native: true }}           
             variant="outlined"
           >
             <option value=""></option>
@@ -310,43 +262,43 @@ const AnimalDetails = props => {
           </TextField>
         </Grid>
 
-            
-            <Grid
+        <Grid
               item
               md={2}
               xs={12}
             >
               <TextField
                 fullWidth
+                inputProps={{
+                  readOnly: true,
+                  disabled: true                                 
+                }}
                 InputLabelProps={{
                   shrink: true,
-                }}    
-                margin = 'dense'           
-                label="Tag Prefix "
-                name="tag_prefix"
-                onChange={handleChange}
-                variant="outlined"
-              />
+                }}
+                margin = 'dense'
+                label="Sex"
+                name="sex"
+                onChange={handleChange}                                                    
+                select                
+                SelectProps={{ native: true }}                
+                variant="outlined"               
+                value = {sex}
+              >
+                <option value=""></option>
+                {gender.map( sex => (
+                    <option                      
+                      value={sex.id}
+                    >
+                      {sex.value}
+                    </option>
+                  ))
+                }    
+              
+              </TextField>
             </Grid>
-            
-            <Grid
-              item
-              md={2}
-              xs={12}
-            >
-              <TextField
-                fullWidth
-                InputLabelProps={{
-                  shrink: true,
-                }}    
-                margin = 'dense'           
-                label="Tag Sequence "
-                name="tag_sequence"
-                onChange={handleChange}                                
-                variant="outlined"  
-              />
-            </Grid>
-            
+
+         
             
             <Grid
               item
@@ -443,6 +395,7 @@ const AnimalDetails = props => {
                 InputLabelProps={{
                   shrink: true,
                 }}
+                required
                 margin = 'dense'
                 label="Animal Name"
                 name="animal_name"
@@ -508,39 +461,7 @@ const AnimalDetails = props => {
                              
               />
             </Grid>
-            <Grid
-              item
-              md={2}
-              xs={12}
-            >
-              <TextField
-                fullWidth
-                InputLabelProps={{
-                  shrink: true,
-                }}
-                margin = 'dense'
-                label="Sex"
-                name="sex"
-                onChange={handleChange} 
-                required              
-                select
-                // eslint-disable-next-line react/jsx-sort-props
-                SelectProps={{ native: true }}
-                //value={values.timezone}
-                variant="outlined"
-              >
-                <option value=""></option>
-                {gender.map( sex => (
-                    <option                      
-                      value={sex.id}
-                    >
-                      {sex.value}
-                    </option>
-                  ))
-                }    
-              
-              </TextField>
-            </Grid>
+           
             <Grid
               item
               md={2}
@@ -604,6 +525,7 @@ const AnimalDetails = props => {
                 InputLabelProps={{
                   shrink: true,
                 }}
+                required
                 margin = 'dense'
                 label="Main Breed"
                 name="main_breed"
