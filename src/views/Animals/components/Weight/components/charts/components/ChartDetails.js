@@ -5,8 +5,8 @@ import { makeStyles } from '@material-ui/styles';
 import {Card, CardContent, CardHeader, Grid,Divider,colors} from '@material-ui/core';
 import {Sidebar} from '../../index';
 import {default as WeightCurve} from '../../../../Analytics/components/WeightCurve';
-import {default as HeartGirthCurve} from '../../../../Analytics/components/HeartGirthCurve';
-import {default as BodyLengthCurve} from '../../../../Analytics/components/BodyLengthCurve';
+//import {default as HeartGirthCurve} from '../../../../Analytics/components/HeartGirthCurve';
+//import {default as BodyLengthCurve} from '../../../../Analytics/components/BodyLengthCurve';
 
 
 
@@ -51,12 +51,16 @@ const ChartDetails = props => {
               <Grid item  xs={12} >  
                 <WeightCurve/>
               </Grid>
-              <Grid item  xs={12} >  
+              { /*
+                <Grid item  xs={12} >  
                 <HeartGirthCurve/>
               </Grid>
               <Grid item  xs={12} >  
                 <BodyLengthCurve/>
-              </Grid>  
+              </Grid> */
+
+              }
+               
             </Grid> 
 
          </Grid>

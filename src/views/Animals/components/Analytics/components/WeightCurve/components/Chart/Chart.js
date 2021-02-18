@@ -62,7 +62,7 @@ const Chart = props => {
           },
           scaleLabel: {
             display: true,
-            labelString: 'MONTH'
+            labelString: 'AGE (months)'
           }
         }
       ],
@@ -89,7 +89,7 @@ const Chart = props => {
           },
           scaleLabel: {
             display: true,
-            labelString: 'Monthly Average Weight'
+            labelString: 'Average Weight'
           }
         }
       ]

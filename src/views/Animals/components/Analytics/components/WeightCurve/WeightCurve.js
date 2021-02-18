@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import { makeStyles } from '@material-ui/styles';
 import { Card, CardHeader, CardContent, Divider } from '@material-ui/core';
-import { GenericMoreButton } from 'components';
 import { Chart } from './components';
 import {getWeightGrowthCurveData}   from '../../../../../../utils/API';
 import {endpoint_weight_growth_curve} from '../../../../../../configs/endpoints';
@@ -37,8 +36,8 @@ const WeightCurve = props => {
 
   useEffect(() => {   
     let mounted = true;
-    (async  (endpoint,option,id) => {     
-        await  getWeightGrowthCurveData(endpoint,option,id)
+    (async  (endpoint,option,type,id) => {     
+        await  getWeightGrowthCurveData(endpoint,option,type,id)
         .then(response => {       
           if (mounted) { 
             const data = response.payload;                                  
@@ -46,15 +45,15 @@ const WeightCurve = props => {
             let weights = [];
             if (data.length > 0 ){
               for (let i = 0; i< data.length; i++){                              
-                dates.push(data[i].month_year);
-                weights.push(data[i].avg_monthly_weight);              
+                dates.push(data[i].age);
+                weights.push(data[i].avg_weight);              
               }             
             } 
             setDateCategories(dates); 
             setWeightValues(weights);            
           }
         });
-      })(endpoint_weight_growth_curve,1,animal_id);
+      })(endpoint_weight_growth_curve,1,1,animal_id);
 
     return () => {
       mounted = false;     
@@ -73,9 +72,8 @@ const WeightCurve = props => {
       {...rest}
       className={clsx(classes.root, className)}
     >
-      <CardHeader
-        action={<GenericMoreButton />}
-        title="Weight Curve"
+      <CardHeader      
+        title="Growth Curve"
       />
       <Divider />
       <CardContent className={classes.content}>

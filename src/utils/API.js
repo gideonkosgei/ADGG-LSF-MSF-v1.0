@@ -3184,9 +3184,9 @@ export const getVaccination =  function (config,id,option) {
 
 
 // Weight & Growth Data
-export const getWeightGrowthCurveData =  function (config,option,animal_id) { 
+export const getWeightGrowthCurveData =  function (config,option,type,animal_id) { 
   const options = {
-    url:`${config.url}${option}/${animal_id}`,
+    url:`${config.url}${option}/${type}/${animal_id}`,
     method: config.method,
     headers: config.headers    
   }    
