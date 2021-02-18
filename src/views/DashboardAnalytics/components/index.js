@@ -11,6 +11,8 @@ export { default as HerdMilkingCowNumbers } from './HerdMilkingCowNumbers';
 export { default as HerdAnnualMilkProduction } from './HerdAnnualMilkProduction';
 export { default as DueDates } from './DueDates';
 export { default as PdActionList } from './PdActionList';
+export { default as ServiceActionList } from './ServiceActionList';
+
 
 
 

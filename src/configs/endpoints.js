@@ -731,6 +731,13 @@ export const endpoint_pd_action_list = {
   headers: headers   
 }
 
+// Analytics - Service action List Table
+export const endpoint_service_action_list = {
+  url: `${api}/stats/service-action-list/`,
+  method: 'GET',
+  headers: headers   
+}
+
 // Analytics - Health Summary Table
 export const endpoint_health_summary_table = {
   url: `${api}/stats/health-management-trends/`,

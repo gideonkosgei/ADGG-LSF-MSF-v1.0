@@ -10,7 +10,8 @@ import {
   HerdMilkingCowNumbers,
   HerdAnnualMilkProduction,
   DueDates,
-  PdActionList 
+  PdActionList ,
+  ServiceActionList
   /*MostProfitableProducts,
   CustomerActivity,
   LatestOrders*/
@@ -78,8 +79,18 @@ const DashboardAnalytics = () => {
           xl={12}
           xs={12}
         >
+          <ServiceActionList />
+        </Grid>
+
+        <Grid
+          item
+          lg={12}
+          xl={12}
+          xs={12}
+        >
           <HerdMilkingCowNumbers />
         </Grid>
+
         <Grid
           item
           lg={12}
