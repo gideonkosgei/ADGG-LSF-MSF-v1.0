@@ -1436,22 +1436,21 @@ export const getMilkingParameters =  function (config,id,milk_date) {
 export const postMilking =  function (config,animal_id,values,user_id,quality_toggle,lactation_id, lactation_number, days_in_milk,test_day_no) {      
   let {milk_mid_day,milk_lactose,milk_am_litres,milk_protein,milk_urea,milk_somatic_cell_count,field_agent_id,milk_butter_fat,milk_date,milk_pm_litres,milk_sample_type,milking_notes,milk_Weight} = values;
  
-    milk_urea = quality_toggle ? (typeof milk_urea === 'undefined')? '0':milk_urea.replace('','0') : null; 
-    milk_protein = quality_toggle ? (typeof milk_protein === 'undefined')? '0':milk_protein.replace('','0') : null; 
-    milk_butter_fat = quality_toggle ? (typeof milk_butter_fat === 'undefined')? '0':milk_butter_fat.replace('','0') : null;   
-    milk_Weight = quality_toggle ? (typeof milk_Weight === 'undefined')? '0':milk_Weight.replace('','0') : null;
-    milk_somatic_cell_count =  quality_toggle ? (typeof milk_somatic_cell_count === 'undefined')? '0':milk_somatic_cell_count.replace('','0') : null;  
-    milk_sample_type =  quality_toggle ?(typeof milk_sample_type === 'undefined')? '0':milk_sample_type.replace('','0') : null;
-    milk_lactose = quality_toggle ? (typeof milk_lactose === 'undefined')? '0':milk_lactose.replace('','0') : null;  
+    milk_urea = quality_toggle ? (typeof milk_urea === 'undefined' || milk_urea === '')? null:milk_urea : null; 
+    milk_protein = quality_toggle ? (typeof milk_protein === 'undefined' || milk_protein === '')? null:milk_protein: null; 
+    milk_butter_fat = quality_toggle ? (typeof milk_butter_fat === 'undefined' || milk_butter_fat === '')? null:milk_butter_fat: null;   
+    milk_Weight = quality_toggle ? (typeof milk_Weight === 'undefined' || milk_Weight === '')? null:milk_Weight: null;
+    milk_somatic_cell_count =  quality_toggle ? (typeof milk_somatic_cell_count === 'undefined' || milk_somatic_cell_count === '')? null:milk_somatic_cell_count: null;  
+    milk_sample_type =  quality_toggle ?(typeof milk_sample_type === 'undefined' || milk_sample_type === '')? null:milk_sample_type: null;
+    milk_lactose = quality_toggle ? (typeof milk_lactose === 'undefined'  || milk_lactose === '')? null:milk_lactose: null;  
 
-    milking_notes = (typeof milking_notes === 'undefined')? '':milking_notes;        
-    field_agent_id = (typeof field_agent_id === 'undefined')? '0':field_agent_id.replace('','0');       
-    milk_pm_litres = (typeof milk_pm_litres === 'undefined')? '0':milk_pm_litres.replace('','0');     
-    milk_date = (typeof milk_date === 'undefined')? moment(new Date()).format('YYYY-MM-DD'):milk_date;
-    milk_mid_day = (typeof milk_mid_day === 'undefined')? '0':milk_mid_day.replace('','0');
-    milk_am_litres = (typeof milk_am_litres === 'undefined')? '0':milk_am_litres.replace('','0'); 
+    milking_notes = (typeof milking_notes === 'undefined' || milking_notes === '')? null:milking_notes;        
+    field_agent_id = (typeof field_agent_id === 'undefined' || field_agent_id === '')? null:field_agent_id;       
+    milk_pm_litres = (typeof milk_pm_litres === 'undefined' || milk_pm_litres === '')? null:milk_pm_litres;     
+    milk_date = (typeof milk_date === 'undefined' || milk_date === '')? moment(new Date()).format('YYYY-MM-DD'):milk_date;
+    milk_mid_day = (typeof milk_mid_day === 'undefined' || milk_mid_day === '')? null:milk_mid_day;
+    milk_am_litres = (typeof milk_am_litres === 'undefined' || milk_am_litres === '')? null:milk_am_litres; 
     
-
   const body = {
     "animal_id": animal_id, 
     "milk_date": milk_date,
@@ -1473,15 +1472,12 @@ export const postMilking =  function (config,animal_id,values,user_id,quality_to
     "field_agent_id": field_agent_id,
     "created_by": user_id
   };
-
-
   const options = {
     url:`${config.url}`,
     method: config.method,
     headers: config.headers,
     data: body  
   }; 
-
   return new Promise((resolve, reject) => {
     axios(options)
     .then(res => {           
@@ -1496,24 +1492,23 @@ export const postMilking =  function (config,animal_id,values,user_id,quality_to
 export const updateMilking =  function (config,event_id,values,user_id) {  
     
   let {milk_mid_day,testday_no,milk_lactose,milk_am_litres,milk_protein,milk_urea,milk_somatic_cell_count,field_agent_id,milk_butter_fat,milk_date,lactation_id,lactation_number,days_in_milk,milk_pm_litres,milk_sample_type,milking_notes,milk_Weight} = values;
- 
-    milk_urea = (typeof milk_urea === 'undefined')? '0':milk_urea.replace('',null); 
-    milking_notes = (typeof milking_notes === 'undefined')? '':milking_notes; 
-    testday_no = (typeof testday_no === 'undefined')? '0':testday_no.replace('','0');
-    lactation_id = (typeof lactation_id === 'undefined')? '':lactation_id; 
-    milk_somatic_cell_count = (typeof milk_somatic_cell_count === 'undefined')? '0':milk_somatic_cell_count.replace('',null);  
-    milk_sample_type = (typeof milk_sample_type === 'undefined')? '0':milk_sample_type.replace('','0');
-    field_agent_id = (typeof field_agent_id === 'undefined')? '0':field_agent_id.replace('','0');       
-    milk_pm_litres = (typeof milk_pm_litres === 'undefined')? '0':milk_pm_litres.replace('','0');  
-    milk_lactose = (typeof milk_lactose === 'undefined')? '0':milk_lactose.replace('',null);    
-    milk_date = (typeof milk_date === 'undefined')? moment(new Date()).format('YYYY-MM-DD'):milk_date; 
-    milk_butter_fat = (typeof milk_butter_fat === 'undefined')? '0':milk_butter_fat.replace('',null);   
-    milk_Weight = (typeof milk_Weight === 'undefined')? '0':milk_Weight.replace('',null);
-    lactation_number = (typeof lactation_number === 'undefined')? '0':lactation_number;
-    days_in_milk = (typeof days_in_milk === 'undefined')? '0':days_in_milk.replace('','0'); 
-    milk_protein = (typeof milk_protein === 'undefined')? null:milk_protein.replace('',null);
-    milk_mid_day = (typeof milk_mid_day === 'undefined')? '0':milk_mid_day.replace('','0');
-    milk_am_litres = (typeof milk_am_litres === 'undefined')? '0':milk_am_litres.replace('','0');     
+  milk_urea = (typeof milk_urea === 'undefined'|| milk_urea === '')? null:milk_urea; 
+  milking_notes = (typeof milking_notes === 'undefined' || milking_notes === '')? null:milking_notes; 
+  testday_no = (typeof testday_no === 'undefined' || testday_no === '')? null:testday_no;
+  lactation_id = (typeof lactation_id === 'undefined' || lactation_id === '')? null:lactation_id; 
+  milk_somatic_cell_count = (typeof milk_somatic_cell_count === '' || milk_somatic_cell_count === '')? null:milk_somatic_cell_count;  
+  milk_sample_type = (typeof milk_sample_type === 'undefined' || milk_sample_type === '')? null:milk_sample_type;
+  field_agent_id = (typeof field_agent_id === 'undefined' || field_agent_id === '')? null:field_agent_id;       
+  milk_pm_litres = (typeof milk_pm_litres === 'undefined' || milk_pm_litres === '')? null:milk_pm_litres;  
+  milk_lactose = (typeof milk_lactose === 'undefined' || milk_lactose === '')? null:milk_lactose;    
+  milk_date = (typeof milk_date === 'undefined' || milk_date === '')? moment(new Date()).format('YYYY-MM-DD'):milk_date; 
+  milk_butter_fat = (typeof milk_butter_fat === 'undefined' || milk_butter_fat === '')? null:milk_butter_fat;   
+  milk_Weight = (typeof milk_Weight === 'undefined' || milk_Weight === '')? null:milk_Weight;
+  lactation_number = (typeof lactation_number === 'undefined' || lactation_number === 'undefined')? null:lactation_number;
+  days_in_milk = (typeof days_in_milk === 'undefined' || days_in_milk === '')? null:days_in_milk; 
+  milk_protein = (typeof milk_protein === 'undefined' || milk_protein === '')? null:milk_protein;
+  milk_mid_day = (typeof milk_mid_day === 'undefined' || milk_mid_day === '')? null:milk_mid_day;
+  milk_am_litres = (typeof milk_am_litres === 'undefined' || milk_am_litres === '')? null:milk_am_litres;   
 
   const body = {    
     "milk_date": milk_date,
@@ -1536,8 +1531,6 @@ export const updateMilking =  function (config,event_id,values,user_id) {
     "updated_by": user_id
   };
 
-
- 
   const options = {
     url:`${config.url}${event_id}`,
     method: config.method,
@@ -1554,7 +1547,6 @@ export const updateMilking =  function (config,event_id,values,user_id) {
   });       
 };
 
-
 // get specific milking record details
 export const getMilkingByEventId =   function (config,id) {   
   const options = {
@@ -1562,7 +1554,6 @@ export const getMilkingByEventId =   function (config,id) {
     method: config.method,
     headers: config.headers  
   } 
-
 
   return new Promise((resolve, reject) => {
     axios(options)

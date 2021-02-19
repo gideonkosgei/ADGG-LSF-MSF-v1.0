@@ -481,7 +481,11 @@ const DetailsEdit = props => {
                     fullWidth
                     InputLabelProps={{
                       shrink: true,
-                    }}                    
+                    }}   
+                    inputProps={{
+                      readOnly: Boolean(readOnly),
+                      disabled: Boolean(readOnly)                                
+                    }}                 
                     margin = 'dense'
                     label="Milking Notes"
                     name="milking_notes"                

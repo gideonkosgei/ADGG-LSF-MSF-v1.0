@@ -287,8 +287,7 @@ const DetailsEdit = props => {
                       inputProps={{                                                
                         max: moment(new Date()).format('YYYY-MM-DD')     
                       }}
-                      required
-                      defaultValue = {moment(new Date()).format('YYYY-MM-DD')}
+                      required                      
                       margin = 'dense'
                       label = "Milk Date"
                       type = "date"
@@ -296,7 +295,7 @@ const DetailsEdit = props => {
                       onChange = {handleChange}
                       variant = "outlined"
                     />
-                  </Grid>                  
+                  </Grid>                
                   
              
               <Grid
@@ -321,8 +320,7 @@ const DetailsEdit = props => {
                     value = {milkingParameters.lactation_id}  
                     required                                    
                 />
-              </Grid>
-              
+              </Grid>             
               
               <Grid
                     item
