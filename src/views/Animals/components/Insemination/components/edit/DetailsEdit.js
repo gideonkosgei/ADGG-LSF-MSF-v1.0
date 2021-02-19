@@ -128,7 +128,7 @@ const DetailsEdit = props => {
               }  
 
               //semen types
-              if(data[i].list_type_id === 201){                
+              if(data[i].list_type_id === 20001){                
                 lookup_semen_types.push(data[i]);
               } 
 
@@ -150,7 +150,7 @@ const DetailsEdit = props => {
             setAiTypes(lookup_ai_types);
           }
         });
-      })(endpoint_lookup,'8,14,71,72,201');
+      })(endpoint_lookup,'8,14,71,72,20001');
 
       (async  (endpoint,id) => {             
         await  getInseminationEventById(endpoint,id)

@@ -678,12 +678,12 @@ export const getInseminationEventById =  function (config,id) {
 export const postInsemination =  function (config,animal_id,values,user_id) { 
   let {ai_type,body_condition_score,cost,field_agent_id,service_date,straw_id} = values;
     
-  ai_type = (typeof ai_type === 'undefined')? '0':ai_type.replace('','0');  
-  body_condition_score = (typeof body_condition_score === 'undefined')? '0':body_condition_score.replace('','0');
-  field_agent_id = (typeof field_agent_id === 'undefined')? '0':field_agent_id.replace('','0');  
-  straw_id = (typeof straw_id === 'undefined')? '':straw_id;   
-  cost = (typeof cost === 'undefined')? '0':cost.replace('','0');
-  service_date = (typeof service_date === 'undefined')? moment(new Date()).format('YYYY-MM-DD'):service_date; 
+  ai_type = (typeof ai_type === 'undefined' || ai_type === '')? null:ai_type;  
+  body_condition_score = (typeof body_condition_score === 'undefined' || body_condition_score === '')? null:body_condition_score;
+  field_agent_id = (typeof field_agent_id === 'undefined' || field_agent_id === '')? null:field_agent_id;  
+  straw_id = (typeof straw_id === 'undefined' || straw_id === '')? null:straw_id;   
+  cost = (typeof cost === 'undefined' || cost === '')? null:cost;
+  service_date = (typeof service_date === 'undefined' || service_date === '')? moment(new Date()).format('YYYY-MM-DD'):service_date; 
   
 
   const body = {
@@ -717,13 +717,14 @@ export const postInsemination =  function (config,animal_id,values,user_id) {
 //update insemination event record
 export const updateInsemination =  function (config,event_id,values,user_id) { 
 
-  let {ai_type,body_condition_score,cost,field_agent_id,service_date,straw_record_id} = values;    
-  ai_type = (typeof ai_type === 'undefined')? '0':ai_type.replace('','0');  
-  body_condition_score = (typeof body_condition_score === 'undefined')? '0':body_condition_score.replace('','0');
-  field_agent_id = (typeof field_agent_id === 'undefined')? '0':field_agent_id.replace('','0');  
-  straw_record_id = (typeof straw_record_id === 'undefined')? null:straw_record_id;   
-  cost = (typeof cost === 'undefined')? '0':cost.replace('','0');
-  service_date = (typeof service_date === 'undefined')? moment(new Date()).format('YYYY-MM-DD'):service_date; 
+  let {ai_type,body_condition_score,cost,field_agent_id,service_date,straw_record_id} = values;   
+  
+  ai_type = (typeof ai_type === 'undefined' || ai_type === '')? null:ai_type;  
+  body_condition_score = (typeof body_condition_score === 'undefined' || body_condition_score === '')? null:body_condition_score;
+  field_agent_id = (typeof field_agent_id === 'undefined' || field_agent_id === '')? null:field_agent_id;  
+  straw_record_id = (typeof straw_record_id === 'undefined' || straw_record_id === '')? null:straw_record_id; 
+  cost = (typeof cost === 'undefined' || cost === '')? null:cost;
+  service_date = (typeof service_date === 'undefined' || service_date === '')? moment(new Date()).format('YYYY-MM-DD'):service_date; 
   
   const body = {    
     "ai_date": service_date,      
