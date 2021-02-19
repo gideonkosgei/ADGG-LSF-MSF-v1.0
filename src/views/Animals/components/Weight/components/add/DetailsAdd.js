@@ -34,6 +34,7 @@ const DetailsEdit = props => {
   const animal_id  = localStorage.getItem('animal_id');
   const animal_tag  = sessionStorage.getItem('animal_tag');
   const animal_name  = sessionStorage.getItem('animal_name');
+  const  dob = sessionStorage.getItem('animal_dob'); 
 
   useEffect(() => {   
     let mounted_lookup = true;
@@ -177,9 +178,9 @@ const DetailsEdit = props => {
                         shrink: true,
                       }}
                       inputProps={{                                                 
-                        max: moment(new Date()).format('YYYY-MM-DD')     
-                      }}
-                      defaultValue = {moment(new Date()).format('YYYY-MM-DD')}
+                        max: moment(new Date()).format('YYYY-MM-DD'),  
+                        min : dob   
+                      }}                     
                       required
                       margin = 'dense'
                       label="Weight Date"

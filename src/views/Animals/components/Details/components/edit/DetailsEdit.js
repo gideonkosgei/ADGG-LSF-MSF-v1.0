@@ -53,6 +53,7 @@ const DetailsEdit = props => {
 
   sessionStorage.setItem('animal_tag', values.tag_id);
   sessionStorage.setItem('animal_name', values.animal_name); 
+  sessionStorage.setItem('animal_dob', values.dob); 
 
 
   useEffect(() => {   

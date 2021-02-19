@@ -71,9 +71,9 @@ const TopCows = props => {
   if (!topCows) {
     return null;
   } 
-
   
   const columns = [
+    { name: "num",label: "#",options: {filter: false,sort: true,display:true}},   
     { name: "tag_id",label: "Tag ID",options: {filter: false,sort: true,display:true}},  
     { name: "name",label: "Name",options: {filter: false,sort: true,display:true}},  
     { name: "average_milk",label: "Average Milk(ltrs)",options: {filter: false,sort: true,display:true}},  
