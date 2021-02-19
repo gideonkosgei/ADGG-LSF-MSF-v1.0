@@ -1090,22 +1090,22 @@ export const putAgents =  function (config,values,user_id,record_id) {
 export const postExit =  function (config,animal_id,values,user_id) {  
 
   let {disposal_amount,disposal_reason,disposal_reason_other,exit_date,new_breeder_name,new_breeder_phone_no,new_country,new_district,new_farmer_name,new_farmer_phone_no,new_region,new_ward,new_village} = values;
+    
+    disposal_amount = (typeof disposal_amount === 'undefined' || disposal_amount === '')? null:disposal_amount;  
+    disposal_reason = (typeof disposal_reason === 'undefined' || disposal_reason === '')? null:disposal_reason; 
+    disposal_reason_other = (typeof disposal_reason_other === 'undefined' || disposal_reason_other === '')? null:disposal_reason_other;
+    new_breeder_name = (typeof new_breeder_name === 'undefined' || new_breeder_name === '')? null:new_breeder_name;
+    new_breeder_phone_no = (typeof new_breeder_phone_no === 'undefined' || new_breeder_phone_no === '')? null:new_breeder_phone_no;
+    new_farmer_name = (typeof new_farmer_name === 'undefined' || new_farmer_name === '')? null:new_farmer_name;
+    new_farmer_phone_no = (typeof new_farmer_phone_no === 'undefined' || new_farmer_phone_no === '')? null:new_farmer_phone_no;
+    new_country = (typeof new_country === 'undefined' || new_country === '')? null:new_country;
+    new_district = (typeof new_district === 'undefined' || new_district === '')? null:new_district;
+    new_region = (typeof new_region === 'undefined' || new_region === '')? null:new_region;
+    new_ward = (typeof new_ward === 'undefined' || new_ward === '')? null:new_ward;
+    new_village = (typeof new_village === 'undefined' || new_village === '')? null:new_village;
+    exit_date = (typeof exit_date === 'undefined' || exit_date === '')? moment(new Date()).format('YYYY-MM-DD'):exit_date; 
   
-  disposal_amount = (typeof disposal_amount === 'undefined')? '0':disposal_amount.replace('','0');  
-  disposal_reason = (typeof disposal_reason === 'undefined')? '0':disposal_reason.replace('','0'); 
-  disposal_reason_other = (typeof disposal_reason_other === 'undefined')? '':disposal_reason_other;
-  new_breeder_name = (typeof new_breeder_name === 'undefined')? '':new_breeder_name;
-  new_breeder_phone_no = (typeof new_breeder_phone_no === 'undefined')? '':new_breeder_phone_no;
-  new_farmer_name = (typeof new_farmer_name === 'undefined')? '':new_farmer_name;
-  new_farmer_phone_no = (typeof new_farmer_phone_no === 'undefined')? '':new_farmer_phone_no;
-  new_country = (typeof new_country === 'undefined')? '0':new_country.replace('','0');
-  new_district = (typeof new_district === 'undefined')? '0':new_district.replace('','0');
-  new_region = (typeof new_region === 'undefined')? '0':new_region.replace('','0');
-  new_ward = (typeof new_ward === 'undefined')? '0':new_ward.replace('','0');
-  new_village = (typeof new_village === 'undefined')? '0':new_village.replace('','0');
-  exit_date = (typeof exit_date === 'undefined')? moment(new Date()).format('YYYY-MM-DD'):exit_date;   
-
-  const body = {
+    const body = {
         "animal_id": animal_id,
         "exit_date": exit_date,
         "disposal_amount": disposal_amount,
@@ -1145,19 +1145,19 @@ export const postExit =  function (config,animal_id,values,user_id) {
 export const updateExit =  function (config,event_id,values,user_id) {  
   let {disposal_amount,disposal_reason,disposal_reason_other,exit_date,field_agent_id,new_breeder_name,new_breeder_phone_no,new_country,new_district,new_farmer_name,new_farmer_phone_no,new_region,new_village} = values;
   
-  disposal_amount = (typeof disposal_amount === 'undefined')? '0':disposal_amount.replace('','0');  
-  disposal_reason = (typeof disposal_reason === 'undefined')? '0':disposal_reason.replace('','0');
-  field_agent_id = (typeof field_agent_id === 'undefined')? '0':field_agent_id.replace('','0');
-  disposal_reason_other = (typeof disposal_reason_other === 'undefined')? '':disposal_reason_other;
-  new_breeder_name = (typeof new_breeder_name === 'undefined')? '':new_breeder_name;
-  new_breeder_phone_no = (typeof new_breeder_phone_no === 'undefined')? '':new_breeder_phone_no;
-  new_farmer_name = (typeof new_farmer_name === 'undefined')? '':new_farmer_name;
-  new_farmer_phone_no = (typeof new_farmer_phone_no === 'undefined')? '':new_farmer_phone_no;
-  new_country = (typeof new_country === 'undefined')? '0':new_country.replace('','0');
-  new_district = (typeof new_district === 'undefined')? '0':new_district.replace('','0');
-  new_region = (typeof new_region === 'undefined')? '0':new_region.replace('','0');
-  new_village = (typeof new_village === 'undefined')? '0':new_village.replace('','0');
-  exit_date = (typeof exit_date === 'undefined')? moment(new Date()).format('YYYY-MM-DD'):exit_date;   
+  disposal_amount = (typeof disposal_amount === 'undefined' || disposal_amount === '')? null:disposal_amount;  
+  disposal_reason = (typeof disposal_reason === 'undefined' || disposal_reason === '')? null:disposal_reason; 
+  disposal_reason_other = (typeof disposal_reason_other === 'undefined' || disposal_reason_other === '')? null:disposal_reason_other;
+  new_breeder_name = (typeof new_breeder_name === 'undefined' || new_breeder_name === '')? null:new_breeder_name;
+  new_breeder_phone_no = (typeof new_breeder_phone_no === 'undefined' || new_breeder_phone_no === '')? null:new_breeder_phone_no;
+  new_farmer_name = (typeof new_farmer_name === 'undefined' || new_farmer_name === '')? null:new_farmer_name;
+  new_farmer_phone_no = (typeof new_farmer_phone_no === 'undefined' || new_farmer_phone_no === '')? null:new_farmer_phone_no;
+  new_country = (typeof new_country === 'undefined' || new_country === '')? null:new_country;
+  new_district = (typeof new_district === 'undefined' || new_district === '')? null:new_district;
+  new_region = (typeof new_region === 'undefined' || new_region === '')? null:new_region;
+  //new_ward = (typeof new_ward === 'undefined' || new_ward === '')? null:new_ward;
+  new_village = (typeof new_village === 'undefined' || new_village === '')? null:new_village;
+  exit_date = (typeof exit_date === 'undefined' || exit_date === '')? moment(new Date()).format('YYYY-MM-DD'):exit_date; 
 
   const body = {      
         "exit_date": exit_date,
@@ -1496,7 +1496,7 @@ export const updateMilking =  function (config,event_id,values,user_id) {
   milking_notes = (typeof milking_notes === 'undefined' || milking_notes === '')? null:milking_notes; 
   testday_no = (typeof testday_no === 'undefined' || testday_no === '')? null:testday_no;
   lactation_id = (typeof lactation_id === 'undefined' || lactation_id === '')? null:lactation_id; 
-  milk_somatic_cell_count = (typeof milk_somatic_cell_count === '' || milk_somatic_cell_count === '')? null:milk_somatic_cell_count;  
+  milk_somatic_cell_count = (typeof milk_somatic_cell_count === 'undefined' || milk_somatic_cell_count === '')? null:milk_somatic_cell_count;  
   milk_sample_type = (typeof milk_sample_type === 'undefined' || milk_sample_type === '')? null:milk_sample_type;
   field_agent_id = (typeof field_agent_id === 'undefined' || field_agent_id === '')? null:field_agent_id;       
   milk_pm_litres = (typeof milk_pm_litres === 'undefined' || milk_pm_litres === '')? null:milk_pm_litres;  
