@@ -92,7 +92,7 @@ const DetailsEdit = props => {
 
             for (let i = 0; i< data.length; i++){
               //specifications
-              if(data[i].list_type_id === 201){                
+              if(data[i].list_type_id === 20001){                
                 lookup_specification.push(data[i]);
               } 
               //main breeds
@@ -110,9 +110,7 @@ const DetailsEdit = props => {
                         
           }
         });
-      })(endpoint_lookup,'201,8,14'); 
-
-      
+      })(endpoint_lookup,'20001,8,14');       
         
     return () => {
       mounted_lookup = false;   
