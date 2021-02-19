@@ -241,8 +241,7 @@ const DetailsEdit = props => {
                         readOnly: Boolean(readOnly),
                         disabled: Boolean(readOnly)                                       
                       }}
-                      defaultValue = {moment(new Date()).format('HH:MM')}
-                      required
+                      defaultValue = {moment(new Date()).format('HH:MM')}                    
                       margin = 'dense'
                       label="Sync Time"
                       type="time"

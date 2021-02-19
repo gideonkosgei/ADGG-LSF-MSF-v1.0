@@ -200,8 +200,7 @@ const DetailsEdit = props => {
                         shrink: true,
                       }}
                       
-                      defaultValue = {moment(new Date()).format('HH:MM')}
-                      required
+                      defaultValue = {moment(new Date()).format('HH:MM')}                    
                       margin = 'dense'
                       label="Sync Time"
                       type="time"
