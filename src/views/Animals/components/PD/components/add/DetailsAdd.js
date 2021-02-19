@@ -171,8 +171,7 @@ const DetailsEdit = props => {
                       }}
                       inputProps={{                        
                         max: moment(new Date()).format('YYYY-MM-DD')                 
-                      }}                     
-                      defaultValue = {moment(new Date()).format('YYYY-MM-DD')}
+                      }}
                       required
                       margin = 'dense'
                       label="Examination Date"
@@ -191,9 +190,7 @@ const DetailsEdit = props => {
                       fullWidth
                       InputLabelProps={{
                         shrink: true,
-                      }}
-                      defaultValue = {moment(new Date()).format('HH:MM')}
-                      required
+                      }} 
                       margin = 'dense'
                       label="Examination Time"
                       type="time"
@@ -215,8 +212,7 @@ const DetailsEdit = props => {
                       }}
                       inputProps={{                        
                         max: moment(new Date()).format('YYYY-MM-DD')                 
-                      }} 
-                      required
+                      }}                      
                       margin = 'dense'
                       label="Service Date"
                       type="date"

@@ -223,8 +223,7 @@ const DetailsEdit = props => {
                       inputProps={{
                         readOnly: Boolean(readOnly),
                         disabled: Boolean(readOnly)                
-                      }}
-                      required
+                      }}                     
                       margin = 'dense'
                       label="Examination Time"
                       type="time"
@@ -249,8 +248,7 @@ const DetailsEdit = props => {
                         readOnly: Boolean(readOnly),
                         disabled: Boolean(readOnly),
                         max: moment(new Date()).format('YYYY-MM-DD')              
-                      }}
-                      required
+                      }}                   
                       margin = 'dense'
                       label="Service Date"
                       type="date"
