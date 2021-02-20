@@ -48,6 +48,8 @@ const DetailsEdit = props => {
   
   const [limitParameters, setBodyLimitParameters] = useState([]); 
   const animal_id  = localStorage.getItem('animal_id');
+  const animal_tag  = sessionStorage.getItem('animal_tag');
+  const animal_name  = sessionStorage.getItem('animal_name');
   const option  =  0;
 
   useEffect(() => {   
@@ -239,9 +241,8 @@ const DetailsEdit = props => {
       {...rest}
       className={clsx(classes.root, className)}
       spacing={2}
-    >
-      
-        <CardHeader title="New Calving Details" />
+    >      
+        <CardHeader title= {`NEW CALVING RECORD - ${animal_name}(${animal_tag})`} />
         <Divider />
         <CardContent> 
           <Grid container spacing={1} justify="center">            
