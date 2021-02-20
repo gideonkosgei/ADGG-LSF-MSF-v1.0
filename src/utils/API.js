@@ -1244,64 +1244,140 @@ export const getCalvingByEventId =  function (config,id) {
 }
 
 // add new Calving event
-export const postCalving =  function (config,animal_id,values,user_id) {    
-  let { 
-     Calf_weight,calf_body_condition_score,calf_color,calf_deformities,
-     calf_heart_girth,calf_name,calf_tag_id,calving_birth_type,
-     calving_status,calving_type_other,calving_date,calving_method,
-     ease_of_calving,ease_of_calving_other,field_agent_id,lactation_number,
-     other_calf_deformities,use_of_calf,use_of_calf_other,calf_gender,types_calving
+export const postCalving =  function (config,animal_id,values,user_id,lactation_number) {    
+  let {
+      // calf 1
+      calving_status,
+      calving_type_other,
+      types_calving, 
+      Calf_weight,
+      calf_body_condition_score,      
+      calf_color,
+      calf_deformities,
+      calf_heart_girth,
+      calf_name,
+      calf_tag_id,
+      ease_of_calving,
+      ease_of_calving_other,
+      other_calf_deformities,
+      use_of_calf,
+      use_of_calf_other,
+      calf_gender,
+
+      //calf 2
+      calving_status2,
+      calving_type_other2,
+      types_calving2, 
+      Calf_weight2,
+      calf_body_condition_score2,      
+      calf_color2,
+      calf_deformities2,
+      calf_heart_girth2,
+      calf_name2,
+      calf_tag_id2,
+      ease_of_calving2,
+      ease_of_calving_other2,
+      other_calf_deformities2,
+      use_of_calf2,
+      use_of_calf_other2,
+      calf_gender2,
+       
+      //global
+      calving_birth_type,
+      calving_method, 
+      field_agent_id,
+      calving_date
     } = values;
+    
+
+    calving_status = (typeof calving_status === 'undefined' || calving_status === '')? null:calving_status;  
+    calving_type_other = (typeof calving_type_other === 'undefined' || calving_type_other === '')? null:calving_type_other;  
+    types_calving = (typeof types_calving === 'undefined' || types_calving === '')? null:types_calving;  
+    Calf_weight = (typeof Calf_weight === 'undefined' || Calf_weight === '')? null:Calf_weight;  
+    calf_body_condition_score = (typeof calf_body_condition_score === 'undefined' || calf_body_condition_score === '')? null:calf_body_condition_score;       
+    calf_color = (typeof calf_color === 'undefined' || calf_color === '')? null:calf_color;  
+    calf_deformities = (typeof calf_deformities === 'undefined' || calf_deformities === '')? null:calf_deformities;  
+    calf_heart_girth = (typeof calf_heart_girth === 'undefined' || calf_heart_girth === '')? null:calf_heart_girth;  
+    calf_name = (typeof calf_name === 'undefined' || calf_name === '')? null:calf_name;  
+    calf_tag_id = (typeof calf_tag_id === 'undefined' || calf_tag_id === '')? null:calf_tag_id;  
+    ease_of_calving = (typeof ease_of_calving === 'undefined' || ease_of_calving === '')? null:ease_of_calving;  
+    ease_of_calving_other = (typeof ease_of_calving_other === 'undefined' || ease_of_calving_other === '')? null:ease_of_calving_other;  
+    other_calf_deformities = (typeof other_calf_deformities === 'undefined' || other_calf_deformities === '')? null:other_calf_deformities;  
+    use_of_calf = (typeof use_of_calf === 'undefined' || use_of_calf === '')? null:use_of_calf;  
+    use_of_calf_other = (typeof use_of_calf_other === 'undefined' || use_of_calf_other === '')? null:use_of_calf_other;  
+    calf_gender = (typeof calf_gender === 'undefined' || calf_gender === '')? null:calf_gender;  
+
+    //calf 2
+    calving_status2 = (typeof calving_status2 === 'undefined' || calving_status2 === '')? null:calving_status2;  
+    calving_type_other2 = (typeof calving_type_other2 === 'undefined' || calving_type_other2 === '')? null:calving_type_other2;  
+    types_calving2 = (typeof types_calving2 === 'undefined' || types_calving2 === '')? null:types_calving2;  
+    Calf_weight2 = (typeof Calf_weight2 === 'undefined' || Calf_weight2 === '')? null:Calf_weight2;  
+    calf_body_condition_score2 = (typeof calf_body_condition_score2 === 'undefined' || calf_body_condition_score2 === '')? null:calf_body_condition_score2;       
+    calf_color2 = (typeof calf_color2 === 'undefined' || calf_color2 === '')? null:calf_color2;  
+    calf_deformities2 = (typeof calf_deformities2 === 'undefined' || calf_deformities2 === '')? null:calf_deformities2;  
+    calf_heart_girth2 = (typeof calf_heart_girth2 === 'undefined' || calf_heart_girth2 === '')? null:calf_heart_girth2;  
+    calf_name2 = (typeof calf_name2 === 'undefined' || calf_name2 === '')? null:calf_name2;  
+    calf_tag_id2 = (typeof calf_tag_id2 === 'undefined' || calf_tag_id2 === '')? null:calf_tag_id2;  
+    ease_of_calving2 = (typeof ease_of_calving2 === 'undefined' || ease_of_calving2 === '')? null:ease_of_calving2;  
+    ease_of_calving_other2 = (typeof ease_of_calving_other2 === 'undefined' || ease_of_calving_other2 === '')? null:ease_of_calving_other2;  
+    other_calf_deformities2 = (typeof other_calf_deformities2 === 'undefined' || other_calf_deformities2 === '')? null:other_calf_deformities2;  
+    use_of_calf2 = (typeof use_of_calf2 === 'undefined' || use_of_calf2 === '')? null:use_of_calf2;  
+    use_of_calf_other2 = (typeof use_of_calf_other2 === 'undefined' || use_of_calf_other2 === '')? null:use_of_calf_other2;  
+    calf_gender2 = (typeof calf_gender2 === 'undefined' || calf_gender2 === '')? null:calf_gender2;  
+      
+    //global
+    calving_birth_type = (typeof calving_birth_type === 'undefined' || calving_birth_type === '')? null:calving_birth_type;  
+    calving_method = (typeof calving_method === 'undefined' || calving_method === '')? null:calving_method;   
+    field_agent_id = (typeof field_agent_id === 'undefined' || field_agent_id === '')? null:field_agent_id;  
+    calving_date = (typeof calving_date === 'undefined' || calving_date === '')? moment(new Date()).format('YYYY-MM-DD'):calving_date;  
 
     
-    Calf_weight = (typeof Calf_weight === 'undefined')? '0':Calf_weight.replace('','0');  
-    use_of_calf_other = (typeof use_of_calf_other === 'undefined')? '0':use_of_calf_other;
-    field_agent_id = (typeof field_agent_id === 'undefined')? '0':field_agent_id.replace('','0');
-    use_of_calf = (typeof use_of_calf === 'undefined')? '':use_of_calf.replace('','0');
-    other_calf_deformities = (typeof other_calf_deformities === 'undefined')? '':other_calf_deformities;
-    lactation_number = (typeof lactation_number === 'undefined')? '':lactation_number;
-    ease_of_calving_other = (typeof ease_of_calving_other === 'undefined')? '':ease_of_calving_other;
-    ease_of_calving = (typeof ease_of_calving === 'undefined')? '':ease_of_calving.replace('','0');;
-    calving_type_other = (typeof calving_type_other === 'undefined')? '0':calving_type_other;
-    types_calving = (typeof types_calving === 'undefined')? '0':types_calving.replace('','0');
-    calving_status = (typeof calving_status === 'undefined')? '0':calving_status.replace('','0');
-    calving_method = (typeof calving_method === 'undefined')? '0':calving_method.replace('','0');
-    calving_date = (typeof calving_date === 'undefined')? moment(new Date()).format('YYYY-MM-DD'):calving_date; 
-    calving_birth_type = (typeof calving_birth_type === 'undefined')? '0':calving_birth_type.replace('','0');
-    calf_tag_id = (typeof calf_tag_id === 'undefined')? '0':calf_tag_id;
-    calf_gender = (typeof calf_gender === 'undefined')? '0':calf_gender.replace('','0');
-    calf_name = (typeof calf_name === 'undefined')? '0':calf_name;
-    calf_body_condition_score = (typeof calf_body_condition_score === 'undefined')? '0':calf_body_condition_score.replace('','0');
-    calf_color = (typeof calf_color === 'undefined')? '0':calf_color.replace('','0');
-    calf_deformities = (typeof calf_deformities === 'undefined')? '0':calf_deformities.replace('','0');
-    calf_heart_girth = (typeof calf_heart_girth === 'undefined')? '0':calf_heart_girth.replace('','0');
-  
+    const body = {
+      //global
+      "animal_id": animal_id,
+      "calving_date": calving_date,
+      "birth_type": calving_birth_type,
+      "calving_method": calving_method,
+      "lactation_number":lactation_number,
+      "field_agent_id": field_agent_id,
+      "created_by": user_id,
 
-  const body = {
-    "animal_id": animal_id,
-    "calving_date": calving_date,
-    "birth_type": calving_birth_type,
-    "body_condition_score" : calf_body_condition_score,
-    "calf_color": calf_color,
-    "calf_deformities": calf_deformities,
-    "other_calf_deformities": other_calf_deformities,
-    "heart_girth": calf_heart_girth,
-    "calf_name": calf_name,
-    "calf_sex":calf_gender,
-    "calf_weight": Calf_weight,
-    "ease_of_calving_other": ease_of_calving_other,
-    "calving_method": calving_method,
-    "calving_type_other":calving_type_other,
-    "calving_type":types_calving,
-    "ease_of_calving":ease_of_calving,
-    "calving_status":calving_status,
-    "use_of_calf":use_of_calf,
-    "use_of_calf_other":use_of_calf_other,
-    "calf_tag_id":calf_tag_id,
-    "lactation_number":lactation_number,
-    "field_agent_id": field_agent_id,
-    "created_by": user_id
-  };
+      //calf 1
+      "body_condition_score" : calf_body_condition_score,
+      "calf_color": calf_color,
+      "calf_deformities": calf_deformities,
+      "other_calf_deformities": other_calf_deformities,
+      "heart_girth": calf_heart_girth,
+      "calf_name": calf_name,
+      "calf_sex":calf_gender,
+      "calf_weight": Calf_weight,
+      "ease_of_calving_other": ease_of_calving_other,      
+      "calving_type_other":calving_type_other,
+      "calving_type":types_calving,
+      "ease_of_calving":ease_of_calving,
+      "calving_status":calving_status,
+      "use_of_calf":use_of_calf,
+      "use_of_calf_other":use_of_calf_other,
+      "calf_tag_id":calf_tag_id,
+
+      //calf 2
+      "body_condition_score2" : calf_body_condition_score2,
+      "calf_color2": calf_color2,
+      "calf_deformities2": calf_deformities2,
+      "other_calf_deformities2": other_calf_deformities2,
+      "heart_girth2": calf_heart_girth2,
+      "calf_name2": calf_name2,
+      "calf_sex2":calf_gender2,
+      "calf_weight2": Calf_weight2,
+      "ease_of_calving_other2": ease_of_calving_other2,      
+      "calving_type_other2":calving_type_other2,
+      "calving_type2":types_calving2,
+      "ease_of_calving2":ease_of_calving2,
+      "calving_status2":calving_status2,
+      "use_of_calf2":use_of_calf2,
+      "use_of_calf_other2":use_of_calf_other2,
+      "calf_tag_id2":calf_tag_id2,      
+    };
  
   const options = {
     url:`${config.url}`,
@@ -3013,6 +3089,23 @@ export const CreateOrEditHoofTreatmentRecord =  function (config,id,values,user_
 export const getHoofTreatment =  function (config,id,option) {   
   const options = {
     url:`${config.url}${id}/${option}`,
+    method: config.method,
+    headers: config.headers  
+  }  
+  return new Promise((resolve, reject) => {
+    axios(options)
+    .then(res => {          
+        resolve(res.data);
+    })
+    .catch(err => reject(err));
+  });       
+}
+
+
+// get lactation  number 
+export const getLactationNumber =  function (config,option,animal_id) {   
+  const options = {
+    url:`${config.url}${option}/${animal_id}`,
     method: config.method,
     headers: config.headers  
   }  

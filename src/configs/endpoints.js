@@ -872,6 +872,12 @@ export const endpoint_weight_growth_curve = {
   headers: headers   
 };
 
+export const endpoint_get_lactation_number= {
+  url: `${api}/parameters/lactation-number/`,
+  method: 'GET',
+  headers: headers   
+}
+
 
 
 
