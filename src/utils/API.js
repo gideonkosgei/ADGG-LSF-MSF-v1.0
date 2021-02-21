@@ -1,6 +1,68 @@
 import moment from 'moment';
 const axios = require('axios');
 
+/* 
+  GENERIC METHODS
+  --------------
+  Reduce Repetition -> that why we have generaric function
+                    -> makes the code lean
+                    -> Easy to Maintain
+  General Rules 
+    1) The 1st parameter is the config 
+    2) The 2nd parameter is a description of the function -> for debugging
+*/
+
+
+  /*  GENERIC 3 PARAMETERS  */
+export const genericFunctionThreeParameters =  function (param1,param2,param3) { 
+  console.log(param2);  
+  const options = {
+    url:`${param1.url}/${param3}`,
+    method: param1.method,
+    headers: param1.headers  
+  }   
+  return new Promise((resolve, reject) => {
+    axios(options)
+    .then(res => {             
+        resolve(res.data);
+    }).catch(err => reject(err));
+  });       
+}
+
+ /*  GENERIC 4 PARAMETERS  */
+ export const genericFunctionFourParameters =  function (param1,param2,param3,param4) {  
+  //console.log(param2); 
+  const options = {
+    url:`${param1.url}/${param3}/${param4}`,
+    method: param1.method,
+    headers: param1.headers  
+  }  
+  return new Promise((resolve, reject) => {
+    axios(options)
+    .then(res => {             
+        resolve(res.data);
+    }).catch(err => reject(err));
+  });       
+}
+
+/*  GENERIC 5 PARAMETERS  */
+export const genericFunctionFiveParameters =  function (param1,param2,param3,param4,param5) { 
+  console.log(param2);  
+  const options = {
+    url:`${param1.url}/${param3}/${param4}/${param5}`,
+    method: param1.method,
+    headers: param1.headers  
+  } 
+  return new Promise((resolve, reject) => {
+    axios(options)
+    .then(res => {             
+        resolve(res.data);
+    }).catch(err => reject(err));
+  });       
+}
+
+
+
 // user Authentication  
 export const authenticate =  function (config,username,password) {     
   const data = {
@@ -21,6 +83,8 @@ export const authenticate =  function (config,username,password) {
     }).catch(err => reject(err));
 });       
 }
+
+
 
 // user profile  
 export const getProfileDetails =  function (config,user_id) {   

@@ -242,7 +242,7 @@ export const endpoint_exit_update = {
 
 //get calving data for a specific animal
 export const endpoint_calving = {
-  url: `${api}/events/calving/animal/`,
+  url: `${api}/events/calving/animal`,
   method: 'GET',
   headers: headers   
 };

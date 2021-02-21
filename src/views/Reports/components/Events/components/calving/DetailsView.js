@@ -3,7 +3,7 @@ import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import {Card, CardContent, CardHeader, Grid,Divider,colors,Link} from '@material-ui/core';
-import {getCalving}   from '../../../../../../utils/API';
+import {genericFunctionFourParameters}   from '../../../../../../utils/API';
 import {endpoint_calving} from '../../../../../../configs/endpoints';
 import authContext from '../../../../../../contexts/AuthContext';
 import MUIDataTable from "mui-datatables";
@@ -30,14 +30,15 @@ const DetailsView = props => {
 
   useEffect(() => {     
     let mounted = true;
-      (async  (endpoint,id,option) => {     
-        await  getCalving(endpoint,id,option)
+      (async  (endpoint,desc,id,option) => {     
+        await  genericFunctionFourParameters(endpoint,desc,id,option)
         .then(response => {                        
           if (mounted) {            
             setValues(response.payload[0]);                 
           }
         });
-      })(endpoint_calving,organization_id,1); 
+      }) (endpoint_calving,'view -> All calving records details  for an org',organization_id,1); 
+     
       
     return () => {
       mounted = false;           
