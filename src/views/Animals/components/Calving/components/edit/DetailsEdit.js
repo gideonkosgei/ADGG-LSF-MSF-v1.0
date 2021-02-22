@@ -467,8 +467,8 @@ const DetailsEdit = props => {
                         shrink: true                      
                       }} 
                       inputProps={{
-                        readOnly: Boolean(readOnly),
-                        disabled: Boolean(readOnly)                
+                        readOnly:true,
+                        disabled: true               
                       }}                                      
                       margin = 'dense'
                       required = {true}
@@ -505,9 +505,9 @@ const DetailsEdit = props => {
                       shrink: true,
                     }}
                     inputProps={{
-                      readOnly: Boolean(readOnly),
-                      disabled: Boolean(readOnly)                
-                    }}
+                      readOnly:true,
+                      disabled: true               
+                    }} 
                     required = {parseInt(values.calving_status) ===1 ? true: false}
                     margin = 'dense'
                     label="Calving Type"
@@ -542,9 +542,9 @@ const DetailsEdit = props => {
                         shrink: true                      
                       }} 
                       inputProps={{
-                        readOnly: Boolean(readOnly),
-                        disabled: Boolean(readOnly)                
-                      }}
+                        readOnly:true,
+                        disabled: true               
+                      }} 
                       required = {parseInt(values.calving_status) ===1 ? true: false}                                      
                       margin = 'dense'
                       label="Ease Of Calving"
@@ -625,9 +625,9 @@ const DetailsEdit = props => {
                         shrink: true,
                       }}
                       inputProps={{
-                        readOnly: Boolean(readOnly),
-                        disabled: Boolean(readOnly)                
-                      }}
+                        readOnly:true,
+                        disabled: true               
+                      }} 
                       required = {parseInt(values.calving_status) ===1 ? true: false}
                       margin = 'dense'
                       label="Calf Tag ID"
@@ -651,9 +651,9 @@ const DetailsEdit = props => {
                       shrink: true,
                     }}
                     inputProps={{
-                      readOnly: Boolean(readOnly),
-                      disabled: Boolean(readOnly)                
-                    }}
+                      readOnly:true,
+                      disabled: true               
+                    }} 
                     required = {parseInt(values.calving_status) ===1 ? true: false}
                     margin = 'dense'
                     label="Calf Name"
@@ -682,9 +682,9 @@ const DetailsEdit = props => {
                         shrink: true                      
                       }} 
                       inputProps={{
-                        readOnly: Boolean(readOnly),
-                        disabled: Boolean(readOnly)                
-                      }}
+                        readOnly:true,
+                        disabled: true               
+                      }} 
                       required = {parseInt(values.calving_status) ===1 ? true: false}                                      
                       margin = 'dense'
                       label="Use Of Calf"
@@ -719,9 +719,9 @@ const DetailsEdit = props => {
                       shrink: true,
                     }}
                     inputProps={{
-                      readOnly: Boolean(readOnly),
-                      disabled: Boolean(readOnly)                
-                    }}
+                      readOnly:true,
+                      disabled: true               
+                    }} 
                     margin = 'dense'
                     label="Other Use of Calf"
                     name="use_of_calf_other" 
@@ -745,9 +745,9 @@ const DetailsEdit = props => {
                         shrink: true                      
                       }} 
                       inputProps={{
-                        readOnly: Boolean(readOnly),
-                        disabled: Boolean(readOnly)                
-                      }}   
+                        readOnly:true,
+                        disabled: true               
+                      }}    
                       required = {parseInt(values.calving_status) ===1 ? true: false}                                   
                       margin = 'dense'
                       label="Calf Body Condition"
@@ -782,9 +782,9 @@ const DetailsEdit = props => {
                         shrink: true,
                       }}
                       inputProps={{
-                        readOnly: Boolean(readOnly),
-                        disabled: Boolean(readOnly)                
-                      }}
+                        readOnly:true,
+                        disabled: true               
+                      }} 
                       margin = 'dense'
                       label="Calf Color"
                       name="calf_color"
@@ -819,9 +819,9 @@ const DetailsEdit = props => {
                         shrink: true                      
                       }} 
                       inputProps={{
-                        readOnly: Boolean(readOnly),
-                        disabled: Boolean(readOnly)                
-                      }}
+                        readOnly:true,
+                        disabled: true               
+                      }} 
                       required = {parseInt(values.calving_status) ===1 ? true: false}                                      
                       margin = 'dense'
                       label="Calf Deformities"
@@ -856,9 +856,9 @@ const DetailsEdit = props => {
                       shrink: true,
                     }}
                     inputProps={{
-                      readOnly: Boolean(readOnly),
-                      disabled: Boolean(readOnly)                
-                    }}
+                      readOnly:true,
+                      disabled: true               
+                    }} 
                     margin = 'dense'
                     label="Other Calf Deformaties"
                     name="other_calf_deformities"  
@@ -881,9 +881,9 @@ const DetailsEdit = props => {
                       shrink: true,
                     }}
                     inputProps={{
-                      readOnly: Boolean(readOnly),
-                      disabled: Boolean(readOnly)                
-                    }}
+                      readOnly:true,
+                      disabled: true               
+                    }} 
                     required = {parseInt(values.calving_status) ===1 ? true: false}
                     margin = 'dense'
                     label="Calf Sex"
@@ -921,9 +921,10 @@ const DetailsEdit = props => {
                       min: (calf_weight_limits_status)? calf_weight_limits_min_value : "any",
                       max: (calf_weight_limits_status)? calf_weight_limits_max_value : "any",
                       step: "any" ,
-                      readOnly: Boolean(readOnly),
-                      disabled: Boolean(readOnly)              
+                      readOnly:true,
+                      disabled: true              
                     }}
+                    
                     required = {parseInt(values.calving_status) ===1 ? true: false}
                     type = "number"
                     margin = 'dense'
@@ -949,9 +950,10 @@ const DetailsEdit = props => {
                       min: (calf_heart_girth_limits_status)? calf_heart_girth_limits_min_value : "any",
                       max: (calf_heart_girth_limits_status)? calf_heart_girth_limits_max_value : "any",
                       step: "any",
-                      readOnly: Boolean(readOnly),
-                      disabled: Boolean(readOnly)  
+                      readOnly:true,
+                      disabled: true 
                     }}
+                   
                     type = "number"
                     margin = 'dense'
                     label="Calf Heart Girth(cm)"
@@ -999,9 +1001,9 @@ const DetailsEdit = props => {
                               shrink: true                      
                             }} 
                             inputProps={{
-                              readOnly: Boolean(readOnly),
-                              disabled: Boolean(readOnly)                
-                            }}
+                              readOnly:true,
+                              disabled: true               
+                            }} 
                             required = {parseInt(values.calving_birth_type) ===1 ? false: true}                                      
                             margin = 'dense'                         
                             label="Calving Status"
@@ -1037,9 +1039,9 @@ const DetailsEdit = props => {
                             shrink: true,
                           }}
                           inputProps={{
-                            readOnly: Boolean(readOnly),
-                            disabled: Boolean(readOnly)                
-                          }}
+                            readOnly:true,
+                            disabled: true               
+                          }} 
                           required = {parseInt(values.calving_status2) ===1 ? true: false}
                           margin = 'dense'
                           label="Calving Type"
@@ -1074,9 +1076,9 @@ const DetailsEdit = props => {
                               shrink: true                      
                             }}  
                             inputProps={{
-                              readOnly: Boolean(readOnly),
-                              disabled: Boolean(readOnly)                
-                            }} 
+                              readOnly:true,
+                              disabled: true               
+                            }}  
                             required = {parseInt(values.calving_status2) ===1 ? true: false}                                    
                             margin = 'dense'
                             label="Ease Of Calving"
@@ -1150,9 +1152,9 @@ const DetailsEdit = props => {
                               shrink: true,
                             }}
                             inputProps={{
-                              readOnly: Boolean(readOnly),
-                              disabled: Boolean(readOnly)                
-                            }}
+                              readOnly:true,
+                              disabled: true               
+                            }} 
                             required = {parseInt(values.calving_status2) ===1 ? true: false}
                             margin = 'dense'
                             label="Calf Tag ID"
@@ -1173,9 +1175,9 @@ const DetailsEdit = props => {
                             shrink: true,
                           }}
                           inputProps={{
-                            readOnly: Boolean(readOnly),
-                            disabled: Boolean(readOnly)                
-                          }}
+                            readOnly:true,
+                            disabled: true               
+                          }} 
                           required = {parseInt(values.calving_status2) ===1 ? true: false}
                           margin = 'dense'
                           label="Calf Name"
@@ -1196,9 +1198,9 @@ const DetailsEdit = props => {
                               shrink: true                      
                             }}  
                             inputProps={{
-                              readOnly: Boolean(readOnly),
-                              disabled: Boolean(readOnly)                
-                            }} 
+                              readOnly:true,
+                              disabled: true               
+                            }}  
                             required = {parseInt(values.calving_status2) ===1 ? true: false}                                    
                             margin = 'dense'
                             label="Use Of Calf"
@@ -1233,9 +1235,9 @@ const DetailsEdit = props => {
                             shrink: true,
                           }}
                           inputProps={{
-                            readOnly: Boolean(readOnly),
-                            disabled: Boolean(readOnly)                
-                          }}
+                            readOnly:true,
+                            disabled: true               
+                          }} 
                           margin = 'dense'
                           label="Other Use of Calf"
                           name="use_of_calf_other2"  
@@ -1257,9 +1259,9 @@ const DetailsEdit = props => {
                               shrink: true                      
                             }} 
                             inputProps={{
-                              readOnly: Boolean(readOnly),
-                              disabled: Boolean(readOnly)                
-                            }}
+                              readOnly:true,
+                              disabled: true               
+                            }} 
                             required = {parseInt(values.calving_status2) ===1 ? true: false}                                      
                             margin = 'dense'
                             label="Calf Body Condition"
@@ -1294,9 +1296,9 @@ const DetailsEdit = props => {
                               shrink: true,
                             }}
                             inputProps={{
-                              readOnly: Boolean(readOnly),
-                              disabled: Boolean(readOnly)                
-                            }}
+                              readOnly:true,
+                              disabled: true               
+                            }} 
                             margin = 'dense'
                             label="Calf Color"
                             name="calf_color2"
@@ -1330,9 +1332,9 @@ const DetailsEdit = props => {
                               shrink: true                      
                             }}  
                             inputProps={{
-                              readOnly: Boolean(readOnly),
-                              disabled: Boolean(readOnly)                
-                            }} 
+                              readOnly:true,
+                              disabled: true               
+                            }}  
                             required = {parseInt(values.calving_status2) ===1 ? true: false}                                    
                             margin = 'dense'
                             label="Calf Deformities"
@@ -1367,9 +1369,9 @@ const DetailsEdit = props => {
                             shrink: true,
                           }}
                           inputProps={{
-                            readOnly: Boolean(readOnly),
-                            disabled: Boolean(readOnly)                
-                          }}
+                            readOnly:true,
+                            disabled: true               
+                          }} 
                           margin = 'dense'
                           label="Other Calf Deformaties"
                           name="other_calf_deformities2"   
@@ -1392,9 +1394,9 @@ const DetailsEdit = props => {
                             shrink: true,
                           }}
                           inputProps={{
-                            readOnly: Boolean(readOnly),
-                            disabled: Boolean(readOnly)                
-                          }}
+                            readOnly:true,
+                            disabled: true               
+                          }} 
                           required = {parseInt(values.calving_status2) ===1 ? true: false}
                           margin = 'dense'
                           label="Calf Sex"
@@ -1434,9 +1436,11 @@ const DetailsEdit = props => {
                             min: (calf_weight_limits_status)? calf_weight_limits_min_value : "any",
                             max: (calf_weight_limits_status)? calf_weight_limits_max_value : "any",
                             step: "any",
-                            readOnly: Boolean(readOnly),
-                            disabled: Boolean(readOnly)              
+                            readOnly:true,
+                            disabled: true              
                           }}
+
+                          
                         
                           required = {parseInt(values.calving_status2) ===1 ? true: false}
                           type = "number"
@@ -1464,9 +1468,10 @@ const DetailsEdit = props => {
                             min: (calf_heart_girth_limits_status)? calf_heart_girth_limits_min_value : "any",
                             max: (calf_heart_girth_limits_status)? calf_heart_girth_limits_max_value : "any",
                             step: "any",
-                            readOnly: Boolean(readOnly),
-                            disabled: Boolean(readOnly) 
+                            readOnly:true,
+                            disabled: true
                           }}
+                         
                           type = "number"
                           margin = 'dense'
                           label="Calf Heart Girth(cm)"
