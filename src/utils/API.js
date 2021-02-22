@@ -15,7 +15,7 @@ const axios = require('axios');
 
   /*  GENERIC 3 PARAMETERS  */
 export const genericFunctionThreeParameters =  function (param1,param2,param3) { 
-  console.log(param2);  
+ // console.log(param2);  
   const options = {
     url:`${param1.url}/${param3}`,
     method: param1.method,
@@ -47,7 +47,7 @@ export const genericFunctionThreeParameters =  function (param1,param2,param3) {
 
 /*  GENERIC 5 PARAMETERS  */
 export const genericFunctionFiveParameters =  function (param1,param2,param3,param4,param5) { 
-  console.log(param2);  
+  //console.log(param2);  
   const options = {
     url:`${param1.url}/${param3}/${param4}/${param5}`,
     method: param1.method,
@@ -1637,7 +1637,8 @@ export const getMilkingParameters =  function (config,id,milk_date) {
     url:`${config.url}${id}/${milk_date}`,
     method: config.method,
     headers: config.headers  
-  }     
+  }    
+
   return new Promise((resolve, reject) => {
     axios(options)
     .then(res => {          

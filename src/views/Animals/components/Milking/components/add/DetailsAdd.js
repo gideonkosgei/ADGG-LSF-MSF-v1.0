@@ -251,8 +251,6 @@ const DetailsEdit = props => {
     setQualityFieldsView(!quality_fields_view);   
   };
 
- 
-
   return (
     <Card
       {...rest}
@@ -274,6 +272,31 @@ const DetailsEdit = props => {
                 container
                 spacing={3}
               >  
+              <Grid
+                      item
+                      md={3}
+                      xs={12}
+                  >
+                    <TextField
+                      fullWidth
+                      InputLabelProps={{
+                        shrink: true,
+                      }}
+                      inputProps={{                                                
+                        readOnly: true,
+                        disabled: true  
+                      }}                                        
+                      margin = 'dense'
+                      label = "Calving Date"
+                      type = "date"
+                      name = "calving_date"                      
+                      onChange = {handleChange}
+                      variant = "outlined"
+                      value = {milkingParameters.calving_date}
+                    />
+                  </Grid>                
+                  
+             
                   <Grid
                       item
                       md={3}
@@ -285,7 +308,8 @@ const DetailsEdit = props => {
                         shrink: true,
                       }}
                       inputProps={{                                                
-                        max: moment(new Date()).format('YYYY-MM-DD')     
+                        max: moment(new Date()).format('YYYY-MM-DD'),  
+                        min: moment(milkingParameters.calving_date).format('YYYY-MM-DD')  
                       }}
                       required                      
                       margin = 'dense'

@@ -37,14 +37,17 @@ const Post = props => {
   
   const uuid= localStorage.getItem('batch_upload_uuid');
   localStorage.removeItem('batch_upload_uuid');
+ 
 
   let values = [];
+
 
   for (let i = 0; i<UploadedRecords.length;i++){
     if (UploadedRecords[i].record_status_id === 2){
       values.push(UploadedRecords[i]);
     }
   }
+
   
   useEffect(() => {  
   }, []);

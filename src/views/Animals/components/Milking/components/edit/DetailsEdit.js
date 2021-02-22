@@ -108,8 +108,8 @@ const DetailsEdit = props => {
     return null;
   }
 
-  console.log(values);
-   // validate milk amount
+ 
+  // validate milk amount
    let milk_amount_limits = limitParameters.filter(obj=>obj.category==='milk_amount_limits');
    let milk_amount_limits_status = false;
    let milk_amount_limits_min_value = 0;
@@ -254,6 +254,7 @@ const DetailsEdit = props => {
                 container
                 spacing={4}
               >  
+              
                   <Grid
                       item
                       md={3}
@@ -279,8 +280,7 @@ const DetailsEdit = props => {
                       variant = "outlined"
                       value = {values.milk_date}
                     />
-                  </Grid>                  
-                  
+                  </Grid> 
              
               <Grid
                     item
