@@ -1062,6 +1062,21 @@ export const postServiceProvider =  function (config,values,user_id,org_id) {
       service_provider_type,
       services_offered
     } = values;
+
+    phone_number = (typeof phone_number === 'undefined' || phone_number === '')? null: phone_number;
+    acronym = (typeof acronym === 'undefined' || acronym === '')? null: acronym;
+    city = (typeof city === 'undefined' || city === '')? null: city;
+    contact_person = (typeof contact_person === 'undefined' || contact_person === '')? null: contact_person;
+    contact_person_mobile_number = (typeof contact_person_mobile_number === 'undefined' || contact_person_mobile_number === '')? null: contact_person_mobile_number;
+    country = (typeof country === 'undefined' || country === '')? null: country;
+    description = (typeof description === 'undefined' || description === '')? null: description;
+    email = (typeof email === 'undefined' || email === '')? null: email;
+    name = (typeof name === 'undefined' || name === '')? null: name;
+    postal_address = (typeof postal_address === 'undefined' || postal_address === '')? null: postal_address;
+    postal_code = (typeof postal_code === 'undefined' || postal_code === '')? null: postal_code;
+    service_provider_type = (typeof service_provider_type === 'undefined' || service_provider_type === '')? null: service_provider_type;
+    services_offered = (typeof services_offered === 'undefined' || services_offered === '')? null: services_offered;
+
  
   const body = {
     "name": name,
@@ -1159,8 +1174,38 @@ export const postAgent =  function (config,values,user_id,org_id) {
 }
 
 export const putServiceProvider =  function (config,values,user_id,org_id,record_id) { 
-  let {phone,acronym,city,contact_person,contact_person_mobile_number,country_id,description,email,name,postal_address,postal_code,service_provider_type_id,services_offered} = values;
+  let { 
+      phone,
+      acronym,
+      city,
+      contact_person,
+      contact_person_mobile_number,
+      country_id,
+      description,
+      email,
+      name,
+      postal_address,
+      postal_code,
+      service_provider_type_id,
+      services_offered
+    } = values;
  
+
+
+    phone = (typeof phone === 'undefined' || phone === '')? null: phone;
+    acronym = (typeof acronym === 'undefined' || acronym === '')? null: acronym;
+    city = (typeof city === 'undefined' || city === '')? null: city;
+    contact_person = (typeof contact_person === 'undefined' || contact_person === '')? null: contact_person;
+    contact_person_mobile_number = (typeof contact_person_mobile_number === 'undefined' || contact_person_mobile_number === '')? null: contact_person_mobile_number;
+    country_id = (typeof country_id === 'undefined' || country_id === '')? null: country_id;
+    description = (typeof description === 'undefined' || description === '')? null: description;
+    email = (typeof email === 'undefined' || email === '')? null: email;
+    name = (typeof name === 'undefined' || name === '')? null: name;
+    postal_address = (typeof postal_address === 'undefined' || postal_address === '')? null: postal_address;
+    postal_code = (typeof postal_code === 'undefined' || postal_code === '')? null: postal_code;
+    service_provider_type_id = (typeof service_provider_type_id === 'undefined' || service_provider_type_id === '')? null: service_provider_type_id;
+    services_offered = (typeof services_offered === 'undefined' || services_offered === '')? null: services_offered;
+
   const body = {
     "name": name,
     "acronym": acronym,
@@ -2224,11 +2269,12 @@ export const getParametersLimitOne =   function (config,id) {
 export const postLimitingParameter =  function (config,values,user_id) {      
  
   let {category ,description,is_active,max_value,min_value} = values;
-  category = (typeof category === 'undefined')? '': category;
-  description =  (typeof description === 'undefined')?'':description;
-  is_active =  (typeof is_active === 'undefined')? 0:is_active; 
-  max_value =  (typeof max_value === 'undefined')? null:parseFloat(max_value); 
-  min_value =  (typeof min_value === 'undefined')? null:parseFloat(min_value); 
+  category = (typeof category === 'undefined' || category ==='')? null: category;
+  description =  (typeof description === 'undefined' || description ==='')?null:description;
+  is_active =  (typeof is_active === 'undefined' || is_active ==='')? null:is_active; 
+  max_value =  (typeof max_value === 'undefined' || max_value ==='')? null:parseFloat(max_value); 
+  min_value =  (typeof min_value === 'undefined' || min_value ==='')? null:parseFloat(min_value); 
+
  
   const body = { 
     "category": category,      
@@ -2260,11 +2306,12 @@ return new Promise((resolve, reject) => {
 export const updateLimitingParameter =  function (config,values,user_id,limit_id) {      
  
   let {category ,description,is_active,max_value,min_value} = values;
-  category = (typeof category === 'undefined')? '': category;
-  description =  (typeof description === 'undefined')?'':description;
-  is_active =  (typeof is_active === 'undefined')? 0:is_active; 
-  max_value =  (typeof max_value === 'undefined')? null:parseFloat(max_value); 
-  min_value =  (typeof min_value === 'undefined')? null:parseFloat(min_value); 
+
+  category = (typeof category === 'undefined' || category ==='')? null: category;
+  description =  (typeof description === 'undefined' || description ==='')?null:description;
+  is_active =  (typeof is_active === 'undefined' || is_active ==='')? null:is_active; 
+  max_value =  (typeof max_value === 'undefined' || max_value ==='')? null:parseFloat(max_value); 
+  min_value =  (typeof min_value === 'undefined' || min_value ==='')? null:parseFloat(min_value); 
  
   const body = { 
     "category": category,      
@@ -2330,11 +2377,11 @@ export const getParametersLocalSettingsOrgOne = function (config,param_id) {
 export const postParametersLocalSettings =  function (config,values,user_id,org_id) {      
  
   let {name ,description,is_active,key,value} = values;
-  name = (typeof name === 'undefined')? '': name;
-  description =  (typeof description === 'undefined')?'':description;
-  is_active =  (typeof is_active === 'undefined')? 0:is_active; 
-  key =  (typeof key === 'undefined')? '':key;  
-  value =  (typeof value === 'undefined')? '':value; 
+  name = (typeof name === 'undefined' || name === '')? null: name;
+  description =  (typeof description === 'undefined' || description === '')?null:description;
+  is_active =  (typeof is_active === 'undefined' || is_active === '')? null:is_active; 
+  key =  (typeof key === 'undefined' || key === '')? null:key;  
+  value =  (typeof value === 'undefined' || value === '')? null:value; 
  
   const body = { 
     "name": name,      
@@ -2367,11 +2414,12 @@ return new Promise((resolve, reject) => {
 //update organization/farm specific local settings
 export const updateParametersLocalSettings =  function (config,values,user_id,param_id) {     
  
-  let {description,is_active,key,value} = values;  
-  description =  (typeof description === 'undefined')?'':description;
-  is_active =  (typeof is_active === 'undefined')? 0:is_active; 
-  key =  (typeof key === 'undefined')? '':key; 
-  value =  (typeof value === 'undefined')? '':value; 
+  let {description,is_active,key,value} = values;
+
+  description =  (typeof description === 'undefined' || description === '')?null:description;
+  is_active =  (typeof is_active === 'undefined' || is_active === '')? null:is_active; 
+  key =  (typeof key === 'undefined' || key === '')? null:key;  
+  value =  (typeof value === 'undefined' || value === '')? null:value; 
  
   const body = {          
     "description": description, 
