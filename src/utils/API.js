@@ -883,26 +883,57 @@ export const getStraws =  function (config,id,option,is_active) {
   });       
 }
 
+
+//get ai straws
+export const getStrawsAll =  function (config,id,option,is_active) {   
+  const options = {
+    url:`${config.url}${id}/${option}/${is_active}`,
+    method: config.method,
+    headers: config.headers  
+  }  
+  return new Promise((resolve, reject) => {
+    axios(options)
+    .then(res => {          
+        resolve(res.data);
+    })
+    .catch(err => reject(err));
+  });       
+}
+
 //post ai straw
 export const postStraw =  function (config,values,user_id,org_id) { 
-  let {straw_id, barcode, bull_tag_id, bull_name ,breed, breed_composition, semen_source,origin_country, farm_name,batch_number ,ejaculation_number ,production_date, specification ,additional_info  } = values;
+  let {
+        straw_id, 
+        barcode, 
+        bull_tag_id, 
+        bull_name ,
+        breed, 
+        breed_composition, 
+        semen_source,
+        origin_country, 
+        farm_name,batch_number ,
+        ejaculation_number ,
+        production_date, 
+        specification ,
+        additional_info  
+      } = values;
  
  
 
-  straw_id = (typeof straw_id === 'undefined')? null:straw_id
-  barcode = (typeof barcode === 'undefined')? null:barcode;
-  bull_tag_id = (typeof bull_tag_id === 'undefined')? null:bull_tag_id;
-  bull_name = (typeof bull_name === 'undefined')? null:bull_name;
-  breed = (typeof breed === 'undefined')? null:breed;
-  breed_composition = (typeof breed_composition === 'undefined')? null:isNaN(parseInt(breed_composition))?null:parseInt(breed_composition) ;
-  semen_source = (typeof semen_source === 'undefined')? null:isNaN(parseInt(semen_source))?null:parseInt(semen_source);
-  origin_country = (typeof origin_country === 'undefined')? null:isNaN(parseInt(origin_country))?null:parseInt(origin_country);   
-  farm_name = (typeof farm_name === 'undefined')? null:farm_name;
-  batch_number = (typeof batch_number === 'undefined')? null:batch_number;
-  ejaculation_number = (typeof ejaculation_number === 'undefined')? null:ejaculation_number;
-  production_date = (typeof production_date === 'undefined')? null:production_date;
-  specification  = (typeof specification === 'undefined')? null:specification;
-  additional_info = (typeof additional_info === 'undefined')? null:additional_info;
+  straw_id = (typeof straw_id === 'undefined' || straw_id === 'undeined')? null:straw_id
+  barcode = (typeof barcode === 'undefined' || barcode === 'undeined')? null:barcode;
+  bull_tag_id = (typeof bull_tag_id === 'undefined' || bull_tag_id === 'undeined')? null:bull_tag_id;
+  bull_name = (typeof bull_name === 'undefined' || bull_name === 'undeined')? null:bull_name;
+  breed = (typeof breed === 'undefined' || breed === 'undeined')? null:breed;
+  breed_composition = (typeof breed_composition === 'undefined' || breed_composition === 'undeined')? null:isNaN(parseInt(breed_composition))?null:parseInt(breed_composition) ;
+  semen_source = (typeof semen_source === 'undefined' || semen_source === 'undeined')? null:isNaN(parseInt(semen_source))?null:parseInt(semen_source);
+  origin_country = (typeof origin_country === 'undefined' || origin_country === 'undeined')? null:isNaN(parseInt(origin_country))?null:parseInt(origin_country);   
+  farm_name = (typeof farm_name === 'undefined' || farm_name === 'undeined')? null:farm_name;
+  batch_number = (typeof batch_number === 'undefined' || batch_number === 'undeined')? null:batch_number;
+  ejaculation_number = (typeof ejaculation_number === 'undefined' || ejaculation_number === 'undeined')? null:ejaculation_number;
+  production_date = (typeof production_date === 'undefined' || production_date === 'undeined')? null:production_date;
+  specification  = (typeof specification === 'undefined' || specification === 'undeined')? null:specification;
+  additional_info = (typeof additional_info === 'undefined' || additional_info === 'undeined')? null:additional_info;
   
   const body = {
     "straw_id": straw_id,
@@ -941,11 +972,26 @@ export const postStraw =  function (config,values,user_id,org_id) {
 
 //update AI Straw
 export const putStraw =  function (config,values,user_id,id) { 
-  let {straw_id, barcode, bull_tag_id, bull_name ,breed_id, breed_composition_id, semen_source,origin_country, farm_name,batch_number ,ejaculation_number ,production_date, specification_id ,additional_info,is_active  } = values;
+  let { 
+      straw_id, 
+      barcode, 
+      bull_tag_id, 
+      bull_name ,
+      breed_id, 
+      breed_composition_id,
+      semen_source,
+      origin_country, 
+      farm_name,batch_number ,
+      ejaculation_number ,
+      production_date, 
+      specification_id ,
+      additional_info,
+      is_active  
+    } = values;
   
-  breed_composition_id = (typeof breed_composition_id === 'undefined')? null:isNaN(parseInt(breed_composition_id))?null:parseInt(breed_composition_id) ;
-  semen_source = (typeof semen_source === 'undefined')? null:isNaN(parseInt(semen_source))?null:parseInt(semen_source);
-  origin_country = (typeof origin_country === 'undefined')? null:isNaN(parseInt(origin_country))?null:parseInt(origin_country);   
+  breed_composition_id = (typeof breed_composition_id === 'undefined' || breed_composition_id === '')? null:isNaN(parseInt(breed_composition_id))?null:parseInt(breed_composition_id) ;
+  semen_source = (typeof semen_source === 'undefined' || semen_source === '')? null:isNaN(parseInt(semen_source))?null:parseInt(semen_source);
+  origin_country = (typeof origin_country === 'undefined' || origin_country === '')? null:isNaN(parseInt(origin_country))?null:parseInt(origin_country);   
   
 
   const body = {
@@ -1001,7 +1047,21 @@ export const getAgents =  function (config,id,option) {
 
 
 export const postServiceProvider =  function (config,values,user_id,org_id) { 
-  let {phone_number,acronym,city,contact_person,contact_person_mobile_number,country,description,email,name,postal_address,postal_code,service_provider_type,services_offered} = values;
+  let {
+      phone_number,
+      acronym,
+      city,
+      contact_person,
+      contact_person_mobile_number,
+      country,
+      description,
+      email,
+      name,
+      postal_address,
+      postal_code,
+      service_provider_type,
+      services_offered
+    } = values;
  
   const body = {
     "name": name,
@@ -1038,7 +1098,32 @@ export const postServiceProvider =  function (config,values,user_id,org_id) {
 }
 
 export const postAgent =  function (config,values,user_id,org_id) { 
-  let {phone_number,occupation,city,physical_address,affiliation,country,speciality,email,name,postal_address,postal_code} = values;
+  let { 
+      phone_number,
+      occupation,
+      city,
+      physical_address,
+      affiliation,
+      country,
+      speciality,
+      email,
+      name,
+      postal_address,
+      postal_code
+    } = values;
+
+
+    phone_number = (typeof phone_number === 'undefined' || phone_number === '')? null:phone_number;  
+    occupation = (typeof occupation === 'undefined' || occupation === '')? null:occupation;  
+    city = (typeof city === 'undefined' || city === '')? null:city;  
+    physical_address = (typeof physical_address === 'undefined' || physical_address === '')? null:physical_address;  
+    affiliation = (typeof affiliation === 'undefined' || affiliation === '')? null:affiliation;  
+    country = (typeof country === 'undefined' || country === '')? null:country;  
+    speciality = (typeof speciality === 'undefined' || speciality === '')? null:speciality;  
+    email = (typeof email === 'undefined' || email === '')? null:email;  
+    name = (typeof name === 'undefined' || name === '')? null:name;  
+    postal_address = (typeof postal_address === 'undefined' || postal_address === '')? null:postal_address;  
+    postal_code = (typeof postal_code === 'undefined' || postal_code === '')? null:postal_code;  
   
   const body = {
     "name": name,
@@ -1112,8 +1197,33 @@ export const putServiceProvider =  function (config,values,user_id,org_id,record
 }
 
 export const putAgents =  function (config,values,user_id,record_id) { 
-  let {phone,occupation,city,physical_address,affiliation_id,country_id,speciality,email,name,postal_address,postal_code} = values;
+  let {
+      phone,
+      occupation,
+      city,
+      physical_address,
+      affiliation_id,
+      country_id,
+      speciality,
+      email,
+      name,
+      postal_address,
+      postal_code
+    } = values;
+
+    phone  = (typeof phone === 'undefined' || phone === '')? null:phone;
+    occupation  = (typeof occupation === 'undefined' || occupation === '')? null:occupation;
+    city  = (typeof city === 'undefined' || city === '')? null:city;
+    physical_address  = (typeof physical_address === 'undefined' || physical_address === '')? null:physical_address;
+    affiliation_id = (typeof affiliation_id === 'undefined' || affiliation_id === '')? null:affiliation_id;
+    country_id  = (typeof country_id === 'undefined' || country_id === '')? null:country_id;
+    speciality  = (typeof speciality === 'undefined' || speciality === '')? null:speciality;
+    email  = (typeof email === 'undefined' || email === '')? null:email;
+    name  = (typeof name === 'undefined' || name === '')? null:name;
+    postal_address  = (typeof postal_address === 'undefined' || postal_address === '')? null:postal_address;
+    postal_code  = (typeof postal_code === 'undefined' || postal_code === '')? null:postal_code;
   
+
   const body = {
     "name": name,
     "occupation": occupation,    
