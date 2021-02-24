@@ -3,12 +3,13 @@ import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import {Card, CardContent, CardHeader, Grid,Divider, TextField,colors,Button,CardActions } from '@material-ui/core';
-import {getLookups,postInsemination,getAgents,getStraws,getCountries,getServiceProviders}   from '../../../../../../utils/API';
-import {endpoint_lookup,endpoint_insemination_add,endpoint_agent,endpoint_straw,endpoint_countries,endpoint_service_provider} from '../../../../../../configs/endpoints';
+import {getLookups,postInsemination,getAgents,getStraws,getCountries,getServiceProviders,genericFunctionFourParameters}   from '../../../../../../utils/API';
+import {endpoint_lookup,endpoint_insemination_add,endpoint_agent,endpoint_straw,endpoint_countries,endpoint_service_provider,endpoint_dp_validations} from '../../../../../../configs/endpoints';
 import authContext from '../../../../../../contexts/AuthContext';
 import {Sidebar} from '../index';
 import SuccessSnackbar from '../../../../../../components/SuccessSnackbar';
 import ErrorSnackbar from '../../../../../../components/ErrorSnackbar';
+import {EventValidation}  from '../../../ValidationMessages';
 import moment from 'moment';
 
 const useStyles = makeStyles(theme => ({
@@ -50,6 +51,7 @@ const DetailsEdit = props => {
   const [strawBullBreed, setStrawBullBreed] =  useState(null);
   const [strawBullBreedComposition, setStrawBullBreedComposition] =  useState(null);
   const [strawBullOriginCountry, setStrawBullOriginCountry] =  useState(null);
+  const [validations, setValidations] = useState([]); 
 
   const option_straw  =  0;
   const sp_option  =  0;
@@ -61,6 +63,21 @@ const DetailsEdit = props => {
     let mounted_straw = true;
     let mounted_countries = true;
     let mounted_sp = true;
+    let mounted_validations = true;  
+
+    /**
+   * Check event insemination validations
+   * Animal should be cow or heifer    
+   */
+  (async  (endpoint,desc,option,id) => {      
+    await  genericFunctionFourParameters(endpoint,desc,option,id)
+    .then(response => {       
+      if (mounted_validations) {
+        setValidations(response.payload);  
+      }
+    });
+  })(endpoint_dp_validations,'event-milking-validation',2,animal_id);
+ 
 
     (async  (endpoint,org_id,option) => {     
       await  getServiceProviders(endpoint,org_id,option)
@@ -152,12 +169,13 @@ const DetailsEdit = props => {
       mounted_agents = false;   
       mounted_straw = false; 
       mounted_countries = false; 
-      mounted_sp = false;         
+      mounted_sp = false; 
+      mounted_validations = false;           
     };
-  }, [organization_id]);   
+  }, [organization_id,animal_id]);   
 
 
-  if (!breed_compositions || !body_scores || !semen_sources ||!bull_breeds || !semen_types || !ai_types || !agents || !straws || !countries ) {
+  if (!breed_compositions || !body_scores || !semen_sources ||!bull_breeds || !semen_types || !ai_types || !agents || !straws || !countries || !validations) {
     return null;
   }
 
@@ -183,7 +201,6 @@ const DetailsEdit = props => {
      }
    }
   };
-
   
 
   const handleSubmit = event => {
@@ -208,12 +225,16 @@ const DetailsEdit = props => {
   const handleSnackbarErrorClose = () => {
     setopenSnackbarError(false);
   };
+  
 
   return (
     <Card
       {...rest}
       className={clsx(classes.root, className)}
     >
+       {
+            (parseInt(validations.length) === 0) ?
+          <> 
       
        <CardHeader  title= {`NEW INSEMINATION RECORD - ${animal_name}(${animal_tag})`} /> 
         <Divider />
@@ -654,7 +675,9 @@ const DetailsEdit = props => {
           </Grid>
           </Grid>
         </CardContent>               
-        
+        </>
+          : <EventValidation validations = {validations}/>
+          }  
     </Card>
   );
 };
