@@ -3,12 +3,13 @@ import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import {Card, CardContent, CardHeader, Grid,Divider, TextField,colors,Button,CardActions } from '@material-ui/core';
-import {getLookups,postPd,getAgents}   from '../../../../../../utils/API';
-import {endpoint_lookup,endpoint_pd_add,endpoint_agent} from '../../../../../../configs/endpoints';
+import {getLookups,postPd,getAgents,genericFunctionFourParameters}   from '../../../../../../utils/API';
+import {endpoint_lookup,endpoint_pd_add,endpoint_agent,endpoint_dp_validations} from '../../../../../../configs/endpoints';
 import authContext from '../../../../../../contexts/AuthContext';
 import {Sidebar} from '../index';
 import SuccessSnackbar from '../../../../../../components/SuccessSnackbar';
 import ErrorSnackbar from '../../../../../../components/ErrorSnackbar';
+import {EventValidation}  from '../../../ValidationMessages';
 import moment from 'moment';
 
 
@@ -35,6 +36,7 @@ const DetailsEdit = props => {
   const [pd_stages, setPdStages] = useState([]);
   const [pd_results, setPdResults] = useState([]);
   const [agents, setAgents] = useState([]);
+  const [validations, setValidations] = useState([]); 
   const option  =  0;
   
   const animal_id  = localStorage.getItem('animal_id');
@@ -44,6 +46,20 @@ const DetailsEdit = props => {
   useEffect(() => {   
     let mounted_lookup = true;
     let mounted_agents = true;
+    let mounted_validations = true; 
+
+        /**
+   * Check event pd validations
+   * Animal should be cow or heifer    
+   */
+  (async  (endpoint,desc,option,id) => {      
+    await  genericFunctionFourParameters(endpoint,desc,option,id)
+    .then(response => {       
+      if (mounted_validations) {
+        setValidations(response.payload);  
+      }
+    });
+  })(endpoint_dp_validations,'event-pd-validation',3,animal_id);
 
     (async  (endpoint,org_id,option) => {     
       await  getAgents(endpoint,org_id,option)
@@ -96,13 +112,14 @@ const DetailsEdit = props => {
       
     return () => {
       mounted_lookup = false;  
-      mounted_agents = false;      
+      mounted_agents = false; 
+      mounted_validations = false;      
     };
-  }, [organization_id]);  
+  }, [organization_id,animal_id]);  
 
-  if (!body_scores || !pd_methods || !pd_stages ||!pd_results || !agents) {
+  if (!body_scores || !pd_methods || !pd_stages ||!pd_results || !agents || !validations) { 
     return null;
-  }
+  } 
 
     const handleChange = event => {
     event.persist();
@@ -112,7 +129,6 @@ const DetailsEdit = props => {
           
     });
   };
-
 
   const handleSubmit = event => {
     event.preventDefault();
@@ -143,6 +159,9 @@ const DetailsEdit = props => {
       {...rest}
       className={clsx(classes.root, className)}
     >
+       {
+            (parseInt(validations.length) === 0) ?
+          <> 
         <CardHeader title= {`NEW PREGNANCY DIAGNOSIS RECORD - ${animal_name}(${animal_tag}) `}/>  
         <Divider />
         <CardContent> 
@@ -428,8 +447,10 @@ const DetailsEdit = props => {
           </Card>
           </Grid>
           </Grid>
-        </CardContent>               
-        
+        </CardContent> 
+        </>              
+        : <EventValidation validations = {validations}/>
+          } 
     </Card>
   );
 };
