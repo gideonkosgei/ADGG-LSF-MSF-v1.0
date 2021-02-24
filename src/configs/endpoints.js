@@ -878,6 +878,13 @@ export const endpoint_get_lactation_number= {
   headers: headers   
 }
 
+//Data capture Validations
+export const endpoint_dp_validations = {
+  url: `${api}/validations/events/data-capture`,
+  method: 'GET',
+  headers: headers   
+};
+
 
 
 

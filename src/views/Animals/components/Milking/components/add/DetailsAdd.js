@@ -3,10 +3,11 @@ import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import {Card, CardContent, CardHeader, Grid,Divider, TextField,colors,Button,CardActions,Box,Typography,Switch} from '@material-ui/core';
-import {getLookups,postMilking,getParametersLimitAll,getParametersLocalSettingsOrgAll,getMilkingParameters}   from '../../../../../../utils/API';
-import {endpoint_milking_parameter,endpoint_lookup,endpoint_milking_add,endpoint_parameter_limit_all,endpoint_parameter_local_settings_org_all} from '../../../../../../configs/endpoints';
+import {getLookups,postMilking,getParametersLimitAll,getParametersLocalSettingsOrgAll,getMilkingParameters,genericFunctionFourParameters}   from '../../../../../../utils/API';
+import {endpoint_milking_parameter,endpoint_lookup,endpoint_milking_add,endpoint_parameter_limit_all,endpoint_parameter_local_settings_org_all,endpoint_dp_validations} from '../../../../../../configs/endpoints';
 import authContext from '../../../../../../contexts/AuthContext';
 import {Sidebar} from '../index';
+import {EventValidation}  from '../../../ValidationMessages';
 import SuccessSnackbar from '../../../../../../components/SuccessSnackbar';
 import ErrorSnackbar from '../../../../../../components/ErrorSnackbar';
 import moment from 'moment';
@@ -40,13 +41,14 @@ const DetailsEdit = props => {
   const animal_tag  = sessionStorage.getItem('animal_tag');
   const animal_name  = sessionStorage.getItem('animal_name');
   const [quality_fields_view, setQualityFieldsView] = useState(false);
+  const [validations, setValidations] = useState([]); 
 
   useEffect(() => {   
     let mounted_lookup = true;
     let mounted_limit_parameters = true;
     let mounted_settings = true;
     let mounted_milking_parameters = true;
-    
+    let mounted_validations = true;    
     /* 
       get milk parameters
       -------------------
@@ -55,8 +57,22 @@ const DetailsEdit = props => {
       3. Test Day No
       4. Days in Milk
     */
-    
-    
+
+
+  /**
+   * Check event milking validations
+   * Animal should be cow or heifer and must have lactation details> must have calved at some point
+   * If this check fails,  milk record cannot be captured
+   */
+  (async  (endpoint,desc,option,id) => {      
+    await  genericFunctionFourParameters(endpoint,desc,option,id)
+    .then(response => {       
+      if (mounted_validations) {
+        setValidations(response.payload);  
+      }
+    });
+  })(endpoint_dp_validations,'event-milking-validation',1,animal_id);
+ 
     (async  (endpoint,id,milk_date) => {     
       await  getMilkingParameters(endpoint,id,milk_date)
       .then(response => {       
@@ -112,13 +128,14 @@ const DetailsEdit = props => {
       mounted_limit_parameters = false;  
       mounted_settings = false;
       mounted_milking_parameters = false;
+      mounted_validations = false;      
     };
   }, [organization_id,animal_id]);  
     
     
-  if (!sample_types || !limitParameters || !localSettings || !milkingParameters) {
+  if (!sample_types || !limitParameters || !localSettings || !milkingParameters || !validations) {
     return null;
-  }
+  }   
 
   // validate milk amount
   let milk_amount_limits = limitParameters.filter(obj=>obj.category==='milk_amount_limits');
@@ -235,8 +252,7 @@ const DetailsEdit = props => {
         setopenSnackbarError(true); 
       });
     })(endpoint_milking_add,animal_id,values,user_id,quality_fields_view,milkingParameters.lactation_id, milkingParameters.lactation_number,  milkingParameters.days_in_milk, milkingParameters.test_day_no);    
-  };
-  
+  };  
   
   const handleSnackbarSuccessClose = () => {
     setopenSnackbarSuccess(false);
@@ -250,17 +266,23 @@ const DetailsEdit = props => {
     event.persist();
     setQualityFieldsView(!quality_fields_view);   
   };
+ 
+  
 
   return (
     <Card
       {...rest}
       className={clsx(classes.root, className)}
     >
+      {
+            (parseInt(validations.length) === 0) ?
+          <> 
       
         <CardHeader title= {`NEW MILKING RECORD  - ${animal_name}(${animal_tag}) `}/>  
         <Divider />
         <CardContent> 
-          <Grid container spacing={1} justify="center">            
+          <Grid container spacing={1} justify="center">    
+                         
           <Grid item  xs={1} >  
             <Sidebar/>
          </Grid> 
@@ -752,8 +774,12 @@ const DetailsEdit = props => {
         />
           </Card>
           </Grid>
+        
           </Grid>
-        </CardContent>               
+        </CardContent>  
+        </>
+          : <EventValidation validations = {validations}/>
+          }             
         
     </Card>
   );
