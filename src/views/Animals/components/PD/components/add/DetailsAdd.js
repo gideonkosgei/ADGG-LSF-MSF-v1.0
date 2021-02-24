@@ -48,7 +48,7 @@ const DetailsEdit = props => {
     let mounted_agents = true;
     let mounted_validations = true; 
 
-        /**
+  /**
    * Check event pd validations
    * Animal should be cow or heifer    
    */

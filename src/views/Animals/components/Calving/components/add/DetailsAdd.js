@@ -3,13 +3,14 @@ import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import {Card, CardContent, CardHeader, Grid,Divider, TextField,colors,Button,CardActions } from '@material-ui/core';
-import {getLookups,postCalving,getAgents,getParametersLimitAll,getLactationNumber}   from '../../../../../../utils/API';
-import {endpoint_lookup,endpoint_calving_add,endpoint_agent,endpoint_parameter_limit_all,endpoint_get_lactation_number} from '../../../../../../configs/endpoints';
+import {getLookups,postCalving,getAgents,getParametersLimitAll,getLactationNumber,genericFunctionFourParameters}   from '../../../../../../utils/API';
+import {endpoint_lookup,endpoint_calving_add,endpoint_agent,endpoint_parameter_limit_all,endpoint_get_lactation_number,endpoint_dp_validations} from '../../../../../../configs/endpoints';
 import authContext from '../../../../../../contexts/AuthContext';
 import {Sidebar} from '../index';
 import SuccessSnackbar from '../../../../../../components/SuccessSnackbar';
 import ErrorSnackbar from '../../../../../../components/ErrorSnackbar';
 import moment from 'moment';
+import {EventValidation}  from '../../../ValidationMessages';
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -45,7 +46,7 @@ const DetailsEdit = props => {
   const [uses_of_calf, setCalfUses] = useState([]); 
   const [agents, setAgents] = useState([]);
   const [lactationNumber, setLactationNo] = useState(null);
-  
+  const [validations, setValidations] = useState([]);
   const [limitParameters, setBodyLimitParameters] = useState([]); 
   const animal_id  = localStorage.getItem('animal_id');
   const animal_tag  = sessionStorage.getItem('animal_tag');
@@ -57,6 +58,21 @@ const DetailsEdit = props => {
     let mounted_agents = true;
     let mounted_limit_parameters = true; 
     let mounted_lactation_no = true; 
+    let mounted_validations = true;
+
+    /**
+   * Check event Calving validations
+   * Animal should be cow or heifer    
+   */
+  (async  (endpoint,desc,option,id) => {      
+    await  genericFunctionFourParameters(endpoint,desc,option,id)
+    .then(response => {       
+      if (mounted_validations) {
+        setValidations(response.payload);  
+      }
+    });
+  })(endpoint_dp_validations,'event-calving-validation',4,animal_id);
+
     
     (async  (endpoint,id) => {     
         await  getLookups(endpoint,id)
@@ -171,12 +187,13 @@ const DetailsEdit = props => {
       mounted_lookup = false;  
       mounted_agents = false; 
       mounted_limit_parameters = false;
-      mounted_lactation_no  = false;    
+      mounted_lactation_no  = false;  
+      mounted_validations  = false;          
     };
   }, [organization_id,animal_id]);  
     
     
-  if (!colors  || !deformaties ||!genders || !birth_types|| !calving_methods|| !calving_types || !calving_ease || !calving_status || !uses_of_calf || !body_scores || !agents || !limitParameters ||!lactationNumber) {
+  if (!colors  || !deformaties ||!genders || !birth_types|| !calving_methods|| !calving_types || !calving_ease || !calving_status || !uses_of_calf || !body_scores || !agents || !limitParameters ||!lactationNumber || !validations) {
     return null;
 
   }
@@ -241,7 +258,10 @@ const DetailsEdit = props => {
       {...rest}
       className={clsx(classes.root, className)}
       spacing={2}
-    >      
+    >  
+      {
+            (parseInt(validations.length) === 0) ?
+          <>     
         <CardHeader title= {`NEW CALVING RECORD - ${animal_name}(${animal_tag})`} />
         <Divider />
         <CardContent> 
@@ -1343,7 +1363,9 @@ const DetailsEdit = props => {
           </Grid>
           </Grid>
         </CardContent>               
-        
+        </>              
+        : <EventValidation validations = {validations}/>
+          } 
     </Card>
   );
 };
