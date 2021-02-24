@@ -3,13 +3,14 @@ import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import {Card, CardContent, CardHeader, Grid,Divider, TextField,colors,Button,CardActions } from '@material-ui/core';
-import {getLookups,postSync,getServiceProviders,getAgents}   from '../../../../../../utils/API';
-import {endpoint_lookup,endpoint_sync_add,endpoint_service_provider,endpoint_agent} from '../../../../../../configs/endpoints';
+import {getLookups,postSync,getServiceProviders,getAgents,genericFunctionFourParameters}   from '../../../../../../utils/API';
+import {endpoint_lookup,endpoint_sync_add,endpoint_service_provider,endpoint_agent,endpoint_dp_validations} from '../../../../../../configs/endpoints';
 import authContext from '../../../../../../contexts/AuthContext';
 import {Sidebar} from '../index';
 import SuccessSnackbar from '../../../../../../components/SuccessSnackbar';
 import ErrorSnackbar from '../../../../../../components/ErrorSnackbar';
 import moment from 'moment';
+import {EventValidation}  from '../../../ValidationMessages';
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -35,6 +36,7 @@ const DetailsEdit = props => {
   const [sync_person, setSyncPerson] = useState([]);
   const [service_providers, setServiceProviders] = useState([]);
   const [agents, setAgents] = useState([]);
+  const [validations, setValidations] = useState([]);
   
   const animal_id  = localStorage.getItem('animal_id');
   const animal_tag  = sessionStorage.getItem('animal_tag');
@@ -45,6 +47,21 @@ const DetailsEdit = props => {
     let mounted_lookup = true;
     let mounted_sp = true;
     let mounted_agents = true;
+    let mounted_validations = true;
+
+    /**
+   * Check event Calving validations
+   * Animal should be cow or heifer    
+   */
+  (async  (endpoint,desc,option,id) => {      
+    await  genericFunctionFourParameters(endpoint,desc,option,id)
+    .then(response => {       
+      if (mounted_validations) {
+        setValidations(response.payload);  
+      }
+    });
+  })(endpoint_dp_validations,'event-sync-validation',5,animal_id);
+
 
     (async  (endpoint,org_id,option) => {     
       await  getServiceProviders(endpoint,org_id,option)
@@ -101,10 +118,11 @@ const DetailsEdit = props => {
       mounted_lookup = false;  
       mounted_sp = false; 
       mounted_agents = false;
+      mounted_validations  = false;
     };
-  }, [organization_id]);  
+  }, [organization_id,animal_id]);  
 
-  if ( !sync_numbers || !hormone_types ||!sync_person || !service_providers || !agents) {
+  if ( !sync_numbers || !hormone_types ||!sync_person || !service_providers || !agents || !validations) {
     return null;
   }
 
@@ -150,7 +168,10 @@ const DetailsEdit = props => {
     <Card
       {...rest}
       className={clsx(classes.root, className)}
-    >      
+    >   
+    {
+            (parseInt(validations.length) === 0) ?
+          <>     
       <CardHeader title= {`NEW SYNCHRONIZATION RECORD - ${animal_name}(${animal_tag}) `}/>  
         <Divider />
         <CardContent> 
@@ -511,7 +532,9 @@ const DetailsEdit = props => {
           </Grid>
           </Grid>
         </CardContent>               
-        
+        </>              
+        : <EventValidation validations = {validations}/>
+          }
     </Card>
   );
 };
