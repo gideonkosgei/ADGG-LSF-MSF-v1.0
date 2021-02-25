@@ -57,7 +57,7 @@ const LactationTable = props => {
   }
 
   const columns = [
-    { name: "lactation_id",label: "Lactation ID",options: {filter: false,sort: true,display:true}},  
+    { name: "lactation_id",label: "Lactation ID",options: {filter: false,sort: true,display:false}},  
     { name: "parity",label: "Parity",options: {filter: false,sort: true,display:true}},  
     { name: "date_start",label: "Lactation Start",options: {filter: false,sort: true,display:true}},
     { name: "date_end",label: "Lactation End",options: {filter: false,sort: true,display:true}},
