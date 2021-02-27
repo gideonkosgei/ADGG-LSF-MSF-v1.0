@@ -68,7 +68,7 @@ const DetailsEdit = props => {
     await  genericFunctionFourParameters(endpoint,desc,option,id)
     .then(response => {       
       if (mounted_validations) {
-        setValidations(response.payload);  
+        setValidations(response.payload);         
       }
     });
   })(endpoint_dp_validations,'event-calving-validation',4,animal_id);
@@ -197,7 +197,6 @@ const DetailsEdit = props => {
     return null;
 
   }
-  
 
    // validate weight
    let calf_weight_limits = limitParameters.filter(obj=>obj.category==='calf_weight_limits');
@@ -252,7 +251,7 @@ const DetailsEdit = props => {
   const handleSnackbarErrorClose = () => {
     setopenSnackbarError(false);
   };
-
+  
   return (
     <Card
       {...rest}
