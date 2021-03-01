@@ -46,6 +46,7 @@ const Header = props => {
   if (!values) {
     return null;
   }
+  console.log(values);
   return (    
     <Card
       {...rest}
@@ -117,17 +118,20 @@ const Header = props => {
            : null 
         }
 
-        <Tooltip  title="Calving">   
-          <Button
-            color="default"
-            className={classes.button}
-            startIcon={<ChildCareRoundedIcon />}
-          >
-            <Link style={{ textDecoration: 'none',textTransform: 'none' }} component = {RouterLink} to = {`/management/calving/view/${animal_id}`}>
-              Calving
-            </Link>
-          </Button>
-        </Tooltip> 
+        {values.calving ?
+          <Tooltip  title="Calving">   
+            <Button
+              color="default"
+              className={classes.button}
+              startIcon={<ChildCareRoundedIcon />}
+            >
+              <Link style={{ textDecoration: 'none',textTransform: 'none' }} component = {RouterLink} to = {`/management/calving/view/${animal_id}`}>
+                Calving
+              </Link>
+            </Button>
+          </Tooltip> 
+        : null 
+        }
 
         
 
