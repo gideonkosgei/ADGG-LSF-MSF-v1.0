@@ -245,8 +245,19 @@ export default [
         children: [
           {
             title: 'Organization',
-            href: '/administration/org'                     
+            href: '/administration/org',
+            children: [
+              {
+                title: 'profile',
+                href: '/administration/org/profile'                     
+              },  
+              {
+                title: 'access',
+                href: '/administration/org'                     
+              }, 
+            ],                  
           },
+          
           {
             title: 'Background Processes',
             href: '/background-processes/org'                     

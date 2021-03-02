@@ -885,6 +885,15 @@ export const endpoint_dp_validations = {
   headers: headers   
 };
 
+//orginization profile details
+export const endpoint_org_details = {
+  url: `${api}/org`,
+  method: 'GET',
+  headers: headers   
+};
+
+
+
 
 
 

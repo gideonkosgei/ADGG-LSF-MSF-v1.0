@@ -607,6 +607,11 @@ const routes = [
         exact: true,
         component: lazy(() => import('views/Administration/components/SystemUploads'))        
       },
+      {
+        path: '/administration/org/profile',
+        exact: true,
+        component: lazy(() => import('views/Administration/components/Profile'))        
+      },
 
       // BACKGROUND-PROCESS VIEW
       {

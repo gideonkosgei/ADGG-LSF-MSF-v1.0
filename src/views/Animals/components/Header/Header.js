@@ -111,13 +111,10 @@ const Header = props => {
               PD
             </Link>
           </Button>
-        </Tooltip> 
-
-         
+        </Tooltip>         
           
            : null 
         }
-
         {values.calving ?
           <Tooltip  title="Calving">   
             <Button

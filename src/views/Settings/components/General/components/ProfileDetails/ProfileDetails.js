@@ -63,9 +63,7 @@ const ProfileDetails = props => {
         
       </CardContent>
       <CardActions>
-        <Button
-          //className={classes.removeBotton}
-         // variant="text"
+        <Button        
           variant="contained"
           color="default"
           className={classes.button}
