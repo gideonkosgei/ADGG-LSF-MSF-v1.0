@@ -1,10 +1,15 @@
-import React, {useState} from 'react';
+import React, {useEffect,useState,useContext} from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import PhotoCameraIcon from '@material-ui/icons/PhotoCamera';
 import SaveIcon from '@material-ui/icons/Save';
 import { makeStyles } from '@material-ui/styles';
-import {Card, CardContent, CardActions,CardHeader, Avatar, Typography, Button,Box,Divider,Switch} from '@material-ui/core';
+import {Card, CardActions  , CardContent,CardHeader, Avatar, Typography, Button,Box,Divider,Switch} from '@material-ui/core';
+import {postOrgProfileLogo}   from '../../../../../../utils/API';
+import {endpoint_org_profile_logo} from '../../../../../../configs/endpoints';
+import authContext from '../../../../../../contexts/AuthContext';
+import SuccessSnackbar from '../../../../../../components/SuccessSnackbar';
+import ErrorSnackbar from '../../../../../../components/ErrorSnackbar';
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -21,7 +26,8 @@ const useStyles = makeStyles(theme => ({
     //textAlgin: 'center'
   },
   name: {
-    marginTop: theme.spacing(1)
+    marginTop: theme.spacing(1),
+    marginBottom: theme.spacing(1),
   },
   btn: {
     marginLeft: theme.spacing(1),
@@ -48,6 +54,13 @@ const ProfileLogo = props => {
   const [values, setValues] = useState({ });
   const [fileProps, setFileProps] = useState({ name: null, type: null, size: null });
   const [changeLogo, setChangeLogo] = useState(false);
+  const [openSnackbarSuccess, setopenSnackbarSuccess] = useState(false);
+  const [openSnackbarError, setopenSnackbarError] = useState(false);
+  const [ {user_id} ] = useContext(authContext);
+  const animal_id  = localStorage.getItem('animal_id');
+
+  useEffect(() => { 
+  }, []);
 
   const handleChange = event => {
     event.persist();    
@@ -61,13 +74,13 @@ const ProfileLogo = props => {
     }    
 };
 
-
   const handleSubmit = event => {
     event.preventDefault();
-    const formData = new FormData();
-    formData.append('myImage',event.target.files[0]);   
-    /*(async  (endpoint,id,values,user_id,lactation_number) => {     
-      await  postCalving(endpoint,id,values,user_id,lactation_number)
+    //const formData = new FormData();
+    //formData.append('myImage',event.target.files[0]); 
+    console.log(event);  
+    (async  (endpoint,id,values,user_id,) => {     
+      await  postOrgProfileLogo(endpoint,id,values,user_id)
       .then(() => {  
         setopenSnackbarSuccess(true); 
         setValues({});        
@@ -75,13 +88,21 @@ const ProfileLogo = props => {
       }).catch(() => {
         setopenSnackbarError(true); 
       });
-    })(endpoint_calving_add,animal_id,values,user_id,lactationNumber);  */  
+    })(endpoint_org_profile_logo,animal_id,1,user_id);
   };
 
   const handleSwitchChange = event => {
     event.persist();
     setChangeLogo(!changeLogo); 
     setFileProps({ name:null, type:null, size:null})  
+  };
+
+  const handleSnackbarSuccessClose = () => {
+    setopenSnackbarSuccess(false);
+  };
+
+  const handleSnackbarErrorClose = () => {
+    setopenSnackbarError(false);
   };
   
   return (
@@ -90,7 +111,8 @@ const ProfileLogo = props => {
       className={clsx(classes.root, className)}
     > 
     <CardHeader title="Organization / Farm Logo" />
-    <Divider />
+    <Divider />  
+    <form id ='event' onSubmit={handleSubmit} >
       <CardContent className={classes.content}>
         <Avatar
           className={classes.avatar}
@@ -119,14 +141,13 @@ const ProfileLogo = props => {
             </Typography> 
         </div>
       }
-       
-      </CardContent>
-      <CardActions> 
-      <form onSubmit={handleSubmit} >
-        <Box> 
+
+
+        <Box flexWrap="wrap"> 
           <Typography variant="h6">{ changeLogo? "Cancel logo change" : "Change logo"} </Typography> 
         </Box> 
-        <Box> 
+        <br/>
+        <Box style={{marginLeft:10}}> 
           <Switch             
             className={classes.toggle}            
             checked={values.changeLogo}
@@ -134,15 +155,16 @@ const ProfileLogo = props => {
             edge="start"               
             onChange={handleSwitchChange}
           />             
-         </Box>  
-         { changeLogo ? 
-     
+         </Box> 
+         <CardActions>  
+       
+         { changeLogo ?     
           <Box display="flex" justifyContent="space-between">
             <Button
               variant="contained"
               component="label"
               startIcon={<PhotoCameraIcon />}
-              className={classes.btn}
+              className={classes.btn}              
             >
               Select
               <input
@@ -155,25 +177,33 @@ const ProfileLogo = props => {
             {
               !fileProps.name ? null :
               <Button
-                variant="contained"
-                component="label"
-                startIcon={<SaveIcon />}
                 className={classes.btn}
+                type = "submit"
+                variant="contained"               
+                startIcon={<SaveIcon />}
               >
-                Save
-                <input
-                  type="file"
-                  name="myImage"
-                  hidden
-                  onChange={handleChange}                       
-                />
+                Save  
               </Button> 
         }
         </Box>
         : null 
       }
-      </form>  
-      </CardActions>
+
+</CardActions> 
+      
+        
+      <SuccessSnackbar
+          onClose={handleSnackbarSuccessClose}
+          open={openSnackbarSuccess}
+      />
+      <ErrorSnackbar
+          onClose={handleSnackbarErrorClose}
+          open={openSnackbarError}
+      />
+         
+         </CardContent>
+    </form>
+     
     </Card>
   );
 };
