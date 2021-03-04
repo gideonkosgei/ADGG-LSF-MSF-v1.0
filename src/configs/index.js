@@ -5,3 +5,8 @@ export const headers = {
       'Content-Type': 'application/json;charset=UTF-8',
       'Authorization': token
   };
+  export const headers_files = {
+    'Accept': 'application/json',
+    'Content-Type': 'multipart/form-data',
+    'Authorization': token
+};

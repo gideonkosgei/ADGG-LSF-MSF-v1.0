@@ -1,4 +1,4 @@
-import {api,headers} from '../configs';
+import {api,headers,headers_files} from '../configs';
 
 //user authentication
 export const endpoint_user_authentication = {
@@ -891,6 +891,14 @@ export const endpoint_org_details = {
   method: 'GET',
   headers: headers   
 };
+
+//Update Calving Record
+export const endpoint_org_profile_logo = {
+  url: `${api}/org/upload/profile-logo`,
+  method: 'POST',
+  headers: headers_files   
+};
+
 
 
 

@@ -51,44 +51,42 @@ const useStyles = makeStyles(theme => ({
 const ProfileLogo = props => {
   const { profile, className, ...rest } = props;
   const classes = useStyles();
-  const [values, setValues] = useState({ });
+  const [image, setImage] = useState({ preview: "", raw: "" });
   const [fileProps, setFileProps] = useState({ name: null, type: null, size: null });
   const [changeLogo, setChangeLogo] = useState(false);
   const [openSnackbarSuccess, setopenSnackbarSuccess] = useState(false);
   const [openSnackbarError, setopenSnackbarError] = useState(false);
-  const [ {user_id} ] = useContext(authContext);
-  const animal_id  = localStorage.getItem('animal_id');
-
+  const [ {user_id,organization_id} ] = useContext(authContext); 
+ 
   useEffect(() => { 
   }, []);
 
   const handleChange = event => {
     event.persist();    
-    if (typeof event.target.files[0] !== 'undefined')
-    {
-      setValues({
-        ...values,
-        [event.target.name]:event.target.type === 'file' ? event.target.files[0]:event.target.value              
-      });      
+    if (event.target.files.length) {
+      setImage({
+        preview: URL.createObjectURL(event.target.files[0]),
+        raw: event.target.files[0]
+      });
       setFileProps({ name:event.target.files[0].name, type:event.target.files[0].type, size:event.target.files[0].size})
-    }    
-};
+    }        
+  };  
 
   const handleSubmit = event => {
-    event.preventDefault();
-    //const formData = new FormData();
-    //formData.append('myImage',event.target.files[0]); 
-    console.log(event);  
-    (async  (endpoint,id,values,user_id,) => {     
-      await  postOrgProfileLogo(endpoint,id,values,user_id)
+    event.preventDefault();    
+    const formData = new FormData();
+    formData.append("image", image.raw); 
+
+    (async  (endpoint,org_id,formData,user_id) => {     
+      await  postOrgProfileLogo(endpoint,org_id,formData,user_id)
       .then(() => {  
         setopenSnackbarSuccess(true); 
-        setValues({});        
+        setImage({ preview: "", raw: "" });        
         document.forms["event"].reset();
       }).catch(() => {
         setopenSnackbarError(true); 
       });
-    })(endpoint_org_profile_logo,animal_id,1,user_id);
+    })(endpoint_org_profile_logo,organization_id,{image: image.raw},user_id);
   };
 
   const handleSwitchChange = event => {
@@ -116,7 +114,8 @@ const ProfileLogo = props => {
       <CardContent className={classes.content}>
         <Avatar
           className={classes.avatar}
-          src={profile.profile_image}
+          src={image.preview}
+          //src={profile.profile_image}          
         />
         <Typography
           className={classes.name}
@@ -149,8 +148,7 @@ const ProfileLogo = props => {
         <br/>
         <Box style={{marginLeft:10}}> 
           <Switch             
-            className={classes.toggle}            
-            checked={values.changeLogo}
+            className={classes.toggle}  
             color="secondary"
             edge="start"               
             onChange={handleSwitchChange}
@@ -189,9 +187,7 @@ const ProfileLogo = props => {
         : null 
       }
 
-</CardActions> 
-      
-        
+</CardActions>  
       <SuccessSnackbar
           onClose={handleSnackbarSuccessClose}
           open={openSnackbarSuccess}
@@ -200,10 +196,8 @@ const ProfileLogo = props => {
           onClose={handleSnackbarErrorClose}
           open={openSnackbarError}
       />
-         
          </CardContent>
     </form>
-     
     </Card>
   );
 };
