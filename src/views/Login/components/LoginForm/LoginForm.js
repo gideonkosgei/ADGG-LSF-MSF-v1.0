@@ -105,28 +105,27 @@ const LoginForm = props => {
   const handleSubmit =  event => {  
     event.preventDefault();    
     //setLoad({load: true});  
-
     const username = formState.values.email;
     const passport = formState.values.password;
+
     authenticate(endpoint_user_authentication,username,passport)  
       .then((userData) => {
-        if(typeof userData.payload[0][0] ==='object'){         
+        if(userData.auth_status){         
             dispatch({
               type: 'LOGIN',
               payload: {
                 userData
               }
             });
-        }else {         
+        } else {         
             dispatch({
               type: 'LOGIN_ERROR',
               payload: {
-                error: "Login failed, please try again!"
+                error: userData.user_exist ? "Login failed. Password is incorrect!" : " This account is not registered!"
               }
             });
-        }
-       }      
-				
+          }
+       } 
       )
 			.catch((error) => {        
 				dispatch({

@@ -85,7 +85,6 @@ export const authenticate =  function (config,username,password) {
 }
 
 
-
 // user profile  
 export const getProfileDetails =  function (config,user_id) {   
   const options = {
@@ -2247,13 +2246,13 @@ export const getParametersLimitAll =   function (config) {
 };
 
 // post & put org profile logo
-export const postOrgProfileLogo =   function (config,org_id,image,user_id) {
-  
+export const postOrgProfileLogo =   function (config,org_id,image,user_id) {  
   const body = { 
     "org": org_id,      
     "user_id": user_id,
     "image": image    
   };
+  console.log(body);
 
 const options = {
   url:`${config.url}`, 
@@ -2261,9 +2260,7 @@ const options = {
   headers: config.headers,
   data: body  
 };
-
 console.log(options);
-
   return new Promise((resolve, reject) => {
     axios(options)
     .then(res => {             

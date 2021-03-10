@@ -892,11 +892,11 @@ export const endpoint_org_details = {
   headers: headers   
 };
 
-//Update Calving Record
+//upload org profile logo
 export const endpoint_org_profile_logo = {
   url: `${api}/org/upload/profile-logo`,
   method: 'POST',
-  headers: headers_files   
+  headers: headers_files  
 };
 
 

@@ -75,7 +75,7 @@ const ProfileLogo = props => {
   const handleSubmit = event => {
     event.preventDefault();    
     const formData = new FormData();
-    formData.append("image", image.raw); 
+    formData.append("image", image.raw);    
 
     (async  (endpoint,org_id,formData,user_id) => {     
       await  postOrgProfileLogo(endpoint,org_id,formData,user_id)
@@ -86,7 +86,7 @@ const ProfileLogo = props => {
       }).catch(() => {
         setopenSnackbarError(true); 
       });
-    })(endpoint_org_profile_logo,organization_id,{image: image.raw},user_id);
+    })(endpoint_org_profile_logo,organization_id,image.raw,user_id);
   };
 
   const handleSwitchChange = event => {
