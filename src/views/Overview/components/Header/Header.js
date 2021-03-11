@@ -28,7 +28,23 @@ const Header = props => {
   const { className, ...rest } = props;
 
   const classes = useStyles();
-  const [ {username} ] = useContext(authContext); 
+  const [ {username,organization_id} ] = useContext(authContext);
+
+  let image = "";
+  switch(parseInt(organization_id)) {
+    case 1:
+      image = 'klba.JPG';
+      break;
+    case 4:
+      image = 'stanley.jpg';
+      break;
+    case 5:
+      image = 'kalro.jpg';
+      break;
+    default:
+      image = 'default.png';
+  }
+  console.log(image);
 
   return (
     <div
@@ -76,9 +92,11 @@ const Header = props => {
             md={6}
           >
             <img
+              width ='225'
+              height ='225'
               alt="Cover"
               className={classes.image}
-              src="/images/kalro.jpg"
+              src= {`/images/org-logos/${image}`}
             />
           </Grid>
         </Hidden>
