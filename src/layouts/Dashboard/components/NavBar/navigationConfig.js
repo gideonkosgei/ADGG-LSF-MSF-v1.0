@@ -248,13 +248,18 @@ export default [
             href: '/administration/org',
             children: [
               {
-                title: 'profile',
+                title: 'Org profile',
                 href: '/administration/org/profile'                     
+              },
+              {
+                title: 'User Accounts',
+                href: '/administration/org/user-accounts'                     
               },  
               {
-                title: 'access',
+                title: 'Access',
                 href: '/administration/org'                     
               }, 
+               
             ],                  
           },
           

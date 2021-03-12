@@ -37,6 +37,14 @@ export const endpoint_admin_units = {
   headers: headers   
 };  
 
+//POST NEW USER ACCOUNT PROFILE
+export const endpoint_new_user_account = {
+  url: `${api}/users/org/create-user-account`,
+  method: 'POST',
+  headers: headers   
+};  
+
+
 //clients
 export const endpoint_clients = {
   url: `${api}/clients/`,
@@ -68,6 +76,20 @@ export const endpoint_animal_org = {
 //get all animal by id
 export const endpoint_animal = {
   url: `${api}/animal/`,
+  method: 'GET',
+  headers: headers   
+};
+
+//get auth levels
+export const endpoint_auth_levels = {
+  url: `${api}/auth-levels`,
+  method: 'GET',
+  headers: headers   
+};
+
+//get auth levels
+export const endpoint_auth_roles = {
+  url: `${api}/auth-roles`,
   method: 'GET',
   headers: headers   
 };
@@ -599,6 +621,7 @@ export const endpoint_user_list= {
   method: 'GET',
   headers: headers   
 }
+
 /*export const endpoint_straw_add= {
   url: `${api}/straws`,
   method: 'POST',

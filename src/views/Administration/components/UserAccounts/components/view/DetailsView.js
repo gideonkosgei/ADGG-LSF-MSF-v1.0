@@ -1,19 +1,29 @@
-import React, { useState,useEffect} from 'react';
+import React, { useState,useEffect,useContext} from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
-import {Card, CardContent, CardHeader, Grid,Divider,colors,Link} from '@material-ui/core';
+import {Card, CardContent, Grid,colors,Link ,Typography} from '@material-ui/core';
 import {genericFunctionFourParameters}   from '../../../../../../utils/API';
 import {endpoint_user_list} from '../../../../../../configs/endpoints';
-import {Sidebar} from '../index';
 import MUIDataTable from "mui-datatables";
 import {MuiThemeProvider } from '@material-ui/core/styles';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import { Link as RouterLink } from 'react-router-dom';
 import OpenInNewIcon from '@material-ui/icons/OpenInNew';
+import { Page } from 'components';
+import CustomToolbar from "../CustomToolbar";
+import authContext from '../../../../../../contexts/AuthContext';
 
 const useStyles = makeStyles(theme => ({
-  root: {},
+  root: {
+    width: theme.breakpoints.values.lg,
+    maxWidth: '100%',
+    margin: '0 auto',
+    padding: theme.spacing(3)
+  },  
+  content: {
+    marginTop: theme.spacing(3)
+  },
   saveButton: {
     color: theme.palette.white,
     backgroundColor: colors.green[600],
@@ -26,9 +36,12 @@ const DetailsView = props => {
   const {className, ...rest } = props; 
   const classes = useStyles();  
   const [values, setValues] = useState([]);
+  const [ {organization_id} ] = useContext(authContext);
+  
 
   useEffect(() => {     
     let mounted = true;
+
       (async  (endpoint,desc,option,org) => {     
         await  genericFunctionFourParameters(endpoint,desc,option,org)
         .then(response => {                        
@@ -36,11 +49,12 @@ const DetailsView = props => {
             setValues(response.payload[0]);                 
           }
         });
-      })(endpoint_user_list,'Org user list',0,null);
+      })(endpoint_user_list,'Org user list',1,organization_id);
+
     return () => {
       mounted = false;           
     };
-  }, []); 
+  }, [organization_id]); 
 
   if (!values) {
     return null;
@@ -85,29 +99,36 @@ const DetailsView = props => {
        padding: "none" ,         
        size: "small",
      };
-   }   
+   },
+   customToolbar: () => {
+    return (
+      <CustomToolbar />
+    );
+  }    
   };
 
   return (
-    <Card
-      {...rest}
-      className={clsx(classes.root, className)}
-    >
-        <CardHeader title="Organization Access" />
-        <Divider />
-        <CardContent> 
-          <Grid container spacing={1} justify="center">            
-          <Grid item  xs={1} >  
-            <Sidebar/>
-          </Grid> 
-          <Grid item xs={11}>
-              <Card> 
+    <Page className={classes.root} >
+      <Typography
+      component="h1"
+      variant="h3"
+      spacing={3}
+      >
+        Farm User Accounts
+      </Typography>
+    
+          <Grid  {...rest}
+              className={clsx(classes.root, className)}
+              container              
+              > 
+            <Grid item xs={12}>
+              <Card > 
                 <CardContent>                 
                   <PerfectScrollbar>
                     <div className={classes.inner}>
                       <MuiThemeProvider>                
                         <MUIDataTable
-                          title = "USERS"
+                          title = "FARM USERS"
                           data={values}
                           columns={columns}
                           options={options}
@@ -118,15 +139,13 @@ const DetailsView = props => {
                 </CardContent>
               </Card> 
           </Grid>
-        </Grid>
-        </CardContent> 
-    </Card>
+        </Grid>       
+    </Page>
   );
 };
 
 DetailsView.propTypes = {
-  className: PropTypes.string,
-  //profile: PropTypes.object.isRequired
+  className: PropTypes.string  
 };
 
 export default DetailsView;

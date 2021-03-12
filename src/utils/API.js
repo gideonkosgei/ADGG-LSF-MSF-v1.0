@@ -12,6 +12,21 @@ const axios = require('axios');
     2) The 2nd parameter is a description of the function -> for debugging
 */
 
+/*  GENERIC 2 PARAMETERS  */
+export const genericFunctionTwoParameters =  function (param1,param2) { 
+  // console.log(param2);  
+   const options = {
+     url:`${param1.url}`,
+     method: param1.method,
+     headers: param1.headers  
+   }   
+   return new Promise((resolve, reject) => {
+     axios(options)
+     .then(res => {             
+         resolve(res.data);
+     }).catch(err => reject(err));
+   });       
+ }
 
   /*  GENERIC 3 PARAMETERS  */
 export const genericFunctionThreeParameters =  function (param1,param2,param3) { 
@@ -2252,7 +2267,8 @@ export const postOrgProfileLogo =   function (config,org_id,image,user_id) {
     "user_id": user_id,
     "image": image    
   };
-  console.log(body);
+
+  
 
 const options = {
   url:`${config.url}`, 
@@ -2260,7 +2276,6 @@ const options = {
   headers: config.headers,
   data: body  
 };
-console.log(options);
   return new Promise((resolve, reject) => {
     axios(options)
     .then(res => {             
@@ -2749,22 +2764,7 @@ return new Promise((resolve, reject) => {
 
 
 // ADMINISTRATION
-// 1. ORGANIZATION
 
-export const getUserList =  function (config) {   
-  const options = {
-    url:`${config.url}`,
-    method: config.method,
-    headers: config.headers  
-  }  
-  return new Promise((resolve, reject) => {
-    axios(options)
-    .then(res => {          
-        resolve(res.data);
-    })
-    .catch(err => reject(err));
-  });       
-};
 
 // GET ALL ORGANIZATIONS
 export const getOrgList =  function (config) {   
@@ -3587,6 +3587,79 @@ export const getHealthManagementSummary =  function (config,option,id,date_start
     method: config.method,
     headers: config.headers    
   } 
+  return new Promise((resolve, reject) => {
+    axios(options)
+    .then(res => {           
+        resolve(res.data);
+    })    
+    .catch(err => reject(err));
+  });       
+}
+
+
+// add new exit event
+export const createUpdateUserAccount =  function (config,option,id,org,values,user_id) {  
+  /**
+   * OPTIONS
+   * 0 - create new
+   * 1 - update
+   * 
+   * ID
+   * for edits, the id is the record id but when creating a new records, the id is null
+   */
+  let { 
+      country,
+      district,
+      email,
+      name,
+      phone,
+      region,
+      timezone,
+      username,
+      village,
+      ward,
+      role
+  } = values;
+
+    country = (typeof country === 'undefined' || country === '')? null:country;  
+    district = (typeof district === 'undefined' || district === '')? null:district;  
+    email = (typeof email === 'undefined' || email === '')? null:email;  
+    name = (typeof name === 'undefined' || name === '')? null:name;  
+    phone = (typeof phone === 'undefined' || phone === '')? null:phone;  
+    region = (typeof region === 'undefined' || region === '')? null:region;  
+    timezone = (typeof timezone === 'undefined' || timezone === '')? null:timezone;  
+    username = (typeof username === 'undefined' || username === '')? null:username;  
+    village = (typeof village === 'undefined' || village === '')? null:village;  
+    ward = (typeof ward === 'undefined' || ward === '')? null:ward;  
+    role = (typeof role === 'undefined' || role === '')? null:role; 
+    
+    
+    const body = {   
+      "name": name,
+      "username": username,
+      "phone": phone,
+      "email" : email,
+      "country": country,
+      "district": district,
+      "region": region,
+      "ward": ward,
+      "village": village,
+      "timezone":timezone,
+      "user":user_id,
+      "option":option,
+      "id":id,
+      "org":org,
+      "role":role            
+    };
+  
+  const options = {
+    url:`${config.url}`,
+    method: config.method,
+    headers: config.headers,
+    data: body  
+  }; 
+
+
   return new Promise((resolve, reject) => {
     axios(options)
     .then(res => {           
