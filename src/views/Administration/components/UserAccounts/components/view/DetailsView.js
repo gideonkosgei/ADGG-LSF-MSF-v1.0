@@ -62,12 +62,13 @@ const DetailsView = props => {
  
     const columns = [
     { name: "id",label: "ID",options: {filter: false,sort: false,display:false}},   
-    { name: "name",label: "Name",options: {filter: false,sort: true,display:true}},    
-    { name: "phone",label: "Phone",options: {filter:true,sort: true,display:true}},
-    { name: "email",label: "Email Address",options: {filter: true,sort: false,display:true}}, 
-    { name: "country",label: "Country",options: {filter: true,sort: false,display:true}},   
-    { name: "role",label: "Role",options: {filter: false,sort: false,display:true}}, 
-    { name: "default_org",label: "Default Org",options: {filter: false,sort: false,display:true}},
+    { name: "name",label: "Name",options: {filter: false,sort: true,display:true}},
+    { name: "username",label: "User Name",options: {filter: false,sort: true,display:true}},
+    { name: "email",label: "Email Address",options: {filter: false,sort: false,display:true}},
+    { name: "phone",label: "Phone",options: {filter:false,sort: true,display:true}},        
+    { name: "role",label: "Role",options: {filter: true,sort: false,display:true}}, 
+    { name: "status",label: "Status",options: {filter: true,sort: false,display:true}},
+    { name: "created_at",label: "Date Created",options: {filter: false,sort: false,display:true}},  
     { name: "",
       options: {
       filter: false,
