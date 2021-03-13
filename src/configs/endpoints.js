@@ -14,6 +14,13 @@ export const endpoint_user_profile_details = {
   headers: headers   
 };  
 
+//user account info
+export const endpoint_user_account_info = {
+  url: `${api}/user/account-info`,
+  method: 'GET',
+  headers: headers   
+};  
+
 //timezone list
 export const endpoint_timezones = {
   url: `${api}/timezones`,

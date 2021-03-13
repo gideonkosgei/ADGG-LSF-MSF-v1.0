@@ -35,7 +35,7 @@ export const genericFunctionThreeParameters =  function (param1,param2,param3) {
     url:`${param1.url}/${param3}`,
     method: param1.method,
     headers: param1.headers  
-  }   
+  }     
   return new Promise((resolve, reject) => {
     axios(options)
     .then(res => {             
@@ -3618,7 +3618,8 @@ export const createUpdateUserAccount =  function (config,option,id,org,values,us
       username,
       village,
       ward,
-      role
+      role,
+      status
   } = values;
 
     country = (typeof country === 'undefined' || country === '')? null:country;  
@@ -3632,6 +3633,7 @@ export const createUpdateUserAccount =  function (config,option,id,org,values,us
     village = (typeof village === 'undefined' || village === '')? null:village;  
     ward = (typeof ward === 'undefined' || ward === '')? null:ward;  
     role = (typeof role === 'undefined' || role === '')? null:role; 
+    status = (typeof status === 'undefined' || status === '')? null:status; 
     
     
     const body = {   
@@ -3649,7 +3651,8 @@ export const createUpdateUserAccount =  function (config,option,id,org,values,us
       "option":option,
       "id":id,
       "org":org,
-      "role":role            
+      "role":role,  
+      "status":status         
     };
   
   const options = {

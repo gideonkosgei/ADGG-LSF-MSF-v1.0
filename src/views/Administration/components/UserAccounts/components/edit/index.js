@@ -1,2 +1,1 @@
-export { default } from './Edit';
-
+export { default } from './Account';

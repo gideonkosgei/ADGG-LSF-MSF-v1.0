@@ -622,6 +622,11 @@ const routes = [
         exact: true,
         component: lazy(() => import('views/Administration/components/UserAccounts/components/add'))        
       },
+      {
+        path: '/administration/org/user-accounts/edit/:id',
+        exact: true,
+        component: lazy(() => import('views/Administration/components/UserAccounts/components/edit'))        
+      },
 
       // BACKGROUND-PROCESS VIEW
       {

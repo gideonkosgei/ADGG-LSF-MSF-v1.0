@@ -77,8 +77,8 @@ const DetailsView = props => {
       customBodyRender: (value, tableMeta, updateValue) => {        
         return (
           <Link
-              component={RouterLink}
-              to = {`/administration/org/edit/${tableMeta.rowData[0]}/${tableMeta.rowData[1]}`}              
+              component={RouterLink}             
+              to = {`/administration/org/user-accounts/edit/${tableMeta.rowData[0]}`}               
           >
             <OpenInNewIcon/>
           </Link>          
@@ -115,7 +115,7 @@ const DetailsView = props => {
       variant="h3"
       spacing={3}
       >
-        Farm User Accounts
+         USER ACCOUNTS
       </Typography>
     
           <Grid  {...rest}
@@ -129,7 +129,7 @@ const DetailsView = props => {
                     <div className={classes.inner}>
                       <MuiThemeProvider>                
                         <MUIDataTable
-                          title = "FARM USERS"
+                          title = "SYSTEM USERS"
                           data={values}
                           columns={columns}
                           options={options}
@@ -148,5 +148,4 @@ const DetailsView = props => {
 DetailsView.propTypes = {
   className: PropTypes.string  
 };
-
 export default DetailsView;
