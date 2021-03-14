@@ -3,12 +3,10 @@ import validate from 'validate.js';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
-import {
-  Button, 
-  TextField 
-} from '@material-ui/core';
-
-import useRouter from 'utils/useRouter';
+import {Button, TextField } from '@material-ui/core';
+import { resetPassword}   from '../../../../utils/API';
+import {endpoint_reset_password} from '../../../../configs/endpoints';
+import Alert from '@material-ui/lab/Alert';
 
 const schema = {
   
@@ -40,9 +38,7 @@ const useStyles = makeStyles(theme => ({
 
 const ForgotPasswordForm = props => {
   const { className, ...rest } = props;
-
   const classes = useStyles();
-  const { history } = useRouter();
 
   const [formState, setFormState] = useState({
     isValid: false,
@@ -50,6 +46,7 @@ const ForgotPasswordForm = props => {
     touched: {},
     errors: {}
   });
+  const [output, setOutput] = useState({status:null, message:""}); 
 
   useEffect(() => {
     const errors = validate(formState.values, schema);
@@ -81,7 +78,28 @@ const ForgotPasswordForm = props => {
 
   const handleSubmit = async event => {
     event.preventDefault();
-    history.push('/');
+    (async  (endpoint,values,email,user_id) => {     
+      await  resetPassword(endpoint,values,email,user_id)
+      .then((response) => {        
+        setOutput({status:null, message:''});
+        if (parseInt(response.status) === 1){           
+          setFormState( {
+            isValid: false,
+            values: {},
+            touched: {},
+            errors: {}
+          }) ; 
+          setOutput({status:parseInt(response.status), message:response.message})      
+          document.forms["event"].reset();
+        } else {
+          setOutput({status:parseInt(response.status), message:response.message})
+        }
+        
+      }).catch((error) => {        
+        setOutput({status:0, message:error.message})
+      });
+    })(endpoint_reset_password,formState.values);    
+
   };
 
   const hasError = field =>
@@ -92,8 +110,22 @@ const ForgotPasswordForm = props => {
       {...rest}
       className={clsx(classes.root, className)}
       onSubmit={handleSubmit}
+      id ='event'
     >
       <div className={classes.fields}>
+      {output.status === 0 ?
+              <>
+              <Alert severity="error" >{output.message}</Alert>
+              <br/><br/>
+              </>
+            :output.status === 1 ?
+            <>
+            <Alert severity="success" >{output.message}</Alert>
+            <br/><br/>
+            </>
+            :null
+            }
+
         
         
         <TextField

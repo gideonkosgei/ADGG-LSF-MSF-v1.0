@@ -3673,6 +3673,73 @@ export const createUpdateUserAccount =  function (config,option,id,org,values,us
 }
 
 
+// change password
+export const changePassword =  function (config,values,email,user) {    
+  let { 
+      current_password,
+      new_password,
+      confirm_password,
+      hash      
+  } = values;
+
+  current_password = (typeof current_password === 'undefined' || current_password === '')? null:current_password;  
+  new_password = (typeof new_password === 'undefined' || new_password === '')? null:new_password;  
+  confirm_password = (typeof confirm_password === 'undefined' || confirm_password === '')? null:confirm_password; 
+  hash = (typeof hash === 'undefined' || hash === '')? null:hash;   
+           
+  const body = {   
+    "email": email,
+    "current_password": current_password,
+    "new_password": new_password,
+    "confirm_password" : confirm_password,
+    "user": user,
+    "hash" : hash
+  };
+  
+  const options = {
+    url:`${config.url}`,
+    method: config.method,
+    headers: config.headers,
+    data: body  
+  }; 
+  return new Promise((resolve, reject) => {
+    axios(options)
+    .then(res => {           
+        resolve(res.data);
+    })    
+    .catch(err => reject(err));
+  });       
+}
+
+export const resetPassword =  function (config,values) {    
+  let { email } = values;
+  email = (typeof email === 'undefined' || email === '')? null:email; 
+
+  const body = {   
+    "email": email    
+  };
+  
+  const options = {
+    url:`${config.url}`,
+    method: config.method,
+    headers: config.headers,
+    data: body  
+  }; 
+  console.log(options);
+  
+  return new Promise((resolve, reject) => {
+    axios(options)
+    .then(res => {           
+        resolve(res.data);
+    })    
+    .catch(err => reject(err));
+  });       
+}
+
+
+
+
+
 
 
 

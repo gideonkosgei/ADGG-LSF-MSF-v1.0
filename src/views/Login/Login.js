@@ -102,18 +102,19 @@ const Login = () => {
          
           <LoginForm className={classes.loginForm} />
           <Divider className={classes.divider} />
-         
-          <Link
-            align="center"
-            color="secondary"
-            component={RouterLink}
-            to="/auth/register"
-            underline="always"
-            variant="subtitle2"
-          >
-         
-            Don't have an account?
-          </Link>
+          { /*
+            <Link
+              align="center"
+              color="secondary"
+              component={RouterLink}
+              to="/auth/register"
+              underline="always"
+              variant="subtitle2"
+            >
+          
+              Don't have an account?
+            </Link> */
+          }
        
           <span className={classes.right}>
             <Link

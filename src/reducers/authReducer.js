@@ -1,31 +1,33 @@
 
 export const initialAuthState = {	
-	isLoggedIn: localStorage.getItem('isLoggedIn')?localStorage.getItem('isLoggedIn'):false,
-	isLoading:localStorage.getItem('isLoading')?localStorage.getItem('isLoading'):false,
-	user_id: localStorage.getItem('user_id')?localStorage.getItem('user_id'):0,
-	username: localStorage.getItem('username')?localStorage.getItem('username'):'',
-	name: localStorage.getItem('name')?localStorage.getItem('name'):'',
-	email:localStorage.getItem('email')?localStorage.getItem('email'):'',	
-	status:localStorage.getItem('status')?localStorage.getItem('status'):'',
-	role:localStorage.getItem('role')?localStorage.getItem('role'):'',  
-	error: localStorage.getItem('error')?localStorage.getItem('error'):'',
-	organization_id: localStorage.getItem('organization_id')?localStorage.getItem('organization_id'):'',
-	organization: localStorage.getItem('organization')?localStorage.getItem('organization'):''
+	isLoggedIn: sessionStorage.getItem('isLoggedIn')?sessionStorage.getItem('isLoggedIn'):false,
+	isLoading:sessionStorage.getItem('isLoading')?sessionStorage.getItem('isLoading'):false,
+	user_id: sessionStorage.getItem('user_id')?sessionStorage.getItem('user_id'):0,
+	username: sessionStorage.getItem('username')?sessionStorage.getItem('username'):'',
+	name: sessionStorage.getItem('name')?sessionStorage.getItem('name'):'',
+	email:sessionStorage.getItem('email')?sessionStorage.getItem('email'):'',	
+	status:sessionStorage.getItem('status')?sessionStorage.getItem('status'):'',
+	role:sessionStorage.getItem('role')?sessionStorage.getItem('role'):'',  
+	error: sessionStorage.getItem('error')?sessionStorage.getItem('error'):'',
+	organization_id: sessionStorage.getItem('organization_id')?sessionStorage.getItem('organization_id'):'',
+	organization: sessionStorage.getItem('organization')?sessionStorage.getItem('organization'):'',
+	password: sessionStorage.getItem('password') ? sessionStorage.getItem('password'):''
 	
 };
 export const authReducer = (state, action) => {	
 	switch (action.type) {
 		case 'LOGIN':
-				const data = action.payload.userData.payload[0][0];	
-				localStorage.setItem("user_id",data.id);
-				localStorage.setItem("isLoggedIn",true);
-				localStorage.setItem("isLoading",true);
-				localStorage.setItem("username", data.username);
-				localStorage.setItem("name", data.name);
-				localStorage.setItem("email",data.email);			
-				localStorage.setItem("role", data.role);
-				localStorage.setItem("organization_id", data.org_id);
-				localStorage.setItem("organization", data.organization);
+				const data = action.payload.userData.payload[0][0];					
+				sessionStorage.setItem("user_id",data.id);
+				sessionStorage.setItem("isLoggedIn",true);
+				sessionStorage.setItem("isLoading",true);
+				sessionStorage.setItem("username", data.username);
+				sessionStorage.setItem("name", data.name);
+				sessionStorage.setItem("email",data.email);			
+				sessionStorage.setItem("role", data.role);
+				sessionStorage.setItem("organization_id", data.org_id);
+				sessionStorage.setItem("organization", data.organization);
+				sessionStorage.setItem("password", data.password);
 			
 			return {
 				user_id:data.id,
@@ -37,7 +39,8 @@ export const authReducer = (state, action) => {
 				status:data.status,
 				role:data.role,  
 				organization_id:data.org_id,  
-				organization:data.organization,  				
+				organization:data.organization,  	
+				password:data.password, 			
 				error: ''
 			};
 		case 'LOGIN_ERROR':
@@ -52,10 +55,11 @@ export const authReducer = (state, action) => {
 				role:'', 
 				organization_id:'',
 				organization:'',
+				password:'',
 				error: action.payload.error
 			};
 		case 'LOGOUT':
-			localStorage.clear();
+			sessionStorage.clear();
 			return {
 				isLoggedIn: false,
 				user_id:0,
@@ -66,6 +70,7 @@ export const authReducer = (state, action) => {
 				role:'', 
 				organization_id:'',
 				organization:'',
+				password:'',
 				error: ''
 			};
 		default:

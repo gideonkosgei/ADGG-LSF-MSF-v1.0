@@ -28,6 +28,20 @@ export const endpoint_timezones = {
   headers: headers   
 };   
 
+//change password
+export const endpoint_change_password = {
+  url: `${api}/user/account/change-password/self-service`,
+  method: 'PUT',
+  headers: headers   
+}; 
+
+//reset forgotten password
+export const endpoint_reset_password = {
+  url: `${api}/user/account/reset-password/self-service`,
+  method: 'PUT',
+  headers: headers   
+};
+
 //country list
 export const endpoint_countries = {
   url: `${api}/countries`,
