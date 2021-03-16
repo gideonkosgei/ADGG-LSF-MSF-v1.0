@@ -3779,6 +3779,52 @@ export const milkBatchModifyRevalidate =  function (config,values,record_id,user
 
 
 
+export const weightBatchModifyRevalidate =  function (config,values,record_id,user_id,batch_type) { 
+  
+  let {body_length, body_score, body_weight, heart_girth, weight_date, animal_id,remove } = values;
+
+  body_length = (typeof body_length === 'undefined' || body_length === '')? null:body_length; 
+  body_score = (typeof body_score === 'undefined' || body_score === '')? null:body_score;
+  body_weight = (typeof body_weight === 'undefined' || body_weight === '')? null:body_weight;
+  animal_id = (typeof animal_id === 'undefined' || animal_id === '')? null:animal_id;
+  weight_date = (typeof weight_date === 'undefined' || weight_date === '')? null:weight_date;
+  heart_girth = (typeof heart_girth === 'undefined' || heart_girth === '')? null:heart_girth;
+  remove = (typeof remove === 'undefined' || remove === '')? null:remove;
+
+  const body = {   
+    "body_length": body_length,  
+    "body_score": body_score,
+    "body_weight": body_weight,
+    "animal_id": animal_id,
+    "heart_girth": heart_girth,
+    "weight_date": weight_date,  
+    "record_id": record_id,
+    "user_id": user_id, 
+    "batch_type": batch_type,
+    "remove":remove
+  };
+  
+  const options = {
+    url:`${config.url}`,
+    method: config.method,
+    headers: config.headers,
+    data: body  
+  };  
+  
+  console.log(options);
+  
+  return new Promise((resolve, reject) => {
+    axios(options)
+    .then(res => {           
+        resolve(res.data);
+    })    
+    .catch(err => reject(err));
+  });       
+}
+
+
+
+
 
 
 

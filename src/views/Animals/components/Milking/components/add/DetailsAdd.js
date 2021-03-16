@@ -458,7 +458,7 @@ const DetailsEdit = props => {
                     inputProps={{                      
                       min: (milk_amount_limits_status)? milk_amount_limits_min_value : "any",
                       max: (milk_amount_limits_status)? milk_amount_limits_max_value : "any",
-                      step: "any"               
+                      step: "any"                
                     }}
                     margin = 'dense'
                     label={`Milk AM (${milk_unit_value})`}

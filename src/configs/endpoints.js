@@ -951,12 +951,19 @@ export const endpoint_org_profile_logo = {
   headers: headers_files  
 };
 
-// Edit vaccination event record
 export const endpoint_milkRevalidate = {
   url: `${api}/batches/milking/modify-and-revalidate`,
   method: 'PUT',
   headers: headers   
 };
+
+
+export const endpoint_weightRevalidate = {
+  url: `${api}/batches/weight/modify-and-revalidate`,
+  method: 'PUT',
+  headers: headers   
+};
+
 
 
 
