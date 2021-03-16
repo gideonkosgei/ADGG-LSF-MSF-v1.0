@@ -599,6 +599,7 @@ export const endpoint_service_provider_edit= {
   headers: headers   
 };
 
+
 //agents
 export const endpoint_agent= {
   url: `${api}/partners/agent/`,
@@ -922,6 +923,13 @@ export const endpoint_get_lactation_number= {
   headers: headers   
 }
 
+// view specific batch record
+export const endpoint_batch_record = {
+  url: `${api}/batches/record/any`,
+  method: 'GET',
+  headers: headers   
+};
+
 //Data capture Validations
 export const endpoint_dp_validations = {
   url: `${api}/validations/events/data-capture`,
@@ -942,6 +950,17 @@ export const endpoint_org_profile_logo = {
   method: 'POST',
   headers: headers_files  
 };
+
+// Edit vaccination event record
+export const endpoint_milkRevalidate = {
+  url: `${api}/batches/milking/modify-and-revalidate`,
+  method: 'PUT',
+  headers: headers   
+};
+
+
+
+
 
 
 

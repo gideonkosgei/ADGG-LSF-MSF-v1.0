@@ -51,7 +51,8 @@ export const genericFunctionThreeParameters =  function (param1,param2,param3) {
     url:`${param1.url}/${param3}/${param4}`,
     method: param1.method,
     headers: param1.headers  
-  }  
+  } 
+  
   return new Promise((resolve, reject) => {
     axios(options)
     .then(res => {                    
@@ -3725,7 +3726,7 @@ export const resetPassword =  function (config,values) {
     headers: config.headers,
     data: body  
   }; 
-  console.log(options);
+ 
   
   return new Promise((resolve, reject) => {
     axios(options)
@@ -3735,6 +3736,47 @@ export const resetPassword =  function (config,values) {
     .catch(err => reject(err));
   });       
 }
+
+export const milkBatchModifyRevalidate =  function (config,values,record_id,user_id,batch_type) { 
+  
+  let { amount_afternoon,amount_morning,amount_noon,animal_id,milk_date,remove } = values;
+  amount_afternoon = (typeof amount_afternoon === 'undefined' || amount_afternoon === '')? null:amount_afternoon; 
+  amount_morning = (typeof amount_morning === 'undefined' || amount_morning === '')? null:amount_morning;
+  amount_noon = (typeof amount_noon === 'undefined' || amount_noon === '')? null:amount_noon;
+  animal_id = (typeof animal_id === 'undefined' || animal_id === '')? null:animal_id;
+  milk_date = (typeof milk_date === 'undefined' || milk_date === '')? null:milk_date;
+  remove = (typeof remove === 'undefined' || remove === '')? null:remove;
+
+  const body = {   
+    "amount_afternoon": amount_afternoon,  
+    "amount_morning": amount_morning,
+    "amount_noon": amount_noon,
+    "animal_id": animal_id,
+    "milk_date": milk_date,
+    "record_id": record_id,
+    "user_id": user_id, 
+    "batch_type": batch_type,
+    "remove":remove
+  };
+
+ 
+  
+  const options = {
+    url:`${config.url}`,
+    method: config.method,
+    headers: config.headers,
+    data: body  
+  };   
+  
+  return new Promise((resolve, reject) => {
+    axios(options)
+    .then(res => {           
+        resolve(res.data);
+    })    
+    .catch(err => reject(err));
+  });       
+}
+
 
 
 
