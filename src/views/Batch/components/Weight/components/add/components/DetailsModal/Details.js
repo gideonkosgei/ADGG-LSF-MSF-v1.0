@@ -107,7 +107,7 @@ const useStyles = makeStyles(theme => ({
     return null;
   } 
 
-  console.log(body_scores);
+ 
 
   // validate weight
   let mature_weight_limits = limitParameters.filter(obj=>obj.category==='mature_weight_limits');

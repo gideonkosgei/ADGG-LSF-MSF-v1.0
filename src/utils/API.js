@@ -3810,8 +3810,47 @@ export const weightBatchModifyRevalidate =  function (config,values,record_id,us
     headers: config.headers,
     data: body  
   };  
+  return new Promise((resolve, reject) => {
+    axios(options)
+    .then(res => {           
+        resolve(res.data);
+    })    
+    .catch(err => reject(err));
+  });       
+}
+
+export const aiBatchModifyRevalidate =  function (config,values,record_id,user_id,batch_type) {  
+
+  let {straw_id_id,body_score, service_date, cost, animal_id, ai_type_id, ai_tech,remove } = values;
+  straw_id_id = (typeof straw_id_id === 'undefined' || straw_id_id === '')? null:straw_id_id; 
+  body_score = (typeof body_score === 'undefined' || body_score === '')? null:body_score;
+  ai_type_id = (typeof ai_type_id === 'undefined' || ai_type_id === '')? null:ai_type_id;
+  animal_id = (typeof animal_id === 'undefined' || animal_id === '')? null:animal_id;
+  service_date = (typeof service_date === 'undefined' || service_date === '')? null:service_date;
+  cost = (typeof cost === 'undefined' || cost === '')? null:cost;
+  ai_tech = (typeof ai_tech === 'undefined' || ai_tech === '')? null:ai_tech;
+  remove = (typeof remove === 'undefined' || remove === '')? null:remove;
+
+  const body = {   
+    "straw_id": straw_id_id,  
+    "service_date": service_date,
+    "cost": cost,
+    "animal_id": animal_id,
+    "ai_type_id": ai_type_id,
+    "ai_tech": ai_tech,  
+    "body_score": body_score,
+    "record_id": record_id,
+    "user_id": user_id, 
+    "batch_type": batch_type,
+    "remove":remove
+  };
   
-  console.log(options);
+  const options = {
+    url:`${config.url}`,
+    method: config.method,
+    headers: config.headers,
+    data: body  
+  };  
   
   return new Promise((resolve, reject) => {
     axios(options)

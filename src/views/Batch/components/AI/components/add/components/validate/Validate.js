@@ -41,6 +41,7 @@ const Validate = props => {
   const [openErrorLog, setErrorLog] = useState(false); 
   const [openDetails, setDetails] = useState(false); 
   const [record_id, setRecordID] = useState();    
+  const [straw_Record_id, setStrawID] = useState();  
 
   
   const uuid= localStorage.getItem('batch_upload_uuid');
@@ -139,8 +140,9 @@ const Validate = props => {
     setErrorLog(false);
   };
 
-  const handleDetailsOpen = (record_id) => { 
+  const handleDetailsOpen = (record_id,straw_id) => { 
     setRecordID(record_id);
+    setStrawID(straw_id);
     setDetails(true);
   };
 
@@ -149,6 +151,7 @@ const Validate = props => {
   };
     const columns = [      
     { name: "record_id",label: "record_id",options: {filter: false,sort: false,display:false}},
+    { name: "straw_id_id",label: "straw_id_id",options: {filter: false,sort: false,display:false}},
     { name: "uuid",label: "uuid",options: {filter: false,sort: false,display:false}},
     { name: "animal_id",label: "Animal ID",options: {filter: true,sort: true, display:true}},
     { name: "service_date",label: "Service Date",options: {filter: true,sort: true, display:true}},
@@ -165,7 +168,7 @@ const Validate = props => {
       display:true,   
       customBodyRender: (value, tableMeta, updateValue) => {         
         return (                              
-          <Button onClick = {() => handleDetailsOpen(tableMeta.rowData[0])}>            
+          <Button onClick = {() => handleDetailsOpen(tableMeta.rowData[0],tableMeta.rowData[1])}>            
           < OpenInNewIcon className={classes.buttonIcon} />                
           </Button>
         );
@@ -310,6 +313,7 @@ const Validate = props => {
 
                 <Details
                         record_id={record_id}
+                        straw_record_id = {straw_Record_id}
                         data = {values}
                         onClose={handleDetailsClose}
                         open={openDetails}    

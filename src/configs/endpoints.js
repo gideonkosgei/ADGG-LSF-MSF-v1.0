@@ -964,6 +964,12 @@ export const endpoint_weightRevalidate = {
   headers: headers   
 };
 
+export const endpoint_aiRevalidate = {
+  url: `${api}/batches/ai/modify-and-revalidate`,
+  method: 'PUT',
+  headers: headers   
+};
+
 
 
 
