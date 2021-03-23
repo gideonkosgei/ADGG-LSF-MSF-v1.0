@@ -30,8 +30,8 @@ const DetailsView = props => {
 
   useEffect(() => {     
     let mounted = true;
-      (async  (endpoint,org) => {     
-        await  getBatchTemplate(endpoint,org)
+      (async  (endpoint,type,org) => {     
+        await  getBatchTemplate(endpoint,type,org)
         .then(response => {                             
           if (mounted) { 
             if(response.payload.length>0){                       
@@ -39,7 +39,7 @@ const DetailsView = props => {
             }              
           }
         });
-      })(endpoint_batch_template,organization_id);       
+      })(endpoint_batch_template,1,organization_id);       
     return () => {
       mounted = false;           
     };
@@ -47,14 +47,24 @@ const DetailsView = props => {
 
   if (!values) {
     return null;
-  }
- 
+  }							
+
     const columns = [
-      { name: "Milk_Date",label: "Milk_Date",options: {filter: false,sort: false,display:true}},
-      { name: "Animal_ID",label: "Animal_ID",options: {filter: true,sort: true, display:true}},
-      { name: "Amount_Morning",label: "Amount_Morning",options: {filter: true,sort: true, display:true}},
-      { name: "Amount_Noon",label: "Amount_Noon",options: {filter: true,sort: true, display:true}},
-      { name: "Amount_Afternoon",label: "Amount_Afternoon",options: {filter: true,sort: true, display:true}}    
+      { name: "animal_id",label: "DAM_ID",options: {filter: false,sort: false,display:true}},
+      { name: "estimated_due_date",label: "CALVING_DATE",options: {filter: true,sort: true, display:true}},
+      { name: "",label: "C_TAG_ID",options: {filter: true,sort: true, display:true}},
+      { name: "",label: "C_NAME",options: {filter: true,sort: true, display:true}},
+      { name: "",label: "SEX",options: {filter: true,sort: true, display:true}}, 
+      { name: "",label: "C_METHOD",options: {filter: true,sort: true, display:true}},
+      { name: "",label: "C_TYPE",options: {filter: true,sort: true, display:true}},
+      { name: "",label: "C_EASE",options: {filter: true,sort: true, display:true}}, 
+      { name: "",label: "C_STATUS",options: {filter: true,sort: true, display:true}},
+      { name: "",label: "USE_OF_CALF",options: {filter: true,sort: true, display:true}}, 
+      { name: "",label: "BODY_COND",options: {filter: true,sort: true, display:true}},
+      { name: "",label: "COLOR",options: {filter: true,sort: true, display:true}},
+      { name: "",label: "GENDER",options: {filter: true,sort: true, display:true}},
+      { name: "",label: "WEIGHT",options: {filter: true,sort: true, display:true}},
+      { name: "",label: "HEART_GIRTH",options: {filter: true,sort: true, display:true}}     					
     
   ];
 
@@ -80,7 +90,7 @@ const DetailsView = props => {
       {...rest}
       className={clsx(classes.root, className)}
     >
-        <CardHeader title= "BATCH - WEIGHT & GROWTH TEMPLATE"/>
+        <CardHeader title= "BATCH - CALVING TEMPLATE"/>
         <Divider />
         <CardContent> 
           <Grid container spacing={1} justify="center">            
@@ -95,7 +105,7 @@ const DetailsView = props => {
                     <div className={classes.inner}>
                       <MuiThemeProvider>                
                         <MUIDataTable
-                          title = "BATCH - WEIGHT & GROWTH TEMPLATE"
+                          title = "BATCH - CALVING TEMPLATE"
                           data={values}
                           columns={columns}
                           options={options}

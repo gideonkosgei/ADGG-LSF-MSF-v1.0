@@ -28,7 +28,7 @@ const Edit = props => {
   return (
     <Page
       className={classes.root}
-      title="weight template"
+      title="Batch - AI data template"
     >
     <Card>
         <CardContent> 

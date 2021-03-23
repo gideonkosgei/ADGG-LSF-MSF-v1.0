@@ -316,9 +316,7 @@ const useStyles = makeStyles(theme => ({
               <Alert severity="success" >{output.message}</Alert>           
               </>
               :null
-              }
-           
-             
+              }    
            <PerfectScrollbar>
           <div className={classes.inner}>
           <br/>          
@@ -359,7 +357,6 @@ const useStyles = makeStyles(theme => ({
                       value = {values.animal_id}  
                       variant="outlined" 
                       onChange={handleChange}
-                     
                     />
                   </Grid>
                   <Grid
@@ -407,10 +404,8 @@ const useStyles = makeStyles(theme => ({
                       value = {values.animal_name}  
                       variant="outlined" 
                       onChange={handleChange}
-                     
                     />
                   </Grid>
-                  
                   <Grid
                     item
                     md={3}
@@ -484,8 +479,7 @@ const useStyles = makeStyles(theme => ({
                     fullWidth
                     InputLabelProps={{
                       shrink: true                     
-                    }}                    
-
+                    }}
                     inputProps={{
                       readOnly: Boolean(readOnly),
                       disabled: Boolean(readOnly) 
@@ -601,8 +595,7 @@ const useStyles = makeStyles(theme => ({
                     variant="outlined"
                     name ="semen_source" default = ""                              
                     select                   
-                    SelectProps={{ native: true }}                   
-                   
+                    SelectProps={{ native: true }}   
                   >
                     <option value=""></option>
                     {semen_sources.map(semen_source => (
@@ -687,12 +680,7 @@ const useStyles = makeStyles(theme => ({
                         ))
                     }           
                   </TextField>
-
                 </Grid>
-
-                  
-                
-                 
                   <Grid
                     item
                     md={3}
@@ -741,7 +729,6 @@ const useStyles = makeStyles(theme => ({
                     InputLabelProps={{
                       shrink: true,
                     }}
-
                     inputProps={{
                       readOnly: Boolean(readOnly),
                       disabled: Boolean(readOnly)                

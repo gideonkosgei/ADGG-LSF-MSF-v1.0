@@ -2548,12 +2548,14 @@ export const getBatchUnprocessed =  function (config,type,org_id,step,user_id) {
 };
 
 // view milking template for download
-export const getBatchMilkingTemplate =  function (config,org_id) {   
+export const getBatchTemplate =  function (config,type,org_id) {   
   const options = {
-    url:`${config.url}${org_id}`,
+    url:`${config.url}${type}/${org_id}`,
     method: config.method,
     headers: config.headers  
   } 
+  console.log(options);
+  
   return new Promise((resolve, reject) => {
     axios(options)
     .then(res => {             
@@ -3860,6 +3862,71 @@ export const aiBatchModifyRevalidate =  function (config,values,record_id,user_i
     .catch(err => reject(err));
   });       
 }
+
+
+export const animalBatchModifyRevalidate =  function (config,values,record_id,user_id,batch_type) { 
+ 
+  let {animal_name,animal_type_id,breed_composition_id,color_id,dam_tag_id,dob,entry_type_id,main_breed_id,remove,sec_breed_id,sex_id,sire_tag_id,sire_type_id,tag_id} = values;
+  animal_name = (typeof animal_name === 'undefined' || animal_name === '')? null:animal_name; 
+  animal_type_id = (typeof animal_type_id === 'undefined' || animal_type_id === '')? null:animal_type_id; 
+  breed_composition_id = (typeof breed_composition_id === 'undefined' || breed_composition_id === '')? null:breed_composition_id; 
+  color_id = (typeof color_id === 'undefined' || color_id === '')? null:color_id; 
+  dam_tag_id = (typeof dam_tag_id === 'undefined' || dam_tag_id === '')? null:dam_tag_id; 
+  dob = (typeof dob === 'undefined' || dob === '')? null:dob; 
+  entry_type_id = (typeof entry_type_id === 'undefined' || entry_type_id === '')? null:entry_type_id; 
+  main_breed_id = (typeof main_breed_id === 'undefined' || main_breed_id === '')? null:main_breed_id; 
+  remove = (typeof remove === 'undefined' || remove === '')? null:remove; 
+  sec_breed_id = (typeof sec_breed_id === 'undefined' || sec_breed_id === '')? null:sec_breed_id; 
+  sex_id = (typeof sex_id === 'undefined' || sex_id === '')? null:sex_id; 
+  sire_tag_id = (typeof sire_tag_id === 'undefined' || sire_tag_id === '')? null:sire_tag_id; 
+  sire_type_id = (typeof sire_type_id === 'undefined' || sire_type_id === '')? null:sire_type_id; 
+  tag_id = (typeof tag_id === 'undefined' || tag_id === '')? null:tag_id; 
+  
+
+  const body = {     
+    "animal_name": animal_name,  
+    "animal_type_id": animal_type_id,
+    "breed_composition_id": breed_composition_id,
+    "color_id": color_id,
+    "dam_tag_id": dam_tag_id,
+    "record_id": record_id,
+    "user_id": user_id, 
+    "batch_type": batch_type,
+    "remove":remove, 
+    "dob":dob,
+    "entry_type_id":entry_type_id,
+    "main_breed_id":main_breed_id,    
+    "sex_id":sex_id,
+    "sire_tag_id":sire_tag_id,
+    "sire_type_id":sire_type_id,
+    "tag_id":tag_id,
+    "sec_breed_id": sec_breed_id
+  };
+
+
+ 
+  
+  const options = {
+    url:`${config.url}`,
+    method: config.method,
+    headers: config.headers,
+    data: body  
+  };   
+
+  
+  
+  return new Promise((resolve, reject) => {
+    axios(options)
+    .then(res => {           
+        resolve(res.data);
+    })    
+    .catch(err => reject(err));
+  });       
+}
+
+
+
+
 
 
 

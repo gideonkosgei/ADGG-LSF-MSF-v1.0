@@ -30,8 +30,8 @@ const DetailsView = props => {
 
   useEffect(() => {     
     let mounted = true;
-      (async  (endpoint,org) => {     
-        await  getBatchTemplate(endpoint,org)
+      (async  (endpoint,type,org) => {     
+        await  getBatchTemplate(endpoint,type,org)
         .then(response => {                             
           if (mounted) { 
             if(response.payload.length>0){                       
@@ -39,7 +39,7 @@ const DetailsView = props => {
             }              
           }
         });
-      })(endpoint_batch_template,organization_id);       
+      })(endpoint_batch_template,3,organization_id);       
     return () => {
       mounted = false;           
     };
@@ -48,13 +48,16 @@ const DetailsView = props => {
   if (!values) {
     return null;
   }
- 
+  				
+
     const columns = [
-      { name: "Milk_Date",label: "Milk_Date",options: {filter: false,sort: false,display:true}},
-      { name: "Animal_ID",label: "Animal_ID",options: {filter: true,sort: true, display:true}},
-      { name: "Amount_Morning",label: "Amount_Morning",options: {filter: true,sort: true, display:true}},
-      { name: "Amount_Noon",label: "Amount_Noon",options: {filter: true,sort: true, display:true}},
-      { name: "Amount_Afternoon",label: "Amount_Afternoon",options: {filter: true,sort: true, display:true}}    
+      { name: "next_service_date",label: "SERVICE_DATE",options: {filter: true,sort: false,display:true}},
+      { name: "animal_id",label: "ANIMAL_ID",options: {filter: false,sort: true, display:true}},
+      { name: "",label: "AI_TYPE",options: {filter: true,sort: true, display:true}},
+      { name: "",label: "STRAW_ID",options: {filter: true,sort: true, display:true}},
+      { name: "",label: "BODY_SCORE",options: {filter: true,sort: true, display:true}},
+      { name: "",label: "COST",options: {filter: false,sort: true, display:true}},
+      { name: "",label: "AI_TECH",options: {filter: true,sort: true, display:true}}          
     
   ];
 
@@ -80,7 +83,7 @@ const DetailsView = props => {
       {...rest}
       className={clsx(classes.root, className)}
     >
-        <CardHeader title= "BATCH - WEIGHT & GROWTH TEMPLATE"/>
+        <CardHeader title= "BATCH - AI TEMPLATE"/>
         <Divider />
         <CardContent> 
           <Grid container spacing={1} justify="center">            
@@ -95,7 +98,7 @@ const DetailsView = props => {
                     <div className={classes.inner}>
                       <MuiThemeProvider>                
                         <MUIDataTable
-                          title = "BATCH - WEIGHT & GROWTH TEMPLATE"
+                          title = "BATCH - AI TEMPLATE"
                           data={values}
                           columns={columns}
                           options={options}

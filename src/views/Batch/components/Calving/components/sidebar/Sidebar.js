@@ -9,7 +9,7 @@ import HomeIcon from '@material-ui/icons/Home';
 import PlaylistPlayIcon from '@material-ui/icons/PlaylistPlay';
 import PlaylistAddCheckIcon from '@material-ui/icons/PlaylistAddCheck';
 import DeleteIcon from '@material-ui/icons/Delete';
-
+import CloudDownloadIcon from '@material-ui/icons/CloudDownload';
 
 
 const useStyles = makeStyles(theme => ({
@@ -59,7 +59,15 @@ const Sidebar = props => {
               <DeleteIcon/> 
             </Link>
           </IconButton> 
-        </Tooltip>        
+        </Tooltip>   
+
+        <Tooltip  title="Download Template">              
+          <IconButton aria-label="download" size="small" >
+            <Link component = {RouterLink} to = {`/batch-process/calving/template`}>
+              <CloudDownloadIcon/> 
+            </Link>
+          </IconButton> 
+        </Tooltip>      
                    
         
       </CardContent> 

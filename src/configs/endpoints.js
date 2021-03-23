@@ -544,8 +544,8 @@ export const endpoint_batch_errors= {
   headers: headers   
 };
 
-export const endpoint_batch_milk_template= {
-  url: `${api}/batches/milking/list/`,
+export const endpoint_batch_template= {
+  url: `${api}/batches/template/`,
   method: 'GET',
   headers: headers   
 };
@@ -953,6 +953,12 @@ export const endpoint_org_profile_logo = {
 
 export const endpoint_milkRevalidate = {
   url: `${api}/batches/milking/modify-and-revalidate`,
+  method: 'PUT',
+  headers: headers   
+};
+
+export const endpoint_animalRevalidate = {
+  url: `${api}/batches/animal/modify-and-revalidate`,
   method: 'PUT',
   headers: headers   
 };

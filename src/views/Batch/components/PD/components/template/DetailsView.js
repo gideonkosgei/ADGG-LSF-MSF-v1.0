@@ -3,8 +3,8 @@ import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import {Card, CardContent, CardHeader, Grid,Divider,colors } from '@material-ui/core';
-import {getBatchMilkingTemplate}   from '../../../../../../utils/API';
-import {endpoint_batch_milk_template} from '../../../../../../configs/endpoints';
+import {getBatchTemplate}   from '../../../../../../utils/API';
+import {endpoint_batch_template} from '../../../../../../configs/endpoints';
 import authContext from '../../../../../../contexts/AuthContext';
 import {Sidebar} from '../sidebar';
 import MUIDataTable from "mui-datatables";
@@ -30,8 +30,8 @@ const DetailsView = props => {
 
   useEffect(() => {     
     let mounted = true;
-      (async  (endpoint,org) => {     
-        await  getBatchMilkingTemplate(endpoint,org)
+      (async  (endpoint,type,org) => {     
+        await  getBatchTemplate(endpoint,type,org)
         .then(response => {                             
           if (mounted) { 
             if(response.payload.length>0){                       
@@ -39,7 +39,7 @@ const DetailsView = props => {
             }              
           }
         });
-      })(endpoint_batch_milk_template,organization_id);       
+      })(endpoint_batch_template,4,organization_id);       
     return () => {
       mounted = false;           
     };
@@ -49,12 +49,16 @@ const DetailsView = props => {
     return null;
   }
  
+  						
+
     const columns = [
-      { name: "Milk_Date",label: "Milk_Date",options: {filter: false,sort: false,display:true}},
-      { name: "Animal_ID",label: "Animal_ID",options: {filter: true,sort: true, display:true}},
-      { name: "Amount_Morning",label: "Amount_Morning",options: {filter: true,sort: true, display:true}},
-      { name: "Amount_Noon",label: "Amount_Noon",options: {filter: true,sort: true, display:true}},
-      { name: "Amount_Afternoon",label: "Amount_Afternoon",options: {filter: true,sort: true, display:true}}    
+      { name: "pd_due_date",label: "Exam_Date",options: {filter: false,sort: false,display:true}},
+      { name: "animal_id",label: "Animal_ID",options: {filter: true,sort: true, display:true}},
+      { name: "",label: "PD_method",options: {filter: true,sort: true, display:true}},
+      { name: "",label: "PD_Results",options: {filter: true,sort: true, display:true}},
+      { name: "",label: "Stage",options: {filter: true,sort: true, display:true}},   
+      { name: "",label: "Body_Condition",options: {filter: true,sort: true, display:true}}, 
+      { name: "",label: "Cost",options: {filter: true,sort: true, display:true}}, 
     
   ];
 
@@ -80,7 +84,7 @@ const DetailsView = props => {
       {...rest}
       className={clsx(classes.root, className)}
     >
-        <CardHeader title= "BATCH - WEIGHT & GROWTH TEMPLATE"/>
+        <CardHeader title= "BATCH - PD TEMPLATE"/>
         <Divider />
         <CardContent> 
           <Grid container spacing={1} justify="center">            
@@ -95,7 +99,7 @@ const DetailsView = props => {
                     <div className={classes.inner}>
                       <MuiThemeProvider>                
                         <MUIDataTable
-                          title = "BATCH - WEIGHT & GROWTH TEMPLATE"
+                          title = "BATCH - PD TEMPLATE"
                           data={values}
                           columns={columns}
                           options={options}

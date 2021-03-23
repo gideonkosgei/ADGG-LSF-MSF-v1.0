@@ -3,8 +3,8 @@ import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import {Card, CardContent, CardHeader, Grid,Divider,colors } from '@material-ui/core';
-import {getBatchMilkingTemplate}   from '../../../../../../utils/API';
-import {endpoint_batch_milk_template} from '../../../../../../configs/endpoints';
+import {getBatchTemplate}   from '../../../../../../utils/API';
+import {endpoint_batch_template} from '../../../../../../configs/endpoints';
 import authContext from '../../../../../../contexts/AuthContext';
 import {Sidebar} from '../sidebar';
 import MUIDataTable from "mui-datatables";
@@ -30,8 +30,8 @@ const DetailsView = props => {
 
   useEffect(() => {     
     let mounted = true;
-      (async  (endpoint,org) => {     
-        await  getBatchMilkingTemplate(endpoint,org)
+      (async  (endpoint,type,org) => {     
+        await  getBatchTemplate(endpoint,type,org)
         .then(response => {                             
           if (mounted) { 
             if(response.payload.length>0){                       
@@ -39,7 +39,7 @@ const DetailsView = props => {
             }              
           }
         });
-      })(endpoint_batch_milk_template,organization_id);       
+      })(endpoint_batch_template,2,organization_id);       
     return () => {
       mounted = false;           
     };

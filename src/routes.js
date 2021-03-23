@@ -671,6 +671,22 @@ const routes = [
         exact: true,
         component: lazy(() => import('views/Batch/components/Milking/components/milk_list'))        
       }, 
+      {
+        path: '/batch-process/ai/template',
+        exact: true,
+        component: lazy(() => import('views/Batch/components/AI/components/template'))        
+      }, 
+
+      {
+        path: '/batch-process/calving/template',
+        exact: true,
+        component: lazy(() => import('views/Batch/components/Calving/components/template'))        
+      }, 
+      {
+        path: '/batch-process/pd/template',
+        exact: true,
+        component: lazy(() => import('views/Batch/components/PD/components/template'))        
+      }, 
       // Batch processes Routes subsequent Steps
       {
         path: '/batch-process/milking-records/add/:uuid',
