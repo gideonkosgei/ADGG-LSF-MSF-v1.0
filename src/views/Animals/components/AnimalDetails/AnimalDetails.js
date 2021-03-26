@@ -9,10 +9,9 @@ import authContext from '../../../../contexts/AuthContext';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import SettingsApplicationsIcon from '@material-ui/icons/SettingsApplications';
 import SearchIcon from '@material-ui/icons/Search';
-import SuccessSnackbar from '../../../../components/SuccessSnackbar';
-import ErrorSnackbar from '../../../../components/ErrorSnackbar';   
 import moment from 'moment'; 
-
+import Alert from '@material-ui/lab/Alert';
+import {AnimalModal}  from '../Modal';
 const useStyles = makeStyles(theme => ({
   root: {},
   saveButton: {
@@ -26,8 +25,6 @@ const useStyles = makeStyles(theme => ({
 
 const AnimalDetails = props => {
   const {className, ...rest } = props; 
-  const [openSnackbarSuccess, setopenSnackbarSuccess] = useState(false);
-  const [openSnackbarError, setopenSnackbarError] = useState(false);
   const classes = useStyles();
   const [ {organization_id}  ] = useContext(authContext);
   const [ {user_id} ] = useContext(authContext);
@@ -44,6 +41,9 @@ const AnimalDetails = props => {
   const [deformaties, setDeformaties] = useState([]);
   const [countries, setCountries] = useState([]);
   const [sex, setSex] = useState();
+  const [output, setOutput] = useState({status:null, message:""}); 
+  const [modalStatus, setModalStatus] = useState(false);
+  const [parent, setParent] = useState(null);
 
   useEffect(() => {   
     let mounted_lookup = true;
@@ -160,27 +160,47 @@ const AnimalDetails = props => {
 
   };
 
-  const handleSnackbarSuccessClose = () => {
-    setopenSnackbarSuccess(false);
-  };
-
-  const handleSnackbarErrorClose = () => {
-    setopenSnackbarError(false);
-  };
+ 
 
 
   const handleSubmit = event => {
     event.preventDefault();
     (async  (endpoint,org_id,values,user_id) => {     
       await  postAnimalRegistration(endpoint,org_id,values,user_id)
-      .then(() => {  
-        setopenSnackbarSuccess(true); 
-        setValues({});        
-        document.forms["new_reg"].reset();
-      }).catch(() => {
-        setopenSnackbarError(true); 
+      .then((response) => {  
+          setOutput({status:null, message:''});
+          if (parseInt(response.status) === 1){ 
+            setValues({});        
+            document.forms["new_reg"].reset(); 
+            setOutput({status:parseInt(response.status), message:response.message}) 
+          } else {
+            setOutput({status:parseInt(response.status), message:response.message})
+          }         
+      }).catch((error) => {
+        setOutput({status:0, message:error.message})        
       });
     })(endpoint_animal_add,organization_id,values,user_id);    
+  };
+
+  const handleClickSire = () => {
+    setModalStatus(true);
+    setParent('sire');
+  };
+
+  const handleMouseDownSire = (event) => {
+    event.preventDefault();
+  };
+
+  const handleClickDam = () => {
+    setModalStatus(true);
+    setParent('dam');
+  };
+  const handleMouseDownDam = (event) => {
+    event.preventDefault();
+  };
+
+  const handleClose = () => {
+    setModalStatus(false);
   };
 
   return (
@@ -191,6 +211,17 @@ const AnimalDetails = props => {
       <form id ='new_reg' onSubmit={handleSubmit}>
         <CardHeader title="New Animal Registration " />
         <Divider />
+        {output.status === 0 ?
+              <>
+              <Alert severity="error" >{output.message}</Alert>             
+              </>
+            :output.status === 1 ?
+            <>
+            <Alert severity="success" >{output.message}</Alert>           
+            </>
+            :null
+            }          
+            <br/>  
         <CardContent>
           <Grid
             container
@@ -699,11 +730,6 @@ const AnimalDetails = props => {
                 }
               </TextField>
             </Grid>
-
-
-
-
-
             <Grid
               item
               md={2}
@@ -754,7 +780,9 @@ const AnimalDetails = props => {
                 InputProps={{
                   endAdornment: (
                     <InputAdornment position="end"  >
-                      <IconButton  
+                      <IconButton 
+                       onClick={handleClickSire} 
+                       onMouseDown={handleMouseDownSire}
                         edge="end"
                         variant="outlined"
                         color="inherit"
@@ -789,6 +817,8 @@ const AnimalDetails = props => {
                         edge="end"
                         variant="outlined"
                         color="inherit"
+                        onClick={handleClickDam} 
+                        onMouseDown={handleMouseDownDam}
                       >
                            <SearchIcon/> 
                       </IconButton>
@@ -870,14 +900,11 @@ const AnimalDetails = props => {
           </Button>
         </CardActions>
       </form> 
-      <SuccessSnackbar
-          onClose={handleSnackbarSuccessClose}
-          open={openSnackbarSuccess}
+      <AnimalModal
+                parentType={parent}
+                onClose={handleClose}
+                open={modalStatus}
         />
-        <ErrorSnackbar
-          onClose={handleSnackbarErrorClose}
-          open={openSnackbarError}
-        />   
     </Card>
   );
 };
