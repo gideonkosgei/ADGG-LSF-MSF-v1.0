@@ -982,31 +982,40 @@ export const endpoint_animals_by_type = {
   headers: headers   
 };
 
+//get batch types
+export const endpoint_batch_types = {
+  url: `${api}/batches/types/all`,
+  method: 'GET',
+  headers: headers   
+}; 
 
+//get batch stages
+export const endpoint_batch_stages = {
+  url: `${api}/batches/stages/all`,
+  method: 'GET',
+  headers: headers   
+}; 
 
+//get batch statuses
+export const endpoint_batch_status = {
+  url: `${api}/batches/status/all`,
+  method: 'GET',
+  headers: headers   
+}; 
 
+//get batch validation statuses
+export const endpoint_batch_validation_status = {
+  url: `${api}/batches/validation-status/all`,
+  method: 'GET',
+  headers: headers   
+}; 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+//get batch report all
+export const endpoint_batch_report_all = {
+  url: `${api}/batches/report/all`,
+  method: 'GET',
+  headers: headers   
+}; 
 
 
 

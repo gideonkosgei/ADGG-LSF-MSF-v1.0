@@ -77,6 +77,22 @@ export const genericFunctionFiveParameters =  function (param1,param2,param3,par
   });       
 }
 
+/*  GENERIC 7 PARAMETERS  */
+export const genericFunctionSevenParameters =  function (param1,param2,param3,param4,param5,param6,param7) {   
+  const options = {
+    url:`${param1.url}/${param3}/${param4}/${param5}/${param6}/${param7}`,
+    method: param1.method,
+    headers: param1.headers  
+  }   
+  return new Promise((resolve, reject) => {
+    axios(options)
+    .then(res => {             
+        resolve(res.data);
+    }).catch(err => reject(err));
+  });       
+}
+
+
 
 
 // user Authentication  

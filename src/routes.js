@@ -1178,6 +1178,13 @@ const routes = [
     },
 
 
+    {
+      path: '/reports/batches',
+      exact: true,
+      component: lazy(() => import('views/Reports/components/Batches/components/home'))        
+    },
+
+
 
 
 
