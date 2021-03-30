@@ -93,14 +93,11 @@ const LoginForm = props => {
 
   const handleClickShowPassword = () => {
     setformState({ ...formState, showPassword: !formState.showPassword });
-  };
-
-  
+  };  
 
   const handleMouseDownPassword = (event) => {
     event.preventDefault();
   };
-
   
   const handleSubmit =  event => {  
     event.preventDefault();    

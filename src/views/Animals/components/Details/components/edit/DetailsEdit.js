@@ -214,7 +214,8 @@ const DetailsEdit = props => {
   const handleMetadataClose = () => {
     setMetadata(false);
   };
-  
+
+
  
 
   return (
@@ -231,7 +232,7 @@ const DetailsEdit = props => {
 
          <Grid
               item
-              md={3}
+              md={2}
               xs={12}
             >
               <TextField
@@ -253,40 +254,11 @@ const DetailsEdit = props => {
                 onChange={handleChange}
                 variant="outlined" 
                 required
-                value = {values.dob}             
+                value = {values.registration_date}             
               />
             </Grid>
 
-            <Grid
-              item
-              md={3}
-              xs={12}
-            >
-              <TextField
-                fullWidth
-                InputLabelProps={{
-                  shrink: true,
-                }}
-
-                inputProps={{
-                  readOnly: true,
-                  disabled: true,
-                  max: moment(new Date()).format('YYYY-MM-DD')                
-                }}
-
-                margin = 'dense'
-                label="Entry date"
-                type="date"
-                name="entry_date"               
-                onChange={handleChange}
-                variant="outlined" 
-                required
-                value = {values.entry_date}             
-              />
-            </Grid>
-           
-              
-          
+       
         <Grid
           item
           md={2}
@@ -557,7 +529,7 @@ const DetailsEdit = props => {
 
             <Grid
               item
-              md={3}
+              md={2}
               xs={12}
             >
               <TextField
@@ -649,7 +621,7 @@ const DetailsEdit = props => {
             :null }
             <Grid
               item
-              md={3}
+              md={2}
               xs={12}
             >
               <TextField

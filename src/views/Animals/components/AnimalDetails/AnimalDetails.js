@@ -26,9 +26,7 @@ const useStyles = makeStyles(theme => ({
 const AnimalDetails = props => {
   const {className, ...rest } = props; 
   const classes = useStyles();
-  const [ {organization_id}  ] = useContext(authContext);
-  const [ {user_id} ] = useContext(authContext);
-  
+  const [ {organization_id,user_id}  ] = useContext(authContext);
   const [values, setValues] = useState({ });  
   const [animal_types, setAnimalTypes] = useState([]);
   const [main_breeds, setMainBreeds] = useState([]);
@@ -45,10 +43,15 @@ const AnimalDetails = props => {
   const [modalStatus, setModalStatus] = useState(false);
   const [parent, setParent] = useState(null);
 
+  let _sire_id = sessionStorage.getItem('_sire_id');  
+  let _dam_id = sessionStorage.getItem('_dam_id'); 
+
   useEffect(() => {   
     let mounted_lookup = true;
     let mounted_herds = true;
     let mounted_countries = true;
+    sessionStorage.setItem('_sire_id','');
+    sessionStorage.setItem('_dam_id','');
 
     (async  (endpoint) => {     
       await  getCountries(endpoint)
@@ -157,7 +160,6 @@ const AnimalDetails = props => {
       let selectedSex = ( event.target.value === '1'  || event.target.value === '2'  || event.target.value === '4') ? 2 :1;  
       setSex(selectedSex);      
     }
-
   };
 
  
@@ -165,8 +167,8 @@ const AnimalDetails = props => {
 
   const handleSubmit = event => {
     event.preventDefault();
-    (async  (endpoint,org_id,values,user_id) => {     
-      await  postAnimalRegistration(endpoint,org_id,values,user_id)
+    (async  (endpoint,org_id,values,user_id,sire,dam) => {     
+      await  postAnimalRegistration(endpoint,org_id,values,user_id,sire,dam)
       .then((response) => {  
           setOutput({status:null, message:''});
           if (parseInt(response.status) === 1){ 
@@ -179,7 +181,7 @@ const AnimalDetails = props => {
       }).catch((error) => {
         setOutput({status:0, message:error.message})        
       });
-    })(endpoint_animal_add,organization_id,values,user_id);    
+    })(endpoint_animal_add,organization_id,values,user_id,_sire_id,_dam_id);    
   };
 
   const handleClickSire = () => {
@@ -203,7 +205,7 @@ const AnimalDetails = props => {
     setModalStatus(false);
   };
 
-  return (
+   return (
     <Card
       {...rest}
       className={clsx(classes.root, className)}
@@ -771,12 +773,15 @@ const AnimalDetails = props => {
                 InputLabelProps={{
                   shrink: true,
                 }}
+                inputProps={{
+                  readOnly: true                
+                }}
                 margin = 'dense'
                 label="Sire"
                 name="sire_id"
-                onChange={handleChange}
-                variant="outlined" 
-                type = "number"  
+                onChange={handleChange}               
+                value = {_sire_id}
+                variant="outlined"                 
                 InputProps={{
                   endAdornment: (
                     <InputAdornment position="end"  >
@@ -804,12 +809,15 @@ const AnimalDetails = props => {
                 InputLabelProps={{
                   shrink: true,
                 }}
+                inputProps={{
+                  readOnly: true                
+                }} 
                 margin = 'dense'
                 label="Dam"
                 name="dam_id"                
                 onChange={handleChange}
-                variant="outlined"
-                type = "number"  
+                variant="outlined"              
+                value = {_dam_id} 
                 InputProps={{
                   endAdornment: (
                     <InputAdornment position="end"  >
@@ -901,9 +909,9 @@ const AnimalDetails = props => {
         </CardActions>
       </form> 
       <AnimalModal
-                parentType={parent}
-                onClose={handleClose}
-                open={modalStatus}
+        parentType={parent}
+        onClose={handleClose}
+        open={modalStatus}
         />
     </Card>
   );

@@ -976,6 +976,12 @@ export const endpoint_aiRevalidate = {
   headers: headers   
 };
 
+export const endpoint_animals_by_type = {
+  url: `${api}/animal/type`,
+  method: 'GET',
+  headers: headers   
+};
+
 
 
 
