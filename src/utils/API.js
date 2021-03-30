@@ -2140,13 +2140,13 @@ export const postAnimalRegistration =  function (config,org_id,values,user_id,si
 
 
 // new animal registration
-export const putAnimalDetails =  function (config,org_id,values,user_id,animal_id) { 
+export const putAnimalDetails =  function (config,org_id,values,user_id,animal_id,sire,dam) { 
      
   const farm_id = null;
   let {
     herd_id,main_breed_other,animal_name,animal_type, breed_composition,breed_composition_details,color,
     color_other,country_of_origin,deformaties,dob,entry_type,hair_sample_id,herd_book_number,
-    main_breed,notes,purchase_cost, secondary_breed, secondary_breed_other,sire_id,dam_id, sire_type,tag_id,reg_date,entry_date
+    main_breed,notes,purchase_cost, secondary_breed, secondary_breed_other, sire_type,tag_id,reg_date,entry_date
   } = values;
 
   herd_id = (typeof herd_id === 'undefined' || herd_id ==='')? null:parseInt(herd_id);
@@ -2170,8 +2170,6 @@ export const putAnimalDetails =  function (config,org_id,values,user_id,animal_i
   notes =  (typeof notes === 'undefined' || notes ==='')? null:notes;
   purchase_cost =  (typeof purchase_cost === 'undefined' || purchase_cost ==='')? null:purchase_cost;   
   secondary_breed =  (typeof secondary_breed === 'undefined' || secondary_breed ==='')? null:secondary_breed;
-  sire_id =  (typeof sire_id === 'undefined' || sire_id ==='')? null:sire_id;
-  dam_id =  (typeof dam_id === 'undefined' || dam_id ==='')? null:dam_id;
   sire_type =  (typeof sire_type === 'undefined' || sire_type ==='')? null:sire_type;
   tag_id =  (typeof tag_id === 'undefined' || tag_id ==='')? null:tag_id;
   secondary_breed_other =  (typeof secondary_breed_other === 'undefined' || secondary_breed_other ==='')? null:secondary_breed_other;
@@ -2203,13 +2201,13 @@ export const putAnimalDetails =  function (config,org_id,values,user_id,animal_i
     "secondary_breed" :secondary_breed,
     "secondary_breed_other" :secondary_breed_other,
     "sire_type" :sire_type,
-    "sire_id" :sire_id,
-    "dam_id" :dam_id,
+    "sire_id" :sire,
+    "dam_id" :dam,
     "herd_id" :herd_id,
     "org_id" :org_id,
     "farm_id" :farm_id    
   };
-  
+
 const options = {
   url:`${config.url}'${animal_id}'`, 
   method: config.method,

@@ -772,10 +772,7 @@ const AnimalDetails = props => {
                 fullWidth
                 InputLabelProps={{
                   shrink: true,
-                }}
-                inputProps={{
-                  readOnly: true                
-                }}
+                }}               
                 margin = 'dense'
                 label="Sire"
                 name="sire_id"
@@ -783,6 +780,7 @@ const AnimalDetails = props => {
                 value = {_sire_id}
                 variant="outlined"                 
                 InputProps={{
+                  readOnly: true  ,
                   endAdornment: (
                     <InputAdornment position="end"  >
                       <IconButton 
@@ -809,9 +807,7 @@ const AnimalDetails = props => {
                 InputLabelProps={{
                   shrink: true,
                 }}
-                inputProps={{
-                  readOnly: true                
-                }} 
+                
                 margin = 'dense'
                 label="Dam"
                 name="dam_id"                
@@ -819,6 +815,7 @@ const AnimalDetails = props => {
                 variant="outlined"              
                 value = {_dam_id} 
                 InputProps={{
+                  readOnly: true,  
                   endAdornment: (
                     <InputAdornment position="end"  >
                       <IconButton  

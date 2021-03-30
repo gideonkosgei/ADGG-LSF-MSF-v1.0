@@ -20,7 +20,7 @@ const useStyles = makeStyles(theme => ({
     transform: 'translate(-50%, -50%)',
     outline: 'none',
     boxShadow: theme.shadows[20],
-    width: '40%',
+    width: '50%',
     maxHeight: '100%',
     overflowY: 'auto',
     maxWidth: '100%'

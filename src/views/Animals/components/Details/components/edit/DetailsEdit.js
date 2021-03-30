@@ -2,7 +2,7 @@ import React, { useState,useEffect,useContext } from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
-import {Button, Card,CardActions, CardContent, CardHeader,Tooltip, Grid,Divider, TextField,colors,Box,Switch ,Typography} from '@material-ui/core';
+import {Button, Card,CardActions, CardContent, CardHeader,Tooltip, Grid,Divider, TextField,colors,Box,Switch ,Typography,IconButton} from '@material-ui/core';
 import {getLookups,getHerds,putAnimalDetails,getAnimal,getCountries}   from '../../../../../../utils/API';
 import {endpoint_lookup,endpoint_herd,endpoint_animal_update,endpoint_animal,endpoint_countries} from '../../../../../../configs/endpoints';
 import authContext from '../../../../../../contexts/AuthContext';
@@ -11,6 +11,9 @@ import ErrorSnackbar from '../../../../../../components/ErrorSnackbar';
 import {AnimalDetailsMetaData}  from '../../../Modal';
 import OpenInNewIcon from '@material-ui/icons/OpenInNew';
 import moment from 'moment'; 
+import SearchIcon from '@material-ui/icons/Search';
+import InputAdornment from '@material-ui/core/InputAdornment';
+import {AnimalModal}  from '../../../Modal';
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -50,6 +53,8 @@ const DetailsEdit = props => {
   const [openMetadata, setMetadata] = useState(false);
   const [countries, setCountries] = useState([]);
   const [sex, setSex] = useState();
+  const [modalStatus, setModalStatus] = useState(false);
+  const [parent, setParent] = useState(null);
 
   sessionStorage.setItem('animal_tag', values.tag_id);
   sessionStorage.setItem('animal_name', values.animal_name); 
@@ -61,6 +66,7 @@ const DetailsEdit = props => {
     let mounted_herds = true;
     let mounted_animal_details = true;
     let mounted_countries = true;
+    
 
     (async  (endpoint) => {     
       await  getCountries(endpoint)
@@ -150,7 +156,9 @@ const DetailsEdit = props => {
           if (mounted_animal_details) { 
             const data = response.payload[0][0];             
             setValues(data);    
-            setSex(data.sex)                     
+            setSex(data.sex)         
+            sessionStorage.setItem('_sire_id',!data.sire_id ? '':data.sire_id);
+            sessionStorage.setItem('_dam_id',!data.dam_id ? '':data.dam_id);                    
           }
         });
       })(endpoint_animal,animal_id);
@@ -197,16 +205,16 @@ const DetailsEdit = props => {
 
   const handleSubmit = event => {
     event.preventDefault();
-    (async  (endpoint,org_id,values,user_id,animal_id) => {     
-      await  putAnimalDetails(endpoint,org_id,values,user_id,animal_id)
+    (async  (endpoint,org_id,values,user_id,animal_id,sire,dam) => {     
+      await  putAnimalDetails(endpoint,org_id,values,user_id,animal_id,sire,dam)
       .then(() => {  
         setopenSnackbarSuccess(true); 
       }).catch(() => {
         setopenSnackbarError(true); 
       });
-    })(endpoint_animal_update,organization_id,values,user_id,animal_id);    
+    })(endpoint_animal_update,organization_id,values,user_id,animal_id, sessionStorage.getItem('_dam_id'),sessionStorage.getItem('_sire_id') );    
   };
-
+ 
   const handleMetadataOpen = () => {
     setMetadata(true);
   };
@@ -214,6 +222,28 @@ const DetailsEdit = props => {
   const handleMetadataClose = () => {
     setMetadata(false);
   };
+
+  const handleClickSire = () => {
+    setModalStatus(true);
+    setParent('sire');
+  };
+
+  const handleMouseDownSire = (event) => {
+    event.preventDefault();
+  };
+
+  const handleClickDam = () => {
+    setModalStatus(true);
+    setParent('dam');
+  };
+  const handleMouseDownDam = (event) => {
+    event.preventDefault();
+  };
+
+  const handleClose = () => {
+    setModalStatus(false);
+  };
+
 
 
  
@@ -896,19 +926,28 @@ const DetailsEdit = props => {
                 InputLabelProps={{
                   shrink: true,
                 }}
-
-                inputProps={{
-                  readOnly: Boolean(readOnly),
-                  disabled: Boolean(readOnly)                
-                }}
-
+                InputProps={{
+                  readOnly: true,                 
+                  endAdornment: (
+                    <InputAdornment position="end"  >
+                      <IconButton  
+                        edge="end"
+                        variant="outlined"
+                        color="inherit"
+                        onClick={handleClickSire} 
+                        onMouseDown={handleMouseDownSire}
+                      >
+                        <SearchIcon/> 
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}               
                 margin = 'dense'
                 label="Sire"
                 name="sire_id"
                 onChange={handleChange}
-                variant="outlined" 
-                type = "number"  
-                value = {values.sire_id}                        
+                variant="outlined"                
+                value = {sessionStorage.getItem('_sire_id')}                                     
               />
             </Grid>
             <Grid
@@ -922,18 +961,28 @@ const DetailsEdit = props => {
                   shrink: true,
                 }}
 
-                inputProps={{
-                  readOnly: Boolean(readOnly),
-                  disabled: Boolean(readOnly)                
+                InputProps={{
+                  readOnly: true,                 
+                  endAdornment: (
+                    <InputAdornment position="end"  >
+                      <IconButton  
+                        edge="end"
+                        variant="outlined"
+                        color="inherit"
+                        onClick={handleClickDam} 
+                        onMouseDown={handleMouseDownDam}
+                      >
+                        <SearchIcon/> 
+                      </IconButton>
+                    </InputAdornment>
+                  ),
                 }}
-
                 margin = 'dense'
                 label="Dam"
                 name="dam_id"                
                 onChange={handleChange}
-                variant="outlined"
-                type = "number" 
-                value = {values.dam_id}                         
+                variant="outlined"                 
+                value = {sessionStorage.getItem('_dam_id')}                        
               />
             </Grid>
 
@@ -1078,6 +1127,11 @@ const DetailsEdit = props => {
                 animalDetails={values}
                 onClose={handleMetadataClose}
                 open={openMetadata}
+        />
+        <AnimalModal
+        parentType={parent}
+        onClose={handleClose}
+        open={modalStatus}
         />
     </Card>
   );
