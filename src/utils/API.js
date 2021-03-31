@@ -2537,6 +2537,7 @@ export const getBatchValidation =  function (config,uuid) {
     method: config.method,
     headers: config.headers  
   } 
+  
 
   return new Promise((resolve, reject) => {
     axios(options)
