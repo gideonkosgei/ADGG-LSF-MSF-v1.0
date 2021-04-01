@@ -36,13 +36,14 @@ const ServiceActionList = props => {
   const [values, setValues] = useState([]);
   const [ {organization_id}  ] = useContext(authContext);
 
+
   useEffect(() => {
     let mounted = true;   
     (async  (endpoint,org)=>{     
       await  getServiceActionList(endpoint,org)
        .then(response => {              
          if (mounted) {
-          setValues(response.payload);                           
+          setValues(response.payload);  
          }
        });
      })(endpoint_service_action_list,organization_id);

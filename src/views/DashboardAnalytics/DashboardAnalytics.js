@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {Suspense } from 'react';
 import { makeStyles } from '@material-ui/styles';
 import { Grid } from '@material-ui/core';
 
@@ -11,10 +11,7 @@ import {
   HerdAnnualMilkProduction,
   DueDates,
   PdActionList ,
-  ServiceActionList
-  /*MostProfitableProducts,
-  CustomerActivity,
-  LatestOrders*/
+  ServiceActionList  
 } from './components';
 import {default as HealthManagementSummmaryTable} from '../Animals/components/Analytics/components/HealthManagementSummmaryTable';
 
@@ -30,7 +27,8 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const DashboardAnalytics = () => {
-  const classes = useStyles();
+const classes = useStyles();
+const renderLoader = () => <p>Loading</p>;
 
 
   return (
@@ -49,7 +47,9 @@ const DashboardAnalytics = () => {
           xl={4}
           xs={12}
         >
-          <DueDates/>
+          <Suspense fallback={renderLoader()}>
+            <DueDates/>
+          </Suspense>
         </Grid>
         <Grid
           item
@@ -79,7 +79,9 @@ const DashboardAnalytics = () => {
           xl={12}
           xs={12}
         >
-          <ServiceActionList />
+          <Suspense fallback={renderLoader()}>
+            <ServiceActionList />
+          </Suspense>
         </Grid>
 
         <Grid
@@ -97,7 +99,9 @@ const DashboardAnalytics = () => {
           xl={12}
           xs={12}
         >
-          <HerdAnnualMilkProduction />
+          <Suspense fallback={renderLoader()}>
+            <HerdAnnualMilkProduction />
+          </Suspense>
         </Grid>
        
         <Grid

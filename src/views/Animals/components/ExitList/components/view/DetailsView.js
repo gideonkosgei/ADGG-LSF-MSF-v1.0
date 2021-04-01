@@ -130,7 +130,7 @@ const DetailsView = props => {
               </Card> 
           </Grid>
         </Grid>
-        </CardContent> 
+      </CardContent> 
     </Card>
   );
 };
