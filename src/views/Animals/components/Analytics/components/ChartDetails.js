@@ -24,6 +24,7 @@ const ChartDetails = props => {
   const classes = useStyles();  
   const animal_tag  = sessionStorage.getItem('animal_tag');
   const animal_name  = sessionStorage.getItem('animal_name');
+  sessionStorage.getItem('animal_type')
  
   useEffect(() => {     
   }, []); 
@@ -36,13 +37,19 @@ const ChartDetails = props => {
       <CardHeader title= {`${animal_name}(${animal_tag}) `}/> 
         <Divider />
         <CardContent> 
-          <Grid container spacing={1}>                           
-            <Grid item  xs={12} >  
-              <LactationTable />
-            </Grid>                                    
-            <Grid item  xs={12} >  
-              <LactationCurve/>
-            </Grid>
+          <Grid container spacing={1}> 
+             {  
+             parseInt(sessionStorage.getItem('animal_type')) === 1 || parseInt(sessionStorage.getItem('animal_type')) === 2 ?
+              <>                   
+                <Grid item  xs={12} >  
+                  <LactationTable />
+                </Grid>                                    
+                <Grid item  xs={12} >  
+                  <LactationCurve/>
+                </Grid>
+              </>
+            : null
+            }
             <Grid item  xs={12} >  
               <WeightCurve/>
             </Grid>

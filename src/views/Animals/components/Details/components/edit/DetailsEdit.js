@@ -59,7 +59,8 @@ const DetailsEdit = props => {
   sessionStorage.setItem('animal_tag', values.tag_id);
   sessionStorage.setItem('animal_name', values.animal_name); 
   sessionStorage.setItem('animal_dob', values.dob); 
-
+  sessionStorage.setItem('animal_type', values.animal_type); 
+  
 
   useEffect(() => {   
     let mounted_lookup = true;
