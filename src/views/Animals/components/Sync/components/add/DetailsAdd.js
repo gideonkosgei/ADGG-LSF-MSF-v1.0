@@ -2,7 +2,7 @@ import React, { useState,useEffect,useContext } from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
-import {Card, CardContent, CardHeader, Grid,Divider, TextField,colors,Button,CardActions } from '@material-ui/core';
+import {Card, CardContent, CardHeader, Grid,Divider, TextField,colors,Button,CardActions,Box,Typography,Switch } from '@material-ui/core';
 import {getLookups,postSync,getServiceProviders,getAgents,genericFunctionFourParameters}   from '../../../../../../utils/API';
 import {endpoint_lookup,endpoint_sync_add,endpoint_service_provider,endpoint_agent,endpoint_dp_validations} from '../../../../../../configs/endpoints';
 import authContext from '../../../../../../contexts/AuthContext';
@@ -37,6 +37,7 @@ const DetailsEdit = props => {
   const [service_providers, setServiceProviders] = useState([]);
   const [agents, setAgents] = useState([]);
   const [validations, setValidations] = useState([]);
+  const [override, setOverride] = useState(false);
   
   const animal_id  = localStorage.getItem('animal_id');
   const animal_tag  = sessionStorage.getItem('animal_tag');
@@ -162,6 +163,12 @@ const DetailsEdit = props => {
     setopenSnackbarError(false);
   };
 
+  const handleSwitchChange = event => {
+    event.persist();
+    setOverride(!override);   
+  };
+  
+
 
 
   return (
@@ -170,7 +177,7 @@ const DetailsEdit = props => {
       className={clsx(classes.root, className)}
     >   
     {
-            (parseInt(validations.length) === 0) ?
+            (parseInt(validations.length) === 0 || override) ?
           <>     
       <CardHeader title= {`NEW SYNCHRONIZATION RECORD - ${animal_name}(${animal_tag}) `}/>  
         <Divider />
@@ -535,6 +542,22 @@ const DetailsEdit = props => {
         </>              
         : <EventValidation validations = {validations}/>
           }
+           { parseInt(validations.length) === 0 || override ? null :
+          <CardActions>          
+          <Box> 
+              <Typography variant="h6"> Override Validations </Typography> 
+          </Box> 
+          <Box> 
+              <Switch             
+                className={classes.toggle}            
+               // checked={values.readOnly}
+                color="secondary"
+                edge="start"               
+                onChange={handleSwitchChange}
+              />             
+         </Box>
+        </CardActions> 
+        }
     </Card>
   );
 };

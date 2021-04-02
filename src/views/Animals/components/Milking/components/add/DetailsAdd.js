@@ -42,6 +42,7 @@ const DetailsEdit = props => {
   const animal_name  = sessionStorage.getItem('animal_name');
   const [quality_fields_view, setQualityFieldsView] = useState(false);
   const [validations, setValidations] = useState([]); 
+  const [override, setOverride] = useState(false);
 
   useEffect(() => {   
     let mounted_lookup = true;
@@ -266,6 +267,12 @@ const DetailsEdit = props => {
     event.persist();
     setQualityFieldsView(!quality_fields_view);   
   };
+
+  
+  const handleSwitchChange = event => {
+    event.persist();
+    setOverride(!override);   
+  };
  
   
 
@@ -275,7 +282,7 @@ const DetailsEdit = props => {
       className={clsx(classes.root, className)}
     >
       {
-            (parseInt(validations.length) === 0) ?
+            (parseInt(validations.length) === 0 || override) ?
           <> 
       
         <CardHeader title= {`NEW MILKING RECORD  - ${animal_name}(${animal_tag}) `}/>  
@@ -779,7 +786,23 @@ const DetailsEdit = props => {
         </CardContent>  
         </>
           : <EventValidation validations = {validations}/>
-          }             
+          }    
+           { parseInt(validations.length) === 0 || override ? null :
+          <CardActions>          
+          <Box> 
+              <Typography variant="h6"> Override Validations </Typography> 
+          </Box> 
+          <Box> 
+              <Switch             
+                className={classes.toggle}            
+               // checked={values.readOnly}
+                color="secondary"
+                edge="start"               
+                onChange={handleSwitchChange}
+              />             
+         </Box>
+        </CardActions> 
+        }         
         
     </Card>
   );
