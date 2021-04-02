@@ -107,7 +107,12 @@ const LoginForm = props => {
 
     authenticate(endpoint_user_authentication,username,passport)  
       .then((userData) => {
-        if(userData.auth_status){         
+       let is_active = true; 
+       if (userData.payload[0].length ===1){
+        is_active = userData.payload[0][0].status === 1? true : false;
+       }
+     
+        if(userData.auth_status && is_active ){         
             dispatch({
               type: 'LOGIN',
               payload: {
@@ -118,7 +123,7 @@ const LoginForm = props => {
             dispatch({
               type: 'LOGIN_ERROR',
               payload: {
-                error: userData.user_exist ? "Login failed. Password is incorrect!" : " This account is not registered!"
+                error: !is_active ? 'This account is not active. Contact your local administrator' : userData.user_exist ? "Login failed. Password is incorrect!" : " This account is not registered!"
               }
             });
           }

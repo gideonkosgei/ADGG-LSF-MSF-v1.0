@@ -108,6 +108,7 @@ export const authenticate =  function (config,username,password) {
     params: data
   }
 
+
   return new Promise((resolve, reject) => {
     axios(options)
     .then(res => {             
@@ -3720,7 +3721,7 @@ export const changePassword =  function (config,values,email,user) {
     method: config.method,
     headers: config.headers,
     data: body  
-  }; 
+  };   
   return new Promise((resolve, reject) => {
     axios(options)
     .then(res => {           
@@ -3744,6 +3745,7 @@ export const resetPassword =  function (config,values) {
     headers: config.headers,
     data: body  
   }; 
+
  
   
   return new Promise((resolve, reject) => {
