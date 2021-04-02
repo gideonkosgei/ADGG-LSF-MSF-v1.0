@@ -24,7 +24,7 @@ const ChartDetails = props => {
   const classes = useStyles();  
   const animal_tag  = sessionStorage.getItem('animal_tag');
   const animal_name  = sessionStorage.getItem('animal_name');
-  sessionStorage.getItem('animal_type')
+ 
  
   useEffect(() => {     
   }, []); 

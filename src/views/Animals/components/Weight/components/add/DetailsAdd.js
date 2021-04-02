@@ -36,6 +36,9 @@ const DetailsEdit = props => {
   const animal_name  = sessionStorage.getItem('animal_name');
   const  dob = sessionStorage.getItem('animal_dob'); 
 
+  const is_calf = parseInt(sessionStorage.getItem('animal_type')) === 3 || parseInt(sessionStorage.getItem('animal_type')) === 4 ? true : false;
+  
+
   useEffect(() => {   
     let mounted_lookup = true;
     let mounted_limit_parameters = true; 
@@ -80,36 +83,39 @@ const DetailsEdit = props => {
 
 
   // validate weight
-  let mature_weight_limits = limitParameters.filter(obj=>obj.category==='mature_weight_limits');
-  let mature_weight_limits_status = false;
-  let mature_weight_limits_min_value = 0;
-  let mature_weight_limits_max_value = 0;
-  if(mature_weight_limits.length > 0){
-    mature_weight_limits_status = mature_weight_limits[0].is_active_id;  
-    mature_weight_limits_min_value = mature_weight_limits[0].min_value;
-    mature_weight_limits_max_value = mature_weight_limits[0].max_value;    
+  let categ_weight = is_calf ? 'calf_weight_limits' :'mature_weight_limits'
+  let weight_limits = limitParameters.filter(obj=>obj.category=== categ_weight);
+  let weight_limits_status = false;
+  let weight_limits_min_value = 0;
+  let weight_limits_max_value = 0;
+  if(weight_limits.length > 0){
+    weight_limits_status = weight_limits[0].is_active_id;  
+    weight_limits_min_value = weight_limits[0].min_value;
+    weight_limits_max_value = weight_limits[0].max_value;    
   }
 
-  //validate heart Girth
-  let mature_heart_girth_limits = limitParameters.filter(obj=>obj.category==='mature_heart_girth_limits');
-  let mature_heart_girth_limits_status = false;
-  let mature_heart_girth_limits_min_value = 0;
-  let mature_heart_girth_limits_max_value = 0;
-  if(mature_heart_girth_limits.length > 0){
-    mature_heart_girth_limits_status = mature_heart_girth_limits[0].is_active_id;  
-    mature_heart_girth_limits_min_value = mature_heart_girth_limits[0].min_value;
-    mature_heart_girth_limits_max_value = mature_heart_girth_limits[0].max_value;    
+  //validate heart Girth  
+  let categ_girth = is_calf ? 'calf_heart_girth_limits' :'mature_heart_girth_limits';
+  let heart_girth_limits = limitParameters.filter(obj=>obj.category === categ_girth);
+  let heart_girth_limits_status = false;
+  let heart_girth_limits_min_value = 0;
+  let heart_girth_limits_max_value = 0;
+  if(heart_girth_limits.length > 0){
+    heart_girth_limits_status = heart_girth_limits[0].is_active_id;  
+    heart_girth_limits_min_value = heart_girth_limits[0].min_value;
+    heart_girth_limits_max_value = heart_girth_limits[0].max_value;    
   }
 
   //validate body length
-  let mature_body_length_limits = limitParameters.filter(obj=>obj.category==='mature_body_length');
-  let mature_body_length_limits_status = false;
-  let mature_body_length_limits_min_value = 0;
-  let mature_body_length_limits_max_value = 0;
-  if(mature_body_length_limits.length > 0){
-    mature_body_length_limits_status = mature_body_length_limits[0].is_active_id;  
-    mature_body_length_limits_min_value = mature_body_length_limits[0].min_value;
-    mature_body_length_limits_max_value = mature_body_length_limits[0].max_value;    
+  let categ_length = is_calf ? 'calf_body_length':'mature_body_length';
+  let body_length_limits = limitParameters.filter(obj=>obj.category===categ_length);
+  let body_length_limits_status = false;
+  let body_length_limits_min_value = 0;
+  let body_length_limits_max_value = 0;
+  if(body_length_limits.length > 0){
+    body_length_limits_status = body_length_limits[0].is_active_id;  
+    body_length_limits_min_value = body_length_limits[0].min_value;
+    body_length_limits_max_value = body_length_limits[0].max_value;    
   }
 
     const handleChange = event => {
@@ -144,6 +150,8 @@ const DetailsEdit = props => {
   const handleSnackbarErrorClose = () => {
     setopenSnackbarError(false);
   };
+
+  console.log(heart_girth_limits);
 
   return (
     <Card
@@ -204,8 +212,8 @@ const DetailsEdit = props => {
 
                     
                     inputProps={{                        
-                      min: (mature_body_length_limits_status)? mature_body_length_limits_min_value : "any",
-                      max: (mature_body_length_limits_status)? mature_body_length_limits_max_value : "any",
+                      min: (body_length_limits_status)? body_length_limits_min_value : "any",
+                      max: (body_length_limits_status)? body_length_limits_max_value : "any",
                       step: "any"               
                     }}
                     
@@ -230,8 +238,8 @@ const DetailsEdit = props => {
                     }}
 
                     inputProps={{                     
-                      min: (mature_heart_girth_limits_status)? mature_heart_girth_limits_min_value : "any",
-                      max: (mature_heart_girth_limits_status)? mature_heart_girth_limits_max_value : "any",
+                      min: (heart_girth_limits_status)? heart_girth_limits_min_value : "any",
+                      max: (heart_girth_limits_status)? heart_girth_limits_max_value : "any",
                       step: "any"
                     }}
                     //required
@@ -255,8 +263,8 @@ const DetailsEdit = props => {
                         shrink: true,
                       }}
                       inputProps={{                        
-                        min: (mature_weight_limits_status)? mature_weight_limits_min_value : "any",
-                        max: (mature_weight_limits_status)? mature_weight_limits_max_value : "any",
+                        min: (weight_limits_status)? weight_limits_min_value : "any",
+                        max: (weight_limits_status)? weight_limits_max_value : "any",
                         step: "any"               
                       }}
                       margin = 'dense'
