@@ -300,7 +300,7 @@ const Edit = props => {
     rowHover: true,       
     setTableProps: () => {
      return {
-       padding: "none" ,         
+       padding: "2" ,         
        size: "small",
      };
    },   

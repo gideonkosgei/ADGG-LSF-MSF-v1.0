@@ -5,9 +5,14 @@ import { Results } from './components';
 import {endpoint_animal_org} from '../../configs/endpoints';
 import {getAnimalsOrg}   from '../../utils/API';
 import authContext from '../../contexts/AuthContext';
+import { LinearProgress,Typography } from '@material-ui/core';
+
 
 const useStyles = makeStyles(theme => ({
   root: {
+    width: theme.breakpoints.values.lg,
+    maxWidth: '100%',
+    margin: '0 auto',
     padding: theme.spacing(3)
   },
   results: {
@@ -21,6 +26,8 @@ const AnimalList = props => {
   const [caption, setCaption] = useState('All');
   const [ { organization_id }  ] = useContext(authContext);
   const animal_categ_id = parseInt(props.match.params.id); 
+  const [isLoading, setIsLoading] = useState(true);
+ 
 
   useEffect(() => {   
     let mounted = true;
@@ -28,7 +35,8 @@ const AnimalList = props => {
         await  getAnimalsOrg(endpoint,id,status)
         .then(response => {       
           if (mounted) { 
-          let filtered = []; 
+          let filtered = [];
+          setIsLoading(false); 
           if (typeof(animal_categ_id) !='undefined'){
             for (let i = 0; i<response.payload.length; i++){              
               if (response.payload[i].animal_type_id === animal_categ_id){              
@@ -53,12 +61,25 @@ const AnimalList = props => {
   if (!animals) {
     return null;
   }
+
+  
   return (
     <Page
       className={classes.root}
       title="Animals List"
-    >         
-      {animals && (
+    >  
+     <Typography
+        component="h1"
+        gutterBottom
+        variant="h3"
+      >
+        ANIMAL LIST
+      </Typography>
+      { isLoading  &&
+        <LinearProgress/>
+      }
+
+      {animals && (     
         <Results
           className={classes.results}
           animals={animals}

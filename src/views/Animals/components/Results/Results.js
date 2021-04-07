@@ -1,9 +1,8 @@
 import React from 'react';
-import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import { makeStyles } from '@material-ui/styles';
-import {  Card,CardActions,CardContent,CardHeader, Divider,Link} from '@material-ui/core';
+import {Card,CardContent, Divider,Link} from '@material-ui/core';
 import MUIDataTable from "mui-datatables";
 import {MuiThemeProvider } from '@material-ui/core/styles';
 import OpenInNewIcon from '@material-ui/icons/OpenInNew';
@@ -34,7 +33,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const Results = props => {
-  const { className,animals,caption, ...rest } = props;
+  const {animals,caption} = props;
   const classes = useStyles(); 
 
   const columns = [
@@ -95,23 +94,15 @@ const Results = props => {
         return (
           <CustomToolbar />
         );
-      }   
+      }  
       
      };
 
-  return (
-    <div
-      {...rest}
-      className={clsx(classes.root, className)}
-    >
-      <Card>
-        <CardHeader         
-          title = 'Animal Listing'
-        />
+  return (    
+      <Card>       
         <Divider />
         <CardContent className={classes.content}>
-          <PerfectScrollbar>
-            <div className={classes.inner}>
+          <PerfectScrollbar>           
             <MuiThemeProvider>                
               <MUIDataTable
                 title={`Selected Category: ${caption}`}
@@ -119,15 +110,10 @@ const Results = props => {
                 columns={columns}
                 options={options}
               />
-            </MuiThemeProvider>
-            </div>
+            </MuiThemeProvider>           
           </PerfectScrollbar>
         </CardContent>
-        <CardActions className={classes.actions}>          
-        </CardActions>
       </Card>
-     
-    </div>
   );
 };
 

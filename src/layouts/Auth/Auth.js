@@ -4,9 +4,6 @@ import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import { LinearProgress } from '@material-ui/core';
 
-//import { Topbar } from './components';
-//<Topbar />
-
 const useStyles = makeStyles(theme => ({
   content: {
     height: '100%',
@@ -19,7 +16,6 @@ const useStyles = makeStyles(theme => ({
 
 const Auth = props => {
   const { route } = props;
-
   const classes = useStyles();
 
   return (
