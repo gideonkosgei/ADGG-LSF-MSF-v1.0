@@ -75,6 +75,7 @@ const AnimalList = props => {
       >
         ANIMAL LIST
       </Typography>
+      <br/>
       { isLoading  &&
         <LinearProgress/>
       }

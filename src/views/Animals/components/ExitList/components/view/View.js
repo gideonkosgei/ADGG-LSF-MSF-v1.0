@@ -132,7 +132,8 @@ const Edit = props => {
     { isLoading  &&
       <LinearProgress/>
     }  
-    <Divider />      
+    <Divider />  
+    <br/>    
     <Grid container spacing={1} justify="center">            
       <Grid item  xs={1} >  
         <Sidebar/>
