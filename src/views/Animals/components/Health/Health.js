@@ -2,7 +2,7 @@ import React from 'react';
 import { Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
-import { Tabs, Tab, Divider, colors } from '@material-ui/core';
+import { Tabs, Tab, Divider, colors,Typography } from '@material-ui/core';
 import { Page } from 'components';
 import {Injury,ParasiteInfection,HoofHealth,HoofTreatment,Vaccination} from './components';
 import {default as Header} from '../Header/index';
@@ -28,7 +28,9 @@ const useStyles = makeStyles(theme => ({
 const Health = props => {
   const { match, history } = props;
   const classes = useStyles();
-  const { tab } = match.params;  
+  const { tab } = match.params; 
+  const animal_tag  = sessionStorage.getItem('animal_tag');
+  const animal_name  = sessionStorage.getItem('animal_name');  
 
   const handleTabsChange = (event, value) => {
     history.push(value);
@@ -55,6 +57,14 @@ const Health = props => {
     <Page
       className={classes.root}     
     >
+      <Typography
+        component="h1"
+        gutterBottom
+        variant="h3"
+      >
+       {`HEALTH RECORDS  - ${animal_name}(${animal_tag}) `}
+      </Typography>
+      <br/>
       <Header />      
       <Tabs
         className={classes.tabs}

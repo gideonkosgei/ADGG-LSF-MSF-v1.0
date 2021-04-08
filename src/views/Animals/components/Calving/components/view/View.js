@@ -14,7 +14,6 @@ import OpenInNewIcon from '@material-ui/icons/OpenInNew';
 import { Page } from 'components';
 import {Header} from '../index';
 
-
 const useStyles = makeStyles(theme => ({
   root: {
     width: theme.breakpoints.values.lg,
@@ -119,6 +118,11 @@ const Edit = props => {
        size: "small",
      };
    },
+   textLabels: {
+    body: {
+        noMatch: isLoading ? 'Loading...':'Sorry, there is no matching records to display',
+      },
+    },
    customToolbar: () => {
     return (
       <CustomToolbar />
@@ -131,7 +135,7 @@ const Edit = props => {
       className={classes.root}
       title="calving"
     >
-       <Typography
+      <Typography
         component="h1"
         gutterBottom
         variant="h3"
@@ -153,15 +157,15 @@ const Edit = props => {
         <Grid item xs={11}>
           <Card> 
             <CardContent>                  
-              <PerfectScrollbar>                  
-                  <MuiThemeProvider>                
-                    <MUIDataTable
-                      title = ""
-                      data={values}
-                      columns={columns}
-                      options={options}
-                    />
-                  </MuiThemeProvider>                  
+              <PerfectScrollbar> 
+                <MuiThemeProvider>                
+                  <MUIDataTable
+                    title = ""
+                    data={values}
+                    columns={columns}
+                    options={options}
+                  />
+                </MuiThemeProvider> 
               </PerfectScrollbar> 
             </CardContent>
           </Card> 

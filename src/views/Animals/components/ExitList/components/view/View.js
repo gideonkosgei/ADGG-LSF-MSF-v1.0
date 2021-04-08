@@ -114,7 +114,12 @@ const Edit = props => {
        padding: "none" ,         
        size: "small",
      };
-   }    
+   },
+   textLabels: {
+    body: {
+        noMatch: isLoading ? 'Loading...':'Sorry, there is no matching records to display',
+      },
+    } 
   };
 
   return (

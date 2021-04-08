@@ -110,6 +110,11 @@ const Edit = props => {
        size: "small",
      };
    },
+   textLabels: {
+    body: {
+        noMatch: isLoading ? 'Loading...':'Sorry, there is no matching records to display',
+      },
+    },
    customToolbar: () => {
     return (
       <CustomToolbar />
