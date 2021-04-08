@@ -96,8 +96,6 @@ const Edit = props => {
     return null;
   }
 
-
-
   // validate weight
   let categ_weight = is_calf ? 'calf_weight_limits' :'mature_weight_limits'
   let weight_limits = limitParameters.filter(obj=>obj.category=== categ_weight);
