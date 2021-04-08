@@ -1,7 +1,7 @@
 import React, { useState,useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
-import {Card, CardContent, Grid,colors,Link } from '@material-ui/core';
+import {Card, CardContent, Grid,colors,Link,LinearProgress } from '@material-ui/core';
 import {getHoofHealth}   from '../../../../../../../../utils/API';
 import {endpoint_hoof_health_get} from '../../../../../../../../configs/endpoints';
 import {Sidebar} from '../index';
@@ -33,13 +33,15 @@ const Edit = () => {
   const classes = useStyles();  
   const [values, setValues] = useState([]);
   const animal_id  = localStorage.getItem('animal_id');
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {     
     let mounted = true;
       (async  (endpoint,id,option) => {     
         await  getHoofHealth(endpoint,id,option)
         .then(response => {                        
-          if (mounted) {            
+          if (mounted) { 
+            setIsLoading(false);              
             setValues(response.payload);                 
           }
         });
@@ -82,10 +84,8 @@ const Edit = () => {
         );
       }
     }
-  }
-    
+  }    
   ];
-
   
   const options = {       
     filter: true,
@@ -101,6 +101,11 @@ const Edit = () => {
        size: "small",
      };
    },
+   textLabels: {
+    body: {
+        noMatch: isLoading ? 'Loading...':'Sorry, there is no matching records to display',
+      },
+    },
    customToolbar: () => {
     return (
       <CustomToolbar />
@@ -112,7 +117,10 @@ const Edit = () => {
       <Page
         className={classes.root}
         title="Hoof Health"
-      >
+      >        
+      { isLoading  &&
+        <LinearProgress/>
+      } 
       <Grid container spacing={1} justify="center">            
           <Grid item  xs={1} >  
             <Sidebar animal_id = {animal_id}/>
