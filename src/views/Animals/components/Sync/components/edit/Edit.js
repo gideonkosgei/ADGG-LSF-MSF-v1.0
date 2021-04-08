@@ -1,7 +1,7 @@
 import React, { useState,useEffect,useContext } from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
-import {Card, CardContent, LinearProgress, Grid,Divider, TextField,colors,Button,CardActions,Box,Switch ,Typography,Tooltip } from '@material-ui/core';
+import {Card, CardContent, LinearProgress, Grid, TextField,colors,Button,CardActions,Box,Switch ,Typography,Tooltip } from '@material-ui/core';
 import {getLookups,updateSync,getSyncByEventId,getServiceProviders,getAgents}   from '../../../../../../utils/API';
 import {endpoint_lookup,endpoint_sync_update,endpoint_sync_specific,endpoint_service_provider,endpoint_agent} from '../../../../../../configs/endpoints';
 import authContext from '../../../../../../contexts/AuthContext';
@@ -590,8 +590,7 @@ const Edit = props => {
                 </Grid>
                
               </Grid>
-          </CardContent>
-          <Divider />
+          </CardContent>          
           <CardActions>          
           <Box flexGrow={1}>
             {readOnly ? null :                        
