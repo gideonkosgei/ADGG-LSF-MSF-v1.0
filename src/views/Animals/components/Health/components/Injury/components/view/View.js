@@ -13,7 +13,6 @@ import { Link as RouterLink } from 'react-router-dom';
 import OpenInNewIcon from '@material-ui/icons/OpenInNew';
 import { Page } from 'components';
 
-
 const useStyles = makeStyles(theme => ({
   root: {
   },
@@ -83,8 +82,7 @@ const Edit = props => {
         );
       }
     }
-  }
-    
+  }    
   ];
   
   const options = {       
