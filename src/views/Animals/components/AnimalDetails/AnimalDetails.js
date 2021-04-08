@@ -2,7 +2,7 @@ import React, { useState,useEffect,useContext } from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
-import {Button, Card,CardActions, CardContent, CardHeader, Grid,Divider, TextField,colors,IconButton } from '@material-ui/core';
+import {Button,Typography, Card,CardActions, CardContent, Grid,Divider, TextField,colors,IconButton } from '@material-ui/core';
 import {getLookups,getHerds,postAnimalRegistration,getCountries}   from '../../../../utils/API';
 import {endpoint_lookup,endpoint_herd,endpoint_animal_add,endpoint_countries} from '../../../../configs/endpoints';
 import authContext from '../../../../contexts/AuthContext';
@@ -12,8 +12,14 @@ import SearchIcon from '@material-ui/icons/Search';
 import moment from 'moment'; 
 import Alert from '@material-ui/lab/Alert';
 import {AnimalModal}  from '../Modal';
+import { Page } from 'components';
 const useStyles = makeStyles(theme => ({
-  root: {},
+  root: {
+    width: theme.breakpoints.values.lg,
+    maxWidth: '100%',
+    margin: '0 auto',
+    padding: theme.spacing(3)
+  },
   saveButton: {
     color: theme.palette.white,
     backgroundColor: colors.green[600],
@@ -162,8 +168,6 @@ const AnimalDetails = props => {
     }
   };
 
- 
-
 
   const handleSubmit = event => {
     event.preventDefault();
@@ -205,14 +209,24 @@ const AnimalDetails = props => {
     setModalStatus(false);
   };
 
-   return (
+    return (
+    <Page
+    className={classes.root}
+    title="Animal Details"
+    >  
+   <Typography
+      component="h1"
+      gutterBottom
+      variant="h3"
+    >
+    ANIMAL REGISTRATION
+    </Typography>
+    <br/> 
     <Card
       {...rest}
       className={clsx(classes.root, className)}
     >
-      <form id ='new_reg' onSubmit={handleSubmit}>
-        <CardHeader title="New Animal Registration " />
-        <Divider />
+      <form id ='new_reg' onSubmit={handleSubmit}>       
         {output.status === 0 ?
               <>
               <Alert severity="error" >{output.message}</Alert>             
@@ -911,6 +925,7 @@ const AnimalDetails = props => {
         open={modalStatus}
         />
     </Card>
+    </Page>
   );
 };
 
