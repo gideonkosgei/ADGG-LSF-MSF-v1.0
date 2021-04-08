@@ -131,7 +131,7 @@ const Edit = props => {
                   <PerfectScrollbar>                 
                     <MuiThemeProvider>                
                       <MUIDataTable
-                        title = "Parasite Infection"
+                        title = "PARASITE INFECTION"
                         data={values}
                         columns={columns}
                         options={options}
