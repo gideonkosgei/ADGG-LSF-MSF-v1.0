@@ -4,7 +4,6 @@ import { makeStyles } from '@material-ui/styles';
 import {Card, CardContent, Typography,LinearProgress, Grid,Divider,colors,Link} from '@material-ui/core';
 import {getParametersLocalSettingsOrgAll}   from '../../../../../../utils/API';
 import {endpoint_parameter_local_settings_org_all} from '../../../../../../configs/endpoints';
-import {Sidebar} from '../index';
 import MUIDataTable from "mui-datatables";
 import {MuiThemeProvider } from '@material-ui/core/styles';
 import PerfectScrollbar from 'react-perfect-scrollbar';
