@@ -1,7 +1,11 @@
 import React, { useState,useEffect,useContext } from 'react';
+import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
-import {Card, CardContent, LinearProgress, Grid,Tooltip, TextField,colors,Button,CardActions,Box,Switch ,Typography } from '@material-ui/core';
+import {Card, CardContent,Fab, LinearProgress,CircularProgress, Grid,Tooltip, TextField,colors,Button,CardActions,Box,Switch ,Typography } from '@material-ui/core';
+import { green } from '@material-ui/core/colors';
+import CheckIcon from '@material-ui/icons/Check';
+import SaveIcon from '@material-ui/icons/Save';
 import {getLookups,updateWeight,getWeightByEventId,getParametersLimitAll}   from '../../../../../../utils/API';
 import {endpoint_lookup,endpoint_weight_update,endpoint_weight_specific,endpoint_parameter_limit_all} from '../../../../../../configs/endpoints';
 import authContext from '../../../../../../contexts/AuthContext';
@@ -39,6 +43,31 @@ const useStyles = makeStyles(theme => ({
   },
   content: {
     marginTop: theme.spacing(3)
+  },
+  wrapper: {
+    margin: theme.spacing(1),
+    position: 'relative',
+  },
+  buttonSuccess: {
+    backgroundColor: green[500],
+    '&:hover': {
+      backgroundColor: green[700],
+    },
+  },
+  fabProgress: {
+    color: green[500],
+    position: 'absolute',
+    top: -6,
+    left: -6,
+    zIndex: 1,
+  },
+  buttonProgress: {
+    color: green[500],
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    marginTop: -12,
+    marginLeft: -12,
   }
 }));
 
@@ -58,6 +87,13 @@ const Edit = props => {
   const animal_name  = sessionStorage.getItem('animal_name');  
   const is_calf = parseInt(sessionStorage.getItem('animal_type')) === 3 || parseInt(sessionStorage.getItem('animal_type')) === 4 ? true : false;
   const [isLoading, setIsLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
+  const timer = React.useRef();
+
+  const buttonClassname = clsx({
+    [classes.buttonSuccess]: success,
+  });
 
   useEffect(() => {   
     let mounted_lookup = true;
@@ -149,10 +185,6 @@ const Edit = props => {
     body_length_limits_min_value = body_length_limits[0].min_value;
     body_length_limits_max_value = body_length_limits[0].max_value;    
   }
-
-
-
-
     const handleChange = event => {
     event.persist();
     setValues({
@@ -165,12 +197,23 @@ const Edit = props => {
 
   const handleSubmit = event => {
     event.preventDefault();
+    if (!loading) {
+      setSuccess(false);
+      setLoading(true);
+    }
     (async  (endpoint,id,values,user_id) => {     
       await  updateWeight(endpoint,id,values,user_id)
-      .then(() => {  
-        setopenSnackbarSuccess(true);             
+      .then(() => {       
+          timer.current = window.setTimeout(() => {
+            setSuccess(true);
+            setLoading(false);
+            setopenSnackbarSuccess(true);
+          }, 500);
+                        
       }).catch(() => {
         setopenSnackbarError(true); 
+        setSuccess(false);
+        setLoading(false);
       });
     })(endpoint_weight_update,event_id,values,user_id);    
   };
@@ -194,7 +237,6 @@ const Edit = props => {
   const handleMetadataClose = () => {
     setMetadata(false);
   };
-
   
   return (
     <Page
@@ -242,8 +284,7 @@ const Edit = props => {
                         disabled: Boolean(readOnly) ,                         
                         max: moment(new Date()).format('YYYY-MM-DD')     
                       }}
-                      required
-                     
+                      required                     
                       label="Weight Date"
                       type="date"
                       name="event_date"  
@@ -262,17 +303,14 @@ const Edit = props => {
                     fullWidth
                     InputLabelProps={{
                       shrink: true                     
-                    }}                    
-
+                    }} 
                     inputProps={{
                       readOnly: Boolean(readOnly),
                       disabled: Boolean(readOnly),                      
                       min: (body_length_limits_status)? body_length_limits_min_value : "any",
                       max: (body_length_limits_status)? body_length_limits_max_value : "any",
                       step: "any"               
-                    }} 
-                    //required
-                   
+                    }}
                     label="Body Length (cm)"
                     name="body_length"                                   
                     onChange={handleChange}
@@ -291,7 +329,6 @@ const Edit = props => {
                     InputLabelProps={{
                       shrink: true,
                     }}
-
                     inputProps={{
                       readOnly: Boolean(readOnly),
                       disabled: Boolean(readOnly),
@@ -299,9 +336,6 @@ const Edit = props => {
                       max: (heart_girth_limits_status)? heart_girth_limits_max_value : "any",
                       step: "any"
                     }}
-
-                    //required
-                   
                     label="Heart Girth (cm)"
                     name="heart_girth"                
                     onChange={handleChange}
@@ -350,19 +384,15 @@ const Edit = props => {
                     InputLabelProps={{
                       shrink: true,
                     }}
-
                     inputProps={{
                       readOnly: Boolean(readOnly),
                       disabled: Boolean(readOnly)                
                     }}
-
-                   
                     label="Body Score"
                     name="body_score"
                     onChange={handleChange}
                     value = {values.body_score} 
-                    select
-                    // eslint-disable-next-line react/jsx-sort-props
+                    select                    
                     SelectProps={{ native: true }}                    
                     variant="outlined"
                   >
@@ -376,23 +406,37 @@ const Edit = props => {
                         ))
                     }           
                   </TextField>
-                </Grid>
-               
+                </Grid>               
               </Grid>
           </CardContent>         
-          <CardActions>          
-          <Box flexGrow={1}>
-            {readOnly ? null :                        
+          <CardActions> 
+          {readOnly ? null :  
+          <>    
+            <div className={classes.wrapper}>
+              <Fab
+                aria-label="save"
+                color="primary"
+                className={buttonClassname}
+              >
+                {success ? <CheckIcon /> : <SaveIcon />}
+              </Fab>
+              {loading && <CircularProgress size={68} className={classes.fabProgress} />}
+            </div>
+            <div className={classes.wrapper}>
               <Button
-                className={classes.saveButton}
-                type="submit"
                 variant="contained"
-                hidden = "true"                               
+                color="primary"
+                className={buttonClassname}
+                disabled={loading}                
+                type="submit"
               >
                 Save Changes
-              </Button>              
-            }                             
-          </Box> 
+              </Button>
+              {loading && <CircularProgress size={24} className={classes.buttonProgress} />}
+            </div>
+            </>
+            }
+          
           <Box>
             <Tooltip  title="view Metadata">
               <Button onClick={handleMetadataOpen}>
@@ -423,14 +467,13 @@ const Edit = props => {
           open={openSnackbarError}
         />
         <EventWeightMetaData
-                weightDetails={values}
-                onClose={handleMetadataClose}
-                open={openMetadata}
+          weightDetails={values}
+          onClose={handleMetadataClose}
+          open={openMetadata}
         />   
-          </Card>
-          </Grid>
-          </Grid>
-       
+        </Card>
+      </Grid>
+    </Grid>       
    </Page>
   );
 };
