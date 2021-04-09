@@ -1,7 +1,7 @@
 import React, { useState,useEffect,useContext } from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
-import {Card, CardContent, LinearProgress, Grid,Divider, TextField,colors,Button,CardActions,Box,Switch ,Typography,Tooltip } from '@material-ui/core';
+import {Card, CardContent, LinearProgress, Grid, TextField,colors,Button,CardActions,Box,Switch ,Typography,Tooltip } from '@material-ui/core';
 import {getLookups,CreateOrEditHoofHealthRecord,getHoofHealth,getAgents}   from '../../../../../../../../utils/API';
 import {endpoint_lookup,endpoint_hoof_health_edit,endpoint_hoof_health_get,endpoint_agent} from '../../../../../../../../configs/endpoints';
 import authContext from '../../../../../../../../contexts/AuthContext';
