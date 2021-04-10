@@ -102,8 +102,6 @@ const Edit = props => {
   }    
   ];
   
-
-  
   const options = {       
     filter: true,
     rowsPerPage: 5,       
