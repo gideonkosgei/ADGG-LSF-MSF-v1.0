@@ -58,8 +58,7 @@ const Edit = props => {
 
   if (!values) {
     return null;
-  }  
-  
+  }    
  
     const columns = [      
       { name: "event_id",label: "Event ID",options: {filter: false,sort: false,display:false}},
@@ -150,8 +149,6 @@ const Edit = props => {
              </Card> 
          </Grid>
        </Grid>
-      
-     
    </Page>
   );
 };
