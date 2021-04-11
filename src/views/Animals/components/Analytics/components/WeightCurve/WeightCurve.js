@@ -3,10 +3,11 @@ import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import { makeStyles } from '@material-ui/styles';
-import { Card, CardHeader, CardContent, Divider } from '@material-ui/core';
+import { Card, CardHeader,LinearProgress, CardContent, Divider } from '@material-ui/core';
 import { Chart } from './components';
 import {getWeightGrowthCurveData}   from '../../../../../../utils/API';
 import {endpoint_weight_growth_curve} from '../../../../../../configs/endpoints';
+import { Page } from 'components';
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -33,6 +34,7 @@ const WeightCurve = props => {
   const [dateCategories, setDateCategories] = useState([]);
   const [weightValues, setWeightValues] = useState([]);
   const animal_id  = localStorage.getItem('animal_id'); 
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {   
     let mounted = true;
@@ -50,7 +52,8 @@ const WeightCurve = props => {
               }             
             } 
             setDateCategories(dates); 
-            setWeightValues(weights);            
+            setWeightValues(weights);   
+            setLoading(false);           
           }
         });
       })(endpoint_weight_growth_curve,1,1,animal_id);
@@ -68,6 +71,8 @@ const WeightCurve = props => {
       labels: dateCategories 
   };
   return (
+    <Page> 
+    { loading  && <LinearProgress/>   }  
     <Card
       {...rest}
       className={clsx(classes.root, className)}
@@ -88,6 +93,7 @@ const WeightCurve = props => {
         </PerfectScrollbar>
       </CardContent>
     </Card>
+    </Page> 
   );
 };
 

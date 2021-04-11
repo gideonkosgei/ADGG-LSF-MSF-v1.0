@@ -1,14 +1,19 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
-import {colors } from '@material-ui/core';
+import {colors,Typography,Divider } from '@material-ui/core';
 
 import { Page } from 'components';
 import {Header} from './index';
 import {default as ChartDetails} from './components/ChartDetails';
 
 const useStyles = makeStyles(theme => ({
-  root: {},
+  root: {
+    width: theme.breakpoints.values.lg,
+    maxWidth: '100%',
+    margin: '0 auto',
+    padding: theme.spacing(3)
+  },
   inner: {
     width: theme.breakpoints.values.lg,
     maxWidth: '100%',
@@ -25,12 +30,24 @@ const useStyles = makeStyles(theme => ({
 
 const Chart = props => { 
   const classes = useStyles();
+  const animal_tag  = sessionStorage.getItem('animal_tag');
+  const animal_name  = sessionStorage.getItem('animal_name');
  
   return (
     <Page
       className={classes.root}
       title="Animal Trends"
     >
+       <Typography
+        component="h1"
+        gutterBottom
+        variant="h3"
+      >
+          {`ANIMAL LEVEL DASHBOARD  - ${animal_name}(${animal_tag}) `}
+
+      </Typography> 
+      <Divider />  
+      <br/>  
       <Header/>           
         <br/>
       <ChartDetails/>

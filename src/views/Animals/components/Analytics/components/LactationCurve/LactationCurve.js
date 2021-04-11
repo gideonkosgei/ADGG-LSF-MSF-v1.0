@@ -3,11 +3,12 @@ import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import { makeStyles } from '@material-ui/styles';
-import { Card, CardHeader, CardContent, Divider,TextField,Grid } from '@material-ui/core';
+import { Card, CardHeader, LinearProgress,CardContent, Divider,TextField,Grid } from '@material-ui/core';
 import { GenericMoreButton } from 'components';
 import { Chart } from './components';
 import {endpoint_lactation_curve} from '../../../../../../configs/endpoints';
 import {getlactationCurveData}   from '../../../../../../utils/API';
+import { Page } from 'components';
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -37,6 +38,7 @@ const LactationCurve = props => {
   const [dimData, setDimData] = useState([]);
   const [lactation_ids, setLactationIds] = useState([]); 
   const animal_id  = localStorage.getItem('animal_id');
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     let mounted = true;   
@@ -52,7 +54,8 @@ const LactationCurve = props => {
               lactations.push(response.payload[i].lactation_id);      
             } 
           }                
-          setLactationIds(lactations.filter(onlyUnique));                     
+          setLactationIds(lactations.filter(onlyUnique));   
+          setLoading(false);                     
          }
        });
      })(endpoint_lactation_curve,animal_id);
@@ -95,6 +98,8 @@ const handleChange = event => {
 };
 
   return (
+    <Page> 
+    { loading  && <LinearProgress/>   } 
     <Card
       {...rest}
       className={clsx(classes.root, className)}
@@ -149,6 +154,7 @@ const handleChange = event => {
         </PerfectScrollbar>
       </CardContent>
     </Card>
+    </Page>  
   );
 };
 
