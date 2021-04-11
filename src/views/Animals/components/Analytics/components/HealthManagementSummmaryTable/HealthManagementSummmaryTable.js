@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
-import { Card, CardContent, CardHeader, Divider,Grid, Button, ButtonGroup } from '@material-ui/core';
+import { Card, CardContent,LinearProgress, CardHeader, Divider,Grid, Button, ButtonGroup } from '@material-ui/core';
 import {endpoint_health_summary_table} from '../../../../../../configs/endpoints';
 import {getHealthManagementSummary}   from '../../../../../../utils/API';
 import authContext from '../../../../../../contexts/AuthContext';
@@ -12,6 +12,7 @@ import PerfectScrollbar from 'react-perfect-scrollbar';
 import moment from 'moment';
 import { DatePicker } from '@material-ui/pickers';
 import CalendarTodayIcon from '@material-ui/icons/CalendarTodayOutlined';
+import { Page } from 'components';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -52,6 +53,7 @@ const HealthManagementSummmaryTable = props => {
   const [endDate, setEndDate] = useState(moment());
   const [selectEdge, setSelectEdge] = useState(null);
   const [calendarDate, setCalendarDate] = useState(moment());
+  const [loading, setLoading] = useState(true);
 
   let option = health_summary_option;
   let id = option === 1 ? localStorage.getItem('animal_id'): organization_id;
@@ -62,7 +64,8 @@ const HealthManagementSummmaryTable = props => {
       await  getHealthManagementSummary(endpoint,option,id,start_date,end_date)
        .then(response => {              
          if (mounted) {
-          setValues(response.payload);                           
+          setValues(response.payload);    
+          setLoading(false);                          
          }
        });
      })(endpoint_health_summary_table,option,id,moment(startDate).format('YYYY-MM-DD'),moment(endDate).format('YYYY-MM-DD'));
@@ -97,7 +100,12 @@ const HealthManagementSummmaryTable = props => {
        padding: "none" ,         
        size: "small",
      };
-   }    
+   },
+   textLabels: {
+    body: {
+        noMatch: loading ? 'Loading...':'Sorry, there is no matching records to display',
+      },
+    }   
   };
 
   const handleCalendarOpen = edge => {
@@ -134,6 +142,8 @@ const HealthManagementSummmaryTable = props => {
   const open = Boolean(selectEdge);
  
   return (
+    <Page> 
+    { loading  && <LinearProgress/>   }  
     <Card
       {...rest}
       className={clsx(classes.root, className)}
@@ -186,7 +196,8 @@ const HealthManagementSummmaryTable = props => {
         value={calendarDate}
         variant="dialog"
       />
-    </Card>    
+    </Card>
+    </Page>    
   );
 };
 HealthManagementSummmaryTable.propTypes = {

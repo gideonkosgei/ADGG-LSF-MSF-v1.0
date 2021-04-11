@@ -3,12 +3,13 @@ import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import { makeStyles } from '@material-ui/styles';
-import { Card, CardHeader, CardContent, Divider } from '@material-ui/core';
+import { Card, CardHeader,LinearProgress, CardContent, Divider } from '@material-ui/core';
 import { GenericMoreButton } from 'components';
 import { Chart } from './components';
 import authContext from '../../../../contexts/AuthContext';
 import {endpoint_herd_milking_cow_summary} from '../../../../configs/endpoints';
 import {getHerdMilkingSummary}   from '../../../../utils/API';
+import { Page } from 'components';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -32,6 +33,7 @@ const HerdAnnualMilkProduction = props => {
   const [data, setData] = useState([]);
   const [labels, setLabels] = useState([]);
   const [ { organization_id }] = useContext(authContext);  
+  const [loading, setLoading] = useState(true);
  
   useEffect(() => {
     let mounted = true; 
@@ -50,6 +52,7 @@ const HerdAnnualMilkProduction = props => {
           };                     
             setData(obj_data);
             setLabels(event_year);  
+            setLoading(false);  
          }
        });
      })(endpoint_herd_milking_cow_summary,1,organization_id);
@@ -59,6 +62,8 @@ const HerdAnnualMilkProduction = props => {
   }, [organization_id]);
 
   return (
+    <Page> 
+    { loading  && <LinearProgress/>   }  
     <Card
       {...rest}
       className={clsx(classes.root, className)}
@@ -80,6 +85,7 @@ const HerdAnnualMilkProduction = props => {
         </PerfectScrollbar>
       </CardContent>
     </Card>
+    </Page>  
   );
 };
 

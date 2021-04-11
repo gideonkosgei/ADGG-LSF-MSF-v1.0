@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
-import { Button,Card, CardContent, CardHeader, Divider,Grid, ButtonGroup } from '@material-ui/core';
+import { Button,Card,LinearProgress, CardContent, CardHeader, Divider,Grid, ButtonGroup } from '@material-ui/core';
 import authContext from '../../../../contexts/AuthContext';
 import {endpoint_top_cows} from '../../../../configs/endpoints';
 import {getTopCows}   from '../../../../utils/API';
@@ -12,6 +12,7 @@ import CalendarTodayIcon from '@material-ui/icons/CalendarTodayOutlined';
 import MUIDataTable from "mui-datatables";
 import {MuiThemeProvider } from '@material-ui/core/styles';
 import PerfectScrollbar from 'react-perfect-scrollbar';
+import { Page } from 'components';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -52,6 +53,7 @@ const TopCows = props => {
   const [startDate, setStartDate] = useState(moment());  
   const [selectEdge, setSelectEdge] = useState(null);
   const [calendarDate, setCalendarDate] = useState(moment());  
+  const [loading, setLoading] = useState(true);
   
   useEffect(() => {
     let mounted = true;   
@@ -59,7 +61,8 @@ const TopCows = props => {
       await  getTopCows(endpoint,org_id,year)
        .then(response => {              
          if (mounted) {
-          setTopCows(response.payload);                           
+          setTopCows(response.payload);  
+          setLoading(false);                          
          }
        });
      })(endpoint_top_cows,organization_id,moment(startDate).format('YYYY'));
@@ -96,7 +99,12 @@ const TopCows = props => {
        padding: "none" ,         
        size: "small",
      };
-   }    
+   },
+   textLabels: {
+    body: {
+        noMatch: loading ? 'Loading...':'Sorry, there is no matching records to display',
+      },
+    }   
   };
 
   
@@ -123,6 +131,8 @@ const TopCows = props => {
   };
   const open = Boolean(selectEdge); 
   return (
+    <Page> 
+    { loading  && <LinearProgress/>   }  
     <Card
       {...rest}
       className={clsx(classes.root, className)}
@@ -175,9 +185,8 @@ const TopCows = props => {
         value={calendarDate}
         variant="dialog"
       />
-
     </Card>
-    
+    </Page>     
   );
 };
 

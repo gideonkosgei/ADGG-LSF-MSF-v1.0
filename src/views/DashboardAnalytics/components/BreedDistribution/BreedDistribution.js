@@ -2,13 +2,14 @@ import React, { useState, useEffect, useContext } from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
-import {Card, CardHeader, CardContent, Divider, Typography } from '@material-ui/core';
+import {Card, CardHeader,LinearProgress, CardContent, Divider, Typography } from '@material-ui/core';
 import { GenericMoreButton } from 'components';
 import { Chart } from './components';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import authContext from '../../../../contexts/AuthContext';
 import {endpoint_breeds_distribution} from '../../../../configs/endpoints';
 import {getStatsBreedsDistribution}   from '../../../../utils/API';
+import { Page } from 'components';
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -44,6 +45,7 @@ const BreedDistribution = props => {
   const [ { organization_id }  ] = useContext(authContext);
   const classes = useStyles(); 
   const [stats, setStats] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     let mounted = true;
@@ -52,6 +54,7 @@ const BreedDistribution = props => {
        .then(response => {              
          if (mounted) {
           setStats(response.payload);
+          setLoading(false);  
          }
        });
      })(organization_id);
@@ -62,6 +65,8 @@ const BreedDistribution = props => {
 
 
   return (
+    <Page> 
+    { loading  && <LinearProgress/>   }
     <Card
       {...rest}
       className={clsx(classes.root, className)}
@@ -106,6 +111,7 @@ const BreedDistribution = props => {
           </PerfectScrollbar>
       </CardContent>
     </Card>
+  </Page> 
   );
 };
 

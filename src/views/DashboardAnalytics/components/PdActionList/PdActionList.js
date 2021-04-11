@@ -2,13 +2,14 @@ import React, { useState,useEffect,useContext } from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
-import { Card, CardContent, CardHeader, Divider } from '@material-ui/core';
+import { Card, CardContent,LinearProgress, CardHeader, Divider } from '@material-ui/core';
 import {endpoint_pd_action_list} from '../../../../configs/endpoints';
 import {getPdActionList}   from '../../../../utils/API';
 import MUIDataTable from "mui-datatables";
 import {MuiThemeProvider } from '@material-ui/core/styles';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import authContext from '../../../../contexts/AuthContext';
+import { Page } from 'components';
 
 import { GenericMoreButton } from 'components';
 
@@ -37,6 +38,7 @@ const PdActionList = props => {
   const classes = useStyles();
   const [values, setValues] = useState([]);
   const [ {organization_id}  ] = useContext(authContext);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     let mounted = true;   
@@ -44,7 +46,8 @@ const PdActionList = props => {
       await  getPdActionList(endpoint,org)
        .then(response => {              
          if (mounted) {
-          setValues(response.payload);                           
+          setValues(response.payload);   
+          setLoading(false);                         
          }
        });
      })(endpoint_pd_action_list,organization_id);
@@ -83,10 +86,17 @@ const PdActionList = props => {
        padding: "none" ,         
        size: "small",
      };
-   }    
+   },
+   textLabels: {
+    body: {
+        noMatch: loading ? 'Loading...':'Sorry, there is no matching records to display',
+      },
+    }    
   };
 
   return (
+    <Page>
+         { loading  && <LinearProgress/>   }  
     <Card
       {...rest}
       className={clsx(classes.root, className)}
@@ -111,7 +121,8 @@ const PdActionList = props => {
         </PerfectScrollbar> 
       </CardContent>
       <Divider /> 
-    </Card>    
+    </Card>  
+    </Page>  
   );
 };
 PdActionList.propTypes = {

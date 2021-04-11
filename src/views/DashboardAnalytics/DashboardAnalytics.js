@@ -1,7 +1,6 @@
-import React, {Suspense } from 'react';
+import React from 'react';
 import { makeStyles } from '@material-ui/styles';
-import { Grid } from '@material-ui/core';
-
+import { Grid,Typography,Divider } from '@material-ui/core';
 import { Page } from 'components';
 import {
   AnimalCategorySegmentation,
@@ -16,7 +15,10 @@ import {
 import {default as HealthManagementSummmaryTable} from '../Animals/components/Analytics/components/HealthManagementSummmaryTable';
 
 const useStyles = makeStyles(theme => ({
-  root: {
+  root: {    
+    width: theme.breakpoints.values.lg,
+    maxWidth: '100%',
+    margin: '0 auto',
     padding: theme.spacing(3)
   },
   container: {
@@ -28,14 +30,20 @@ const useStyles = makeStyles(theme => ({
 
 const DashboardAnalytics = () => {
 const classes = useStyles();
-const renderLoader = () => <p>Loading</p>;
-
-
   return (
     <Page
       className={classes.root}
       title="Analytics Dashboard"
-    >    
+    >   
+     <Typography
+        component="h1"
+        gutterBottom
+        variant="h3"
+      >
+        HERD LEVEL DASHBOARDS
+      </Typography> 
+      <Divider />  
+      <br/>  
       <Grid
         className={classes.container}
         container
@@ -47,9 +55,7 @@ const renderLoader = () => <p>Loading</p>;
           xl={4}
           xs={12}
         >
-          <Suspense fallback={renderLoader()}>
-            <DueDates/>
-          </Suspense>
+          <DueDates/>
         </Grid>
         <Grid
           item
@@ -79,9 +85,7 @@ const renderLoader = () => <p>Loading</p>;
           xl={12}
           xs={12}
         >
-          <Suspense fallback={renderLoader()}>
-            <ServiceActionList />
-          </Suspense>
+          <ServiceActionList />
         </Grid>
 
         <Grid
@@ -99,9 +103,7 @@ const renderLoader = () => <p>Loading</p>;
           xl={12}
           xs={12}
         >
-          <Suspense fallback={renderLoader()}>
-            <HerdAnnualMilkProduction />
-          </Suspense>
+          <HerdAnnualMilkProduction />
         </Grid>
        
         <Grid
