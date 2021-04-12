@@ -2172,7 +2172,7 @@ export const putAnimalDetails =  function (config,org_id,values,user_id,animal_i
   animal_type =  (typeof animal_type === 'undefined' || animal_type ==='' || animal_type==='null')? null:animal_type; 
   breed_composition =  (typeof breed_composition === 'undefined' || breed_composition ==='' || breed_composition==='null')? null:breed_composition; 
   breed_composition_details =  (typeof breed_composition_details === 'undefined' || breed_composition_details ==='' || breed_composition_details==='null')? null:breed_composition_details; 
-  color =  (typeof color === 'undefined' || color ==='' || color==='null')? null:color;
+  color =  (typeof color === 'undefined' || color ==='' || color ==='null' || color=== "[\"\"]")? null:color;
   color_other =  (typeof color_other === 'undefined' || color_other ===''  || color_other==='null')? null:color_other;
   country_of_origin =  (typeof country_of_origin === 'undefined' || country_of_origin ==='' || country_of_origin==='null')? null:country_of_origin;    
   deformaties =  (typeof deformaties === 'undefined' || deformaties ==='' || deformaties==='null'|| deformaties=== "[\"\"]")? null:deformaties; 
@@ -2186,7 +2186,7 @@ export const putAnimalDetails =  function (config,org_id,values,user_id,animal_i
   main_breed_other =  (typeof main_breed_other === 'undefined' || main_breed_other ==='' || main_breed_other==='null')? null:main_breed_other;    
   notes =  (typeof notes === 'undefined' || notes ==='' || notes==='null')? null:notes;
   purchase_cost =  (typeof purchase_cost === 'undefined' || purchase_cost ==='' || purchase_cost==='null')? null:purchase_cost;   
-  secondary_breed =  (typeof secondary_breed === 'undefined' || secondary_breed ==='' || secondary_breed==='null')? null:secondary_breed;
+  secondary_breed =  (typeof secondary_breed === 'undefined' || secondary_breed ==='' || secondary_breed==='null' || secondary_breed === "[\"\"]")? null:secondary_breed;
   sire_type =  (typeof sire_type === 'undefined' || sire_type ==='' || sire_type==='null')? null:sire_type;
   tag_id =  (typeof tag_id === 'undefined' || tag_id ==='' || tag_id==='null')? null:tag_id;
   secondary_breed_other =  (typeof secondary_breed_other === 'undefined' || secondary_breed_other ==='' || secondary_breed_other==='null')? null:secondary_breed_other;
