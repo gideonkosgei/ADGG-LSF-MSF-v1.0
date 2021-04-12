@@ -2166,31 +2166,32 @@ export const putAnimalDetails =  function (config,org_id,values,user_id,animal_i
     main_breed,notes,purchase_cost, secondary_breed, secondary_breed_other, sire_type,tag_id,reg_date,entry_date
   } = values;
 
-  herd_id = (typeof herd_id === 'undefined' || herd_id ==='')? null:parseInt(herd_id);
-  main_breed_other =  (typeof main_breed_other === 'undefined' || main_breed_other ==='')?null:main_breed_other;
-  animal_name =  (typeof animal_name === 'undefined' || animal_name ==='')? null:animal_name; 
-  animal_type =  (typeof animal_type === 'undefined' || animal_type ==='')? null:animal_type; 
-  breed_composition =  (typeof breed_composition === 'undefined' || breed_composition ==='')? null:breed_composition; 
-  breed_composition_details =  (typeof breed_composition_details === 'undefined' || breed_composition_details ==='')? null:breed_composition_details; 
-  color =  (typeof color === 'undefined' || color ==='')? null:color;
-  color_other =  (typeof color_other === 'undefined' || color_other ==='')? null:color_other;
-  country_of_origin =  (typeof country_of_origin === 'undefined' || country_of_origin ==='')? null:country_of_origin;    
-  deformaties =  (typeof deformaties === 'undefined' || deformaties ==='')? null:deformaties; 
-  dob =  (typeof dob === 'undefined' || dob ==='')? moment(new Date()).format('YYYY-MM-DD'):dob;
-  reg_date =  (typeof reg_date === 'undefined' || reg_date ==='')? moment(new Date()).format('YYYY-MM-DD'):reg_date;
-  entry_date =  (typeof entry_date === 'undefined' || entry_date ==='')? moment(new Date()).format('YYYY-MM-DD'):entry_date;  
-  entry_type =  (typeof entry_type === 'undefined' || entry_type ==='')? null:entry_type;
-  hair_sample_id =  (typeof hair_sample_id === 'undefined' || hair_sample_id ==='')? null:hair_sample_id;
-  herd_book_number =  (typeof herd_book_number === 'undefined' || herd_book_number ==='')? null:herd_book_number;  
-  main_breed =  (typeof main_breed === 'undefined' || main_breed ==='')? null:main_breed;
-  main_breed_other =  (typeof main_breed_other === 'undefined' || main_breed_other ==='')? null:main_breed_other;    
-  notes =  (typeof notes === 'undefined' || notes ==='')? null:notes;
-  purchase_cost =  (typeof purchase_cost === 'undefined' || purchase_cost ==='')? null:purchase_cost;   
-  secondary_breed =  (typeof secondary_breed === 'undefined' || secondary_breed ==='')? null:secondary_breed;
-  sire_type =  (typeof sire_type === 'undefined' || sire_type ==='')? null:sire_type;
-  tag_id =  (typeof tag_id === 'undefined' || tag_id ==='')? null:tag_id;
-  secondary_breed_other =  (typeof secondary_breed_other === 'undefined' || secondary_breed_other ==='')? null:secondary_breed_other;
-
+  herd_id = (typeof herd_id === 'undefined' || herd_id ==='' || herd_id==='null' )? null:parseInt(herd_id);
+  main_breed_other =  (typeof main_breed_other === 'undefined' || main_breed_other ==='' || main_breed_other==='null' )?null:main_breed_other;
+  animal_name =  (typeof animal_name === 'undefined' || animal_name ==='' || animal_name==='null')? null:animal_name; 
+  animal_type =  (typeof animal_type === 'undefined' || animal_type ==='' || animal_type==='null')? null:animal_type; 
+  breed_composition =  (typeof breed_composition === 'undefined' || breed_composition ==='' || breed_composition==='null')? null:breed_composition; 
+  breed_composition_details =  (typeof breed_composition_details === 'undefined' || breed_composition_details ==='' || breed_composition_details==='null')? null:breed_composition_details; 
+  color =  (typeof color === 'undefined' || color ==='' || color==='null')? null:color;
+  color_other =  (typeof color_other === 'undefined' || color_other ===''  || color_other==='null')? null:color_other;
+  country_of_origin =  (typeof country_of_origin === 'undefined' || country_of_origin ==='' || country_of_origin==='null')? null:country_of_origin;    
+  deformaties =  (typeof deformaties === 'undefined' || deformaties ==='' || deformaties==='null'|| deformaties=== "[\"\"]")? null:deformaties; 
+  dob =  (typeof dob === 'undefined' || dob ==='' || dob==='null')? moment(new Date()).format('YYYY-MM-DD'):dob;
+  reg_date =  (typeof reg_date === 'undefined' || reg_date ==='' || reg_date==='null')? moment(new Date()).format('YYYY-MM-DD'):reg_date;
+  entry_date =  (typeof entry_date === 'undefined' || entry_date ==='' || entry_date==='null')? moment(new Date()).format('YYYY-MM-DD'):entry_date;  
+  entry_type =  (typeof entry_type === 'undefined' || entry_type ==='' || entry_type==='null')? null:entry_type;
+  hair_sample_id =  (typeof hair_sample_id === 'undefined' || hair_sample_id ==='' || hair_sample_id==='null')? null:hair_sample_id;
+  herd_book_number =  (typeof herd_book_number === 'undefined' || herd_book_number ===''  || herd_book_number==='null')? null:herd_book_number;  
+  main_breed =  (typeof main_breed === 'undefined' || main_breed ==='' || main_breed==='null')? null:main_breed;
+  main_breed_other =  (typeof main_breed_other === 'undefined' || main_breed_other ==='' || main_breed_other==='null')? null:main_breed_other;    
+  notes =  (typeof notes === 'undefined' || notes ==='' || notes==='null')? null:notes;
+  purchase_cost =  (typeof purchase_cost === 'undefined' || purchase_cost ==='' || purchase_cost==='null')? null:purchase_cost;   
+  secondary_breed =  (typeof secondary_breed === 'undefined' || secondary_breed ==='' || secondary_breed==='null')? null:secondary_breed;
+  sire_type =  (typeof sire_type === 'undefined' || sire_type ==='' || sire_type==='null')? null:sire_type;
+  tag_id =  (typeof tag_id === 'undefined' || tag_id ==='' || tag_id==='null')? null:tag_id;
+  secondary_breed_other =  (typeof secondary_breed_other === 'undefined' || secondary_breed_other ==='' || secondary_breed_other==='null')? null:secondary_breed_other;
+  sire =  (typeof sire === 'undefined' || sire ==='' || sire==='null')? null:sire;
+  dam =  (typeof dam === 'undefined' || dam ==='' || dam==='null')? null:dam;
 
   
   const body = { 
