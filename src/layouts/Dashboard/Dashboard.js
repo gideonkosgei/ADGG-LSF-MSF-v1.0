@@ -3,7 +3,6 @@ import { renderRoutes } from 'react-router-config';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import { LinearProgress } from '@material-ui/core';
-
 import { NavBar, TopBar} from './components';
 
 const useStyles = makeStyles(() => ({
@@ -37,10 +36,8 @@ const useStyles = makeStyles(() => ({
 
 const Dashboard = props => {
   const { route } = props;
-
   const classes = useStyles();
   const [openNavBarMobile, setOpenNavBarMobile] = useState(false);
-
   const handleNavBarMobileOpen = () => {
     setOpenNavBarMobile(true);
   };
@@ -67,7 +64,6 @@ const Dashboard = props => {
           </Suspense>
         </main>
       </div>
-
     </div>
   );
 };
@@ -75,5 +71,4 @@ const Dashboard = props => {
 Dashboard.propTypes = {
   route: PropTypes.object
 };
-
 export default Dashboard;

@@ -2,12 +2,13 @@ import React, { useState,useEffect,useContext } from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
-import {Button, Card,CardActions, CardContent, LinearProgress,Tooltip, Grid,Divider, TextField,colors,Box,Switch ,Typography,IconButton} from '@material-ui/core';
+import {Button, Card,Fab,CardActions,CircularProgress, CardContent, LinearProgress,Tooltip, Grid,Divider, TextField,colors,Box,Switch ,Typography,IconButton} from '@material-ui/core';
+import { green } from '@material-ui/core/colors';
+import CheckIcon from '@material-ui/icons/Check';
+import SaveIcon from '@material-ui/icons/Save';
 import {getLookups,getHerds,putAnimalDetails,getAnimal,getCountries}   from '../../../../../../utils/API';
 import {endpoint_lookup,endpoint_herd,endpoint_animal_update,endpoint_animal,endpoint_countries} from '../../../../../../configs/endpoints';
 import authContext from '../../../../../../contexts/AuthContext';
-import SuccessSnackbar from '../../../../../../components/SuccessSnackbar';   
-import ErrorSnackbar from '../../../../../../components/ErrorSnackbar';
 import {AnimalDetailsMetaData}  from '../../../Modal';
 import OpenInNewIcon from '@material-ui/icons/OpenInNew';
 import moment from 'moment'; 
@@ -16,6 +17,7 @@ import InputAdornment from '@material-ui/core/InputAdornment';
 import {AnimalModal}  from '../../../Modal';
 import { Page } from 'components';
 import {Header} from '../index';
+import Alert from '@material-ui/lab/Alert';
 
 
 
@@ -47,6 +49,32 @@ const useStyles = makeStyles(theme => ({
   },
   toggle :{    
     justifyContent: 'center'
+  },
+  
+  wrapper: {
+    margin: theme.spacing(1),
+    position: 'relative',
+  },
+  buttonSuccess: {
+    backgroundColor: green[500],
+    '&:hover': {
+      backgroundColor: green[700],
+    },
+  },
+  fabProgress: {
+    color: green[500],
+    position: 'absolute',
+    top: -6,
+    left: -6,
+    zIndex: 1,
+  },
+  buttonProgress: {
+    color: green[500],
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    marginTop: -12,
+    marginLeft: -12,
   }
 }));
 
@@ -54,8 +82,6 @@ const Edit = props => {
   const classes = useStyles(); 
   localStorage.setItem('animal_id', parseInt(props.match.params.id));  
   const {className, ...rest } = props; 
-  const [openSnackbarSuccess, setopenSnackbarSuccess] = useState(false);
-  const [openSnackbarError, setopenSnackbarError] = useState(false);  
   const [ {organization_id}  ] = useContext(authContext);
   const [ {user_id} ] = useContext(authContext);
   
@@ -77,6 +103,14 @@ const Edit = props => {
   const [modalStatus, setModalStatus] = useState(false);
   const [parent, setParent] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
+  const [output, setOutput] = useState({status:null, message:""}); 
+  const timer = React.useRef();
+
+  const buttonClassname = clsx({
+    [classes.buttonSuccess]: success,
+  });
 
   sessionStorage.setItem('animal_tag', values.tag_id);
   sessionStorage.setItem('animal_name', values.animal_name); 
@@ -218,23 +252,29 @@ const Edit = props => {
     setReadOnly(!readOnly);   
   };  
 
-  const handleSnackbarSuccessClose = () => {
-    setopenSnackbarSuccess(false);
-  };
-
-  const handleSnackbarErrorClose = () => {
-    setopenSnackbarError(false);
-  };
-
-
   const handleSubmit = event => {
     event.preventDefault();
+    if (!loading) {
+      setSuccess(false);
+      setLoading(true);
+    }
     (async  (endpoint,org_id,values,user_id,animal_id,sire,dam) => {     
       await  putAnimalDetails(endpoint,org_id,values,user_id,animal_id,sire,dam)
-      .then(() => {  
-        setopenSnackbarSuccess(true); 
-      }).catch(() => {
-        setopenSnackbarError(true); 
+      .then((response) => {  
+        setOutput({status:null, message:''})
+        timer.current = window.setTimeout(() => {
+          setSuccess(true);
+          setLoading(false);        
+        }, 500);
+        if (parseInt(response.status) === 1){    
+          setOutput({status:parseInt(response.status), message:response.message})      
+        } else {
+          setOutput({status:parseInt(response.status), message:response.message})
+        }
+      }).catch((error) => {
+        setOutput({status:0, message:error.message})        
+        setSuccess(false);
+        setLoading(false);
       });
     })(endpoint_animal_update,organization_id,values,user_id,animal_id, sessionStorage.getItem('_dam_id'),sessionStorage.getItem('_sire_id') );    
   };
@@ -242,20 +282,16 @@ const Edit = props => {
   const handleMetadataOpen = () => {
     setMetadata(true);
   };
-
   const handleMetadataClose = () => {
     setMetadata(false);
   };
-
   const handleClickSire = () => {
     setModalStatus(true);
     setParent('sire');
   };
-
   const handleMouseDownSire = (event) => {
     event.preventDefault();
   };
-
   const handleClickDam = () => {
     setModalStatus(true);
     setParent('dam');
@@ -263,13 +299,9 @@ const Edit = props => {
   const handleMouseDownDam = (event) => {
     event.preventDefault();
   };
-
   const handleClose = () => {
     setModalStatus(false);
   };
-
-
-
  
   return (
     <Page
@@ -296,6 +328,19 @@ const Edit = props => {
 
       <form id ='new_reg' onSubmit={handleSubmit}>  
         <CardContent>
+        {output.status === 0 ?
+            <>
+            <Alert severity="error" >{output.message}</Alert>
+            <br/><br/>
+            </>
+          :output.status === 1 ?
+          <>
+          <Alert severity="success" >{output.message}</Alert>
+          <br/><br/>
+          </>
+          :null
+          }
+
           <Grid container spacing={4} > 
          <Grid
               item
@@ -313,8 +358,7 @@ const Edit = props => {
                   disabled: true,
                   max: moment(new Date()).format('YYYY-MM-DD')                
                 }}
-
-                margin = 'dense'
+               
                 label="Registration Date"
                 type="date"
                 name="reg_date"               
@@ -323,9 +367,7 @@ const Edit = props => {
                 required
                 value = {values.registration_date}             
               />
-            </Grid>
-
-       
+            </Grid>       
         <Grid
           item
           md={2}
@@ -340,7 +382,7 @@ const Edit = props => {
               readOnly: Boolean(readOnly),
               disabled: Boolean(readOnly)                
             }}
-            margin = 'dense'
+           
             label="Entry Type"
             name="entry_type"
             onChange={handleChange}
@@ -378,7 +420,7 @@ const Edit = props => {
               readOnly: Boolean(readOnly),
               disabled: Boolean(readOnly)                
             }}
-            margin = 'dense'
+           
             label="Animal Type"
             name="animal_type"
             onChange={handleChange}
@@ -417,7 +459,7 @@ const Edit = props => {
                   disabled: true              
                 }}
 
-                margin = 'dense'
+               
                 label="Sex"
                 name="sex"
                 onChange={handleChange} 
@@ -456,7 +498,7 @@ const Edit = props => {
                 inputProps={{
                   readOnly: Boolean(readOnly)                 
                 }}   
-                margin = 'dense'           
+                          
                 label="Tag ID "
                 name="tag_id"
                 onChange={handleChange}
@@ -466,7 +508,6 @@ const Edit = props => {
                 
               />
             </Grid>
-
              
             <Grid
               item
@@ -482,7 +523,7 @@ const Edit = props => {
                   readOnly: Boolean(readOnly),
                   disabled: Boolean(readOnly)                
                 }}  
-                margin = 'dense'           
+                          
                 label="Origin Country "
                 name="country_of_origin"
                 onChange={handleChange}
@@ -517,7 +558,7 @@ const Edit = props => {
                   readOnly: Boolean(readOnly),
                   disabled: Boolean(readOnly)                
                 }}   
-                margin = 'dense'           
+                          
                 label="Purchase Cost"
                 name="purchase_cost"
                 onChange={handleChange}
@@ -545,7 +586,7 @@ const Edit = props => {
                   disabled: Boolean(readOnly)                
                 }}
                 required
-                margin = 'dense'
+               
                 label="Animal Name"
                 name="animal_name"
                 onChange={handleChange}
@@ -570,7 +611,7 @@ const Edit = props => {
                   disabled: Boolean(readOnly)                
                 }}
 
-                margin = 'dense'
+               
                 label="Herd"
                 name="herd_id"
                 onChange={handleChange}                              
@@ -611,7 +652,7 @@ const Edit = props => {
                   max: moment(new Date()).format('YYYY-MM-DD')                
                 }}
 
-                margin = 'dense'
+               
                 label="DOB"
                 type="date"
                 name="dob"               
@@ -639,7 +680,7 @@ const Edit = props => {
                 }}
 
 
-                margin = 'dense'
+               
                 label="Color"
                 name="color"
                 onChange={handleChange}               
@@ -677,7 +718,7 @@ const Edit = props => {
                   disabled: Boolean(readOnly)                
                 }}
 
-                margin = 'dense'           
+                          
                 label="Color Other"
                 name="color_other"
                 onChange={handleChange}
@@ -701,7 +742,7 @@ const Edit = props => {
                   readOnly: Boolean(readOnly),
                   disabled: Boolean(readOnly)                
                 }}
-                margin = 'dense'
+               
                 label="Main Breed"
                 name="main_breed"
                 onChange={handleChange}   
@@ -739,7 +780,7 @@ const Edit = props => {
                   disabled: Boolean(readOnly)                
                 }}
 
-                margin = 'dense'           
+                          
                 label="Main Breed Other"
                 name="main_breed_other"
                 onChange={handleChange}
@@ -765,7 +806,7 @@ const Edit = props => {
                   disabled: Boolean(readOnly)                
                 }}
 
-                margin = 'dense'
+               
                 label="Secondary Breed"
                 name="secondary_breed"
                 onChange={handleChange}               
@@ -804,7 +845,7 @@ const Edit = props => {
                   disabled: Boolean(readOnly)                
                 }}
 
-                margin = 'dense'           
+                          
                 label="Sec Breed Other"
                 name="secondary_breed_other"
                 onChange={handleChange}
@@ -824,7 +865,7 @@ const Edit = props => {
                 InputLabelProps={{
                   shrink: true,
                 }}
-                margin = 'dense'
+               
                 label="Breed Composition"
                 name="breed_composition"
                 onChange={handleChange}               
@@ -868,7 +909,7 @@ const Edit = props => {
                   disabled: Boolean(readOnly)                
                 }}
 
-                margin = 'dense'
+               
                 label="Breed Composition Details"
                 name="breed_composition_details"
                 multiline
@@ -889,7 +930,7 @@ const Edit = props => {
                 InputLabelProps={{
                   shrink: true,
                 }}
-                margin = 'dense'
+               
                 label="Deformaties"
                 name="deformaties"
                 onChange={handleChange}               
@@ -926,7 +967,7 @@ const Edit = props => {
                 InputLabelProps={{
                   shrink: true,
                 }}
-                margin = 'dense'
+               
                 label="Sire Type"
                 name="sire_type"
                 onChange={handleChange}               
@@ -979,7 +1020,7 @@ const Edit = props => {
                     </InputAdornment>
                   ),
                 }}               
-                margin = 'dense'
+               
                 label="Sire"
                 name="sire_id"
                 onChange={handleChange}
@@ -1014,7 +1055,7 @@ const Edit = props => {
                     </InputAdornment>
                   ),
                 }}
-                margin = 'dense'
+               
                 label="Dam"
                 name="dam_id"                
                 onChange={handleChange}
@@ -1039,7 +1080,7 @@ const Edit = props => {
                   disabled: Boolean(readOnly)                
                 }}
 
-                margin = 'dense'
+               
                 label="Hair Sample ID"
                 name="hair_sample_id"                
                 onChange={handleChange}
@@ -1066,7 +1107,7 @@ const Edit = props => {
                   readOnly: Boolean(readOnly),
                   disabled: Boolean(readOnly)                
                 }}
-                margin = 'dense'
+               
                 label="Herd Book Info"
                 name="herd_book_number"                
                 onChange={handleChange}
@@ -1085,13 +1126,10 @@ const Edit = props => {
                 InputLabelProps={{
                   shrink: true,
                 }}
-
                 inputProps={{
                   readOnly: Boolean(readOnly),
                   disabled: Boolean(readOnly)                
-                }}
-
-                margin = 'dense'
+                }}               
                 label="Notes"
                 name="notes"
                 multiline
@@ -1101,36 +1139,36 @@ const Edit = props => {
                 value = {values.notes}              
               />
             </Grid>
-
-           
-
-            
           </Grid>
         </CardContent>
         <Divider />
-        <CardActions>        
-          <Box flexGrow={1}>
+        <CardActions>  
             {readOnly ? null :                        
-              <Button
-                className={classes.saveButton}
-                type="submit"
-                variant="contained"
-                hidden = "true"                               
-              >
-                Save Changes
-              </Button>              
-            }                             
-          </Box>
-          {/*
-          <Box>
-            <Tooltip  title="Location Details">
-              <Button onClick={handleMetadataOpen}>
-                <LocationOnIcon className={classes.buttonIcon} />                
-              </Button>
-            </Tooltip>             
-          </Box> */
-          }
-          
+               <>    
+               <div className={classes.wrapper}>
+                 <Fab
+                   aria-label="save"
+                   color="primary"
+                   className={buttonClassname}
+                 >
+                   {success ? <CheckIcon /> : <SaveIcon />}
+                 </Fab>
+                 {loading && <CircularProgress size={68} className={classes.fabProgress} />}
+               </div>
+               <div className={classes.wrapper}>
+                 <Button
+                   variant="contained"
+                   color="primary"
+                   className={buttonClassname}
+                   disabled={loading}                
+                   type="submit"
+                 >
+                   Save Changes
+                 </Button>
+                 {loading && <CircularProgress size={24} className={classes.buttonProgress} />}
+               </div>
+               </>          
+            }  
           <Box>
             <Tooltip  title="Metadata">
               <Button onClick={handleMetadataOpen}>
@@ -1151,30 +1189,19 @@ const Edit = props => {
               />             
          </Box>
         </CardActions>
-      </form> 
-      <SuccessSnackbar
-          onClose={handleSnackbarSuccessClose}
-          open={openSnackbarSuccess}
-        />
-        <ErrorSnackbar
-          onClose={handleSnackbarErrorClose}
-          open={openSnackbarError}
-        />   
+      </form>
+       
         <AnimalDetailsMetaData
-                animalDetails={values}
-                onClose={handleMetadataClose}
-                open={openMetadata}
+          animalDetails={values}
+          onClose={handleMetadataClose}
+          open={openMetadata}
         />
         <AnimalModal
-        parentType={parent}
-        onClose={handleClose}
-        open={modalStatus}
+          parentType={parent}
+          onClose={handleClose}
+          open={modalStatus}
         />
     </Card>
-  
-
-           
-           
    </Page>
   );
 };

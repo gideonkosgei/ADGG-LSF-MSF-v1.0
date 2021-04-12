@@ -43,8 +43,7 @@ const AnimalList = props => {
                 filtered.push(response.payload[i]);
               }
             }
-          } 
-          
+          }           
             const res = isNaN(animal_categ_id)? response.payload : filtered; 
             if (!isNaN(animal_categ_id)){
               setCaption(res[0].animalType);           
@@ -61,8 +60,6 @@ const AnimalList = props => {
   if (!animals) {
     return null;
   }
-
-  
   return (
     <Page
       className={classes.root}

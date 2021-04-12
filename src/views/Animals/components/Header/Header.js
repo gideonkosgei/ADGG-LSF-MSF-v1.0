@@ -45,8 +45,7 @@ const Header = props => {
 
   if (!values) {
     return null;
-  }
-  console.log(values);
+  }  
   return (    
     <Card
       {...rest}
