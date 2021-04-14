@@ -293,6 +293,10 @@ const Edit = props => {
 
   const handleSubmit = event => {
     event.preventDefault();
+    if (!loading) {
+      setSuccess(false);
+      setLoading(true);
+    }
     (async  (endpoint,id,values,user_id,quality_toggle,lactation_id, lactation_number,  days_in_milk, test_day_no) => {     
       await  postMilking(endpoint,id,values,user_id,quality_toggle,lactation_id, lactation_number,  days_in_milk, test_day_no)
       .then((response) => {  
@@ -300,16 +304,15 @@ const Edit = props => {
         setOutput({status:null, message:''});
         timer.current = window.setTimeout(() => {
           setSuccess(true);
-          setLoading(false);        
+          setLoading(false);
+          if (parseInt(response.status) === 1){ 
+            setValues({});        
+            document.forms["event"].reset(); 
+            setOutput({status:parseInt(response.status), message:response.message}) 
+          } else {
+            setOutput({status:parseInt(response.status), message:response.message})
+          }         
         }, 500);
-        
-        if (parseInt(response.status) === 1){ 
-          setValues({});        
-          document.forms["event"].reset(); 
-          setOutput({status:parseInt(response.status), message:response.message}) 
-        } else {
-          setOutput({status:parseInt(response.status), message:response.message})
-        }   
         
       }).catch((error) => {        
         setOutput({status:0, message:error.message})  

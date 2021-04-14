@@ -10,13 +10,12 @@ import {getLookups,updateWeight,getWeightByEventId,getParametersLimitAll}   from
 import {endpoint_lookup,endpoint_weight_update,endpoint_weight_specific,endpoint_parameter_limit_all} from '../../../../../../configs/endpoints';
 import authContext from '../../../../../../contexts/AuthContext';
 import {Sidebar} from '../index';
-import SuccessSnackbar from '../../../../../../components/SuccessSnackbar';
-import ErrorSnackbar from '../../../../../../components/ErrorSnackbar';
 import OpenInNewIcon from '@material-ui/icons/OpenInNew';
 import {EventWeightMetaData}  from '../../../Modal';
 import moment from 'moment';
 import { Page } from 'components';
 import {Header} from '../index';
+import Alert from '@material-ui/lab/Alert';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -74,8 +73,6 @@ const useStyles = makeStyles(theme => ({
 const Edit = props => { 
   const classes = useStyles();
   localStorage.setItem('event_id', parseInt(props.match.params.id));  
-  const [openSnackbarSuccess, setopenSnackbarSuccess] = useState(false);
-  const [openSnackbarError, setopenSnackbarError] = useState(false);
   const [ {user_id} ] = useContext(authContext);  
   const [values, setValues] = useState({ });  
   const [body_scores, setBodyScores] = useState([]);  
@@ -89,6 +86,7 @@ const Edit = props => {
   const [isLoading, setIsLoading] = useState(true);
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [output, setOutput] = useState({status:null, message:""}); 
   const timer = React.useRef();
 
   const buttonClassname = clsx({
@@ -203,27 +201,25 @@ const Edit = props => {
     }
     (async  (endpoint,id,values,user_id) => {     
       await  updateWeight(endpoint,id,values,user_id)
-      .then(() => {       
+      .then((response) => { 
+          setOutput({status:null, message:''});      
           timer.current = window.setTimeout(() => {
             setSuccess(true);
             setLoading(false);
-            setopenSnackbarSuccess(true);
+            
+            if (parseInt(response.status) === 1){               
+              setOutput({status:parseInt(response.status), message:response.message}) 
+            } else {
+              setOutput({status:parseInt(response.status), message:response.message})
+            } 
           }, 500);
                         
-      }).catch(() => {
-        setopenSnackbarError(true); 
+      }).catch((error) => {
+        setOutput({status:0, message:error.message})
         setSuccess(false);
         setLoading(false);
       });
     })(endpoint_weight_update,event_id,values,user_id);    
-  };
-
-  const handleSnackbarSuccessClose = () => {
-    setopenSnackbarSuccess(false);
-  };
-
-  const handleSnackbarErrorClose = () => {
-    setopenSnackbarError(false);
   };
 
   const handleSwitchChange = event => {
@@ -264,7 +260,18 @@ const Edit = props => {
           <Grid item xs={11}>
             <Card> 
             <form id ='event' onSubmit={handleSubmit} >
-              <CardContent>        
+              <CardContent> 
+              {output.status === 0 ?
+              <>
+              <Alert severity="error" >{output.message}</Alert>             
+              </>
+              :output.status === 1 ?
+              <>
+              <Alert severity="success" >{output.message}</Alert>           
+              </>
+              :null
+              }          
+            <br/>         
               <Grid
                 container
                 spacing={4}
@@ -457,15 +464,7 @@ const Edit = props => {
               />             
          </Box>
         </CardActions> 
-        </form> 
-        <SuccessSnackbar
-          onClose={handleSnackbarSuccessClose}
-          open={openSnackbarSuccess}
-        />
-        <ErrorSnackbar
-          onClose={handleSnackbarErrorClose}
-          open={openSnackbarError}
-        />
+        </form>        
         <EventWeightMetaData
           weightDetails={values}
           onClose={handleMetadataClose}

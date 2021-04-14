@@ -263,13 +263,14 @@ const Edit = props => {
         setOutput({status:null, message:''})
         timer.current = window.setTimeout(() => {
           setSuccess(true);
-          setLoading(false);        
+          setLoading(false); 
+          if (parseInt(response.status) === 1){    
+            setOutput({status:parseInt(response.status), message:response.message})      
+          } else {
+            setOutput({status:parseInt(response.status), message:response.message})
+          }       
         }, 500);
-        if (parseInt(response.status) === 1){    
-          setOutput({status:parseInt(response.status), message:response.message})      
-        } else {
-          setOutput({status:parseInt(response.status), message:response.message})
-        }
+       
       }).catch((error) => {
         setOutput({status:0, message:error.message})        
         setSuccess(false);

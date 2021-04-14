@@ -7,8 +7,6 @@ import {getLookups,postWeight,getParametersLimitAll}   from '../../../../../../u
 import {endpoint_lookup,endpoint_weight_add,endpoint_parameter_limit_all} from '../../../../../../configs/endpoints';
 import authContext from '../../../../../../contexts/AuthContext';
 import {Sidebar} from '../index';
-import SuccessSnackbar from '../../../../../../components/SuccessSnackbar';
-import ErrorSnackbar from '../../../../../../components/ErrorSnackbar';
 import moment from 'moment';
 import { Page } from 'components';
 import {Header} from '../index';
@@ -71,9 +69,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const Edit = props => {  
-  const [openSnackbarSuccess, setopenSnackbarSuccess] = useState(false);
-  const [openSnackbarError, setopenSnackbarError] = useState(false);
+const Edit = props => {   
   const [ {user_id} ] = useContext(authContext);
   const classes = useStyles();
   const [values, setValues] = useState({ });  
@@ -182,39 +178,32 @@ const Edit = props => {
 
   const handleSubmit = event => {
     event.preventDefault();
+    if (!loading) {
+      setSuccess(false);
+      setLoading(true);
+    }
     (async  (endpoint,id,values,user_id) => {     
       await  postWeight(endpoint,id,values,user_id)
-     .then((response) => {  
-
+     .then((response) => {
         setOutput({status:null, message:''});
         timer.current = window.setTimeout(() => {
           setSuccess(true);
-          setLoading(false);        
+          setLoading(false); 
+
+          if (parseInt(response.status) === 1){ 
+            setValues({});        
+            document.forms["event"].reset(); 
+            setOutput({status:parseInt(response.status), message:response.message}) 
+          } else {
+            setOutput({status:parseInt(response.status), message:response.message})
+          }          
         }, 500);
-        
-        if (parseInt(response.status) === 1){ 
-          setValues({});        
-          document.forms["event"].reset(); 
-          setOutput({status:parseInt(response.status), message:response.message}) 
-        } else {
-          setOutput({status:parseInt(response.status), message:response.message})
-        }   
-        
       }).catch((error) => {        
         setOutput({status:0, message:error.message})  
         setSuccess(false);
         setLoading(false);  
       });
     })(endpoint_weight_add,animal_id,values,user_id);    
-  };
-
-  const handleSnackbarSuccessClose = () => {
-    setopenSnackbarSuccess(false);
-  };
-
-
-  const handleSnackbarErrorClose = () => {
-    setopenSnackbarError(false);
   };
 
   return (
@@ -383,15 +372,15 @@ const Edit = props => {
               <Divider />
               <CardActions>          
                <div className={classes.wrapper}>
-              <Fab
-                aria-label="save"
-                color="primary"
-                className={buttonClassname}
-              >
-                {success ? <CheckIcon /> : <SaveIcon />}
-              </Fab>
-              {loading && <CircularProgress size={68} className={classes.fabProgress} />}
-            </div>
+                <Fab
+                  aria-label="save"
+                  color="primary"
+                  className={buttonClassname}
+                >
+                  {success ? <CheckIcon /> : <SaveIcon />}
+                </Fab>
+                {loading && <CircularProgress size={68} className={classes.fabProgress} />}
+               </div>
             <div className={classes.wrapper}>
               <Button
                 variant="contained"
@@ -404,16 +393,9 @@ const Edit = props => {
               </Button>
               {loading && <CircularProgress size={24} className={classes.buttonProgress} />}
             </div>
+            
               </CardActions> 
-            </form> 
-            <SuccessSnackbar
-              onClose={handleSnackbarSuccessClose}
-              open={openSnackbarSuccess}
-            />
-            <ErrorSnackbar
-              onClose={handleSnackbarErrorClose}
-              open={openSnackbarError}
-            />
+            </form>            
           </Card>
         </Grid>
       </Grid>

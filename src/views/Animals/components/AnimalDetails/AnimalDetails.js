@@ -214,6 +214,10 @@ const AnimalDetails = props => {
 
   const handleSubmit = event => {
     event.preventDefault();
+    if (!loading) {
+      setSuccess(false);
+      setLoading(true);
+    }
     (async  (endpoint,org_id,values,user_id,sire,dam) => {     
       await  postAnimalRegistration(endpoint,org_id,values,user_id,sire,dam)
       .then((response) => {  
@@ -221,16 +225,16 @@ const AnimalDetails = props => {
           setOutput({status:null, message:''});
           timer.current = window.setTimeout(() => {
             setSuccess(true);
-            setLoading(false);        
+            setLoading(false); 
+            if (parseInt(response.status) === 1){ 
+              setValues({});        
+              document.forms["new_reg"].reset(); 
+              setOutput({status:parseInt(response.status), message:response.message}) 
+            } else {
+              setOutput({status:parseInt(response.status), message:response.message})
+            }        
           }, 500);
-
-          if (parseInt(response.status) === 1){ 
-            setValues({});        
-            document.forms["new_reg"].reset(); 
-            setOutput({status:parseInt(response.status), message:response.message}) 
-          } else {
-            setOutput({status:parseInt(response.status), message:response.message})
-          }         
+                 
       }).catch((error) => {
         setOutput({status:0, message:error.message})  
         setSuccess(false);
