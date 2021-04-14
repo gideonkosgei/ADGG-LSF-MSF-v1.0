@@ -1,7 +1,7 @@
 import React, { useState,useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
-import {Card, CardContent, Grid,Divider,colors,Link,Typography,LinearProgress} from '@material-ui/core';
+import {Card, CardContent,TextField, Grid,Divider,colors,Link,Typography,LinearProgress} from '@material-ui/core';
 import {getMilking}   from '../../../../../../utils/API';
 import {endpoint_milking} from '../../../../../../configs/endpoints';
 import {Sidebar} from '../index';
@@ -46,9 +46,11 @@ const useStyles = makeStyles(theme => ({
 const Edit = props => {  
   const classes = useStyles();  
   const [values, setValues] = useState([]);
+  const [valuesOriginal, setValuesOriginal] = useState([]);
   const animal_id  = localStorage.getItem('animal_id');
   const animal_tag  = sessionStorage.getItem('animal_tag');
   const animal_name  = sessionStorage.getItem('animal_name');
+  const [lactations, setLactations]  =  useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {     
@@ -57,8 +59,17 @@ const Edit = props => {
         await  getMilking(endpoint,id,option)
         .then(response => {                        
           if (mounted) {            
-            setValues(response.payload[0]);   
-            setIsLoading(false);                
+            setValues(response.payload[0]);  
+            setValuesOriginal(response.payload[0]);
+            setIsLoading(false);  
+             let lactation_array = []  
+            if  (response.payload[0].length > 0){      
+              for (let i = 0 ; i< response.payload[0].length; i++ ) {
+                lactation_array.push(response.payload[0][i].lactation_id);                
+              }
+              const unique_lactations = [...new Set(lactation_array)];  
+              setLactations(unique_lactations.sort((a, b) => a - b));
+           }
           }
         });
       })(endpoint_milking,animal_id,0); 
@@ -72,6 +83,7 @@ const Edit = props => {
   if (!values) {
     return null;
   }  
+ 
 
     const columns = [
     { name: "event_id",label: "Event ID",options: {filter: false,sort: false,display:false}}, 
@@ -127,6 +139,27 @@ const Edit = props => {
     );
   }  
   }; 
+
+  const handleChange = event => {
+    setValues({...values });
+    event.persist();
+    let filtered_values = []; 
+   
+    if (valuesOriginal.length > 0 ){
+      if(parseInt(event.target.value) === 0){
+        setValues(valuesOriginal);        
+      } else {      
+        for (let i = 0; i< valuesOriginal.length; i++){          
+          if (valuesOriginal[i].lactation_id === event.target.value){           
+            filtered_values.push(valuesOriginal[i]);         
+          }  
+        }
+        setValues(filtered_values); 
+      }       
+    } 
+  };
+ 
+  
   return (
     <Page
     className={classes.root}
@@ -143,17 +176,40 @@ const Edit = props => {
       <LinearProgress/>
     }  
     <Divider />  
-    <br/>   
-
+    <br/>  
     <Header />
-    <br/>   
+    <br/>           
     <Grid container spacing={1} justify="center">            
       <Grid item  xs={1} >  
         <Sidebar animal_id = {animal_id}/>
-      </Grid> 
+      </Grid>       
       <Grid item xs={11}>
         <Card> 
-          <CardContent>                  
+          <CardContent>
+          <Grid container >  
+              <Grid item xs={2}>
+                <TextField
+                  fullWidth
+                  InputLabelProps={{
+                    shrink: true,
+                  }}               
+                  label="LACTATION ID"
+                  name="lactation_id"                                 
+                  default = "" 
+                  margin = 'dense'                             
+                  select                
+                  SelectProps={{ native: true }}                    
+                  variant="filled"
+                  onChange={handleChange} 
+                >
+                  <option value ={0}></option>
+                  {lactations.map(lactation_id => (
+                    <option value={lactation_id}> {lactation_id}</option>
+                    ))
+                  }          
+                </TextField>
+              </Grid>
+            </Grid>  
             <PerfectScrollbar>                  
                 <MuiThemeProvider>                
                   <MUIDataTable
