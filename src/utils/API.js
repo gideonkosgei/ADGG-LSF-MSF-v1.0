@@ -2099,12 +2099,12 @@ export const postAnimalRegistration =  function (config,org_id,values,user_id,si
     main_breed_other =  (typeof main_breed_other === 'undefined' || main_breed_other ==='')? null:main_breed_other;    
     notes =  (typeof notes === 'undefined' || notes ==='')? null:notes;
     purchase_cost =  (typeof purchase_cost === 'undefined' || purchase_cost ==='')? null:purchase_cost;   
-    secondary_breed =  (typeof secondary_breed === 'undefined' || secondary_breed ==='')? null:secondary_breed;
-   
+    secondary_breed =  (typeof secondary_breed === 'undefined' || secondary_breed ==='')? null:secondary_breed;   
     sire_type =  (typeof sire_type === 'undefined' || sire_type ==='')? null:sire_type;
     tag_id =  (typeof tag_id === 'undefined' || tag_id ==='')? null:tag_id;
-    secondary_breed_other =  (typeof secondary_breed_other === 'undefined' || secondary_breed_other ==='')? null:secondary_breed_other;
-
+    secondary_breed_other =  (typeof secondary_breed_other === 'undefined' || secondary_breed_other ==='')? null:secondary_breed_other;    
+    sire =  (typeof sire === 'undefined' || sire ==='')? null:sire;
+    dam =  (typeof dam === 'undefined' || dam ==='')? null:dam;
     
     const body = {
       "created_by": user_id,
@@ -2142,8 +2142,7 @@ export const postAnimalRegistration =  function (config,org_id,values,user_id,si
     method: config.method,
     headers: config.headers,
     data: body  
-  };
-  
+  }; 
 
   
   return new Promise((resolve, reject) => {

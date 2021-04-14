@@ -1,7 +1,8 @@
 import React, { useState,useEffect,useContext } from 'react';
+import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
-import {Card, CardContent, Typography, Grid,Divider, TextField,colors,Button,CardActions } from '@material-ui/core';
+import {Card, CardContent,Fab, Typography, Grid,Divider,CircularProgress, TextField,colors,Button,CardActions } from '@material-ui/core';
 import {getLookups,postWeight,getParametersLimitAll}   from '../../../../../../utils/API';
 import {endpoint_lookup,endpoint_weight_add,endpoint_parameter_limit_all} from '../../../../../../configs/endpoints';
 import authContext from '../../../../../../contexts/AuthContext';
@@ -11,6 +12,11 @@ import ErrorSnackbar from '../../../../../../components/ErrorSnackbar';
 import moment from 'moment';
 import { Page } from 'components';
 import {Header} from '../index';
+import { green } from '@material-ui/core/colors';
+import CheckIcon from '@material-ui/icons/Check';
+import SaveIcon from '@material-ui/icons/Save';
+import Alert from '@material-ui/lab/Alert';
+
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -37,6 +43,31 @@ const useStyles = makeStyles(theme => ({
     '&:hover': {
       backgroundColor: colors.green[900]
     }
+  },
+  wrapper: {
+    margin: theme.spacing(1),
+    position: 'relative',
+  },
+  buttonSuccess: {
+    backgroundColor: green[500],
+    '&:hover': {
+      backgroundColor: green[700],
+    },
+  },
+  fabProgress: {
+    color: green[500],
+    position: 'absolute',
+    top: -6,
+    left: -6,
+    zIndex: 1,
+  },
+  buttonProgress: {
+    color: green[500],
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    marginTop: -12,
+    marginLeft: -12,
   }
 }));
 
@@ -53,7 +84,15 @@ const Edit = props => {
   const animal_name  = sessionStorage.getItem('animal_name');
   const  dob = sessionStorage.getItem('animal_dob'); 
   const is_calf = parseInt(sessionStorage.getItem('animal_type')) === 3 || parseInt(sessionStorage.getItem('animal_type')) === 4 ? true : false;
-  
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
+  const [output, setOutput] = useState({status:null, message:""}); 
+  const timer = React.useRef();
+
+  const buttonClassname = clsx({
+    [classes.buttonSuccess]: success,
+  });
+
 
   useEffect(() => {   
     let mounted_lookup = true;
@@ -145,12 +184,26 @@ const Edit = props => {
     event.preventDefault();
     (async  (endpoint,id,values,user_id) => {     
       await  postWeight(endpoint,id,values,user_id)
-      .then(() => {  
-        setopenSnackbarSuccess(true); 
-        setValues({});        
-        document.forms["event"].reset();
-      }).catch(() => {
-        setopenSnackbarError(true); 
+     .then((response) => {  
+
+        setOutput({status:null, message:''});
+        timer.current = window.setTimeout(() => {
+          setSuccess(true);
+          setLoading(false);        
+        }, 500);
+        
+        if (parseInt(response.status) === 1){ 
+          setValues({});        
+          document.forms["event"].reset(); 
+          setOutput({status:parseInt(response.status), message:response.message}) 
+        } else {
+          setOutput({status:parseInt(response.status), message:response.message})
+        }   
+        
+      }).catch((error) => {        
+        setOutput({status:0, message:error.message})  
+        setSuccess(false);
+        setLoading(false);  
       });
     })(endpoint_weight_add,animal_id,values,user_id);    
   };
@@ -158,6 +211,7 @@ const Edit = props => {
   const handleSnackbarSuccessClose = () => {
     setopenSnackbarSuccess(false);
   };
+
 
   const handleSnackbarErrorClose = () => {
     setopenSnackbarError(false);
@@ -186,7 +240,18 @@ const Edit = props => {
         <Grid item xs={11}>
           <Card> 
             <form id ='event' onSubmit={handleSubmit} >
-              <CardContent>        
+              <CardContent>  
+              {output.status === 0 ?
+                <>
+                <Alert severity="error" >{output.message}</Alert>             
+                </>
+                :output.status === 1 ?
+                <>
+                <Alert severity="success" >{output.message}</Alert>           
+                </>
+                :null
+                }          
+              <br/>       
                 <Grid
                   container
                   spacing={4}
@@ -317,13 +382,28 @@ const Edit = props => {
               </CardContent>
               <Divider />
               <CardActions>          
-                <Button
-                  className={classes.saveButton}
-                  type="submit"
-                  variant="contained"
-                >
-                  Save Details
-                </Button>
+               <div className={classes.wrapper}>
+              <Fab
+                aria-label="save"
+                color="primary"
+                className={buttonClassname}
+              >
+                {success ? <CheckIcon /> : <SaveIcon />}
+              </Fab>
+              {loading && <CircularProgress size={68} className={classes.fabProgress} />}
+            </div>
+            <div className={classes.wrapper}>
+              <Button
+                variant="contained"
+                color="primary"
+                className={buttonClassname}
+                disabled={loading}                
+                type="submit"
+              >
+                Save Changes
+              </Button>
+              {loading && <CircularProgress size={24} className={classes.buttonProgress} />}
+            </div>
               </CardActions> 
             </form> 
             <SuccessSnackbar

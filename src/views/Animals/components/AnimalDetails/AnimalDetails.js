@@ -2,7 +2,7 @@ import React, { useState,useEffect,useContext } from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
-import {Button,Typography, Card,CardActions, CardContent, Grid,Divider, TextField,colors,IconButton } from '@material-ui/core';
+import {Button,Typography,Fab, Card,CardActions,CircularProgress, CardContent, Grid,Divider, TextField,colors,IconButton } from '@material-ui/core';
 import {getLookups,getHerds,postAnimalRegistration,getCountries}   from '../../../../utils/API';
 import {endpoint_lookup,endpoint_herd,endpoint_animal_add,endpoint_countries} from '../../../../configs/endpoints';
 import authContext from '../../../../contexts/AuthContext';
@@ -13,6 +13,11 @@ import moment from 'moment';
 import Alert from '@material-ui/lab/Alert';
 import {AnimalModal}  from '../Modal';
 import { Page } from 'components';
+import { green } from '@material-ui/core/colors';
+import CheckIcon from '@material-ui/icons/Check';
+import SaveIcon from '@material-ui/icons/Save';
+
+
 const useStyles = makeStyles(theme => ({
   root: {
     width: theme.breakpoints.values.lg,
@@ -26,6 +31,35 @@ const useStyles = makeStyles(theme => ({
     '&:hover': {
       backgroundColor: colors.green[900]
     }
+  },
+  toggle :{    
+    justifyContent: 'center'
+  },
+  
+  wrapper: {
+    margin: theme.spacing(1),
+    position: 'relative',
+  },
+  buttonSuccess: {
+    backgroundColor: green[500],
+    '&:hover': {
+      backgroundColor: green[700],
+    },
+  },
+  fabProgress: {
+    color: green[500],
+    position: 'absolute',
+    top: -6,
+    left: -6,
+    zIndex: 1,
+  },
+  buttonProgress: {
+    color: green[500],
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    marginTop: -12,
+    marginLeft: -12,
   }
 }));
 
@@ -48,9 +82,18 @@ const AnimalDetails = props => {
   const [output, setOutput] = useState({status:null, message:""}); 
   const [modalStatus, setModalStatus] = useState(false);
   const [parent, setParent] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
+  const timer = React.useRef();
 
   let _sire_id = sessionStorage.getItem('_sire_id');  
   let _dam_id = sessionStorage.getItem('_dam_id'); 
+
+
+  const buttonClassname = clsx({
+    [classes.buttonSuccess]: success,
+  });
+
 
   useEffect(() => {   
     let mounted_lookup = true;
@@ -174,7 +217,13 @@ const AnimalDetails = props => {
     (async  (endpoint,org_id,values,user_id,sire,dam) => {     
       await  postAnimalRegistration(endpoint,org_id,values,user_id,sire,dam)
       .then((response) => {  
+
           setOutput({status:null, message:''});
+          timer.current = window.setTimeout(() => {
+            setSuccess(true);
+            setLoading(false);        
+          }, 500);
+
           if (parseInt(response.status) === 1){ 
             setValues({});        
             document.forms["new_reg"].reset(); 
@@ -183,7 +232,9 @@ const AnimalDetails = props => {
             setOutput({status:parseInt(response.status), message:response.message})
           }         
       }).catch((error) => {
-        setOutput({status:0, message:error.message})        
+        setOutput({status:0, message:error.message})  
+        setSuccess(false);
+        setLoading(false);      
       });
     })(endpoint_animal_add,organization_id,values,user_id,_sire_id,_dam_id);    
   };
@@ -254,7 +305,7 @@ const AnimalDetails = props => {
             InputLabelProps={{
               shrink: true,
             }}
-            margin = 'dense'
+           
             label="Entry Type"
             name="entry_type"
             onChange={handleChange}
@@ -288,7 +339,7 @@ const AnimalDetails = props => {
             InputLabelProps={{
               shrink: true,
             }}
-            margin = 'dense'
+           
             label="Animal Type"
             name="animal_type"
             onChange={handleChange}
@@ -324,7 +375,7 @@ const AnimalDetails = props => {
                 InputLabelProps={{
                   shrink: true,
                 }}
-                margin = 'dense'
+               
                 label="Sex"
                 name="sex"
                 onChange={handleChange}                                                    
@@ -358,7 +409,7 @@ const AnimalDetails = props => {
                 InputLabelProps={{
                   shrink: true,
                 }}    
-                margin = 'dense'           
+                          
                 label="Tag ID "
                 name="tag_id"
                 onChange={handleChange}
@@ -393,7 +444,7 @@ const AnimalDetails = props => {
                 InputLabelProps={{
                   shrink: true,
                 }}    
-                margin = 'dense'           
+                          
                 label="Origin Country "
                 name="country_of_origin"
                 onChange={handleChange}
@@ -424,7 +475,7 @@ const AnimalDetails = props => {
                 InputLabelProps={{
                   shrink: true,
                 }}    
-                margin = 'dense'           
+                          
                 label="Purchase Cost"
                 name="purchase_cost"
                 onChange={handleChange}
@@ -444,7 +495,7 @@ const AnimalDetails = props => {
                   shrink: true,
                 }}
                 required
-                margin = 'dense'
+               
                 label="Animal Name"
                 name="animal_name"
                 onChange={handleChange}
@@ -462,7 +513,7 @@ const AnimalDetails = props => {
                 InputLabelProps={{
                   shrink: true,
                 }}
-                margin = 'dense'
+               
                 label="Herd"
                 name="herd_id"
                 onChange={handleChange}                              
@@ -498,7 +549,7 @@ const AnimalDetails = props => {
                 inputProps={{                        
                   max: moment(new Date()).format('YYYY-MM-DD')                 
                 }} 
-                margin = 'dense'
+               
                 label="DOB"
                 type="date"
                 name="dob"
@@ -520,7 +571,7 @@ const AnimalDetails = props => {
                 InputLabelProps={{
                   shrink: true,
                 }}
-                margin = 'dense'
+               
                 label="Color"
                 name="color"
                 onChange={handleChange}               
@@ -552,7 +603,7 @@ const AnimalDetails = props => {
                 InputLabelProps={{
                   shrink: true,
                 }}    
-                margin = 'dense'           
+                          
                 label="Color Other"
                 name="color_other"
                 onChange={handleChange}
@@ -574,7 +625,7 @@ const AnimalDetails = props => {
                   shrink: true,
                 }}
                 required
-                margin = 'dense'
+               
                 label="Main Breed"
                 name="main_breed"
                 onChange={handleChange}               
@@ -605,7 +656,7 @@ const AnimalDetails = props => {
                 InputLabelProps={{
                   shrink: true,
                 }}    
-                margin = 'dense'           
+                          
                 label="Main Breed Other"
                 name="main_breed_other"
                 onChange={handleChange}
@@ -623,7 +674,7 @@ const AnimalDetails = props => {
                 InputLabelProps={{
                   shrink: true,
                 }}
-                margin = 'dense'
+               
                 label="Secondary Breed"
                 name="secondary_breed"
                 onChange={handleChange}               
@@ -654,7 +705,7 @@ const AnimalDetails = props => {
                 InputLabelProps={{
                   shrink: true,
                 }}    
-                margin = 'dense'           
+                          
                 label="Sec Breed Other"
                 name="secondary_breed_other"
                 onChange={handleChange}
@@ -673,7 +724,7 @@ const AnimalDetails = props => {
                 InputLabelProps={{
                   shrink: true,
                 }}
-                margin = 'dense'
+               
                 label="Breed Composition"
                 name="breed_composition"
                 onChange={handleChange}               
@@ -705,7 +756,7 @@ const AnimalDetails = props => {
                 InputLabelProps={{
                   shrink: true,
                 }}
-                margin = 'dense'
+               
                 label="Breed Composition Details"
                 name="breed_composition_details"
                 multiline
@@ -725,7 +776,7 @@ const AnimalDetails = props => {
                 InputLabelProps={{
                   shrink: true,
                 }}
-                margin = 'dense'
+               
                 label="Deformaties"
                 name="deformaties"
                 onChange={handleChange}               
@@ -756,7 +807,7 @@ const AnimalDetails = props => {
                 InputLabelProps={{
                   shrink: true,
                 }}
-                margin = 'dense'
+               
                 label="Sire Type"
                 name="sire_type"
                 onChange={handleChange}               
@@ -787,7 +838,7 @@ const AnimalDetails = props => {
                 InputLabelProps={{
                   shrink: true,
                 }}               
-                margin = 'dense'
+               
                 label="Sire"
                 name="sire_id"
                 onChange={handleChange}               
@@ -822,7 +873,7 @@ const AnimalDetails = props => {
                   shrink: true,
                 }}
                 
-                margin = 'dense'
+               
                 label="Dam"
                 name="dam_id"                
                 onChange={handleChange}
@@ -857,7 +908,7 @@ const AnimalDetails = props => {
                 InputLabelProps={{
                   shrink: true,
                 }}
-                margin = 'dense'
+               
                 label="Hair Sample ID"
                 name="hair_sample_id"                
                 onChange={handleChange}
@@ -877,7 +928,7 @@ const AnimalDetails = props => {
                 InputLabelProps={{
                   shrink: true,
                 }}
-                margin = 'dense'
+               
                 label="Herd Book Info"
                 name="herd_book_number"                
                 onChange={handleChange}
@@ -895,7 +946,7 @@ const AnimalDetails = props => {
                 InputLabelProps={{
                   shrink: true,
                 }}
-                margin = 'dense'
+               
                 label="Notes"
                 name="notes"
                 multiline
@@ -910,13 +961,28 @@ const AnimalDetails = props => {
         </CardContent>
         <Divider />
         <CardActions>
-          <Button
-            className={classes.saveButton}
-            type="submit"
-            variant="contained"
+        <div className={classes.wrapper}>
+          <Fab
+            aria-label="save"
+            color="primary"
+            className={buttonClassname}
           >
-            Save Details
+            {success ? <CheckIcon /> : <SaveIcon />}
+          </Fab>
+          {loading && <CircularProgress size={68} className={classes.fabProgress} />}
+        </div>
+        <div className={classes.wrapper}>
+          <Button
+            variant="contained"
+            color="primary"
+            className={buttonClassname}
+            disabled={loading}                
+            type="submit"
+          >
+            Save Changes
           </Button>
+          {loading && <CircularProgress size={24} className={classes.buttonProgress} />}
+        </div>
         </CardActions>
       </form> 
       <AnimalModal
