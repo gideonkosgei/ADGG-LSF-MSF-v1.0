@@ -2,15 +2,17 @@ import React, { useState,useEffect,useContext } from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
-import {Card, CardContent,Typography, Grid,Divider, TextField,colors,Button,CardActions } from '@material-ui/core';
+import {Card, CardContent,Fab,CircularProgress,Typography, Grid,Divider, TextField,colors,Button,CardActions } from '@material-ui/core';
 import {getLookups,postExit,getCountries,getAdminUnits}   from '../../../../../../utils/API';
 import {endpoint_lookup,endpoint_exit_add,endpoint_countries,endpoint_admin_units} from '../../../../../../configs/endpoints';
 import authContext from '../../../../../../contexts/AuthContext';
-import SuccessSnackbar from '../../../../../../components/SuccessSnackbar';
-import ErrorSnackbar from '../../../../../../components/ErrorSnackbar';
 import moment from 'moment';
 import { Page } from 'components';
 import {Header} from '../index';
+import { green } from '@material-ui/core/colors';
+import CheckIcon from '@material-ui/icons/Check';
+import SaveIcon from '@material-ui/icons/Save';
+import Alert from '@material-ui/lab/Alert';
 
 
 const useStyles = makeStyles(theme => ({
@@ -38,13 +40,36 @@ const useStyles = makeStyles(theme => ({
   },
   content: {
     marginTop: theme.spacing(3)
+  },
+  wrapper: {
+    margin: theme.spacing(1),
+    position: 'relative',
+  },
+  buttonSuccess: {
+    backgroundColor: green[500],
+    '&:hover': {
+      backgroundColor: green[700],
+    },
+  },
+  fabProgress: {
+    color: green[500],
+    position: 'absolute',
+    top: -6,
+    left: -6,
+    zIndex: 1,
+  },
+  buttonProgress: {
+    color: green[500],
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    marginTop: -12,
+    marginLeft: -12,
   }
 }));
 
 const Edit = props => { 
-  const {className, ...rest } = props; 
-  const [openSnackbarSuccess, setopenSnackbarSuccess] = useState(false);
-  const [openSnackbarError, setopenSnackbarError] = useState(false);
+  const {className, ...rest } = props;   
   const [ {user_id} ] = useContext(authContext);
   const classes = useStyles();
   const [values, setValues] = useState({ });
@@ -57,6 +82,16 @@ const Edit = props => {
   const [districts, setDistricts] = useState([]);
   const [wards, setWards] = useState([]);
   const [villages, setVillages] = useState([]);
+  
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
+  const [output, setOutput] = useState({status:null, message:""}); 
+  const timer = React.useRef();
+
+  const buttonClassname = clsx({
+    [classes.buttonSuccess]: success,
+  }); 
+
 
   async function adminUnits (endpoint,unit,option){ 
     await  getAdminUnits(endpoint,unit,option)
@@ -176,26 +211,35 @@ const Edit = props => {
 
   const handleSubmit = event => {
     event.preventDefault();
+    if (!loading) {
+      setSuccess(false);
+      setLoading(true);
+    }
     (async  (endpoint,id,values,user_id) => {     
       await  postExit(endpoint,id,values,user_id)
-      .then(() => {  
-        setopenSnackbarSuccess(true); 
-        setValues({});        
-        document.forms["event"].reset();
-      }).catch(() => {
-        setopenSnackbarError(true); 
-      });
+      .then((response) => {  
+
+        setOutput({status:null, message:''});
+        timer.current = window.setTimeout(() => {
+          setSuccess(true);
+          setLoading(false);
+          if (parseInt(response.status) === 1){ 
+            setValues({});        
+            document.forms["event"].reset(); 
+            setOutput({status:parseInt(response.status), message:response.message}) 
+          } else {
+            setOutput({status:parseInt(response.status), message:response.message})
+          }         
+        }, 500);
+        
+      }).catch((error) => {        
+        setOutput({status:0, message:error.message})  
+        setSuccess(false);
+        setLoading(false);  
+      });      
     })(endpoint_exit_add,animal_id,values,user_id);    
   };
   
-  
-  const handleSnackbarSuccessClose = () => {
-    setopenSnackbarSuccess(false);
-  };
-
-  const handleSnackbarErrorClose = () => {
-    setopenSnackbarError(false);
-  };
 
   let showNewFarmerLocationFields = 
   (isNaN(parseInt(values.disposal_reason))|| parseInt(values.disposal_reason) === 1 || parseInt(values.disposal_reason) === 3 ||   parseInt(values.disposal_reason) === 4 ||
@@ -224,7 +268,18 @@ const Edit = props => {
           <Grid item xs={12}>
             <Card {...rest} className={clsx(classes.root, className)}> 
             <form id ='event' onSubmit={handleSubmit} >
-              <CardContent>        
+              <CardContent> 
+              {output.status === 0 ?
+                <>
+                <Alert severity="error" >{output.message}</Alert>             
+                </>
+                :output.status === 1 ?
+                <>
+                <Alert severity="success" >{output.message}</Alert>           
+                </>
+                :null
+                }          
+              <br/>            
               <Grid
                 container
                 spacing={4}
@@ -577,23 +632,30 @@ const Edit = props => {
           </CardContent>
           <Divider />
           <CardActions>          
-          <Button
-            className={classes.saveButton}
-            type="submit"
-            variant="contained"
-          >
-            Save Details
-          </Button>
+          <div className={classes.wrapper}>
+                <Fab
+                  aria-label="save"
+                  color="primary"
+                  className={buttonClassname}
+                >
+                  {success ? <CheckIcon /> : <SaveIcon />}
+                </Fab>
+                {loading && <CircularProgress size={68} className={classes.fabProgress} />}
+              </div>
+              <div className={classes.wrapper}>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  className={buttonClassname}
+                  disabled={loading}                
+                  type="submit"
+                >
+                  Save Changes
+                </Button>
+                {loading && <CircularProgress size={24} className={classes.buttonProgress} />}
+              </div>  
         </CardActions> 
-        </form> 
-        <SuccessSnackbar
-          onClose={handleSnackbarSuccessClose}
-          open={openSnackbarSuccess}
-        />
-        <ErrorSnackbar
-          onClose={handleSnackbarErrorClose}
-          open={openSnackbarError}
-        />
+        </form>         
         </Card>
       </Grid>
     </Grid>          

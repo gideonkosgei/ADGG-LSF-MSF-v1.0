@@ -138,8 +138,7 @@ const Edit = props => {
         </Grid> 
         <Grid item xs={11}>
           <Card> 
-            <CardContent> 
-              hello                
+            <CardContent>                      
               <PerfectScrollbar>               
                 <MuiThemeProvider>                
                   <MUIDataTable

@@ -8,13 +8,14 @@ import LibraryBooksIcon from '@material-ui/icons/LibraryBooks';
 import SettingsIcon from '@material-ui/icons/SettingsOutlined';
 import CloudDownloadIcon from '@material-ui/icons/CloudDownload';
 
-export default [
+const p = [
   {
-     pages: [      
+     pages: [             
       {
         title: 'Overview',
         href: '/overview',
-        icon: HomeIcon
+        icon: HomeIcon,
+        role : 'admin'
       },
       {
         title: 'Dashboards',
@@ -242,3 +243,8 @@ export default [
     ]
   },
 ];
+
+console.log(p[0].pages[0].href)
+
+
+export default p;
