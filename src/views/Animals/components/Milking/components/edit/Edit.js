@@ -17,7 +17,6 @@ import { green } from '@material-ui/core/colors';
 import CheckIcon from '@material-ui/icons/Check';
 import SaveIcon from '@material-ui/icons/Save';
 
-
 const useStyles = makeStyles(theme => ({
   root: {
     width: theme.breakpoints.values.lg,
@@ -264,7 +263,7 @@ const Edit = props => {
     }
     (async  (endpoint,id,values,user_id) => {     
       await  updateMilking(endpoint,id,values,user_id)
-      .then((response) => { 
+      .then((response) => {        
         setOutput({status:null, message:''});      
         timer.current = window.setTimeout(() => {
           setSuccess(true);

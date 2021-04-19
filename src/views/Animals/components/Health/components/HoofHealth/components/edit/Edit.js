@@ -1,18 +1,21 @@
 import React, { useState,useEffect,useContext } from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
-import {Card, CardContent, LinearProgress, Grid, TextField,colors,Button,CardActions,Box,Switch ,Typography,Tooltip } from '@material-ui/core';
+import {Card,Fab,CircularProgress, CardContent, LinearProgress, Grid, TextField,colors,Button,CardActions,Box,Switch ,Typography,Tooltip } from '@material-ui/core';
 import {getLookups,CreateOrEditHoofHealthRecord,getHoofHealth,getAgents}   from '../../../../../../../../utils/API';
 import {endpoint_lookup,endpoint_hoof_health_edit,endpoint_hoof_health_get,endpoint_agent} from '../../../../../../../../configs/endpoints';
 import authContext from '../../../../../../../../contexts/AuthContext';
 import {Sidebar} from '../index';
-import SuccessSnackbar from '../../../../../../../../components/SuccessSnackbar';
-import ErrorSnackbar from '../../../../../../../../components/ErrorSnackbar';
 import OpenInNewIcon from '@material-ui/icons/OpenInNew';
 import {EventMetaData}  from '../../../../../Modal';
 import moment from 'moment';
 import { Page } from 'components';
 import {default as Header} from '../../../../../Header/index';
+import Alert from '@material-ui/lab/Alert';
+import clsx from 'clsx';
+import { green } from '@material-ui/core/colors';
+import CheckIcon from '@material-ui/icons/Check';
+import SaveIcon from '@material-ui/icons/Save';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -39,14 +42,37 @@ const useStyles = makeStyles(theme => ({
   },
   content: {
     marginTop: theme.spacing(3)
+  },
+  wrapper: {
+    margin: theme.spacing(1),
+    position: 'relative',
+  },
+  buttonSuccess: {
+    backgroundColor: green[500],
+    '&:hover': {
+      backgroundColor: green[700],
+    },
+  },
+  fabProgress: {
+    color: green[500],
+    position: 'absolute',
+    top: -6,
+    left: -6,
+    zIndex: 1,
+  },
+  buttonProgress: {
+    color: green[500],
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    marginTop: -12,
+    marginLeft: -12,
   }
 }));
 
 const Edit = props => { 
   const classes = useStyles();
-  sessionStorage.setItem('hoof_health_record_id', parseInt(props.match.params.id));  
-  const [openSnackbarSuccess, setopenSnackbarSuccess] = useState(false);
-  const [openSnackbarError, setopenSnackbarError] = useState(false);
+  sessionStorage.setItem('hoof_health_record_id', parseInt(props.match.params.id));   
   const [ {user_id,organization_id} ] = useContext(authContext);
   const [values, setValues] = useState({ });  
   const [digital_dermatitis_options, setDigitalDermatitis] = useState([]);
@@ -59,6 +85,14 @@ const Edit = props => {
   const animal_name  = sessionStorage.getItem('animal_name'); 
   const option  =  0;
   const [isLoading, setIsLoading] = useState(true);
+  const [output, setOutput] = useState({status:null, message:""}); 
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
+  const timer = React.useRef();
+
+  const buttonClassname = clsx({
+    [classes.buttonSuccess]: success,
+  });
 
   useEffect(() => {   
     let mounted_lookup = true;
@@ -132,24 +166,32 @@ const Edit = props => {
 
   const handleSubmit = event => {
     event.preventDefault();
+    if (!loading) {
+      setSuccess(false);
+      setLoading(true);
+    }
     (async  (endpoint,id,values,user_id) => {     
       await  CreateOrEditHoofHealthRecord(endpoint,id,values,user_id)
-      .then(() => {  
-        setopenSnackbarSuccess(true);         
-      }).catch(() => {        
-        setopenSnackbarError(true); 
-      });
+      .then((response) => {        
+        setOutput({status:null, message:''});      
+        timer.current = window.setTimeout(() => {
+          setSuccess(true);
+          setLoading(false);          
+          if (parseInt(response.status) === 1){               
+            setOutput({status:parseInt(response.status), message:response.message}) 
+          } else {
+            setOutput({status:parseInt(response.status), message:response.message})
+          } 
+        }, 500);
+                      
+    }).catch((error) => {
+      setOutput({status:0, message:error.message})
+      setSuccess(false);
+      setLoading(false);
+    });
     })(endpoint_hoof_health_edit,record_id,values,user_id);    
-  };
-  
-  
-  const handleSnackbarSuccessClose = () => {
-    setopenSnackbarSuccess(false);
-  };
-
-  const handleSnackbarErrorClose = () => {
-    setopenSnackbarError(false);
-  };
+  }; 
+ 
 
   const handleSwitchChange = event => {
     event.persist();
@@ -187,8 +229,19 @@ const Edit = props => {
          </Grid> 
           <Grid item xs={11}>
             <Card> 
-            <form id ='event' onSubmit={handleSubmit} >
-              <CardContent>        
+              <form id ='event' onSubmit={handleSubmit} >
+                <CardContent>   
+                {output.status === 0 ?
+                <>
+                <Alert severity="error" >{output.message}</Alert>             
+                </>
+                :output.status === 1 ?
+                <>
+                <Alert severity="success" >{output.message}</Alert>           
+                </>
+                :null
+                }          
+              <br/>     
               <Grid
                 container
                 spacing={4}
@@ -576,18 +629,35 @@ const Edit = props => {
           
           </CardContent>         
           <CardActions>          
-          <Box flexGrow={1}>
+         
             {readOnly ? null :                        
-              <Button
-                className={classes.saveButton}
-                type="submit"
-                variant="contained"
-                hidden = "true"                               
-              >
-                Save Changes
-              </Button>              
+              <>    
+              <div className={classes.wrapper}>
+                <Fab
+                  aria-label="save"
+                  color="primary"
+                  className={buttonClassname}
+                >
+                  {success ? <CheckIcon /> : <SaveIcon />}
+                </Fab>
+                {loading && <CircularProgress size={68} className={classes.fabProgress} />}
+              </div>
+              <div className={classes.wrapper}>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  className={buttonClassname}
+                  disabled={loading}                
+                  type="submit"
+                >
+                  Save Changes
+                </Button>
+                {loading && <CircularProgress size={24} className={classes.buttonProgress} />}
+              </div>
+              </>
+                     
             }                             
-          </Box> 
+         
           <Box>
             <Tooltip  title="view Metadata">
               <Button onClick={handleMetadataOpen}>
@@ -599,29 +669,22 @@ const Edit = props => {
               <Typography variant="h6">{ readOnly? "Enable Form" : "Disable Form"} </Typography> 
           </Box> 
           <Box> 
-              <Switch             
-                className={classes.toggle}            
-                checked={values.readOnly}
-                color="secondary"
-                edge="start"               
-                onChange={handleSwitchChange}
-              />             
+            <Switch             
+              className={classes.toggle}            
+              checked={values.readOnly}
+              color="secondary"
+              edge="start"               
+              onChange={handleSwitchChange}
+            />             
          </Box>        
           
         </CardActions> 
-        </form> 
-        <SuccessSnackbar
-          onClose={handleSnackbarSuccessClose}
-          open={openSnackbarSuccess}
-        />
-        <ErrorSnackbar
-          onClose={handleSnackbarErrorClose}
-          open={openSnackbarError}
-        />
+        </form>   
+
         <EventMetaData
-                Details={values}
-                onClose={handleMetadataClose}
-                open={openMetadata}
+          Details={values}
+          onClose={handleMetadataClose}
+          open={openMetadata}
         /> 
           </Card>
           </Grid>
