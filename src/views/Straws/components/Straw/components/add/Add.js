@@ -71,7 +71,6 @@ const useStyles = makeStyles(theme => ({
 const Edit = props => {    
   const [ {organization_id,user_id} ] = useContext(authContext);
   const classes = useStyles();
-
   const [values, setValues] = useState({ });
   const [specifications, setSpecification] = useState([]);
   const [breeds, setBreeds] = useState([]);
@@ -137,9 +136,7 @@ const Edit = props => {
             }                    
             setSpecification(lookup_specification);
             setBreedCompositions(lookup_breed_composition);
-            setBreeds(lookup_breed);
-            
-                        
+            setBreeds(lookup_breed);  
           }
         });
       })(endpoint_lookup,'20001,8,14'); 
@@ -153,23 +150,23 @@ const Edit = props => {
   if (!breeds || !breedCompositions || !specifications || !service_providers || !countries) {
     return null;
   }
-
-
     const handleChange = event => {
     event.persist();
     setValues({
       ...values,
-      [event.target.name]:event.target.type === 'checkbox' ? event.target.checked: event.target.value  
-          
+      [event.target.name]:event.target.type === 'checkbox' ? event.target.checked: event.target.value 
     });
   };
 
   const handleSubmit = event => {
     event.preventDefault();
+    if (!loading) {
+      setSuccess(false);
+      setLoading(true);
+    }
     (async  (endpoint,values,user_id,org_id) => {     
       await  postStraw(endpoint,values,user_id,org_id)
-      .then((response) => {  
-        console.log(response);
+      .then((response) => {         
         setOutput({status:null, message:''});      
         timer.current = window.setTimeout(() => {
           setSuccess(true);
