@@ -122,12 +122,22 @@ export const endpoint_lookup = {
   headers: headers   
 }; 
 
+
+
 //get lookup to populate combo boxes
 export const endpoint_herd = {
-  url: `${api}/herds/org/`,
+  url: `${api}/herds`,
   method: 'GET',
   headers: headers   
 };
+
+export const endpoint_herd_animals = {
+  url: `${api}/animal/herd`,
+  method: 'GET',
+  headers: headers   
+};
+
+
 
 //get weight & Growth Details for Specific Animal
 export const endpoint_weight = {
@@ -1016,6 +1026,29 @@ export const endpoint_batch_report_all = {
   method: 'GET',
   headers: headers   
 }; 
+
+// add herd
+export const endpoint_herd_add= {
+  url: `${api}/herds`,
+  method: 'POST',
+  headers: headers   
+};
+
+// update herd
+export const endpoint_herd_update= {
+  url: `${api}/herds`,
+  method: 'PUT',
+  headers: headers   
+};
+
+
+
+//get farms
+export const endpoint_farms = {
+  url: `${api}/farms`,
+  method: 'GET',
+  headers: headers   
+};  
 
 
 

@@ -952,20 +952,20 @@ export const postStraw =  function (config,values,user_id,org_id) {
  
  
 
-  straw_id = (typeof straw_id === 'undefined' || straw_id === 'undeined')? null:straw_id
-  barcode = (typeof barcode === 'undefined' || barcode === 'undeined')? null:barcode;
-  bull_tag_id = (typeof bull_tag_id === 'undefined' || bull_tag_id === 'undeined')? null:bull_tag_id;
-  bull_name = (typeof bull_name === 'undefined' || bull_name === 'undeined')? null:bull_name;
-  breed = (typeof breed === 'undefined' || breed === 'undeined')? null:breed;
-  breed_composition = (typeof breed_composition === 'undefined' || breed_composition === 'undeined')? null:isNaN(parseInt(breed_composition))?null:parseInt(breed_composition) ;
-  semen_source = (typeof semen_source === 'undefined' || semen_source === 'undeined')? null:isNaN(parseInt(semen_source))?null:parseInt(semen_source);
-  origin_country = (typeof origin_country === 'undefined' || origin_country === 'undeined')? null:isNaN(parseInt(origin_country))?null:parseInt(origin_country);   
-  farm_name = (typeof farm_name === 'undefined' || farm_name === 'undeined')? null:farm_name;
-  batch_number = (typeof batch_number === 'undefined' || batch_number === 'undeined')? null:batch_number;
-  ejaculation_number = (typeof ejaculation_number === 'undefined' || ejaculation_number === 'undeined')? null:ejaculation_number;
-  production_date = (typeof production_date === 'undefined' || production_date === 'undeined')? null:production_date;
-  specification  = (typeof specification === 'undefined' || specification === 'undeined')? null:specification;
-  additional_info = (typeof additional_info === 'undefined' || additional_info === 'undeined')? null:additional_info;
+  straw_id = (typeof straw_id === 'undefined' || straw_id === '')? null:straw_id
+  barcode = (typeof barcode === 'undefined' || barcode === '')? null:barcode;
+  bull_tag_id = (typeof bull_tag_id === 'undefined' || bull_tag_id === '')? null:bull_tag_id;
+  bull_name = (typeof bull_name === 'undefined' || bull_name === '')? null:bull_name;
+  breed = (typeof breed === 'undefined' || breed === '')? null:breed;
+  breed_composition = (typeof breed_composition === 'undefined' || breed_composition === '')? null:isNaN(parseInt(breed_composition))?null:parseInt(breed_composition) ;
+  semen_source = (typeof semen_source === 'undefined' || semen_source === '')? null:isNaN(parseInt(semen_source))?null:parseInt(semen_source);
+  origin_country = (typeof origin_country === 'undefined' || origin_country === '')? null:isNaN(parseInt(origin_country))?null:parseInt(origin_country);   
+  farm_name = (typeof farm_name === 'undefined' || farm_name === '')? null:farm_name;
+  batch_number = (typeof batch_number === 'undefined' || batch_number === '')? null:batch_number;
+  ejaculation_number = (typeof ejaculation_number === 'undefined' || ejaculation_number === '')? null:ejaculation_number;
+  production_date = (typeof production_date === 'undefined' || production_date === '')? null:production_date;
+  specification  = (typeof specification === 'undefined' || specification === '')? null:specification;
+  additional_info = (typeof additional_info === 'undefined' || additional_info === '')? null:additional_info;
   
   const body = {
     "straw_id": straw_id,
@@ -3941,6 +3941,95 @@ export const animalBatchModifyRevalidate =  function (config,values,record_id,us
     .catch(err => reject(err));
   });       
 }
+
+
+//post herd
+export const postHerd =  function (config,values,user_id,org_id) { 
+   
+  let {country, district,farm_id, herd_name, region , village, ward } = values;
+
+    country = (typeof country === 'undefined' || country === '')? null:country
+    district = (typeof district === 'undefined' || district === '')? null:district;
+    herd_name = (typeof herd_name === 'undefined' || herd_name === '')? null:herd_name;
+    region = (typeof region === 'undefined' || region === '')? null:region;
+    village = (typeof village === 'undefined' || village === '')? null:village;
+    ward = (typeof ward === 'undefined' || ward === '')? null:ward;  
+    farm_id = (typeof farm_id === 'undefined' || farm_id === '')? null:farm_id;  
+       
+  const body = {
+    "country": country,
+    "region": region,
+    "district": district,    
+    "ward": ward,
+    "village": village,           
+    "herd_name": herd_name,            
+    "org": org_id,
+    "user": user_id,
+    "farm_id": farm_id       
+  };  
+ 
+  const options = {
+    url:`${config.url}`,
+    method: config.method,
+    headers: config.headers,
+    data: body  
+  };
+
+  return new Promise((resolve, reject) => {
+    axios(options)
+    .then(res => {           
+        resolve(res.data);
+    })    
+    .catch(err => reject(err));
+  });       
+}
+
+//update herd
+export const putHerd =  function (config,values,user_id,org) { 
+   
+  let {country, district,farm_id, herd_name, region , village, ward, reg_date,id } = values;
+
+    country = (typeof country === 'undefined' || country === '')? null:country
+    district = (typeof district === 'undefined' || district === '')? null:district;
+    herd_name = (typeof herd_name === 'undefined' || herd_name === '')? null:herd_name;
+    region = (typeof region === 'undefined' || region === '')? null:region;
+    village = (typeof village === 'undefined' || village === '')? null:village;
+    ward = (typeof ward === 'undefined' || ward === '')? null:ward;  
+    farm_id = (typeof farm_id === 'undefined' || farm_id === '')? null:farm_id;  
+    reg_date = (typeof reg_date === 'undefined' || reg_date === '')? null:reg_date;
+    id = (typeof id === 'undefined' || id === '')? null:id;
+       
+  const body = {
+    "herd_id": id,
+    "country": country,
+    "region": region,
+    "district": district,    
+    "ward": ward,
+    "village": village,           
+    "herd_name": herd_name,  
+    "user": user_id,
+    "farm_id": farm_id,  
+    "reg_date": reg_date,
+    "org_id": org      
+  };   
+ 
+  const options = {
+    url:`${config.url}`,
+    method: config.method,
+    headers: config.headers,
+    data: body  
+  };
+
+  return new Promise((resolve, reject) => {
+    axios(options)
+    .then(res => {           
+        resolve(res.data);
+    })    
+    .catch(err => reject(err));
+  });       
+}
+
+
 
 
 

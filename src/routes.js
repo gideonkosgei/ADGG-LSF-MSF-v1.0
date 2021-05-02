@@ -313,6 +313,22 @@ const routes = [
         exact: true,
         component: lazy(() => import('views/Animals/components/ExitList/components/details'))
       },
+      {
+        path: '/management/herds',
+        exact: true,
+        component: lazy(() => import('views/Herds/components/Herds/components/view'))
+      },
+      {
+        path: '/management/herds/add',
+        exact: true,
+        component: lazy(() => import('views/Herds/components/Herds/components/add'))        
+      },
+      {
+        path: '/management/herds/edit/:id',
+        exact: true,
+        component: lazy(() => import('views/Herds/components/Herds/components/edit'))        
+      },
+
      /* {
         path: '/management/health/view/:id',
         exact: true,

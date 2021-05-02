@@ -34,9 +34,13 @@ const p = [
         icon: BarChartIcon,
         children: [         
           {
+            title: 'Herds',
+            href: '/management/herds'
+          }, 
+          {
             title: 'Animals',
             href: '/management/animals'
-          },         
+          },          
           {
             title: 'Exit List',
             href: '/management/exit-list'
