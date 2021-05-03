@@ -34,8 +34,7 @@ const Chart = props => {
       }
     ],
     labels: []
-  }; 
-  
+  };   
 
   for (const item of dataProp) {
     data.datasets[0].data.push(item.percentage);
@@ -49,7 +48,7 @@ const Chart = props => {
     animation: false,
     cutoutPercentage: 80,
     legend: {
-      display: false
+      display: true
     },
     layout: {
       padding: 0

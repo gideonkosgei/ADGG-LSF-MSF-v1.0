@@ -6,6 +6,10 @@ import {putHerd,getCountries,getAdminUnits,genericFunctionFourParameters}   from
 import {endpoint_herd_update,endpoint_countries,endpoint_admin_units,endpoint_farms,endpoint_herd,endpoint_herd_animals} from '../../../../../../configs/endpoints';
 import authContext from '../../../../../../contexts/AuthContext';
 import {Header} from '../Header';
+import {default as Statistics} from '../../../../../Overview/components/Statistics';
+import {default as AnimalCategorySegmentation} from '../../../../../DashboardAnalytics/components/AnimalCategorySegmentation';
+import {default as BreedDistribution} from '../../../../../DashboardAnalytics/components/BreedDistribution';
+
 import { Page } from 'components';
 import { green } from '@material-ui/core/colors';
 import CheckIcon from '@material-ui/icons/Check';
@@ -688,9 +692,33 @@ const Edit = props => {
     variant="h4"
   >
     <br/>
-    HERD SUMMARY
+    {`HERD SUMMARY - ${values.herd_name}`}
   </Typography>
   <br/> 
+  <Statistics className={classes.statistics} org = {organization_id} level = {1} herd = {herd_id} />
+  <br/>
+  <Grid
+    container
+    spacing={3}
+  >    
+    <Grid
+       item
+       lg={5}
+       xl={4}
+       xs={12}
+    >
+       <AnimalCategorySegmentation org = {organization_id} level = {1} herd = {herd_id} />
+    </Grid>
+    <Grid
+      item
+      lg={7}
+      xl={4}
+      xs={12}
+    >
+      <BreedDistribution org = {organization_id} level = {1} herd = {herd_id} />
+    </Grid> 
+  </Grid>
+ 
 
   <Typography
     component="h2"
@@ -698,7 +726,7 @@ const Edit = props => {
     variant="h4"
   >
     <br/>
-    HERD ANIMALS
+    {`HERD ANIMALS - ${values.herd_name}`}    
   </Typography>
   <br/> 
   { isLoadingAnimals  &&  <LinearProgress/>   } 

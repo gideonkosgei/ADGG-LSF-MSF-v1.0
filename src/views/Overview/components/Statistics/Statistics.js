@@ -1,10 +1,9 @@
-import React, { useState, useEffect,useContext} from 'react';
+import React, { useState, useEffect} from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/styles';
 import { Link as RouterLink } from 'react-router-dom';
 import { Card, Typography, Grid, Link} from '@material-ui/core';
-import authContext from '../../../../contexts/AuthContext';
 import {endpoint_animal_statistics} from '../../../../configs/endpoints';
 import {getAnimalStats}   from '../../../../utils/API';
 
@@ -41,25 +40,24 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const Statistics = props => {
-  const { className, ...rest } = props;
-  const classes = useStyles();
-  const [ { organization_id }  ] = useContext(authContext); 
+  const { className,org,level,herd, ...rest } = props;
+  const classes = useStyles(); 
   const [statistics, setStatistics] = useState(null);
   useEffect(() => {
     let mounted = true; 
-    (async  (org_id)=>{     
-      await  getAnimalStats(endpoint_animal_statistics,org_id)
+    (async  (endpoint,org_id,level,herd)=>{     
+      await  getAnimalStats(endpoint,org_id,level,herd)
        .then(response => {              
          if (mounted) {
           setStatistics(response.payload);
          }
        });
-     })(organization_id);    
+     })(endpoint_animal_statistics,org,level,herd);    
        
     return () => {
       mounted = false;
     };
-  }, [organization_id]);
+  }, [org,level,herd]);
 
   if (!statistics) {
     return null;
@@ -72,6 +70,7 @@ const Statistics = props => {
   const bulls = statistics.find(stat => stat.animal_type === 'Bull'); 
   const uncategorized = statistics.find(stat => stat.animal_type === 'Uncategorized');   
   //const ai_straws = statistics.find(stat => stat.animal_type === 'AI Straw');
+  
   
 
   return (
@@ -99,7 +98,7 @@ const Statistics = props => {
             <Link
               color="inherit"
               component={RouterLink}
-              to = {(typeof(cows) === 'undefined')? '#':`/management/animals/${cows.animal_type_id}`}
+              to = {(typeof(cows) === 'undefined')? '#':`/management/animals/${cows.animal_type_id}/${herd}`}
               variant="h6"
             >
                 COWS
@@ -122,7 +121,7 @@ const Statistics = props => {
             <Link
               color="inherit"
               component={RouterLink}
-              to = {(typeof(heifers) === 'undefined')? '#':`/management/animals/${heifers.animal_type_id}`}         
+              to = {(typeof(heifers) === 'undefined')? '#':`/management/animals/${heifers.animal_type_id}/${herd}`}         
               variant="h6"
             >
                 Heifers
@@ -144,7 +143,7 @@ const Statistics = props => {
             <Link
               color="inherit"
               component={RouterLink}
-              to = {(typeof(male_calves) === 'undefined')? '#':`/management/animals/${male_calves.animal_type_id}`}
+              to = {(typeof(male_calves) === 'undefined')? '#':`/management/animals/${male_calves.animal_type_id}/${herd}`}
               variant="h6"
             >
               MALE CALVES
@@ -166,7 +165,7 @@ const Statistics = props => {
             <Link
               color="inherit"
               component={RouterLink}
-              to = {(typeof(female_calves) === 'undefined')? '#':`/management/animals/${female_calves.animal_type_id}`}
+              to = {(typeof(female_calves) === 'undefined')? '#':`/management/animals/${female_calves.animal_type_id}/${herd}`}
               variant="h6"
             >
               FEMALE CALVES
@@ -188,7 +187,7 @@ const Statistics = props => {
             <Link
               color="inherit"
               component={RouterLink}
-              to = {(typeof(bulls) === 'undefined')? '#':`/management/animals/${bulls.animal_type_id}`}
+              to = {(typeof(bulls) === 'undefined')? '#':`/management/animals/${bulls.animal_type_id}/${herd}`}
               variant="h6"
             >
                 BULLS
@@ -210,7 +209,7 @@ const Statistics = props => {
             <Link
               color="inherit"
               component={RouterLink}
-              to = {(typeof(uncategorized) === 'undefined')? '#':`/management/animals/${uncategorized.animal_type_id}`}
+              to = {(typeof(uncategorized) === 'undefined')? '#':`/management/animals/${uncategorized.animal_type_id}/${herd}`}
               variant="h6"
             >
                  UNCATEGORIZED
@@ -223,6 +222,9 @@ const Statistics = props => {
 };
 
 Statistics.propTypes = {
-  className: PropTypes.string 
+  className: PropTypes.string,
+  org: PropTypes.number,
+  level: PropTypes.number,
+  herd: PropTypes.number
 };
 export default Statistics;

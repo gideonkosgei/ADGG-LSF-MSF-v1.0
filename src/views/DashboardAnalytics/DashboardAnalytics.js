@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import { makeStyles } from '@material-ui/styles';
 import { Grid,Typography,Divider } from '@material-ui/core';
 import { Page } from 'components';
@@ -13,6 +13,7 @@ import {
   ServiceActionList  
 } from './components';
 import {default as HealthManagementSummmaryTable} from '../Animals/components/Analytics/components/HealthManagementSummmaryTable';
+import authContext from '../../contexts/AuthContext';
 
 const useStyles = makeStyles(theme => ({
   root: {    
@@ -30,6 +31,7 @@ const useStyles = makeStyles(theme => ({
 
 const DashboardAnalytics = () => {
 const classes = useStyles();
+const [ {organization_id} ] = useContext(authContext);
   return (
     <Page
       className={classes.root}
@@ -112,7 +114,7 @@ const classes = useStyles();
           xl={4}
           xs={12}
         >
-          <AnimalCategorySegmentation />
+          <AnimalCategorySegmentation org = {organization_id} level = {0} herd = {null} />
         </Grid>
         <Grid
           item
@@ -120,7 +122,7 @@ const classes = useStyles();
           xl={4}
           xs={12}
         >
-          <BreedDistribution/>
+          <BreedDistribution org = {organization_id} level = {0} herd = {null}/>
         </Grid> 
         
         

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect } from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
@@ -6,7 +6,6 @@ import {Card, CardHeader,LinearProgress, CardContent, Divider, Typography } from
 import { GenericMoreButton } from 'components';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import { Chart } from './components';
-import authContext from '../../../../contexts/AuthContext';
 import {endpoint_animal_statistics} from '../../../../configs/endpoints';
 import {getAnimalStats}   from '../../../../utils/API';
 import { Page } from 'components';
@@ -41,27 +40,27 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const AnimalCategorySegmentation = props => {
-  const { className, ...rest } = props;
-  const [ { organization_id }  ] = useContext(authContext);
+  const { className,org,level,herd, ...rest } = props;  
   const classes = useStyles(); 
   const [stats, setStats] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     let mounted = true;
-    (async  (org_id)=>{     
-      await  getAnimalStats(endpoint_animal_statistics,org_id)
+    (async  (endpoint,org_id,level,herd)=>{     
+      await  getAnimalStats(endpoint,org_id,level,herd)
        .then(response => {              
          if (mounted) {
           setStats(response.payload);
-          setLoading(false);    
+          setLoading(false);  
          }
        });
-     })(organization_id);
+     })(endpoint_animal_statistics,org,level,herd);    
+       
     return () => {
       mounted = false;
     };
-  }, [organization_id]);
+  }, [org,level,herd]);
 
   return (
     <Page> 
@@ -72,7 +71,7 @@ const AnimalCategorySegmentation = props => {
     >
       <CardHeader
         action={<GenericMoreButton/>}
-        title="Animal Categories"
+        title="ANIMAL CATEGORIES"
       />
       <Divider />
       <CardContent className={classes.content}>
@@ -115,7 +114,10 @@ const AnimalCategorySegmentation = props => {
 };
 
 AnimalCategorySegmentation.propTypes = {
-  className: PropTypes.string
+  className: PropTypes.string,
+  org: PropTypes.number,
+  level: PropTypes.number,
+  herd: PropTypes.number
 };
 
 export default AnimalCategorySegmentation;

@@ -1,6 +1,6 @@
-import React from 'react';
+import React,{useContext} from 'react';
 import { makeStyles } from '@material-ui/styles';
-
+import authContext from '../../contexts/AuthContext';
 import { Page } from 'components';
 import {
   Header,
@@ -30,6 +30,12 @@ const useStyles = makeStyles(theme => ({
 
 const Overview = () => {
   const classes = useStyles();
+  const [ { organization_id }  ] = useContext(authContext); 
+  const level = 0;
+  /*
+  level 0 -> summary at org level
+  level 1 -> summary at herd level
+  */
 
   return (
     <Page
@@ -37,9 +43,8 @@ const Overview = () => {
       title="Overview"
     >
       <Header />
-      <Statistics className={classes.statistics} /> 
+      <Statistics className={classes.statistics} org = {organization_id} level = {level} herd = {null} /> 
     </Page>
   );
 };
-
 export default Overview;

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect } from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
@@ -6,7 +6,6 @@ import {Card, CardHeader,LinearProgress, CardContent, Divider, Typography } from
 import { GenericMoreButton } from 'components';
 import { Chart } from './components';
 import PerfectScrollbar from 'react-perfect-scrollbar';
-import authContext from '../../../../contexts/AuthContext';
 import {endpoint_breeds_distribution} from '../../../../configs/endpoints';
 import {getStatsBreedsDistribution}   from '../../../../utils/API';
 import { Page } from 'components';
@@ -41,27 +40,26 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const BreedDistribution = props => {
-  const { className, ...rest } = props;
-  const [ { organization_id }  ] = useContext(authContext);
+  const { className,herd,level,org, ...rest } = props;
   const classes = useStyles(); 
   const [stats, setStats] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     let mounted = true;
-    (async  (org_id)=>{     
-      await  getStatsBreedsDistribution(endpoint_breeds_distribution,org_id)
+    (async  (endpoint,org_id,level,herd_id)=>{     
+      await  getStatsBreedsDistribution(endpoint,org_id,level,herd_id)
        .then(response => {              
          if (mounted) {
           setStats(response.payload);
           setLoading(false);  
          }
        });
-     })(organization_id);
+     })(endpoint_breeds_distribution,org,level,herd);
     return () => {
       mounted = false;
     };
-  }, [organization_id]);
+  }, [org,level,herd]);
 
 
   return (
@@ -73,7 +71,7 @@ const BreedDistribution = props => {
     >
       <CardHeader
         action={<GenericMoreButton/>}
-        title="Breed Distribution"
+        title="BREED DISTRIBUTION"
       />
       <Divider />
       <CardContent className={classes.content}>
@@ -116,7 +114,10 @@ const BreedDistribution = props => {
 };
 
 BreedDistribution.propTypes = {
-  className: PropTypes.string
+  className: PropTypes.string,
+  org: PropTypes.number,
+  level: PropTypes.number,
+  herd: PropTypes.number
 };
 
 export default BreedDistribution;

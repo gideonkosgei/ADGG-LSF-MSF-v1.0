@@ -220,9 +220,9 @@ export const getFarmDetails =  function (config,farm_id) {
 }
 
 // get animal overview statistics
-export const getAnimalStats =  function (config,organisation_id) {   
+export const getAnimalStats =  function (config,organisation_id,level,herd) {   
   const options = {
-    url:`${config.url}${organisation_id}`,
+    url:`${config.url}${organisation_id}/${level}/${herd}`,
     method: config.method,
     headers: config.headers  
   }  
@@ -3006,12 +3006,12 @@ export const getHerdMilkingSummary =  function (config,rpt_id,org_id) {
 });       
 }
 
-export const getStatsBreedsDistribution =  function (config,organisation_id) {   
+export const getStatsBreedsDistribution =  function (config,org,level,herd) {   
   const options = {
-    url:`${config.url}${organisation_id}`,
+    url:`${config.url}${org}/${level}/${herd}`,
     method: config.method,
     headers: config.headers  
-  }    
+  }  
   return new Promise((resolve, reject) => {
     axios(options)
     .then(res => {          

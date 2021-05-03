@@ -26,6 +26,7 @@ const AnimalList = props => {
   const [caption, setCaption] = useState('All');
   const [ { organization_id }  ] = useContext(authContext);
   const animal_categ_id = parseInt(props.match.params.id); 
+  const herd_id = parseInt(props.match.params.herd);
   const [isLoading, setIsLoading] = useState(true);
  
 
@@ -37,13 +38,25 @@ const AnimalList = props => {
           if (mounted) { 
           let filtered = [];
           setIsLoading(false); 
-          if (typeof(animal_categ_id) !='undefined'){
+         
+          //herd_id: 12740
+
+          if (typeof(animal_categ_id) !='undefined' && isNaN(herd_id) ){
             for (let i = 0; i<response.payload.length; i++){              
               if (response.payload[i].animal_type_id === animal_categ_id){              
                 filtered.push(response.payload[i]);
               }
             }
-          }           
+          }  
+
+          if (typeof(animal_categ_id) !='undefined' && isNaN(herd_id) === false ){
+            for (let i = 0; i<response.payload.length; i++){              
+              if (response.payload[i].animal_type_id === animal_categ_id && response.payload[i].herd_id === parseInt(herd_id) ){              
+                filtered.push(response.payload[i]);
+              }
+            }
+          }    
+
             const res = isNaN(animal_categ_id)? response.payload : filtered; 
             if (!isNaN(animal_categ_id)){
               setCaption(res[0].animalType);           
@@ -55,11 +68,13 @@ const AnimalList = props => {
     return () => {
       mounted = false;
     };
-  }, [organization_id,animal_categ_id]);
+  }, [organization_id,animal_categ_id,herd_id]);
 
   if (!animals) {
     return null;
   }
+
+  console.log(isNaN(herd_id));
   return (
     <Page
       className={classes.root}
