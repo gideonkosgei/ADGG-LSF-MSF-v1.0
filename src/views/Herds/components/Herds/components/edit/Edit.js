@@ -353,6 +353,7 @@ const Edit = props => {
       </Typography>
       <br/>  
       <Header />
+      
       <br/>           
       { isLoading  &&
         <LinearProgress/>
