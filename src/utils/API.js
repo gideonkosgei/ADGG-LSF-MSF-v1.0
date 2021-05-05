@@ -2278,21 +2278,13 @@ export const getParametersLimitAll =   function (config) {
 };
 
 // post & put org profile logo
-export const postOrgProfileLogo =   function (config,org_id,image,user_id) {  
-  const body = { 
-    "org": org_id,      
-    "user_id": user_id,
-    "image": image    
+export const postOrgProfileLogo =   function (config,org_id,formData,user_id,type) {   
+  const options = {
+    url:`${config.url}/${org_id}/${user_id}/${type}`, 
+    method: config.method,
+    headers: config.headers,
+    data: formData  
   };
-
-  
-
-const options = {
-  url:`${config.url}`, 
-  method: config.method,
-  headers: config.headers,
-  data: body  
-};
   return new Promise((resolve, reject) => {
     axios(options)
     .then(res => {             

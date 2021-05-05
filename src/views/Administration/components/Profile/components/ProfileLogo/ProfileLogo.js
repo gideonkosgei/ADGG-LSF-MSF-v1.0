@@ -4,12 +4,14 @@ import clsx from 'clsx';
 import PhotoCameraIcon from '@material-ui/icons/PhotoCamera';
 import SaveIcon from '@material-ui/icons/Save';
 import { makeStyles } from '@material-ui/styles';
-import {Card, CardActions  , CardContent,CardHeader, Avatar, Typography, Button,Box,Divider,Switch} from '@material-ui/core';
+import {Card, CardActions ,Fab,CircularProgress, CardContent,CardHeader, Avatar, Typography, Button,Box,Divider,Switch} from '@material-ui/core';
 import {postOrgProfileLogo}   from '../../../../../../utils/API';
 import {endpoint_org_profile_logo} from '../../../../../../configs/endpoints';
 import authContext from '../../../../../../contexts/AuthContext';
-import SuccessSnackbar from '../../../../../../components/SuccessSnackbar';
-import ErrorSnackbar from '../../../../../../components/ErrorSnackbar';
+import { green } from '@material-ui/core/colors';
+import Alert from '@material-ui/lab/Alert';
+import CheckIcon from '@material-ui/icons/Check';
+
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -20,10 +22,8 @@ const useStyles = makeStyles(theme => ({
     textAlgin: 'center'
   },
   imageDetails: {
-    display: 'flex',
-    //alignItems: 'center',
-    flexDirection: 'column',
-    //textAlgin: 'center'
+    display: 'flex',   
+    flexDirection: 'column'    
   },
   name: {
     marginTop: theme.spacing(1),
@@ -44,19 +44,49 @@ const useStyles = makeStyles(theme => ({
     minWidth: 160,
     maxWidth: 210
   },
+  wrapper: {
+    margin: theme.spacing(1),
+    position: 'relative',
+  },
+  buttonSuccess: {
+    backgroundColor: green[500],
+    '&:hover': {
+      backgroundColor: green[700],
+    },
+  },
+  fabProgress: {
+    color: green[500],
+    position: 'absolute',
+    top: -6,
+    left: -6,
+    zIndex: 1,
+  },
+  buttonProgress: {
+    color: green[500],
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    marginTop: -12,
+    marginLeft: -12,
+  }
 }));
-
-
 
 const ProfileLogo = props => {
   const { profile, className, ...rest } = props;
   const classes = useStyles();
   const [image, setImage] = useState({ preview: "", raw: "" });
   const [fileProps, setFileProps] = useState({ name: null, type: null, size: null });
-  const [changeLogo, setChangeLogo] = useState(false);
-  const [openSnackbarSuccess, setopenSnackbarSuccess] = useState(false);
-  const [openSnackbarError, setopenSnackbarError] = useState(false);
+  const [changeLogo, setChangeLogo] = useState(false); 
   const [ {user_id,organization_id} ] = useContext(authContext); 
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
+  const [output, setOutput] = useState({status:null, message:""}); 
+  const timer = React.useRef();
+
+  const buttonClassname = clsx({
+    [classes.buttonSuccess]: success,
+  });
+ 
  
   useEffect(() => { 
   }, []);
@@ -73,34 +103,39 @@ const ProfileLogo = props => {
   };  
 
   const handleSubmit = event => {
-    event.preventDefault();    
+    event.preventDefault();
     const formData = new FormData();
-    formData.append("image", image.raw);    
+    formData.append('image', image.raw); 
+    if (!loading) {
+      setSuccess(false);
+      setLoading(true);
+    }   
 
-    (async  (endpoint,org_id,formData,user_id) => {     
-      await  postOrgProfileLogo(endpoint,org_id,formData,user_id)
-      .then(() => {  
-        setopenSnackbarSuccess(true); 
-        setImage({ preview: "", raw: "" });        
-        document.forms["event"].reset();
-      }).catch(() => {
-        setopenSnackbarError(true); 
-      });
-    })(endpoint_org_profile_logo,organization_id,image.raw,user_id);
+    (async  (endpoint,org_id,form_data,user_id,type) => {     
+      await  postOrgProfileLogo(endpoint,org_id,form_data,user_id,type)
+      .then((response) => {  
+        setOutput({status:null, message:''});      
+        timer.current = window.setTimeout(() => {
+          setSuccess(true);
+          setLoading(false);          
+          if (parseInt(response.status) === 1){               
+            setOutput({status:parseInt(response.status), message:response.message}) 
+          } else {
+            setOutput({status:parseInt(response.status), message:response.message})
+          } 
+        }, 500);                      
+    }).catch((error) => {
+      setOutput({status:0, message:error.message})
+      setSuccess(false);
+      setLoading(false);
+    });
+    })(endpoint_org_profile_logo,organization_id,formData,user_id,0); 
   };
 
   const handleSwitchChange = event => {
     event.persist();
     setChangeLogo(!changeLogo); 
     setFileProps({ name:null, type:null, size:null})  
-  };
-
-  const handleSnackbarSuccessClose = () => {
-    setopenSnackbarSuccess(false);
-  };
-
-  const handleSnackbarErrorClose = () => {
-    setopenSnackbarError(false);
   };
   
   return (
@@ -112,10 +147,23 @@ const ProfileLogo = props => {
     <Divider />  
     <form id ='event' onSubmit={handleSubmit} >
       <CardContent className={classes.content}>
+        {output.status === 0 ?
+          <>
+          <Alert severity="error" >{output.message}</Alert>        
+          <br/>      
+          </>
+          :output.status === 1 ?
+          <>
+          <Alert severity="success" >{output.message}</Alert>  
+          <br/>          
+          </>
+          :null
+        }          
+        <br/> 
         <Avatar
           className={classes.avatar}
-          src={image.preview}
-          //src={profile.profile_image}          
+          src={image.preview} 
+          variant="rounded"         
         />
         <Typography
           className={classes.name}
@@ -167,36 +215,50 @@ const ProfileLogo = props => {
               Select
               <input
                 type="file"
-                name="myImage"
+                name="image"
+                accept = "image/*"
+                multiple = {false}
                 hidden
                 onChange={handleChange}
               />
           </Button>  
             {
               !fileProps.name ? null :
-              <Button
-                className={classes.btn}
-                type = "submit"
-                variant="contained"               
-                startIcon={<SaveIcon />}
-              >
-                Save  
-              </Button> 
+              <>    
+                <div className={classes.wrapper}>
+                  <Fab
+                    aria-label="save"
+                    color="primary"
+                    className={buttonClassname}
+                  >
+                    {success ? <CheckIcon /> : <SaveIcon />}
+                  </Fab>
+                  {loading && <CircularProgress size={68} className={classes.fabProgress} />}
+                </div>
+                <div className={classes.wrapper}>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    className={buttonClassname}
+                    disabled={loading}                
+                    type="submit"
+                  >
+                    Save Changes
+                  </Button>
+                  {loading && <CircularProgress size={24} className={classes.buttonProgress} />}
+                </div>
+              </>
+
+
+              
         }
         </Box>
         : null 
       }
 
 </CardActions>  
-      <SuccessSnackbar
-          onClose={handleSnackbarSuccessClose}
-          open={openSnackbarSuccess}
-      />
-      <ErrorSnackbar
-          onClose={handleSnackbarErrorClose}
-          open={openSnackbarError}
-      />
-         </CardContent>
+     
+      </CardContent>
     </form>
     </Card>
   );

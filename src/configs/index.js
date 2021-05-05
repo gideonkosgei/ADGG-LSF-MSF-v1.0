@@ -6,7 +6,6 @@ export const headers = {
       'Authorization': token
   };
   export const headers_files = {
-     'Accept': 'application/json',
-    'Content-Type': 'multipart/form-data  ; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW',
+    'Accept': 'multipart/form-data',
     'Authorization': token
 };
