@@ -5,13 +5,13 @@ import PhotoCameraIcon from '@material-ui/icons/PhotoCamera';
 import SaveIcon from '@material-ui/icons/Save';
 import { makeStyles } from '@material-ui/styles';
 import {Card, CardActions ,Fab,CircularProgress, CardContent,CardHeader, Avatar, Typography, Button,Box,Divider,Switch} from '@material-ui/core';
-import {postOrgProfileLogo}   from '../../../../../../utils/API';
-import {endpoint_org_profile_logo} from '../../../../../../configs/endpoints';
+import {postOrgProfileLogo,genericFunctionFourParameters}   from '../../../../../../utils/API';
+import {endpoint_org_profile_logo,endpoint_get_avatar} from '../../../../../../configs/endpoints';
 import authContext from '../../../../../../contexts/AuthContext';
 import { green } from '@material-ui/core/colors';
 import Alert from '@material-ui/lab/Alert';
 import CheckIcon from '@material-ui/icons/Check';
-
+import {url} from '../../../../../../configs';
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -73,7 +73,7 @@ const useStyles = makeStyles(theme => ({
 
 const ProfileLogo = props => {
   const { profile, className, ...rest } = props;
-  const classes = useStyles();
+  const classes = useStyles(); 
   const [image, setImage] = useState({ preview: "", raw: "" });
   const [fileProps, setFileProps] = useState({ name: null, type: null, size: null });
   const [changeLogo, setChangeLogo] = useState(false); 
@@ -82,15 +82,33 @@ const ProfileLogo = props => {
   const [success, setSuccess] = useState(false);
   const [output, setOutput] = useState({status:null, message:""}); 
   const timer = React.useRef();
+  const type = 0;
 
   const buttonClassname = clsx({
     [classes.buttonSuccess]: success,
-  });
- 
+  }); 
  
   useEffect(() => { 
-  }, []);
+    let mounted = true;
+    (async  (endpoint,desc,id,type) => {     
+      await  genericFunctionFourParameters(endpoint,desc,id,type)
+      .then(response => {                        
+        if (mounted) { 
+          if (response.payload[0].length !== 0 ) {   
+            setImage({
+            preview: `${url}/${response.payload[0][0].filename}`,          
+            raw: null
+           });
+          } 
+        }
+      });
+    })(endpoint_get_avatar,'get avatar',organization_id,type); 
 
+    return () => {
+      mounted = false;      
+    };    
+  }, [organization_id,type]);  
+  
   const handleChange = event => {
     event.persist();    
     if (event.target.files.length) {
@@ -163,6 +181,7 @@ const ProfileLogo = props => {
         <Avatar
           className={classes.avatar}
           src={image.preview} 
+                
           variant="rounded"         
         />
         <Typography
@@ -205,6 +224,7 @@ const ProfileLogo = props => {
          <CardActions>  
        
          { changeLogo ?     
+
           <Box display="flex" justifyContent="space-between">
             <Button
               variant="contained"

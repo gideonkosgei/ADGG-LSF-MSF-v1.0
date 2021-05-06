@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect,useContext } from 'react';
+import React, { Fragment, useEffect,useContext,useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
@@ -10,6 +10,9 @@ import useRouter from 'utils/useRouter';
 import { Navigation } from 'components';
 import navigationConfig from './navigationConfig';
 import authContext from '../../../../contexts/AuthContext';
+import {genericFunctionFourParameters}   from '../../../../utils/API';
+import {endpoint_get_avatar} from '../../../../configs/endpoints';
+import {url} from '../../../../configs';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -26,8 +29,8 @@ const useStyles = makeStyles(theme => ({
     minHeight: 'fit-content'
   },
   avatar: {
-    width: 60,
-    height: 60
+    width: 100,
+    height: 100
   },
   name: {
     marginTop: theme.spacing(1)
@@ -42,17 +45,38 @@ const useStyles = makeStyles(theme => ({
 
 const NavBar = props => {
   const { openMobile, onMobileClose, className, ...rest } = props;
-  const [ {name ,email,organization} ] = useContext(authContext);
-
   const classes = useStyles();
   const router = useRouter();
+  const [ {name ,email,organization,user_id} ] = useContext(authContext);
+  const [values, setValues] = useState({ });
+  const type = 1;
+
+  
   useEffect(() => {
+    let mounted = true;
+
     if (openMobile) {
       onMobileClose && onMobileClose();
     }
+  
+    (async  (endpoint,desc,id,type) => {     
+      await  genericFunctionFourParameters(endpoint,desc,id,type)
+      .then(response => {                         
+        if (mounted) { 
+          if (response.payload[0].length !== 0 ) {   
+            setValues(response.payload[0][0]); 
+          }  
+        }
+      });
+    })(endpoint_get_avatar,'get avatar',user_id,type); 
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [router.location.pathname]);
+    return () => {
+      mounted = false;      
+    }; 
+    
+  }, [router.location.pathname,user_id,type,onMobileClose,openMobile]);
+
+ 
 
   const navbarContent = (
     <div className={classes.content}>
@@ -61,7 +85,7 @@ const NavBar = props => {
           alt="Person"
           className={classes.avatar}
           component={RouterLink}
-          src=''
+          src={`${url}/${values.filename}`}
           to="/settings"
         />
         <Typography

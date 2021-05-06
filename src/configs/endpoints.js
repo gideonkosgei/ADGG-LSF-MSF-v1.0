@@ -960,6 +960,12 @@ export const endpoint_org_profile_logo = {
   method: 'POST',
   headers: headers_files  
 };
+//view avatar
+export const endpoint_get_avatar = {
+  url: `${api}/org/profile-logo`,
+  method: 'GET',
+  headers: headers  
+};
 
 export const endpoint_milkRevalidate = {
   url: `${api}/batches/milking/modify-and-revalidate`,

@@ -2284,7 +2284,7 @@ export const postOrgProfileLogo =   function (config,org_id,formData,user_id,typ
     method: config.method,
     headers: config.headers,
     data: formData  
-  };
+  };  
   return new Promise((resolve, reject) => {
     axios(options)
     .then(res => {             
@@ -2293,7 +2293,6 @@ export const postOrgProfileLogo =   function (config,org_id,formData,user_id,typ
     .catch(err => reject(err));
   });       
 };
-
 
 // 2. Limit parameters one
 export const getParametersLimitOne =   function (config,id) {   
@@ -2563,8 +2562,8 @@ export const getBatchTemplate =  function (config,type,org_id) {
     method: config.method,
     headers: config.headers  
   } 
-  console.log(options);
-  
+
+   
   return new Promise((resolve, reject) => {
     axios(options)
     .then(res => {             

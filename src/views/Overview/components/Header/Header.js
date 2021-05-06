@@ -1,4 +1,4 @@
-import React,{useContext} from 'react';
+import React,{useContext,useEffect,useState} from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/styles';
@@ -6,7 +6,9 @@ import { Typography, Grid, Button, Hidden } from '@material-ui/core';
 import BarChartIcon from '@material-ui/icons/BarChart';
 import authContext from '../../../../contexts/AuthContext';
 import greetingText from '../../../../utils/greetingText';
-
+import {genericFunctionFourParameters}   from '../../../../utils/API';
+import {endpoint_get_avatar} from '../../../../configs/endpoints';
+import {url} from '../../../../configs';
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -26,26 +28,29 @@ const useStyles = makeStyles(theme => ({
 
 const Header = props => {
   const { className, ...rest } = props;
-
   const classes = useStyles();
   const [ {username,organization_id} ] = useContext(authContext);
+  const [values, setValues] = useState({ });
+  const type = 0;
 
-  let image = "";
-  switch(parseInt(organization_id)) {
-    case 1:
-      image = 'klba.JPG';
-      break;
-    case 4:
-      image = 'stanley.jpg';
-      break;
-    case 5:
-      image = 'kalro.jpg';
-      break;
-    default:
-      image = 'default.png';
-  }
-  console.log(image);
+  useEffect(() => { 
+    let mounted = true;
+    (async  (endpoint,desc,id,type) => {     
+      await  genericFunctionFourParameters(endpoint,desc,id,type)
+      .then(response => {                        
+        if (mounted) { 
+          if (response.payload[0].length !== 0 ) {   
+            setValues(response.payload[0][0]); 
+          }  
+        }
+      });
+    })(endpoint_get_avatar,'get avatar',organization_id,type); 
 
+    return () => {
+      mounted = false;      
+    };    
+  }, [organization_id,type]);
+  
   return (
     <div
       {...rest}
@@ -87,6 +92,8 @@ const Header = props => {
           </Button>
         </Grid>
         <Hidden smDown>
+          {
+            typeof values.filename === 'undefined'? null :
           <Grid
             item
             md={6}
@@ -94,11 +101,12 @@ const Header = props => {
             <img
               width ='225'
               height ='225'
-              alt="Cover"
+              alt=""
               className={classes.image}
-              src= {`/images/org-logos/${image}`}
+              src= {`${url}/${values.filename}`}
             />
           </Grid>
+        }
         </Hidden>
       </Grid>
     </div>
