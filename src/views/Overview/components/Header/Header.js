@@ -8,7 +8,7 @@ import authContext from '../../../../contexts/AuthContext';
 import greetingText from '../../../../utils/greetingText';
 import {genericFunctionFourParameters}   from '../../../../utils/API';
 import {endpoint_get_avatar} from '../../../../configs/endpoints';
-import {url} from '../../../../configs';
+import {root_dir} from '../../../../configs';
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -103,7 +103,7 @@ const Header = props => {
               height ='225'
               alt=""
               className={classes.image}
-              src= {`${url}/${values.filename}`}
+              src= {`${root_dir}/${values.filename}`}
             />
           </Grid>
         }

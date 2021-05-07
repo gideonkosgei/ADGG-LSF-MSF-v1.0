@@ -12,7 +12,7 @@ import navigationConfig from './navigationConfig';
 import authContext from '../../../../contexts/AuthContext';
 import {genericFunctionFourParameters}   from '../../../../utils/API';
 import {endpoint_get_avatar} from '../../../../configs/endpoints';
-import {url} from '../../../../configs';
+import {root_dir} from '../../../../configs';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -85,7 +85,7 @@ const NavBar = props => {
           alt="Person"
           className={classes.avatar}
           component={RouterLink}
-          src={`${url}/${values.filename}`}
+          src={`${root_dir}/${values.filename}`}
           to="/settings"
         />
         <Typography
