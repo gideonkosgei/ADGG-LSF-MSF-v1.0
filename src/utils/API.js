@@ -287,12 +287,12 @@ export const getLookups =  function (config,id) {
 }
 
 // get lookup values
-export const getHerds =  function (config,id) {   
+export const getHerds =  function (config,option,id) {   
   const options = {
-    url:`${config.url}'${id}'`,
+    url:`${config.url}/${option}/${id}`,
     method: config.method,
     headers: config.headers  
-  }  
+  } 
  
   return new Promise((resolve, reject) => {
     axios(options)

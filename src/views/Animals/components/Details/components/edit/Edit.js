@@ -196,15 +196,14 @@ const Edit = props => {
         });
       })(endpoint_lookup,'8,14,62,3,83,13,11,69');
 
-      (async  (endpoint,id) => {     
-        await  getHerds(endpoint,id)
+      (async  (endpoint,option,id) => {     
+        await  getHerds(endpoint,option,id)
         .then(response => {       
-          if (mounted_herds) { 
-            const data = response.payload; 
-            setHerds(data);               
+          if (mounted_herds) {             
+            setHerds(response.payload[0]);               
           }
         });
-      })(endpoint_herd,organization_id);
+      })(endpoint_herd,0,organization_id);
 
       (async  (endpoint,id) => {             
         await  getAnimal(endpoint,id)
@@ -229,7 +228,7 @@ const Edit = props => {
     };
   }, [organization_id,animal_id]); 
 
-  if (!countries || !values || !animal_types || !main_breeds || !breed_composition || !gender || !colors || !sire_types || !entryTypes || !deformaties) {
+  if (!countries || !values || !animal_types || !main_breeds || !breed_composition || !gender || !colors || !sire_types || !entryTypes || !deformaties ||!herds) {
     return null;
   }
 
@@ -626,7 +625,7 @@ const Edit = props => {
                     <option                      
                       value={herd.id}
                     >
-                      {herd.name}
+                      {herd.herd_name}
                     </option>
                   ))
                 }    
