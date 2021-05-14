@@ -5,14 +5,12 @@ import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import { Drawer, Divider, Paper, Avatar, Typography } from '@material-ui/core';
 import { Hidden } from '@material-ui/core';
-
 import useRouter from 'utils/useRouter';
 import { Navigation } from 'components';
 import navigationConfig from './navigationConfig';
 import authContext from '../../../../contexts/AuthContext';
 import {genericFunctionFourParameters}   from '../../../../utils/API';
 import {endpoint_get_avatar} from '../../../../configs/endpoints';
-import {root_dir} from '../../../../configs';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -50,7 +48,6 @@ const NavBar = props => {
   const [ {name ,email,organization,user_id} ] = useContext(authContext);
   const [values, setValues] = useState({ });
   const type = 1;
-
   
   useEffect(() => {
     let mounted = true;
@@ -64,7 +61,7 @@ const NavBar = props => {
       .then(response => {                         
         if (mounted) { 
           if (response.payload[0].length !== 0 ) {   
-            setValues(response.payload[0][0]); 
+            setValues(response.payload[0][0]);             
           }  
         }
       });
@@ -75,7 +72,6 @@ const NavBar = props => {
     }; 
     
   }, [router.location.pathname,user_id,type,onMobileClose,openMobile]);
-
  
 
   const navbarContent = (
@@ -85,7 +81,7 @@ const NavBar = props => {
           alt="Person"
           className={classes.avatar}
           component={RouterLink}
-          src={`${root_dir}/${values.filename}`}
+          src={`/images/uploads/${values.filename}`}
           to="/settings"
         />
         <Typography

@@ -73,8 +73,7 @@ const AnimalList = props => {
   if (!animals) {
     return null;
   }
-
-  console.log(isNaN(herd_id));
+ 
   return (
     <Page
       className={classes.root}

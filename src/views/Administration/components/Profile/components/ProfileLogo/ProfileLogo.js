@@ -11,7 +11,6 @@ import authContext from '../../../../../../contexts/AuthContext';
 import { green } from '@material-ui/core/colors';
 import Alert from '@material-ui/lab/Alert';
 import CheckIcon from '@material-ui/icons/Check';
-import {root_dir} from '../../../../../../configs';
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -96,14 +95,13 @@ const ProfileLogo = props => {
         if (mounted) { 
           if (response.payload[0].length !== 0 ) {   
             setImage({
-            preview: `${root_dir}/${response.payload[0][0].filename}`,          
+            preview: `/images/uploads/${response.payload[0][0].filename}`,          
             raw: null
            });
           } 
         }
       });
     })(endpoint_get_avatar,'get avatar',organization_id,type); 
-
     return () => {
       mounted = false;      
     };    

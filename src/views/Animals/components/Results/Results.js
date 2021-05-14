@@ -78,7 +78,7 @@ const Results = props => {
 
      const options = {       
        filter: true,
-       rowsPerPage: 5,       
+       rowsPerPage: 20,       
        rowsPerPageOptions :[5,10,20,50,100],
        selectableRows: 'none',      
        filterType: 'checkbox',

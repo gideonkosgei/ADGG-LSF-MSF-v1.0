@@ -15,7 +15,6 @@ import Alert from '@material-ui/lab/Alert';
 import {postOrgProfileLogo,genericFunctionFourParameters}   from '../../../../../../utils/API';
 import {endpoint_org_profile_logo,endpoint_get_avatar} from '../../../../../../configs/endpoints';
 import authContext from '../../../../../../contexts/AuthContext';
-import {root_dir} from '../../../../../../configs';
 import CheckIcon from '@material-ui/icons/Check';
 import SaveIcon from '@material-ui/icons/Save';
 import { green } from '@material-ui/core/colors';
@@ -100,7 +99,7 @@ const ProfileDetails = props => {
         if (mounted) { 
          if (response.payload[0].length !== 0 ) {   
            setImage({
-           preview: `${root_dir}/${response.payload[0][0].filename}`,          
+           preview: `/images/uploads/${response.payload[0][0].filename}`,          
            raw: null
           });
          }          
