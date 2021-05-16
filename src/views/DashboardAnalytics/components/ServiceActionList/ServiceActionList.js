@@ -32,7 +32,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const ServiceActionList = props => {
-  const { className, ...rest } = props;
+  const { className,option, ...rest } = props;
   const classes = useStyles();
   const [values, setValues] = useState([]);
   const [ {organization_id}  ] = useContext(authContext);
@@ -41,19 +41,19 @@ const ServiceActionList = props => {
 
   useEffect(() => {
     let mounted = true;   
-    (async  (endpoint,org)=>{     
-      await  getServiceActionList(endpoint,org)
+    (async  (endpoint,org,option)=>{     
+      await  getServiceActionList(endpoint,org,option)
        .then(response => {              
          if (mounted) {
           setValues(response.payload); 
           setLoading(false);   
          }
        });
-     })(endpoint_service_action_list,organization_id);
+     })(endpoint_service_action_list,organization_id,option);
     return () => {
       mounted = false;
     };
-  }, [organization_id]);
+  }, [organization_id,option]);
 
   if (!values) {
     return null;

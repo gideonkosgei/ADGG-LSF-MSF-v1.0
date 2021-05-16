@@ -4,7 +4,8 @@ import authContext from '../../contexts/AuthContext';
 import { Page } from 'components';
 import {
   Header,
-  Statistics  
+  Statistics,
+  Todos 
 } from './components';
 
 const useStyles = makeStyles(theme => ({
@@ -44,6 +45,8 @@ const Overview = () => {
     >
       <Header />
       <Statistics className={classes.statistics} org = {organization_id} level = {level} herd = {null} /> 
+      <br/> <br/>
+      <Todos/>
     </Page>
   );
 };

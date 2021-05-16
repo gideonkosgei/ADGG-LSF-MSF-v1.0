@@ -57,7 +57,7 @@ const [ {organization_id} ] = useContext(authContext);
           xl={4}
           xs={12}
         >
-          <DueDates/>
+          <DueDates option = {0}/>
         </Grid>
         <Grid
           item
@@ -65,7 +65,7 @@ const [ {organization_id} ] = useContext(authContext);
           xl={4}
           xs={12}
         >
-          <PdActionList/>
+          <PdActionList option = {0}/>
         </Grid>
 
         <Grid item  xs={6} >  
@@ -87,7 +87,7 @@ const [ {organization_id} ] = useContext(authContext);
           xl={12}
           xs={12}
         >
-          <ServiceActionList />
+          <ServiceActionList option = {0} />
         </Grid>
 
         <Grid
@@ -128,7 +128,9 @@ const [ {organization_id} ] = useContext(authContext);
         
       </Grid>
     </Page>
-  );
+ 
+ 
+ );
 };
 
 export default DashboardAnalytics;

@@ -34,7 +34,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const DueDates = props => {
-  const { className, ...rest } = props;
+  const { className,option, ...rest } = props;
   const classes = useStyles();
   const [values, setValues] = useState([]);
   const [ {organization_id}  ] = useContext(authContext);
@@ -42,19 +42,19 @@ const DueDates = props => {
 
   useEffect(() => {
     let mounted = true;   
-    (async  (endpoint,org)=>{     
-      await  getDueDateTable(endpoint,org)
+    (async  (endpoint,org,option)=>{     
+      await  getDueDateTable(endpoint,org,option)
        .then(response => {              
          if (mounted) {
           setValues(response.payload);  
           setLoading(false);                          
          }
        });
-     })(endpoint_due_date,organization_id);
+     })(endpoint_due_date,organization_id,option);
     return () => {
       mounted = false;
     };
-  }, [organization_id]);
+  }, [organization_id,option]);
 
   if (!values) {
     return null;
@@ -102,7 +102,7 @@ const DueDates = props => {
     >
       <CardHeader
         action={<GenericMoreButton />}
-        title="ESTIMATED CALVING DATES"
+        title="CALVING DATES"
       />
       <Divider />
       <CardContent className={classes.content}>

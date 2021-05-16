@@ -2,12 +2,13 @@ import React,{useContext,useEffect,useState} from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/styles';
-import { Typography, Grid, Button, Hidden } from '@material-ui/core';
+import { Typography,Link, Grid, Button, Hidden } from '@material-ui/core';
 import BarChartIcon from '@material-ui/icons/BarChart';
 import authContext from '../../../../contexts/AuthContext';
 import greetingText from '../../../../utils/greetingText';
 import {genericFunctionFourParameters}   from '../../../../utils/API';
 import {endpoint_get_avatar} from '../../../../configs/endpoints';
+import { Link as RouterLink } from 'react-router-dom';
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -81,14 +82,16 @@ const Header = props => {
           >
             Here’s what’s happening on your farm today
           </Typography>
-          <Button
-            className={classes.summaryButton}
-            edge="start"
-            variant="contained"
-          >
-            <BarChartIcon className={classes.barChartIcon} />
-            View summary
-          </Button>
+          <Link  component={RouterLink} to='/dashboards/analytics'>
+            <Button
+              className={classes.summaryButton}
+              edge="start"
+              variant="contained"
+            >
+              <BarChartIcon className={classes.barChartIcon} />
+              View summary
+            </Button>
+          </Link>
         </Grid>
         <Hidden smDown>
           {
@@ -102,7 +105,7 @@ const Header = props => {
               height ='225'
               alt=""
               className={classes.image}
-              src= {`/images/uploads/${values.filename}`}
+              src= {require(`../../../../../public/images/uploads/${values.filename}`)}
             />
           </Grid>
         }

@@ -1,50 +1,19 @@
 /* eslint-disable react/no-multi-comp */
-import React, { useState, useEffect } from 'react';
+import React, {useEffect } from 'react';
 import PropTypes from 'prop-types';
-import clsx from 'clsx';
-import moment from 'moment';
 import { makeStyles } from '@material-ui/styles';
+import { Page } from 'components';
 import {
-  Button,
-  Card,
-  CardContent,
-  CardHeader,
-  Divider,
-  IconButton,
-  List,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
-  Radio,
-  Tooltip,
-  Typography,
-  colors
+  Grid,  
+  Divider, 
+  Typography
 } from '@material-ui/core';
-import AddIcon from '@material-ui/icons/Add';
-import ArchiveIcon from '@material-ui/icons/ArchiveOutlined';
 
-import axios from 'utils/axios';
-import { Label } from 'components';
-
-const getLabel = todo => {
-  if (todo.done) {
-    return null;
-  }
-
-  if (moment(todo.deadline).isBefore(moment(), 'day')) {
-    return (
-      <Label color={colors.red[600]}>{`Due ${moment(
-        todo.deadline
-      ).fromNow()}`}</Label>
-    );
-  }
-
-  if (moment(todo.deadline).isSame(moment(), 'day')) {
-    return <Label color={colors.orange[600]}>Due today</Label>;
-  }
-
-  return <Label>{`Due ${moment(todo.deadline).fromNow()}`}</Label>;
-};
+import { 
+  DueDates,
+  PdActionList ,
+  ServiceActionList  
+} from '../../../DashboardAnalytics/components';
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -60,96 +29,60 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const Todos = props => {
-  const { className, ...rest } = props;
-
+const Todos = props => { 
   const classes = useStyles();
-  const [todos, setTodos] = useState([]);
 
-  useEffect(() => {
-    let mounted = true;
-
-    const fetchTodos = () => {
-      axios.get('/api/account/todos').then(response => {
-        if (mounted) {
-          setTodos(response.data.todos);
-        }
-      });
-    };
-
-    fetchTodos();
-
-    return () => {
-      mounted = false;
-    };
+  useEffect(() => {  
   }, []);
 
-  const handleChange = (event, todo) => {
-    event.persist();
-
-    setTodos(todos =>
-      todos.map(t => {
-        if (t.id === todo.id) {
-          return { ...todo, done: !todo.done };
-        }
-
-        return t;
-      })
-    );
-  };
-
   return (
-    <Card
-      {...rest}
-      className={clsx(classes.root, className)}
+  <Page
+    className={classes.root}
+    title="Analytics Dashboard"
+  >   
+   <Typography
+      component="h1"
+      gutterBottom
+      variant="h3"
     >
-      <CardHeader
-        action={
-          <Button
-            color="primary"
-            size="small"
-          >
-            <AddIcon className={classes.addIcon} />
-            Add
-          </Button>
-        }
-        title="My todos"
-      />
-      <Divider />
-      <CardContent className={classes.content}>
-        <List>
-          {todos.map((todo, i) => (
-            <ListItem
-              divider={i < todos.length - 1}
-              key={todo.id}
-            >
-              <ListItemIcon>
-                <Radio
-                  checked={todo.done}
-                  onClick={event => handleChange(event, todo)}
-                />
-              </ListItemIcon>
-              <ListItemText>
-                <Typography
-                  className={clsx({
-                    [classes.done]: todo.done
-                  })}
-                  variant="body1"
-                >
-                  {todo.title}
-                </Typography>
-              </ListItemText>
-              {getLabel(todo)}
-              <Tooltip title="Archive">
-                <IconButton>
-                  <ArchiveIcon />
-                </IconButton>
-              </Tooltip>
-            </ListItem>
-          ))}
-        </List>
-      </CardContent>
-    </Card>
+      TODAY'S TODO LIST
+    </Typography> 
+    <Divider />  
+    <br/>  
+    <Grid
+      className={classes.container}
+      container
+      spacing={3}
+    >    
+      <Grid
+        item
+        lg={6}
+        xl={4}
+        xs={12}
+      >
+        <DueDates option = {1}/>
+      </Grid>
+      <Grid
+        item
+        lg={6}
+        xl={4}
+        xs={12}
+      >
+        <PdActionList option = {1}/>
+      </Grid>
+      <Grid
+        item
+        lg={12}
+        xl={12}
+        xs={12}
+      >
+        <ServiceActionList option = {1} />
+      </Grid>      
+    </Grid>
+  </Page>
+
+
+    
   );
 };
 

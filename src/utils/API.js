@@ -2897,9 +2897,9 @@ export const getlactationTable =  function (config,animal_id) {
 
 
 // Analytics Due Dates table 
-export const getDueDateTable =  function (config,org) {   
+export const getDueDateTable =  function (config,org,option) {   
   const options = {
-    url:`${config.url}${org}`,
+    url:`${config.url}${org}/${option}`,
     method: config.method,
     headers: config.headers  
   }    
@@ -2914,9 +2914,9 @@ export const getDueDateTable =  function (config,org) {
 }
 
 // Analytics Due Dates table 
-export const getPdActionList =  function (config,org) {   
+export const getPdActionList =  function (config,org,option) {   
   const options = {
-    url:`${config.url}${org}`,
+    url:`${config.url}${org}/${option}`,
     method: config.method,
     headers: config.headers  
   }    
@@ -2931,9 +2931,9 @@ export const getPdActionList =  function (config,org) {
 }
 
 // Analytics Service Action List
-export const getServiceActionList =  function (config,org) {   
+export const getServiceActionList =  function (config,org,option) {   
   const options = {
-    url:`${config.url}${org}`,
+    url:`${config.url}${org}/${option}`,
     method: config.method,
     headers: config.headers  
   }    
