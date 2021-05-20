@@ -102,7 +102,7 @@ const DueDates = props => {
     >
       <CardHeader
         action={<GenericMoreButton />}
-        title="CALVING DATES"
+        title="CALVING ACTION LIST"
       />
       <Divider />
       <CardContent className={classes.content}>

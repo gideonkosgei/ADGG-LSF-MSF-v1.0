@@ -109,19 +109,7 @@ mock.onGet('/api/account/notifications').reply(200, {
       title: 'New customer is registered',
       type: 'user',
       created_at: moment().subtract(1, 'day')
-    },
-    {
-      id: uuid(),
-      title: 'Project has been approved',
-      type: 'project',
-      created_at: moment().subtract(3, 'days')
-    },
-    {
-      id: uuid(),
-      title: 'New feature has been added',
-      type: 'feature',
-      created_at: moment().subtract(7, 'days')
-    }
+    }    
   ]
 });
 

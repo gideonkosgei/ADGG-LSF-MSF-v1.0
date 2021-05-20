@@ -137,6 +137,8 @@ const TopBar = props => {
     setOpenNotifications(false);
   };
 
+ 
+
   return (     
      
     <AppBar
@@ -194,7 +196,7 @@ const TopBar = props => {
      
       <NotificationsPopover
         anchorEl={notificationsRef.current}
-        notifications={notifications}
+        notifications={notifications}      
         onClose={handleNotificationsClose}
         open={openNotifications}
       />
