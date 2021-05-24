@@ -68,7 +68,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const Add = props => {    
-  const [ {organization_id,user_id} ] = useContext(authContext);
+  const [ {organization_id,user_id,country_id} ] = useContext(authContext);
   const classes = useStyles();
   const [values, setValues] = useState({ });  
   const [countries, setCountries] = useState([]);
@@ -81,8 +81,14 @@ const Add = props => {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [output, setOutput] = useState({status:null, message:""}); 
-  const timer = React.useRef();
-  
+  const [units, setUnits] = useState({
+    unit1: 'Regions',
+    unit2: 'District',
+    unit3: 'Ward',
+    unit4: 'Village'
+  });
+
+  const timer = React.useRef();  
   const buttonClassname = clsx({
     [classes.buttonSuccess]: success,
   });
@@ -141,7 +147,17 @@ const Add = props => {
       await  getCountries(endpoint)
       .then(response => {                        
         if (mounted_countries) {            
-          setCountries(response.payload);                 
+          setCountries(response.payload); 
+
+          if (country_id && country_id !=='' ){
+            let getUnits = response.payload.find(country => country.id === parseInt(country_id));         
+            setUnits({
+              unit1: getUnits.unit1_name,
+              unit2: getUnits.unit2_name,
+              unit3: getUnits.unit3_name,
+              unit4: getUnits.unit4_name
+            }); 
+          }            
         }
       });
     })(endpoint_countries);
@@ -159,7 +175,7 @@ const Add = props => {
       mounted_countries = false;  
       mounted_farms = false;        
     };    
-  }, [organization_id]);  
+  }, [organization_id,country_id]);  
 
   if (!countries || !farms) {
     return null;
@@ -170,9 +186,19 @@ const Add = props => {
       ...values,
       [event.target.name]:event.target.type === 'checkbox' ? event.target.checked: event.target.value 
     });
+    
     if (event.target.name === 'country'){
       adminUnits(endpoint_admin_units,parseInt(event.target.value),1);
-    }  
+      if (event.target.value !== '') {
+        let getUnits = countries.find(country => country.id === parseInt(event.target.value));         
+        setUnits({
+          unit1: getUnits.unit1_name,
+          unit2: getUnits.unit2_name,
+          unit3: getUnits.unit3_name,
+          unit4: getUnits.unit4_name
+        }); 
+      } 
+    } 
     
     if (event.target.name === 'region'){     
       adminUnits(endpoint_admin_units,parseInt(event.target.value),2);      
@@ -215,7 +241,8 @@ const Add = props => {
     })(endpoint_herd_add,values,user_id,organization_id);    
   };
  
- console.log(farms);
+
+
   return (
     <Page
       className={classes.root}
@@ -336,7 +363,7 @@ const Add = props => {
                     InputLabelProps={{
                       shrink: true,
                     }}
-                    label="Region"
+                    label={units.unit1}
                     name="region"                
                     onChange={handleChange}
                     variant="outlined" select                    
@@ -364,7 +391,7 @@ const Add = props => {
                       shrink: true,
                     }}                   
                     
-                    label="District"
+                    label={units.unit2}
                     name="district"                
                     onChange={handleChange}
                     variant="outlined" select                    
@@ -391,7 +418,7 @@ const Add = props => {
                     InputLabelProps={{
                       shrink: true,
                     }}  
-                    label="Ward"
+                    label={units.unit3}
                     name="ward"                
                     onChange={handleChange}
                     variant="outlined"  select                    
@@ -419,7 +446,7 @@ const Add = props => {
                       shrink: true,
                     }}           
                     
-                    label="Village"
+                    label={units.unit4}
                     name="village"                
                     onChange={handleChange}
                     variant="outlined" select                    

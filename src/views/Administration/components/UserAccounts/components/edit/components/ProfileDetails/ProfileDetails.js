@@ -32,9 +32,15 @@ const ProfileDetails = props => {
   const [villages, setVillages] = useState([]);
   const [output, setOutput] = useState({status:null, message:""}); 
   const [openSnackbarError, setopenSnackbarError] = useState(false);
-  const [ {user_id,organization_id} ] = useContext(authContext); 
+  const [ {user_id,organization_id,country_id} ] = useContext(authContext); 
   const [authRoles, setAuthRoles] = useState([]);  
   const [readOnly, setReadOnly] = useState(true);
+  const [units, setUnits] = useState({
+    unit1: 'Regions',
+    unit2: 'District',
+    unit3: 'Ward',
+    unit4: 'Village'
+  });
 
   async function adminUnits (endpoint,unit,option){ 
     await  getAdminUnits(endpoint,unit,option)
@@ -123,7 +129,18 @@ const ProfileDetails = props => {
         await  getCountries(endpoint)
         .then(response => {                        
           if (mounted_countries) {            
-            setCountries(response.payload);                 
+            setCountries(response.payload); 
+
+            if (country_id && country_id !=='' ){
+              let getUnits = response.payload.find(country => country.id === parseInt(country_id));         
+              setUnits({
+                unit1: getUnits.unit1_name,
+                unit2: getUnits.unit2_name,
+                unit3: getUnits.unit3_name,
+                unit4: getUnits.unit4_name
+              }); 
+            } 
+
           }
         });
       })(endpoint_countries);
@@ -134,7 +151,7 @@ const ProfileDetails = props => {
       mounted_auth_roles  = false;
       mounted_acc_info = false;
     };
-  }, [record_id]); 
+  }, [record_id,country_id]); 
 
   if (!timezones || !countries || !authRoles || !values) {
     return null;
@@ -148,6 +165,17 @@ const ProfileDetails = props => {
     });
     if (event.target.name === 'country'){
       adminUnits(endpoint_admin_units,parseInt(event.target.value),1);
+
+      if (event.target.value !== '') {
+        let getUnits = countries.find(country => country.id === parseInt(event.target.value));         
+        setUnits({
+          unit1: getUnits.unit1_name,
+          unit2: getUnits.unit2_name,
+          unit3: getUnits.unit3_name,
+          unit4: getUnits.unit4_name
+        }); 
+      } 
+      
     }  
     
     if (event.target.name === 'region'){     
@@ -196,6 +224,8 @@ const ProfileDetails = props => {
     event.persist();
     setReadOnly(!readOnly);   
   };
+
+  console.log(values);
  
   return (
     <Card
@@ -365,7 +395,7 @@ const ProfileDetails = props => {
                     
                     //required
                    
-                    label="Region"
+                    label={units.unit1}
                     name="region"     
                     value = {values.region}                               
                     onChange={handleChange}                   
@@ -401,7 +431,7 @@ const ProfileDetails = props => {
                     }}
                     //required
                    
-                    label="District"
+                    label={units.unit2}
                     name="district"    
                     value = {values.district}                                  
                     onChange={handleChange}                   
@@ -437,7 +467,7 @@ const ProfileDetails = props => {
                       disabled: Boolean(readOnly)                
                     }}
                    
-                    label="Ward"
+                    label={units.unit3}
                     name="ward"   
                     value = {values.ward}              
                     onChange={handleChange}
@@ -472,7 +502,7 @@ const ProfileDetails = props => {
                       disabled: Boolean(readOnly)                
                     }}
                    
-                    label="Village"
+                    label={units.unit4}
                     name="village" 
                     value = {values.village} 
                     onChange={handleChange}

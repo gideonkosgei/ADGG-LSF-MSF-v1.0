@@ -11,7 +11,8 @@ export const initialAuthState = {
 	error: sessionStorage.getItem('error')?sessionStorage.getItem('error'):'',
 	organization_id: sessionStorage.getItem('organization_id')?sessionStorage.getItem('organization_id'):'',
 	organization: sessionStorage.getItem('organization')?sessionStorage.getItem('organization'):'',
-	password: sessionStorage.getItem('password') ? sessionStorage.getItem('password'):''
+	password: sessionStorage.getItem('password') ? sessionStorage.getItem('password'):'',
+	country_id: sessionStorage.getItem('country_id') ? sessionStorage.getItem('country_id'):''
 	
 };
 export const authReducer = (state, action) => {	
@@ -28,7 +29,8 @@ export const authReducer = (state, action) => {
 				sessionStorage.setItem("organization_id", data.org_id);
 				sessionStorage.setItem("organization", data.organization);
 				sessionStorage.setItem("password", data.password);
-			
+				sessionStorage.setItem("country_id", data.country_id);			
+					
 			return {
 				user_id:data.id,
 				isLoggedIn: true,
@@ -40,7 +42,8 @@ export const authReducer = (state, action) => {
 				role:data.role,  
 				organization_id:data.org_id,  
 				organization:data.organization,  	
-				password:data.password, 			
+				password:data.password, 
+				country_id:data.country_id,							
 				error: ''
 			};
 		case 'LOGIN_ERROR':
@@ -54,6 +57,7 @@ export const authReducer = (state, action) => {
 				status:'',				
 				role:'', 
 				organization_id:'',
+				country_id:'',
 				organization:'',
 				password:'',
 				error: action.payload.error
@@ -71,7 +75,8 @@ export const authReducer = (state, action) => {
 				organization_id:'',
 				organization:'',
 				password:'',
-				error: ''
+				error: '',
+				country_id:''
 			};
 		default:
 			return state;

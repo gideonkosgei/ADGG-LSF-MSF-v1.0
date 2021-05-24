@@ -31,7 +31,13 @@ const ProfileDetails = props => {
   const [villages, setVillages] = useState([]);
   const [output, setOutput] = useState({status:null, message:""}); 
   const [openSnackbarError, setopenSnackbarError] = useState(false);
-  const [ {user_id,organization_id} ] = useContext(authContext); 
+  const [ {user_id,organization_id,country_id} ] = useContext(authContext); 
+  const [units, setUnits] = useState({
+    unit1: 'Regions',
+    unit2: 'District',
+    unit3: 'Ward',
+    unit4: 'Village'
+  });
   const [authRoles, setAuthRoles] = useState([]);
 
   async function adminUnits (endpoint,unit,option){ 
@@ -107,7 +113,17 @@ const ProfileDetails = props => {
         await  getCountries(endpoint)
         .then(response => {                        
           if (mounted_countries) {            
-            setCountries(response.payload);                 
+            setCountries(response.payload);  
+            if (country_id && country_id !=='' ){
+              let getUnits = response.payload.find(country => country.id === parseInt(country_id));         
+              setUnits({
+                unit1: getUnits.unit1_name,
+                unit2: getUnits.unit2_name,
+                unit3: getUnits.unit3_name,
+                unit4: getUnits.unit4_name
+              }); 
+            }     
+
           }
         });
       })(endpoint_countries);
@@ -117,7 +133,7 @@ const ProfileDetails = props => {
       mounted_countries = false;  
       mounted_auth_roles  = false;
     };
-  }, []); 
+  }, [country_id]); 
 
   if (!timezones || !countries || !authRoles) {
     return null;
@@ -131,6 +147,15 @@ const ProfileDetails = props => {
     });
     if (event.target.name === 'country'){
       adminUnits(endpoint_admin_units,parseInt(event.target.value),1);
+      if (event.target.value !== '') {
+        let getUnits = countries.find(country => country.id === parseInt(event.target.value));         
+        setUnits({
+          unit1: getUnits.unit1_name,
+          unit2: getUnits.unit2_name,
+          unit3: getUnits.unit3_name,
+          unit4: getUnits.unit4_name
+        }); 
+      } 
     }  
     
     if (event.target.name === 'region'){     
@@ -315,7 +340,7 @@ const ProfileDetails = props => {
                     }}
                     //required
                    
-                    label="Region"
+                    label={units.unit1}
                     name="region"                                   
                     onChange={handleChange}                   
                     variant="outlined" 
@@ -346,7 +371,7 @@ const ProfileDetails = props => {
                     }}
                     //required
                    
-                    label="District"
+                    label={units.unit2}
                     name="district"                                   
                     onChange={handleChange}                   
                     variant="outlined" 
@@ -376,7 +401,7 @@ const ProfileDetails = props => {
                       shrink: true,
                     }}
                    
-                    label="Ward"
+                    label={units.unit3}
                     name="ward"                
                     onChange={handleChange}
                     variant="outlined" 
@@ -406,7 +431,7 @@ const ProfileDetails = props => {
                       shrink: true,
                     }}
                    
-                    label="Village"
+                    label={units.unit4}
                     name="village"                
                     onChange={handleChange}
                     variant="outlined"

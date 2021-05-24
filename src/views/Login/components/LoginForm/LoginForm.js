@@ -103,15 +103,14 @@ const LoginForm = props => {
     event.preventDefault();    
     //setLoad({load: true});  
     const username = formState.values.email;
-    const passport = formState.values.password;
+    const password = formState.values.password;
 
-    authenticate(endpoint_user_authentication,username,passport)  
+    authenticate(endpoint_user_authentication,username,password)  
       .then((userData) => {
        let is_active = true; 
        if (userData.payload[0].length ===1){
         is_active = userData.payload[0][0].status === 1? true : false;
        }
-     
         if(userData.auth_status && is_active ){         
             dispatch({
               type: 'LOGIN',

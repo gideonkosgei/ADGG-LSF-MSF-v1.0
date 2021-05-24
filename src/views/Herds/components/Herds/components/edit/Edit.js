@@ -80,7 +80,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const Edit = props => {    
-  const [ {organization_id,user_id} ] = useContext(authContext);
+  const [ {organization_id,user_id,country_id} ] = useContext(authContext);
   const classes = useStyles();
   const [values, setValues] = useState({ });  
   const [countries, setCountries] = useState([]);
@@ -99,7 +99,13 @@ const Edit = props => {
   const option  =  1;
   const [isLoading, setIsLoading] = useState(true);
   const [isLoadingAnimals, setIsLoadingAnimals] = useState(true);
-  
+  const [units, setUnits] = useState({
+    unit1: 'Regions',
+    unit2: 'District',
+    unit3: 'Ward',
+    unit4: 'Village'
+  });
+
   const timer = React.useRef();
   const herd_id  = parseInt(props.match.params.id);
   
@@ -110,7 +116,6 @@ const Edit = props => {
   async function adminUnits (endpoint,unit,option){ 
     await  getAdminUnits(endpoint,unit,option)
     .then(response => {
-
       if(option ===1){ 
         if(isNaN(unit)){
           setRegions([]);
@@ -170,6 +175,24 @@ const Edit = props => {
       });
     })(endpoint_herd_animals,'get herd animals',organization_id,herd_id); 
 
+    (async  (endpoint) => {     
+      await  getCountries(endpoint)
+      .then(response => {                        
+        if (mounted_countries) {            
+          setCountries(response.payload);    
+          if (country_id && country_id !=='' ){
+            let getUnits = response.payload.find(country => country.id === parseInt(country_id));         
+            setUnits({
+              unit1: getUnits.unit1_name,
+              unit2: getUnits.unit2_name,
+              unit3: getUnits.unit3_name,
+              unit4: getUnits.unit4_name
+            }); 
+          }               
+        }
+      });
+    })(endpoint_countries);
+
 
     (async  (endpoint,desc,option,id) => {     
       await  genericFunctionFourParameters(endpoint,desc,option,id)
@@ -180,25 +203,17 @@ const Edit = props => {
           adminUnits(endpoint_admin_units,response.payload[0][0].country,1);
           adminUnits(endpoint_admin_units,response.payload[0][0].region,2);
           adminUnits(endpoint_admin_units,response.payload[0][0].district,3);
-          adminUnits(endpoint_admin_units,response.payload[0][0].ward,4);                 
+          adminUnits(endpoint_admin_units,response.payload[0][0].ward,4); 
         }
       });
     })(endpoint_herd,'get herd details',option,herd_id); 
 
-    (async  (endpoint) => {     
-      await  getCountries(endpoint)
-      .then(response => {                        
-        if (mounted_countries) {            
-          setCountries(response.payload);                 
-        }
-      });
-    })(endpoint_countries);
-
+   
     (async  (endpoint,desc,option,id) => {     
       await  genericFunctionFourParameters(endpoint,desc,option,id)
       .then(response => {                        
         if (mounted_farms) {            
-          setFarms(response.payload[0]);                 
+          setFarms(response.payload[0]);                         
         }
       });
     })(endpoint_farms,'get farms',0,organization_id);
@@ -209,12 +224,12 @@ const Edit = props => {
       mounted = false; 
       mounted_animals = false;            
     };    
-  }, [organization_id,herd_id]);  
+  }, [organization_id,herd_id,country_id]);  
 
   if (!countries || !farms || !values) {
     return null;
   }
-    const handleChange = event => {
+    const handleChange = event => {   
     event.persist();
     setValues({
       ...values,
@@ -222,6 +237,15 @@ const Edit = props => {
     });
     if (event.target.name === 'country'){
       adminUnits(endpoint_admin_units,parseInt(event.target.value),1);
+      if (event.target.value !== '') {
+        let getUnits = countries.find(country => country.id === parseInt(event.target.value));         
+        setUnits({
+          unit1: getUnits.unit1_name,
+          unit2: getUnits.unit2_name,
+          unit3: getUnits.unit3_name,
+          unit4: getUnits.unit4_name
+        }); 
+      } 
     }  
     
     if (event.target.name === 'region'){     
@@ -235,9 +259,10 @@ const Edit = props => {
     if (event.target.name === 'ward'){     
       adminUnits(endpoint_admin_units,parseInt(event.target.value),4);      
     }
+
   };
 
-  const handleSubmit = event => {
+  const handleSubmit = event => {   
     event.preventDefault();
     if (!loading) {
       setSuccess(false);
@@ -508,7 +533,7 @@ const Edit = props => {
                       readOnly: Boolean(readOnly),
                       disabled: Boolean(readOnly)                
                     }}
-                    label="Region"
+                    label={units.unit1}
                     name="region"   
                     value = {values.region}               
                     onChange={handleChange}
@@ -541,7 +566,7 @@ const Edit = props => {
                       disabled: Boolean(readOnly)                
                     }}                
                     
-                    label="District"
+                    label={units.unit2}
                     name="district"  
                     value = {values.district}               
                     onChange={handleChange}
@@ -573,7 +598,7 @@ const Edit = props => {
                       readOnly: Boolean(readOnly),
                       disabled: Boolean(readOnly)                
                     }}
-                    label="Ward"
+                    label={units.unit3}
                     name="ward"    
                     value = {values.ward}               
                     onChange={handleChange}
@@ -606,7 +631,7 @@ const Edit = props => {
                       disabled: Boolean(readOnly)                
                     }}        
                     
-                    label="Village"
+                    label={units.unit4}
                     name="village"    
                     value = {values.village}                    
                     onChange={handleChange}
