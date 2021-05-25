@@ -122,8 +122,6 @@ export const endpoint_lookup = {
   headers: headers   
 }; 
 
-
-
 //get lookup to populate combo boxes
 export const endpoint_herd = {
   url: `${api}/herds`,
@@ -1048,13 +1046,29 @@ export const endpoint_herd_update= {
 };
 
 
-
 //get farms
 export const endpoint_farms = {
   url: `${api}/farms`,
   method: 'GET',
   headers: headers   
 };  
+
+// add farm
+export const endpoint_farm_add= {
+  url: `${api}/farms`,
+  method: 'POST',
+  headers: headers   
+};
+
+// update farm
+export const endpoint_farm_update= {
+  url: `${api}/farms`,
+  method: 'PUT',
+  headers: headers   
+};
+
+
+
 
 
 

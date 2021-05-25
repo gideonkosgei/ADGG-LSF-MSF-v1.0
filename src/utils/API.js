@@ -4020,6 +4020,113 @@ export const putHerd =  function (config,values,user_id,org) {
   });       
 }
 
+//post farm
+export const postFarm =  function (config,values,user_id,org_id) {
+   
+  let {country,district,email,farm_code,farm_type,farm_name,farmer_name,phone,region,village,ward } = values;
+
+  country = (typeof country === 'undefined' || country === '')? null:country
+  district = (typeof district === 'undefined' || district === '')? null:district;
+  email = (typeof email === 'undefined' || email === '')? null:email;
+  region = (typeof region === 'undefined' || region === '')? null:region;
+  village = (typeof village === 'undefined' || village === '')? null:village;
+  ward = (typeof ward === 'undefined' || ward === '')? null:ward;  
+  farm_code = (typeof farm_code === 'undefined' || farm_code === '')? null:farm_code; 
+  farm_type = (typeof farm_type === 'undefined' || farm_type === '')? null:farm_type;  
+  farm_name = (typeof farm_name === 'undefined' || farm_name === '')? null:farm_name;  
+  farmer_name = (typeof farmer_name === 'undefined' || farmer_name === '')? null:farmer_name;  
+  phone = (typeof phone === 'undefined' || phone === '')? null:phone;    
+
+  const body = {
+    "country": country,
+    "region": region,
+    "district": district,    
+    "ward": ward,
+    "village": village, 
+    "org": org_id,
+    "user": user_id,
+    "email": email,  
+    "farm_code": farm_code,
+    "farm_type": farm_type,
+    "farm_name": farm_name,
+    "farmer_name": farmer_name,
+    "phone": phone    
+  }; 
+  const options = {
+    url:`${config.url}`,
+    method: config.method,
+    headers: config.headers,
+    data: body  
+  };
+
+  return new Promise((resolve, reject) => {
+    axios(options)
+    .then(res => {           
+        resolve(res.data);
+    })    
+    .catch(err => reject(err));
+  });       
+}
+
+//update farm
+export const putFarm =  function (config,values,user_id,org) { 
+   
+  let {country,district,email,farm_code,farm_type,farm_name,farmer_name,phone,region,village,ward, reg_date,id } = values;
+
+  country = (typeof country === 'undefined' || country === '')? null:country
+  district = (typeof district === 'undefined' || district === '')? null:district;
+  email = (typeof email === 'undefined' || email === '')? null:email;
+  region = (typeof region === 'undefined' || region === '')? null:region;
+  village = (typeof village === 'undefined' || village === '')? null:village;
+  ward = (typeof ward === 'undefined' || ward === '')? null:ward;  
+  farm_code = (typeof farm_code === 'undefined' || farm_code === '')? null:farm_code; 
+  farm_type = (typeof farm_type === 'undefined' || farm_type === '')? null:farm_type;  
+  farm_name = (typeof farm_name === 'undefined' || farm_name === '')? null:farm_name;  
+  farmer_name = (typeof farmer_name === 'undefined' || farmer_name === '')? null:farmer_name;  
+  phone = (typeof phone === 'undefined' || phone === '')? null:phone;      
+  reg_date = (typeof reg_date === 'undefined' || reg_date === '')? null:reg_date;
+  id = (typeof id === 'undefined' || id === '')? null:id;
+ 
+  const body = {
+    "farm_id": id,
+    "country": country,
+    "region": region,
+    "district": district,    
+    "ward": ward,
+    "village": village, 
+    "org": org,
+    "user": user_id,
+    "email": email,  
+    "farm_code": farm_code,
+    "farm_type": farm_type,
+    "farm_name": farm_name,
+    "farmer_name": farmer_name,
+    "phone": phone,
+    "reg_date": reg_date    
+  }; 
+ 
+  const options = {
+    url:`${config.url}`,
+    method: config.method,
+    headers: config.headers,
+    data: body  
+  };
+
+  return new Promise((resolve, reject) => {
+    axios(options)
+    .then(res => {           
+        resolve(res.data);
+    })    
+    .catch(err => reject(err));
+  });       
+}
+
+
+
+
+
+
+
 
 
 

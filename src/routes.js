@@ -332,7 +332,28 @@ const routes = [
         path: '/management/herds/edit/:id',
         exact: true,
         component: lazy(() => import('views/Herds/components/Herds/components/edit'))        
+      },    
+      {
+        path: '/management/farms',
+        exact: true,
+        component: lazy(() => import('views/Farms/components/Farms/components/view'))
       },
+      {
+        path: '/management/farms/add',
+        exact: true,
+        component: lazy(() => import('views/Farms/components/Farms/components/add'))        
+      },
+      {
+        path: '/management/farms/edit/:id',
+        exact: true,
+        component: lazy(() => import('views/Farms/components/Farms/components/edit'))        
+      },
+      {
+        path: '/management/farms/edit/:id',
+        exact: true,
+        component: lazy(() => import('views/Farms/components/Farms/components/edit'))        
+      },
+
 
      /* {
         path: '/management/health/view/:id',
@@ -422,12 +443,7 @@ const routes = [
         path: '/management/customers/:id',
         exact: true,
         component: lazy(() => import('views/CustomerManagementDetails'))
-      },
-      {
-        path: '/management/farms/:id/:tab',
-        exact: true,
-        component: lazy(() => import('views/Farms'))
-      },
+      },     
       {
         path: '/management/customers/:id/:tab',
         exact: true,

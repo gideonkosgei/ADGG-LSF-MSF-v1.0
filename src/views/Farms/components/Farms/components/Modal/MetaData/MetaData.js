@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import { Modal,Card,CardContent, CardActions, Grid,Typography,TextField,Button, colors} from '@material-ui/core';
+
 const useStyles = makeStyles(theme => ({
   root: {
     position: 'absolute',
@@ -11,7 +12,7 @@ const useStyles = makeStyles(theme => ({
     transform: 'translate(-50%, -50%)',
     outline: 'none',
     boxShadow: theme.shadows[20],
-    width: 700,
+    width: 400,
     maxHeight: '100%',
     overflowY: 'auto',
     maxWidth: '100%'
@@ -34,28 +35,13 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const HouseholdEdit = props => {
-  const { open, onClose, farmDetails, className, ...rest } = props;
-  const classes = useStyles();
-  const [formState, setFormState] = useState({
-    ...farmDetails
-  });
+const MetaData = props => {
+  const { open, onClose, Details, className, ...rest } = props;
+  const classes = useStyles(); 
 
   if (!open) {
     return null;
   }
-
-  const handleFieldChange = event => {
-    event.persist();
-    setFormState(formState => ({
-      ...formState,
-      [event.target.name]:
-        event.target.type === 'checkbox'
-          ? event.target.checked
-          : event.target.value
-    }));
-  };
-
   return (
     <Modal
       onClose={onClose}
@@ -70,9 +56,9 @@ const HouseholdEdit = props => {
             <Typography
               align="center"
               gutterBottom
-              variant="h3"
+              variant="h5"
             >
-              Edit Household Info -<span className={classes.details}> {farmDetails.farm_name} #{farmDetails.farm_id}</span>
+              Service Provider Metadata-<span className={classes.details}> #{Details.id}</span>
             </Typography>
             <Grid
               className={classes.container}
@@ -85,12 +71,40 @@ const HouseholdEdit = props => {
                 xs={12}
               >
                 <TextField
-                  fullWidth
-                  label="Farmer is Head"
-                  name="email"
-                  onChange={handleFieldChange}
-                  value={formState.farmerIsHouseholdHead}
+                  fullWidth                 
+                  margin = 'dense'
+                  label="ID"
+                  name="id" 
+                  value = {Details.id} 
                   variant="outlined"
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                  inputProps={{
+                    readOnly: true,
+                    disabled: true               
+                  }}
+                />
+              </Grid>
+              <Grid
+                item
+                md={6}
+                xs={12}
+              >
+                <TextField
+                  fullWidth                 
+                  margin = 'dense'
+                  label="Creation Date"
+                  name="creation_date" 
+                  value = {Details.created_at} 
+                  variant="outlined"
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                  inputProps={{
+                    readOnly: true,
+                    disabled: true               
+                  }}
                 />
               </Grid>
               <Grid
@@ -100,11 +114,18 @@ const HouseholdEdit = props => {
               >
                 <TextField
                   fullWidth
-                  label="Head Age"
-                  name="name"
-                  onChange={handleFieldChange}
-                  value={formState.householdHeadAge}
+                  inputProps={{
+                    readOnly: true,
+                    disabled: true               
+                  }}
+                  margin = 'dense'
+                  label="Created By"
+                  name="created_by"                  
+                  value={Details.created_by}
                   variant="outlined"
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
                 />
               </Grid>
               <Grid
@@ -114,11 +135,18 @@ const HouseholdEdit = props => {
               >
                 <TextField
                   fullWidth
-                  label="Head Gender"
-                  name="phone"
-                  onChange={handleFieldChange}
-                  value={formState.householdHeadGender}
+                  inputProps={{
+                    readOnly: true,
+                    disabled: true               
+                  }}
+                  margin = 'dense'
+                  label="Last Update Date"
+                  name="update_date"                  
+                  value = {Details.updated_at} 
                   variant="outlined"
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
                 />
               </Grid>
               <Grid
@@ -128,44 +156,31 @@ const HouseholdEdit = props => {
               >
                 <TextField
                   fullWidth
-                  label="Head Mobile"
-                  name="state"
-                  onChange={handleFieldChange}
-                  value={formState.householdHeadMobile}
+                  inputProps={{
+                    readOnly: true,
+                    disabled: true               
+                  }}
+                  margin = 'dense'
+                  label="Last Update By"
+                  name="updated_by"                  
+                  value={Details.updated_by}
                   variant="outlined"
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
                 />
-              </Grid>
-              <Grid
-                item
-                md={6}
-                xs={12}
-              >
-                <TextField
-                  fullWidth
-                  label="Land Owned"
-                  name="country"
-                  onChange={handleFieldChange}
-                  value={formState.totalNumberofParcelofLandowned}
-                  variant="outlined"
-                />
-              </Grid>
-              
+              </Grid>            
+               
             </Grid>
           </CardContent>
           <CardActions className={classes.actions}>
             <Button
+             className={classes.saveButton}
               onClick={onClose}
               variant="contained"
             >
               Close
-            </Button>
-            <Button
-              className={classes.saveButton}
-              onClick={onClose}
-              variant="contained"
-            >
-              Save
-            </Button>
+            </Button>           
           </CardActions>
         </form>
       </Card>
@@ -173,18 +188,18 @@ const HouseholdEdit = props => {
   );
 };
 
-HouseholdEdit.displayName = 'HouseholdEdit';
+MetaData.displayName = 'MetaData';
 
-HouseholdEdit.propTypes = {
+MetaData.propTypes = {
   className: PropTypes.string,
   customer: PropTypes.any,
   onClose: PropTypes.func,
   open: PropTypes.bool
 };
 
-HouseholdEdit.defaultProps = {
+MetaData.defaultProps = {
   open: false,
   onClose: () => {}
 };
 
-export default HouseholdEdit;
+export default MetaData;

@@ -32,7 +32,11 @@ const p = [
         title: 'Management',
         href: '/management',
         icon: BarChartIcon,
-        children: [         
+        children: [ 
+          {
+            title: 'Farms',
+            href: '/management/farms'
+          },         
           {
             title: 'Herds',
             href: '/management/herds'

@@ -1,14 +1,11 @@
 import React, { useState,useEffect,useContext } from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
-import {Card,Fab,Link,LinearProgress,CircularProgress,Box, CardContent,Typography, Grid, TextField,colors,Button,CardActions,Switch,Tooltip} from '@material-ui/core';
-import {putHerd,getCountries,getAdminUnits,genericFunctionFourParameters}   from '../../../../../../utils/API';
-import {endpoint_herd_update,endpoint_countries,endpoint_admin_units,endpoint_farms,endpoint_herd,endpoint_herd_animals} from '../../../../../../configs/endpoints';
+import {Card,Fab,LinearProgress,CircularProgress,Box, CardContent,Typography, Grid, TextField,colors,Button,CardActions,Switch,Tooltip} from '@material-ui/core';
+import {putFarm,getLookups,getCountries,getAdminUnits,genericFunctionFourParameters}   from '../../../../../../utils/API';
+import {endpoint_lookup,endpoint_farm_update,endpoint_countries,endpoint_admin_units,endpoint_farms} from '../../../../../../configs/endpoints';
 import authContext from '../../../../../../contexts/AuthContext';
 import {Header} from '../Header';
-import {default as Statistics} from '../../../../../Overview/components/Statistics';
-import {default as AnimalCategorySegmentation} from '../../../../../DashboardAnalytics/components/AnimalCategorySegmentation';
-import {default as BreedDistribution} from '../../../../../DashboardAnalytics/components/BreedDistribution';
 
 import { Page } from 'components';
 import { green } from '@material-ui/core/colors';
@@ -19,11 +16,6 @@ import Alert from '@material-ui/lab/Alert';
 import OpenInNewIcon from '@material-ui/icons/OpenInNew';
 import {MetaData}  from '../Modal';
 import moment from 'moment';
-import CustomToolbar from "./CustomToolbar";
-import { Link as RouterLink } from 'react-router-dom';
-import MUIDataTable from "mui-datatables";
-import {MuiThemeProvider } from '@material-ui/core/styles';
-import PerfectScrollbar from 'react-perfect-scrollbar';
 
 
 const useStyles = makeStyles(theme => ({
@@ -87,18 +79,16 @@ const Edit = props => {
   const [regions, setRegions] = useState([]);
   const [districts, setDistricts] = useState([]);
   const [wards, setWards] = useState([]);
-  const [villages, setVillages] = useState([]);  
-  const [farms, setFarms] = useState([]);
-  const [animals, setAnimals] = useState([]);
+  const [villages, setVillages] = useState([]); 
   const [readOnly, setReadOnly] = useState(true);
   const [openMetadata, setMetadata] = useState(false); 
+  const [farm_types, setFarmTypes] = useState([]);
  
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [output, setOutput] = useState({status:null, message:""}); 
   const option  =  1;
   const [isLoading, setIsLoading] = useState(true);
-  const [isLoadingAnimals, setIsLoadingAnimals] = useState(true);
   const [units, setUnits] = useState({
     unit1: 'Regions',
     unit2: 'District',
@@ -159,21 +149,9 @@ const Edit = props => {
   };
  
   useEffect(() => {     
-    let mounted_countries = true;
-    let mounted_farms = true;
+    let mounted_countries = true;   
     let mounted = true;
-    let mounted_animals = true;
-
-    // get all animals that belongs to this herd
-    (async  (endpoint,desc,org,herd) => {     
-      await  genericFunctionFourParameters(endpoint,desc,org,herd)
-      .then(response => {                        
-        if (mounted_animals) {   
-          setIsLoadingAnimals(false);          
-          setAnimals(response.payload[0]);                           
-        }
-      });
-    })(endpoint_herd_animals,'get herd animals',organization_id,herd_id); 
+    let mounted_lookup = true;
 
     (async  (endpoint) => {     
       await  getCountries(endpoint)
@@ -196,11 +174,32 @@ const Edit = props => {
     })(endpoint_countries);
 
 
+    (async  (endpoint,id) => {     
+      await  getLookups(endpoint,id)
+      .then(response => {       
+        if (mounted_lookup) { 
+
+          const data = response.payload[0];
+          let lookup_farm_types = [];
+
+          for (let i = 0; i< data.length; i++){ 
+            //Farm Types
+            if(data[i].list_type_id === 2){                
+              lookup_farm_types.push(data[i]);
+            }
+          }  
+          setFarmTypes(lookup_farm_types);
+        }
+      });
+    })(endpoint_lookup,'2');
+
+
+
     (async  (endpoint,desc,option,id) => {     
       await  genericFunctionFourParameters(endpoint,desc,option,id)
       .then(response => {                        
         if (mounted) {   
-          setIsLoading(false);          
+          setIsLoading(false);               
           setValues(response.payload[0][0]); 
           adminUnits(endpoint_admin_units,response.payload[0][0].country,1);
           adminUnits(endpoint_admin_units,response.payload[0][0].region,2);
@@ -208,27 +207,18 @@ const Edit = props => {
           adminUnits(endpoint_admin_units,response.payload[0][0].ward,4); 
         }
       });
-    })(endpoint_herd,'get herd details',option,herd_id); 
+    })(endpoint_farms,'get herd details',option,herd_id); 
 
    
-    (async  (endpoint,desc,option,id) => {     
-      await  genericFunctionFourParameters(endpoint,desc,option,id)
-      .then(response => {                        
-        if (mounted_farms) {            
-          setFarms(response.payload[0]);                         
-        }
-      });
-    })(endpoint_farms,'get farms',0,organization_id);
-
+    
     return () => {   
-      mounted_countries = false;  
-      mounted_farms = false;  
+      mounted_countries = false;
       mounted = false; 
-      mounted_animals = false;            
+      mounted_lookup = false;               
     };    
   }, [organization_id,herd_id,country_id]);  
 
-  if (!countries || !farms || !values) {
+  if (!countries || !values || !farm_types) {
     return null;
   }
     const handleChange = event => {   
@@ -271,7 +261,7 @@ const Edit = props => {
       setLoading(true);
     }
     (async  (endpoint,values,user_id,rec_id) => {     
-      await  putHerd(endpoint,values,user_id,rec_id)
+      await  putFarm(endpoint,values,user_id,rec_id)
       .then((response) => {         
         setOutput({status:null, message:''});      
         timer.current = window.setTimeout(() => {
@@ -289,7 +279,7 @@ const Edit = props => {
       setLoading(false);
     });
 
-    })(endpoint_herd_update,values,user_id,organization_id);    
+    })(endpoint_farm_update,values,user_id,organization_id);    
   };
 
   
@@ -303,68 +293,7 @@ const Edit = props => {
   };
   const handleMetadataClose = () => {
     setMetadata(false);
-  }; 
-
-  
-  const columns = [
-    { name: "animal_id",label: "id",options: {filter: false,sort: false,display:false}}, 
-    { name: "registration_date",label: "Reg Date",options: {filter: false,sort: true, display:true,hint:'Registration Date'}} ,
-    { name: "animal_id",label: "ID",options: {filter: false,sort: true,display:true}},    
-    { name: "tag_id",label: "Tag",options: {filter: false,sort: true,display:true}},
-    { name: "animal_name",label: "Name",options: {filter: false,sort: true,display:true}},       
-    { name: "org_id",label: "org_id",options: {filter: false,sort: true,display:false}},
-    { name: "sex_id",label: "sex_id",options: {filter: false,sort: true,display:false}},
-    { name: "sex",label: "Sex",options: {filter: true,sort: true,display:true}},    
-    { name: "farm_id",label: "farm_id",options: {filter: false,sort: true,display:false}},    
-    { name: "animalType",label: "Type",options: {filter: true,sort: true, display:true}},   
-    { name: "dateofBirth",label: "DOB",options: {filter: false,sort: true, display:true}} ,  
-    { name: "main_breed",label: "Breed",options: {filter: true,sort: true, display:true}},  
-    { name: "breedComposition",label: "Breed Comp",options: {filter: false,sort: false, display:true, hint:'Breed Composition'}},
-    
-     
-    { name: "",
-      options: {
-      filter: false,
-      sort: false,  
-      empty:true,    
-      customBodyRender: (value, tableMeta, updateValue) => {
-        return (
-          <Link
-              component={RouterLink}
-              to = {`/management/details/edit/${tableMeta.rowData[0]}`}
-          >
-            <OpenInNewIcon/>
-          </Link>
-          
-        );
-      }
-    }
-  }
-    
-  ];
-
-  const data = animals;  
-
-     const options = {       
-       filter: true,
-       rowsPerPage: 5,       
-       rowsPerPageOptions :[5,10,20,50,100],
-       selectableRows: 'none',      
-       filterType: 'checkbox',
-       responsive: 'stacked',                
-       rowHover: true,       
-       setTableProps: () => {
-        return {
-          padding: "none" ,         
-          size: "small",
-        };
-      }, 
-      customToolbar: () => {
-        return (
-          <CustomToolbar />
-        );
-      }       
-     };
+  };      
 
   return (
     <Page
@@ -376,7 +305,7 @@ const Edit = props => {
         gutterBottom
         variant="h3"
       >
-         { readOnly ? `HERD - ${values.herd_name}`:`EDIT HERD  - ${values.herd_name}` }
+         { readOnly ? `FARM - ${values.farm_name}`:`EDIT FARM  - ${values.farm_name}` }
       </Typography>
       <br/>  
       <Header />
@@ -401,66 +330,18 @@ const Edit = props => {
               </>
               :null
               }          
-              <br/>        
-                    
+              <br/> 
+
               <Grid
                 container
                 spacing={4}
-              > 
+              >               
+             
               <Grid
                 item
                 md={2}
                 xs={12}
               >
-                <TextField
-                  fullWidth
-                  InputLabelProps={{
-                    shrink: true,
-                  }} 
-                  inputProps={{
-                    readOnly: Boolean(readOnly),
-                    disabled: Boolean(readOnly),
-                    max: moment(new Date()).format('YYYY-MM-DD')                
-                  }}
-                  
-                  label="Registration Date"
-                  type="date"
-                  name="reg_date"
-                  value = {values.reg_date}   
-                  onChange={handleChange}
-                  variant="outlined" 
-                  required                   
-                />
-            </Grid>  
-              
-              <Grid
-                    item
-                    md={2}
-                    xs={12}
-                  >
-                  <TextField
-                    fullWidth
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-                    inputProps={{
-                      readOnly: Boolean(readOnly),
-                      disabled: Boolean(readOnly)                
-                    }}
-                    
-                    label="Herd Name"
-                    name="herd_name" 
-                    value = {values.herd_name}                
-                    onChange={handleChange}
-                    variant="outlined" 
-                    required                                        
-                />
-              </Grid>
-              <Grid
-                    item
-                    md={4}
-                    xs={12}
-                  >
                   <TextField
                     fullWidth
                     InputLabelProps={{
@@ -471,19 +352,19 @@ const Edit = props => {
                       disabled: Boolean(readOnly)                
                     }}
                     required
-                    label="Farm"
-                    name="farm_id" 
-                    value = {values.farm_id}                
+                    label="Farm Type"
+                    name="farm_type"  
+                    value = {values.farm_type}                
                     onChange={handleChange}
                     variant="outlined" select                    
                     SelectProps={{ native: true }} 
                   >
                     <option value=""></option>
-                    {farms.map(farm => (
+                    {farm_types.map(farm_type => (
                           <option                    
-                            value={farm.id}
+                            value={farm_type.id}
                           >
-                             {(typeof farm.code === 'undefined' || farm.code === null ) ? farm.name : `${farm.name} - ${farm.code}` }
+                            {farm_type.value} 
                           </option>
                         ))
                     }           
@@ -503,9 +384,81 @@ const Edit = props => {
                       readOnly: Boolean(readOnly),
                       disabled: Boolean(readOnly)                
                     }}
+                    
+                    label="Farm Code"
+                    name="farm_code" 
+                    value = {values.farm_code}                  
+                    onChange={handleChange}
+                    variant="outlined" 
+                                                            
+                />
+              </Grid>
+              <Grid
+                    item
+                    md={4}
+                    xs={12}
+                  >
+                  <TextField
+                    fullWidth
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                    inputProps={{
+                      readOnly: Boolean(readOnly),
+                      disabled: Boolean(readOnly)                
+                    }}
+                    required
+                    label="Farm Name"
+                    name="farm_name" 
+                    value = {values.farm_name}                
+                    onChange={handleChange}
+                    variant="outlined" 
+                                                            
+                />
+              </Grid>
+              
+              <Grid
+                    item
+                    md={4}
+                    xs={12}
+                  >
+                  <TextField
+                    fullWidth
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                    inputProps={{
+                      readOnly: Boolean(readOnly),
+                      disabled: Boolean(readOnly)                
+                    }}
+                    
+                    label="Farmer Name"
+                    name="farmer_name" 
+                    value = {values.farmer_name}                 
+                    onChange={handleChange}
+                    variant="outlined" 
+                                                            
+                />
+              </Grid>
+              
+              <Grid
+                    item
+                    md={2}
+                    xs={12}
+                  >
+                  <TextField
+                    fullWidth
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                    inputProps={{
+                      readOnly: Boolean(readOnly),
+                      disabled: Boolean(readOnly)                
+                    }}
                     label="Country"
-                    name="country"   
-                    value = {values.country}               
+                    name="country"  
+                    value = {values.country}
+                    required              
                     onChange={handleChange}
                     variant="outlined" select                    
                     SelectProps={{ native: true }} 
@@ -536,7 +489,7 @@ const Edit = props => {
                       disabled: Boolean(readOnly)                
                     }}
                     label={units.unit1}
-                    name="region"   
+                    name="region" 
                     value = {values.region}               
                     onChange={handleChange}
                     variant="outlined" select                    
@@ -562,14 +515,14 @@ const Edit = props => {
                     fullWidth
                     InputLabelProps={{
                       shrink: true,
-                    }}   
+                    }} 
                     inputProps={{
                       readOnly: Boolean(readOnly),
                       disabled: Boolean(readOnly)                
-                    }}                
+                    }}                  
                     
                     label={units.unit2}
-                    name="district"  
+                    name="district" 
                     value = {values.district}               
                     onChange={handleChange}
                     variant="outlined" select                    
@@ -601,7 +554,7 @@ const Edit = props => {
                       disabled: Boolean(readOnly)                
                     }}
                     label={units.unit3}
-                    name="ward"    
+                    name="ward"  
                     value = {values.ward}               
                     onChange={handleChange}
                     variant="outlined"  select                    
@@ -627,15 +580,16 @@ const Edit = props => {
                     fullWidth
                     InputLabelProps={{
                       shrink: true,
-                    }}   
+                    }} 
+                    
                     inputProps={{
                       readOnly: Boolean(readOnly),
                       disabled: Boolean(readOnly)                
-                    }}        
+                    }}
                     
                     label={units.unit4}
-                    name="village"    
-                    value = {values.village}                    
+                    name="village"  
+                    value = {values.village}                 
                     onChange={handleChange}
                     variant="outlined" select                    
                     SelectProps={{ native: true }} 
@@ -651,8 +605,82 @@ const Edit = props => {
                     }           
                   </TextField>
               </Grid>
+              <Grid
+                    item
+                    md={2}
+                    xs={12}
+                  >
+                  <TextField
+                    fullWidth
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
 
+                    inputProps={{
+                      readOnly: Boolean(readOnly),
+                      disabled: Boolean(readOnly)                
+                    }}
+                    
+                    label="Phone Number"
+                    name="phone" 
+                    value = {values.phone}                
+                    onChange={handleChange}
+                    variant="outlined" 
+                                                            
+                />
+              </Grid>
               
+              <Grid
+                    item
+                    md={4}
+                    xs={12}
+                  >
+                  <TextField
+                    fullWidth
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+
+                    inputProps={{
+                      readOnly: Boolean(readOnly),
+                      disabled: Boolean(readOnly)                
+                    }}
+                    type = "email"                    
+                    label="Email"
+                    name="email"
+                    value = {values.email}                    
+                    onChange={handleChange}
+                    variant="outlined" 
+                                                            
+                />
+              </Grid>
+              <Grid
+                item
+                md={2}
+                xs={12}
+              >
+                <TextField
+                  fullWidth
+                  InputLabelProps={{
+                    shrink: true,
+                  }} 
+                  inputProps={{
+                    readOnly: true,
+                    disabled: true,
+                    max: moment(new Date()).format('YYYY-MM-DD')                
+                  }}
+                  
+                  label="Registration Date"
+                  type="date"
+                  name="reg_date"
+                  value = {values.reg_date}   
+                  onChange={handleChange}
+                  variant="outlined"                                
+                />
+            </Grid>
+            
+              
+            
               </Grid>
           </CardContent>          
           <CardActions>   
@@ -715,66 +743,6 @@ const Edit = props => {
     </Grid>
   </Grid>
 
-  <Typography
-    component="h2"
-    gutterBottom
-    variant="h4"
-  >
-    <br/>
-    {`HERD SUMMARY - ${values.herd_name}`}
-  </Typography>
-  <br/> 
-  <Statistics className={classes.statistics} org = {organization_id} level = {1} herd = {herd_id} />
-  <br/>
-  <Grid
-    container
-    spacing={3}
-  >    
-    <Grid
-       item
-       lg={5}
-       xl={4}
-       xs={12}
-    >
-       <AnimalCategorySegmentation org = {organization_id} level = {1} herd = {herd_id} />
-    </Grid>
-    <Grid
-      item
-      lg={7}
-      xl={4}
-      xs={12}
-    >
-      <BreedDistribution org = {organization_id} level = {1} herd = {herd_id} />
-    </Grid> 
-  </Grid>
- 
-
-  <Typography
-    component="h2"
-    gutterBottom
-    variant="h4"
-  >
-    <br/>
-    {`HERD ANIMALS - ${values.herd_name}`}    
-  </Typography>
-  <br/> 
-  { isLoadingAnimals  &&  <LinearProgress/>   } 
-  <Card> 
-        <CardContent className={classes.content}>
-          <PerfectScrollbar>           
-            <MuiThemeProvider>                
-              <MUIDataTable
-                title=""
-                data={data}
-                columns={columns}
-                options={options}
-              />
-            </MuiThemeProvider>           
-          </PerfectScrollbar>
-        </CardContent>
-      </Card>
-        
-    
      
    </Page>
   );
