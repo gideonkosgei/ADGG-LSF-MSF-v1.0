@@ -179,7 +179,8 @@ const Edit = props => {
       await  getCountries(endpoint)
       .then(response => {                        
         if (mounted_countries) {            
-          setCountries(response.payload);    
+          setCountries(response.payload); 
+
           if (country_id && country_id !=='' ){
             let getUnits = response.payload.find(country => country.id === parseInt(country_id));         
             setUnits({
@@ -188,7 +189,8 @@ const Edit = props => {
               unit3: getUnits.unit3_name,
               unit4: getUnits.unit4_name
             }); 
-          }               
+          } 
+                        
         }
       });
     })(endpoint_countries);
@@ -481,7 +483,7 @@ const Edit = props => {
                           <option                    
                             value={farm.id}
                           >
-                            {`${farm.name} - ${farm.code}`} 
+                             {(typeof farm.code === 'undefined' || farm.code === null ) ? farm.name : `${farm.name} - ${farm.code}` }
                           </option>
                         ))
                     }           

@@ -242,7 +242,7 @@ const Add = props => {
   };
  
 
-
+console.log(farms);
   return (
     <Page
       className={classes.root}
@@ -320,7 +320,7 @@ const Add = props => {
                           <option                    
                             value={farm.id}
                           >
-                            {`${farm.name} - ${farm.code}`} 
+                            {(typeof farm.code === 'undefined' || farm.code === null ) ? farm.name : `${farm.name} - ${farm.code}` }
                           </option>
                         ))
                     }           

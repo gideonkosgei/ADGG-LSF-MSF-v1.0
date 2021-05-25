@@ -74,7 +74,8 @@ const Edit = props => {
     const columns = [
     { name: "id",label: "ID",options: {filter: false,sort: false,display:false}},   
     { name: "herd_name",label: "HERD NAME",options: {filter: false,sort: true,display:true}},
-    { name: "farm",label: "FARM",options: {filter: false,sort: true,display:true}},
+    { name: "farm_name",label: "FARM NAME",options: {filter: false,sort: true,display:true}},
+    { name: "farm_code",label: "FARM CODE",options: {filter: false,sort: true,display:true}},
     { name: "reg_date",label: "REG DATE",options: {filter: true,sort: false,display:true}},
     { name: "country",label: "COUNTRY",options: {filter: false,sort: true,display:true}}, 
     { name: "region",label: "REGION",options: {filter: false,sort: true,display:true}},  
