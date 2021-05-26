@@ -6,6 +6,7 @@ import {putFarm,getLookups,getCountries,getAdminUnits,genericFunctionFourParamet
 import {endpoint_lookup,endpoint_farm_update,endpoint_countries,endpoint_admin_units,endpoint_farms} from '../../../../../../configs/endpoints';
 import authContext from '../../../../../../contexts/AuthContext';
 import {Header} from '../Header';
+import {default as Herds} from '../../../../../Herds/components/Herds/components/view'
 
 import { Page } from 'components';
 import { green } from '@material-ui/core/colors';
@@ -742,9 +743,10 @@ const Edit = props => {
         </Card>
     </Grid>
   </Grid>
-
-     
+  <Herds farm = {values.id}/>
    </Page>
+
+
   );
 };
 

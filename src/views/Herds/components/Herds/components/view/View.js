@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import {Grid,Divider,colors,Link,Typography,Card,CardContent,LinearProgress} from '@material-ui/core';
 import { Page } from 'components';
-import {genericFunctionFourParameters}   from '../../../../../../utils/API';
+import {genericFunctionFiveParameters}   from '../../../../../../utils/API';
 import {endpoint_herd} from '../../../../../../configs/endpoints';
 import authContext from '../../../../../../contexts/AuthContext';
 import MUIDataTable from "mui-datatables";
@@ -42,30 +42,31 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const Edit = props => {  
+  const {farm } = props; 
   const classes = useStyles();  
   const [values, setValues] = useState([]);
   const [ {organization_id}  ] = useContext(authContext);
   const option  =  0;
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(true); 
 
   useEffect(() => {     
     let mounted = true;
 
-      (async  (endpoint,desc,option,id) => {     
-        await  genericFunctionFourParameters(endpoint,desc,option,id)
+      (async  (endpoint,desc,option,id,farm_id) => {     
+        await  genericFunctionFiveParameters(endpoint,desc,option,id,farm_id)
         .then(response => {                        
           if (mounted) {   
             setIsLoading(false);          
             setValues(response.payload[0]);                 
           }
         });
-      })(endpoint_herd,'get all herds',option,organization_id); 
+      })(endpoint_herd,'get all herds',option,organization_id,farm); 
       
     return () => {
       mounted = false;
            
     };
-  }, [organization_id]); 
+  }, [organization_id,farm]); 
 
   if (!values) {
     return null;
