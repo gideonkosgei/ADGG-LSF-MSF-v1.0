@@ -89,6 +89,7 @@ const Edit = props => {
   const [output, setOutput] = useState({status:null, message:""}); 
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [quality_fields_view, setQualityFieldsView] = useState(false);
   const timer = React.useRef();
 
   const buttonClassname = clsx({
@@ -123,7 +124,13 @@ const Edit = props => {
         .then(response => {       
           if (mounted_milking) { 
             const data = response.payload[0][0];                       
-            setValues(data); 
+            setValues(data);
+
+            if (data.milk_Weight === 0 && data.milk_butter_fat === 0 &&  data.milk_lactose === 0 && data.milk_protein === 0  && data.milk_somatic_cell_count === 0 && data.milk_urea === 0){
+              setQualityFieldsView(false);
+            } else {
+              setQualityFieldsView(true);
+            }
             setIsLoading(false);                                
           }
         });
@@ -294,6 +301,13 @@ const Edit = props => {
   const handleMetadataClose = () => {
     setMetadata(false);
   };
+
+  const handleQualitySwitchChange = event => {
+    event.persist();
+    setQualityFieldsView(!quality_fields_view);   
+  };  
+  
+console.log(values);
   return (
     <Page
       className={classes.root}
@@ -491,8 +505,7 @@ const Edit = props => {
                     onChange={handleChange}
                     variant="outlined"
                     type = "number"
-                    value = {values.milk_am_litres}                       
-                    
+                    value = {values.milk_am_litres === 0 ? null : values.milk_am_litres} 
                 />
               </Grid>
 
@@ -519,9 +532,8 @@ const Edit = props => {
                     name="milk_mid_day"                
                     onChange={handleChange}
                     variant="outlined"
-                    type = "number" 
-                    value = {values.milk_mid_day}                      
-                    
+                    type = "number"                    
+                    value = {values.milk_mid_day === 0 ? null : values.milk_mid_day} 
                 />
               </Grid>
 
@@ -549,7 +561,7 @@ const Edit = props => {
                     onChange={handleChange}
                     variant="outlined"
                     type = "number"  
-                    value = {values.milk_pm_litres}                     
+                    value = {values.milk_pm_litres === 0 ? null : values.milk_pm_litres}                    
                     
                 />
               </Grid>
@@ -580,7 +592,30 @@ const Edit = props => {
                 />
               </Grid>
 
+              <Grid
+                      item
+                      md={12}
+                      xs={12}
+                    >
 
+                      <Box> 
+                        <Typography variant="h6">{ quality_fields_view? "Discard/Hide Milk Quality Attributes" : "Capture Milk Quality Attributes"} </Typography> 
+                      </Box> 
+                      <Box> 
+                          <Switch             
+                            className={classes.toggle}            
+                            checked={quality_fields_view}
+                            color="secondary"
+                            edge="start"               
+                            onChange={handleQualitySwitchChange}
+                          />             
+                      </Box> 
+                </Grid>
+
+            <Grid item md={12} xs={12}> 
+            <Box>
+            {quality_fields_view ?   
+            <Grid container spacing={3}>  
               <Grid
                     item
                     md={3}
@@ -636,8 +671,8 @@ const Edit = props => {
                     name="milk_Weight"                
                     onChange={handleChange}
                     variant="outlined"  
-                    type = "number"  
-                    value = {values.milk_Weight} 
+                    type = "number"                    
+                    value = {values.milk_Weight === 0 ? null : values.milk_Weight} 
                 />
               </Grid>              
 
@@ -663,9 +698,8 @@ const Edit = props => {
                     name="milk_butter_fat"                
                     onChange={handleChange}
                     variant="outlined" 
-                    type = "number" 
-                    value = {values.milk_butter_fat}                                         
-                    
+                    type = "number"                                                           
+                    value = {values.milk_butter_fat === 0 ? null : values.milk_butter_fat} 
                 />
               </Grid>
                    
@@ -693,9 +727,8 @@ const Edit = props => {
                     name="milk_lactose"                
                     onChange={handleChange}
                     variant="outlined" 
-                    type = "number" 
-                    value = {values.milk_lactose}                                         
-                    
+                    type = "number"                     
+                    value = {values.milk_lactose === 0 ? null : values.milk_lactose}  
                 />
               </Grid>
   
@@ -721,9 +754,8 @@ const Edit = props => {
                     name="milk_protein"                
                     onChange={handleChange}
                     variant="outlined"
-                    type = "number" 
-                    value = {values.milk_protein}                                          
-                    
+                    type = "number"                 
+                    value = {values.milk_protein === 0 ? null : values.milk_protein}  
                 />
               </Grid>
 
@@ -750,9 +782,8 @@ const Edit = props => {
                     name="milk_urea"                
                     onChange={handleChange}
                     variant="outlined"   
-                    type = "number"  
-                    value = {values.milk_urea}                                      
-                    
+                    type = "number"                                                         
+                    value = {values.milk_urea === 0 ? null : values.milk_urea}  
                 />
               </Grid>
   
@@ -777,13 +808,17 @@ const Edit = props => {
                     name="milk_somatic_cell_count"                
                     onChange={handleChange}
                     variant="outlined" 
-                    type = "number"  
-                    value = {values.milk_somatic_cell_count}                                                          
-                    
+                    type = "number"                                                                           
+                    value = {values.milk_somatic_cell_count === 0 ? null : values.milk_somatic_cell_count}  
                 />
               </Grid>   
             
-              </Grid>
+            </Grid>
+            : null
+            }
+            </Box>
+            </Grid>
+            </Grid>
           </CardContent>
           <Divider />
           <CardActions>     
