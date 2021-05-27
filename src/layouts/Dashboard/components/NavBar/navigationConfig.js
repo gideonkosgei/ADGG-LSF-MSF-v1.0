@@ -235,7 +235,11 @@ const p = [
               {
                 title: 'Access',
                 href: '/administration/org'                     
-              },               
+              },  
+              {
+                title: 'Setup',
+                href: '/administration/org/setup'                     
+              },             
             ],                  
           },          
           {

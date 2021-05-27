@@ -348,11 +348,7 @@ const routes = [
         exact: true,
         component: lazy(() => import('views/Farms/components/Farms/components/edit'))        
       },
-      {
-        path: '/management/farms/edit/:id',
-        exact: true,
-        component: lazy(() => import('views/Farms/components/Farms/components/edit'))        
-      },
+     
 
 
      /* {
@@ -664,6 +660,24 @@ const routes = [
         exact: true,
         component: lazy(() => import('views/Administration/components/UserAccounts/components/edit'))        
       },
+      {
+        path: '/administration/org/setup',
+        exact: true,
+        component: lazy(() => import('views/Administration/components/Setup/components/Setup/components/view'))
+      },
+      {
+        path: '/administration/org/add',
+        exact: true,
+        component: lazy(() => import('views/Administration/components/Setup/components/Setup/components/add')) 
+             
+      },
+      {
+        path: '/administration/org/edit/:id',
+        exact: true,
+        component: lazy(() => import('views/Administration/components/Setup/components/Setup/components/edit'))        
+      },
+     
+
 
       // BACKGROUND-PROCESS VIEW
       {
@@ -1220,6 +1234,7 @@ const routes = [
       exact: true,
       component: lazy(() => import('views/Reports/components/Batches/components/home'))        
     },
+  
 
 
 
@@ -1251,7 +1266,10 @@ const routes = [
       },
       {
         component: () => <Redirect to="/errors/error-404" />
-      }        
+      } 
+      
+      
+
     ]
   }
 ];

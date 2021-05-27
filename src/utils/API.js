@@ -51,7 +51,7 @@ export const genericFunctionThreeParameters =  function (param1,param2,param3) {
     url:`${param1.url}/${param3}/${param4}`,
     method: param1.method,
     headers: param1.headers  
-  } 
+  }  
   
   return new Promise((resolve, reject) => {
     axios(options)
@@ -4121,6 +4121,77 @@ export const putFarm =  function (config,values,user_id,org) {
     .catch(err => reject(err));
   });       
 }
+
+
+//post org
+export const postOrg =  function (config,values,user_id) {
+   
+  let {country,org_name } = values;
+
+  country = (typeof country === 'undefined' || country === '')? null:country
+  org_name = (typeof org_name === 'undefined' || org_name === '')? null:org_name;     
+
+  const body = {
+    "country": country,
+    "org_name": org_name,   
+    "user": user_id      
+  }; 
+  
+  const options = {
+    url:`${config.url}`,
+    method: config.method,
+    headers: config.headers,
+    data: body  
+  };
+
+  return new Promise((resolve, reject) => {
+    axios(options)
+    .then(res => {           
+        resolve(res.data);
+    })    
+    .catch(err => reject(err));
+  });       
+}
+
+
+
+//put org
+export const putOrg =  function (config,values,user_id,org_id) {
+   
+  let {country,org_name } = values;
+  country = (typeof country === 'undefined' || country === '')? null:country
+  org_name = (typeof org_name === 'undefined' || org_name === '')? null:org_name;     
+
+  const body = {
+    "country": country,
+    "org_name": org_name,   
+    "user": user_id,
+    "org_id": org_id
+  }; 
+  
+  const options = {
+    url:`${config.url}`,
+    method: config.method,
+    headers: config.headers,
+    data: body  
+  };
+
+  return new Promise((resolve, reject) => {
+    axios(options)
+    .then(res => {           
+        resolve(res.data);
+    })    
+    .catch(err => reject(err));
+  });       
+}
+
+
+
+
+
+
+
+
 
 
 

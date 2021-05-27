@@ -691,6 +691,20 @@ export const endpoint_orgs_access_switch = {
   headers: headers   
 }
 
+// add org
+export const endpoint_org_add= {
+  url: `${api}/org`,
+  method: 'POST',
+  headers: headers   
+};
+
+// update farm
+export const endpoint_org_update= {
+  url: `${api}/org`,
+  method: 'PUT',
+  headers: headers   
+};
+
 
 // DASHBOARD: ANALYTICS
 // TOP COWS
