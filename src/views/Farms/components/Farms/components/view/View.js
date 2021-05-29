@@ -42,11 +42,14 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const Edit = props => {  
+  const {org} = props; 
   const classes = useStyles();  
   const [values, setValues] = useState([]);
   const [ {organization_id}  ] = useContext(authContext);
   const option  =  0;
   const [isLoading, setIsLoading] = useState(true);
+
+  const org_id = (typeof org === 'undefined') ? organization_id: org;
 
   useEffect(() => {     
     let mounted = true;
@@ -59,13 +62,13 @@ const Edit = props => {
             setValues(response.payload[0]);                 
           }
         });
-      })(endpoint_farms,'get all farms',option,organization_id); 
+      })(endpoint_farms,'get all farms',option,org_id); 
       
     return () => {
       mounted = false;
            
     };
-  }, [organization_id]); 
+  }, [org_id]); 
 
   if (!values) {
     return null;

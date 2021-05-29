@@ -65,6 +65,13 @@ export const endpoint_new_user_account = {
   headers: headers   
 };  
 
+//org farm allocation
+export const endpoint_org_farm_alloc = {
+  url: `${api}/org/farm-allocation`,
+  method: 'PUT',
+  headers: headers   
+};  
+
 
 //clients
 export const endpoint_clients = {
@@ -1066,6 +1073,8 @@ export const endpoint_farms = {
   method: 'GET',
   headers: headers   
 };  
+
+
 
 // add farm
 export const endpoint_farm_add= {

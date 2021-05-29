@@ -51,7 +51,7 @@ export const genericFunctionThreeParameters =  function (param1,param2,param3) {
     url:`${param1.url}/${param3}/${param4}`,
     method: param1.method,
     headers: param1.headers  
-  }  
+  } 
   
   return new Promise((resolve, reject) => {
     axios(options)
@@ -2835,6 +2835,33 @@ export const putOrgAccess =  function (config,values,user,created_by) {
     .catch(err => reject(err));
   });       
 }
+
+
+export const putOrgFarmAllocation =  function (config,org,farm,user,) {  
+   
+  const body = {      
+    "org": org,
+    "farm":farm,
+    "user":user,
+  };
+    const options = {
+    url:`${config.url}`,
+    method: config.method,
+    headers: config.headers,
+    data: body  
+  }; 
+
+  console.log(options);
+
+  return new Promise((resolve, reject) => {
+    axios(options)
+    .then(res => {           
+        resolve(res.data);
+    })    
+    .catch(err => reject(err));
+  });       
+}
+
 
 
 

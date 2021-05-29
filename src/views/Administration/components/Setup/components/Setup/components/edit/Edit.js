@@ -6,7 +6,7 @@ import {putOrg,getCountries,genericFunctionFourParameters}   from '../../../../.
 import {endpoint_org_update,endpoint_countries,endpoint_orgs} from '../../../../../../../../configs/endpoints';
 import authContext from '../../../../../../../../contexts/AuthContext';
 import {Header} from '../Header';
-import {default as Herds} from '../../../../../../../Herds/components/Herds/components/view'
+import {default as Farms} from '../../../../../../../Farms/components/Farms/components/view'
 
 import { Page } from 'components';
 import { green } from '@material-ui/core/colors';
@@ -15,7 +15,7 @@ import SaveIcon from '@material-ui/icons/Save';
 import clsx from 'clsx';
 import Alert from '@material-ui/lab/Alert';
 import OpenInNewIcon from '@material-ui/icons/OpenInNew';
-import {MetaData}  from '../Modal';
+import {MetaData,FarmModal}  from '../Modal';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -77,6 +77,7 @@ const Edit = props => {
   const [countries, setCountries] = useState([]);   
   const [readOnly, setReadOnly] = useState(true);
   const [openMetadata, setMetadata] = useState(false); 
+  const [farmModalToggle, setFarmModalToggle] = useState(null);
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [output, setOutput] = useState({status:null, message:""}); 
@@ -172,7 +173,15 @@ const Edit = props => {
   };
   const handleMetadataClose = () => {
     setMetadata(false);
-  };   
+  }; 
+  
+  const handleClose = () => {
+    setFarmModalToggle(false);
+  };
+
+  const handleClickAddFarm = () => {
+    setFarmModalToggle(true);   
+  };
   
 
   return (
@@ -331,12 +340,38 @@ const Edit = props => {
           onClose={handleMetadataClose}
           open={openMetadata}
         /> 
+
+        <FarmModal         
+          onClose={handleClose}
+          open={farmModalToggle}
+          Details={values}
+        />
         
         </Card>
-    </Grid>
+    </Grid>    
   </Grid>
-  <Herds farm = {values.id}/>
-   </Page>
+  <br/>
+  <Grid
+    alignItems="flex-end"
+    container
+    justify="space-between"
+    spacing={3}
+  >
+    <Grid item>
+      <Button
+        color="primary"
+        variant="contained"
+        onClick={handleClickAddFarm} 
+      >
+        Add Farm To Org
+      </Button>
+    </Grid>
+
+  </Grid>
+
+  <Farms org = {org_id}/>
+
+  </Page>
 
 
   );
