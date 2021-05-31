@@ -679,7 +679,7 @@ export const endpoint_orgs= {
 
 // org access list
 export const endpoint_orgs_access= {
-  url: `${api}/orgs/access/`,
+  url: `${api}/org/access/`,
   method: 'GET',
   headers: headers   
 }

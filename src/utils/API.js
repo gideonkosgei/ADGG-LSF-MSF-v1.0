@@ -2801,6 +2801,7 @@ export const getOrgAccess =  function (config,user) {
     method: config.method,
     headers: config.headers  
   }  
+  console.log(options);
   return new Promise((resolve, reject) => {
     axios(options)
     .then(res => {          

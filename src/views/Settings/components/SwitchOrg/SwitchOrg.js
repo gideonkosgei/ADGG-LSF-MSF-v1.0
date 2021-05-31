@@ -172,17 +172,17 @@ const SwitchOrg = props => {
         gutterBottom
         variant="h3"
       >
-        SWITCH ORGANIZATION / FARM
-      </Typography>
-      <br/> 
+        ACCESS SHUTTLE
+      </Typography> 
+      <br/>    
       { isLoading  &&
+       
         <LinearProgress/>
       } 
     <Card
       {...rest}
       className={clsx(classes.root, className)}
-    >
-     
+    > 
       <form  onSubmit={handleSubmit}>
       <CardContent>  
       {output.status === 0 ?
@@ -211,8 +211,13 @@ const SwitchOrg = props => {
                 variant="subtitle1"
               >
                 Current Context <b> {`${organization}`} </b>
-                <br/>
-                <b>NB:</b> Changes Take Effect On The Next Login!    
+                <Typography variant="h6">Important Notes</Typography>
+                <Typography variant="body2">
+                  A user can be given access to more that one organization. This facility is controlled by the admin.<br/>   
+                  A listing of the orgs the user has access to will appear on the drop down list<br/>              
+                  A user can only access one org at a time and changes only take effect on the next login                               
+                </Typography> 
+                    
                 <br/>            
                 {(orgs.length<1) ? "User not allowed to switch organization/farms. Contact Admin!" : 
                 null
@@ -230,6 +235,7 @@ const SwitchOrg = props => {
                     InputLabelProps={{
                       shrink: true,
                     }}
+                    required
                     margin = 'dense'
                     label="Organization/farm"
                     name="org"

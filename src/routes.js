@@ -541,12 +541,7 @@ const routes = [
         path: '/settings/:tab',
         exact: true,
         component: lazy(() => import('views/Settings'))
-      },
-      {
-        path: '/switch/org',
-        exact: true,
-        component: lazy(() => import('views/Settings/components/SwitchOrg'))
-      },
+      },     
 
       {
         path: '/settings/parameters/limits',

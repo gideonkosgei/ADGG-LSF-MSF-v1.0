@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import { Grid } from '@material-ui/core';
 import { ProfileDetails, GeneralSettings } from './components';
+import { default as AccessShuttle } from '../SwitchOrg';
 import authContext from '../../../../contexts/AuthContext';
 import {endpoint_user_profile_details,endpoint_timezones,endpoint_countries} from '../../../../configs/endpoints';
 import {getProfileDetails,getTimezones,getCountries}   from '../../../../utils/API';
@@ -86,6 +87,16 @@ const General = props => {
         xs={12}
       >
         <GeneralSettings profile={profile}  timezones = {timezones} countries ={countries}/>
+      </Grid>
+
+      <Grid
+        item
+        lg={12}
+        md={6}
+        xl={9}
+        xs={12}
+      >
+        <AccessShuttle/>
       </Grid>
     </Grid>
   );
