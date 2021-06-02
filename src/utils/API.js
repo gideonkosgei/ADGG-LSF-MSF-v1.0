@@ -51,8 +51,7 @@ export const genericFunctionThreeParameters =  function (param1,param2,param3) {
     url:`${param1.url}/${param3}/${param4}`,
     method: param1.method,
     headers: param1.headers  
-  } 
-  
+  }   
   return new Promise((resolve, reject) => {
     axios(options)
     .then(res => {                    
@@ -4212,6 +4211,36 @@ export const putOrg =  function (config,values,user_id,org_id) {
     .catch(err => reject(err));
   });       
 }
+
+// Remove access to a unit
+export const UnitAccessAddRemove =  function (config,arr_ids,account_id,user_id,unit_type,action) {     
+  const body = {
+    "account_id": account_id,
+    "user_id": user_id, 
+    "unit_type": unit_type,  
+    "units": arr_ids,
+    "action": action
+  }; 
+
+  console.log(body);
+  
+  const options = {
+    url:`${config.url}`,
+    method: config.method,
+    headers: config.headers,
+    data: body  
+  };
+
+  return new Promise((resolve, reject) => {
+    axios(options)
+    .then(res => {           
+        resolve(res.data);
+    })    
+    .catch(err => reject(err));
+  });       
+}
+
+
 
 
 

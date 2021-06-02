@@ -14,6 +14,13 @@ export const endpoint_user_profile_details = {
   headers: headers   
 };  
 
+// get unit access
+export const endpoint_unit_access = {
+  url: `${api}/org/unit-access`,
+  method: 'GET',
+  headers: headers   
+};  
+
 //user account info
 export const endpoint_user_account_info = {
   url: `${api}/user/account-info`,
@@ -1089,6 +1096,13 @@ export const endpoint_farm_update= {
   method: 'PUT',
   headers: headers   
 };
+
+// remove unit access 
+export const endpoint_add_remove_unit_access = {
+  url: `${api}/unit-remove-access`,
+  method: 'PUT',
+  headers: headers   
+}; 
 
 
 

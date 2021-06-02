@@ -2,26 +2,56 @@ import React, { useState,useEffect,useContext } from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
-import {Card, CardContent,CardActions,Button, CardHeader, Grid,Divider,Box,Switch,TextField,colors,Typography } from '@material-ui/core';
-import { getTimezones, getCountries,getAdminUnits,createUpdateUserAccount,genericFunctionTwoParameters,genericFunctionThreeParameters}   from '../../../../../../../../utils/API';
-import {endpoint_user_account_info,endpoint_timezones,endpoint_countries,endpoint_admin_units,endpoint_new_user_account,endpoint_auth_roles} from '../../../../../../../../configs/endpoints';
-import ErrorSnackbar from '../../../../../../../../components/ErrorSnackbar';
-import authContext from '../../../../../../../../contexts/AuthContext';
+import {CircularProgress,Card,Fab, CardContent,CardActions,Button, Grid,Divider,Box,Switch,TextField,Typography,LinearProgress } from '@material-ui/core';
+import { getTimezones, getCountries,getAdminUnits,createUpdateUserAccount,genericFunctionTwoParameters,genericFunctionThreeParameters}   from '../../../../../../utils/API';
+import {endpoint_user_account_info,endpoint_timezones,endpoint_countries,endpoint_admin_units,endpoint_new_user_account,endpoint_auth_roles} from '../../../../../../configs/endpoints';
+import ErrorSnackbar from '../../../../../../components/ErrorSnackbar';
+import authContext from '../../../../../../contexts/AuthContext';
+import {default as UnitAccess} from '../../../UnitAccess';
 import Alert from '@material-ui/lab/Alert';
+import { Page } from 'components';
+import { green } from '@material-ui/core/colors';
+import CheckIcon from '@material-ui/icons/Check';
+import SaveIcon from '@material-ui/icons/Save';
 
 const useStyles = makeStyles(theme => ({
-  root: {},
-  saveButton: {
-    color: theme.palette.white,
-    backgroundColor: colors.green[600],
+  root: {
+    width: theme.breakpoints.values.lg,
+    maxWidth: '100%',
+    margin: '0 auto',
+    padding: theme.spacing(3)
+  },  
+  content: {
+    marginTop: theme.spacing(3)
+  },
+  wrapper: {
+    margin: theme.spacing(1),
+    position: 'relative',
+  },
+  buttonSuccess: {
+    backgroundColor: green[500],
     '&:hover': {
-      backgroundColor: colors.green[900]
-    }
+      backgroundColor: green[700],
+    },
+  },
+  fabProgress: {
+    color: green[500],
+    position: 'absolute',
+    top: -6,
+    left: -6,
+    zIndex: 1,
+  },
+  buttonProgress: {
+    color: green[500],
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    marginTop: -12,
+    marginLeft: -12,
   }
 }));
 
-const ProfileDetails = props => {
-  const { className,record_id, ...rest } = props; 
+const Edit = props => {
   const classes = useStyles();   
   const [values, setValues] = useState({});
   const [timezones, setTimezones] = useState(null);
@@ -40,6 +70,15 @@ const ProfileDetails = props => {
     unit2: 'District',
     unit3: 'Ward',
     unit4: 'Village'
+  });
+  const [isLoading, setIsLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
+  const record_id = props.match.params.id;
+  const timer = React.useRef();
+
+  const buttonClassname = clsx({
+    [classes.buttonSuccess]: success,
   });
 
   async function adminUnits (endpoint,unit,option){ 
@@ -90,11 +129,13 @@ const ProfileDetails = props => {
     let mounted_countries = true;
     let mounted_auth_roles = true;
     let mounted_acc_info = true;
+    
 
      (async  (endpoint,desc,id) => {     
       await  genericFunctionThreeParameters(endpoint,desc,id)
       .then(response => {                        
-        if (mounted_acc_info) {            
+        if (mounted_acc_info) {     
+          setIsLoading(false);       
           setValues(response.payload[0][0]);
           adminUnits(endpoint_admin_units,response.payload[0][0].country,1);
           adminUnits(endpoint_admin_units,response.payload[0][0].region,2);
@@ -102,8 +143,7 @@ const ProfileDetails = props => {
           adminUnits(endpoint_admin_units,response.payload[0][0].ward,4); 
         }
       });
-    })(endpoint_user_account_info,'fetch user account info',record_id);
-          
+    })(endpoint_user_account_info,'fetch user account info',record_id);          
 
       (async  (endpoint,desc) => {     
         await  genericFunctionTwoParameters(endpoint,desc)
@@ -112,9 +152,7 @@ const ProfileDetails = props => {
             setAuthRoles(response.payload);                 
           }
         });
-      })(endpoint_auth_roles,'fetch auth roles');
-
-      
+      })(endpoint_auth_roles,'fetch auth roles');      
 
       (async  (endpoint_timezones) => {     
         await  getTimezones(endpoint_timezones)
@@ -139,8 +177,7 @@ const ProfileDetails = props => {
                 unit3: getUnits.unit3_name,
                 unit4: getUnits.unit4_name
               }); 
-            } 
-
+            }
           }
         });
       })(endpoint_countries);
@@ -193,6 +230,10 @@ const ProfileDetails = props => {
 
   const handleSubmit = event => {
     event.preventDefault(); 
+    if (!loading) {
+      setSuccess(false);
+      setLoading(true);
+    }
     /**
      * option
      * 0 > create
@@ -201,16 +242,31 @@ const ProfileDetails = props => {
    
     (async  (endpoint,option,id,org,values,user_id) => {     
       await  createUpdateUserAccount(endpoint,option,id,org,values,user_id)
-      .then((response) => { 
-        setOutput({status:null, message:''})
-        if (parseInt(response.payload[0][0].status) === 1){    
+      .then((response) => {       
+        setOutput({status:null, message:''});
+        timer.current = window.setTimeout(() => {
+          setSuccess(true);
+          setLoading(false);          
+          if (parseInt(response.payload[0][0].status) === 1){               
+            setOutput({status:parseInt(response.payload[0][0].status), message:response.payload[0][0].message}) 
+          } else {
+            setOutput({status:parseInt(response.payload[0][0].status), message:response.payload[0][0].message})
+          } 
+        }, 500);  
+
+
+
+        
+        /*if (parseInt(response.payload[0][0].status) === 1){    
           setOutput({status:parseInt(response.payload[0][0].status), message:response.payload[0][0].message})      
         } else {
           setOutput({status:parseInt(response.payload[0][0].status), message:response.payload[0][0].message})
-        }
+        }*/
         
       }).catch((error) => {        
-        setOutput({status:0, message:error.message})
+        setOutput({status:0, message:error.message});
+        setSuccess(false);
+        setLoading(false);
       });
     })(endpoint_new_user_account,1,record_id,organization_id,values,user_id);    
   };
@@ -225,15 +281,29 @@ const ProfileDetails = props => {
     setReadOnly(!readOnly);   
   };
 
-  console.log(values);
- 
   return (
-    <Card
-      {...rest}
-      className={clsx(classes.root, className)}
-    >
-      <form id ='event' onSubmit={handleSubmit}>
-        <CardHeader title= { readOnly ? `VIEW USER ACCOUNT PROFILE  #${record_id}`:`EDIT USER ACCOUNT PROFILE #${record_id}`}/>
+    <Page className={classes.root} >
+      <Typography
+      component="h1"
+      variant="h3"
+      >
+         { readOnly ? `USER ACCOUNT - ${values.name}`:`USER ACCOUNT - ${values.name}` }        
+      </Typography>
+      <br/>           
+      { isLoading  &&
+        <LinearProgress/>
+      } 
+      <Grid
+      container spacing={1} justify="center"
+      >       
+      
+      <Grid
+        item        
+        xs={12}
+      >
+        <Card>   
+    
+        <form id ='event' onSubmit={handleSubmit}>        
         <Divider />
         <CardContent>
           {output.status === 0 ?
@@ -595,47 +665,61 @@ const ProfileDetails = props => {
                   </TextField>
               </Grid>
               <Grid
-                    item
-                    md={3}
-                    xs={12}
-                  >
+                item
+                md={3}
+                xs={12}
+              >
                   
-                  <Box> 
+                <Box> 
                   <Typography variant="h6">{ values.status? "Deactivate Account" : "Activate Account"} </Typography> 
-                  </Box> 
-                  <Box> 
-                      <Switch  
-                        inputProps={{
-                          readOnly: Boolean(readOnly),
-                          disabled: Boolean(readOnly)                
-                        }}  
-                        name = 'status'         
-                        className={classes.toggle}            
-                        checked = {(values.status)?true:false}
-                        color="secondary"
-                        edge="start"               
-                        onChange={handleChange}
-                      />             
-                </Box>     
-                       
-                  
+                </Box> 
+                <Box> 
+                  <Switch  
+                    inputProps={{
+                      readOnly: Boolean(readOnly),
+                      disabled: Boolean(readOnly)                
+                    }}  
+                    name = 'status'         
+                    className={classes.toggle}            
+                    checked = {(values.status)?true:false}
+                    color="secondary"
+                    edge="start"               
+                    onChange={handleChange}
+                  />             
+                </Box> 
               </Grid>
           </Grid>
         </CardContent> 
           <Divider />
-            <CardActions>          
-              <Box flexGrow={1}>
-              {readOnly ? null :                        
-                <Button
-                  className={classes.saveButton}
-                  type="submit"
-                  variant="contained"
-                  hidden = "true"                               
-                >
-                  Save Changes
-                </Button>              
-              }                             
-            </Box>              
+            <CardActions> 
+
+              {readOnly ? null :        
+              <>    
+                <div className={classes.wrapper}>
+                  <Fab
+                    aria-label="save"
+                    color="primary"
+                    className={buttonClassname}
+                  >
+                    {success ? <CheckIcon /> : <SaveIcon />}
+                  </Fab>
+                  {loading && <CircularProgress size={68} className={classes.fabProgress} />}
+                </div>
+                <div className={classes.wrapper}>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    className={buttonClassname}
+                    disabled={loading}                
+                    type="submit"
+                  >
+                    Save Changes
+                  </Button>
+                  {loading && <CircularProgress size={24} className={classes.buttonProgress} />}
+                </div>
+              </>
+              }         
+             
             <Box> 
                 <Typography variant="h6">{ readOnly? "Enable Form" : "Disable Form"} </Typography> 
             </Box> 
@@ -655,12 +739,24 @@ const ProfileDetails = props => {
           open={openSnackbarError}
         />         
     </Card>
+        
+      </Grid>
+
+      <Grid
+        item        
+        xs={12}
+      >
+       <UnitAccess UserDetails = {values}/>
+      </Grid>
+      
+    </Grid>
+    </Page>
   );
 };
 
-ProfileDetails.propTypes = {
+Edit.propTypes = {
   className: PropTypes.string,
-  profile: PropTypes.object.isRequired
+  history: PropTypes.object.isRequired,
+  match: PropTypes.object.isRequired
 };
-
-export default ProfileDetails;
+export default Edit;

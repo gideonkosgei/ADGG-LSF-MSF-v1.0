@@ -227,11 +227,7 @@ const p = [
               {
                 title: 'User Accounts',
                 href: '/administration/org/user-accounts'                     
-              },  
-              {
-                title: 'Access',
-                href: '/administration/org'                     
-              },  
+              },   
               {
                 title: 'Setup',
                 href: '/administration/org/setup'                     

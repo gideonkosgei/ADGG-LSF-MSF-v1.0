@@ -623,13 +623,14 @@ const routes = [
        {
         path: '/administration/org',
         exact: true,
-        component: lazy(() => import('views/Administration/components/Organization/components/view'))        
+        component: lazy(() => import('views/Administration/components/UnitAccess'))        
       },       
       {
         path: '/administration/org/edit/:id/:name',
         exact: true,
-        component: lazy(() => import('views/Administration/components/Organization/components/edit'))        
+        component: lazy(() => import('views/Administration/components/UnitAccess/components/Org'))        
       },
+              
       {
         path: '/administration/upload-logo',
         exact: true,

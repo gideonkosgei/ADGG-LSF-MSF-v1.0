@@ -211,7 +211,7 @@ const SwitchOrg = props => {
                 variant="subtitle1"
               >
                 Current Context <b> {`${organization}`} </b>
-                <Typography variant="h6">Important Notes</Typography>
+                <Typography variant="h6">Important Note(s)</Typography>
                 <Typography variant="body2">
                   A user can be given access to more that one organization. This facility is controlled by the admin.<br/>   
                   A listing of the orgs the user has access to will appear on the drop down list<br/>              
