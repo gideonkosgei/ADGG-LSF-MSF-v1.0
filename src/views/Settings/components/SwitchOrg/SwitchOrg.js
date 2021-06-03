@@ -1,8 +1,8 @@
 import React, { useState,useEffect,useContext } from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import {getOrgAccess,putOrgAccessSwitch}   from '../../../../utils/API';
-import {endpoint_orgs_access,endpoint_orgs_access_switch} from '../../../../configs/endpoints';
+import {genericFunctionFiveParameters,putOrgAccessSwitch}   from '../../../../utils/API';
+import {endpoint_unit_access,endpoint_orgs_access_switch} from '../../../../configs/endpoints';
 import authContext from '../../../../contexts/AuthContext';
 import SuccessSnackbar from '../../../../components/SuccessSnackbar';
 import ErrorSnackbar from '../../../../components/ErrorSnackbar';
@@ -86,35 +86,41 @@ const SwitchOrg = props => {
     [classes.buttonSuccess]: success,
   });
 
-  useEffect(() => {    
-    let mounted = true; 
+  /* 
+    unit_type = 0 > org
+    unit_type = 1 > farm 
+  */ 
+    const unit_type = 0;
     
-      (async  (endpoint,user_id) => {     
-        await  getOrgAccess(endpoint,user_id)
-        .then(response => {       
-          if (mounted) { 
-            const data = response.payload;
-            let orgs_accessible = [];        
+    /* 
+     * display_option = 0 > display allocated units
+     * display_option = 1 > display unallocated units
+     */
+    const display_option = 0 ; 
 
-          for (let i = 0; i<data.length; i++){
-            if (data[i].status === 1){
-              orgs_accessible.push(data[i]);
-            }
-          }               
-          setOrgs(orgs_accessible);
-          }
-          setIsLoading(false);
-        });
-      })(endpoint_orgs_access,user_id);
+  useEffect(() => {    
+    let mounted = true;     
+    (async  (endpoint,desc,user,unit_type,display_option) => {     
+      await  genericFunctionFiveParameters(endpoint,desc,user,unit_type,display_option)
+      .then(response => {                        
+        if (mounted) {   
+          setIsLoading(false); 
+          setOrgs(response.payload); 
+        }
+      });
+    })(endpoint_unit_access,'org unit access',user_id,unit_type,display_option); 
  
     return () => {      
       mounted = false;      
     };    
   }, [user_id]);  
 
+
   if ( !orgs) {
     return null;
   }
+
+  console.log(orgs);
 
   const handleChange = event => {
     event.persist();
@@ -250,7 +256,7 @@ const SwitchOrg = props => {
                           <option                    
                             value={org.id}
                           >
-                            {org.name}
+                            {org.org_name}
                           </option>
                         ))
                     }           

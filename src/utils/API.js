@@ -2793,23 +2793,6 @@ export const getOrgList =  function (config) {
   });       
 };
 
-//access
-export const getOrgAccess =  function (config,user) {   
-  const options = {
-    url:`${config.url}${user}`,
-    method: config.method,
-    headers: config.headers  
-  }  
-  console.log(options);
-  return new Promise((resolve, reject) => {
-    axios(options)
-    .then(res => {          
-        resolve(res.data);
-    })
-    .catch(err => reject(err));
-  });       
-};
-
 export const putOrgAccess =  function (config,values,user,created_by) { 
   let orgs = [];
   for (let i = 0; i<values.length;i++){
