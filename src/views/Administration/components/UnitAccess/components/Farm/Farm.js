@@ -132,6 +132,7 @@ const Farm = props => {
     { name: "name",label: "FARM NAME",options: {filter: false,sort: true,display:true}},  
    // { name: "farmer_name",label: "FARMER NAME",options: {filter: false,sort: true,display:true}},  
     { name: "code",label: "FARM CODE",options: {filter: false,sort: false,display:true}}, 
+    { name: "org_name",label: "ORG",options: {filter: true,sort: true,display:true}},  
     { name: "country",label: "COUNTRY",options: {filter: true,sort: true,display:true}},  
     { name: "region",label: "REGION",options: {filter: true,sort: true,display:true}},  
     { name: "district",label: "DISTRICT",options: {filter:true,sort: true,display:true}}, 
