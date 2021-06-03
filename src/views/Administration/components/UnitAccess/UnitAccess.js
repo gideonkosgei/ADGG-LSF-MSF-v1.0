@@ -8,7 +8,7 @@ import {Farm,Org}   from './components';
 import { Page } from 'components';
 
 const UnitAccess = props => {
-  const {UserDetails} = props; 
+  const {UserDetails,ApplicationArea} = props; 
   const [ { organization_id }  ] = useContext(authContext);  
   const [profile, setProfile] = useState(null);
 
@@ -43,7 +43,10 @@ const UnitAccess = props => {
         xs={12}
       >
         <br/>
-        <Org UserDetails = {UserDetails}/>
+        <Org 
+          UserDetails = {UserDetails}
+          ApplicationArea = {ApplicationArea}
+        />
        
       </Grid>
       
@@ -56,7 +59,10 @@ const UnitAccess = props => {
         xs={12}
       >
          <br/>
-        <Farm UserDetails = {UserDetails}/>
+        <Farm 
+          UserDetails = {UserDetails}
+          ApplicationArea = {ApplicationArea}
+        />
       </Grid>
     </Grid>
     </Page>
@@ -65,6 +71,7 @@ const UnitAccess = props => {
 
 UnitAccess.propTypes = {
   className: PropTypes.string,
-  UserDetails : PropTypes.object.isRequired
+  UserDetails : PropTypes.object.isRequired,
+  ApplicationArea:PropTypes.string.isRequired
 };
 export default UnitAccess;

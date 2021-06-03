@@ -41,7 +41,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const Farm = props => {  
-  const {UserDetails} = props; 
+  const {UserDetails,ApplicationArea} = props; 
   const classes = useStyles();  
   const [values, setValues] = useState([]);
   const [selectedRowData, SetSelectedRows] = useState([]);  
@@ -148,7 +148,7 @@ const Farm = props => {
     search: true,
     rowsPerPage: 5,       
     rowsPerPageOptions :[5,10,20,50,100],   
-    selectableRows: "multiple",  
+    selectableRows:  (ApplicationArea==='admin')? "multiple" : "none", 
     selectableRowsHeader: true,     
     filterType: 'checkbox',
     responsive: 'stacked',                
@@ -215,30 +215,36 @@ const Farm = props => {
         spacing={3}
       >
         <Grid item>
-          <Button
-          
-            variant="outlined"
-            onClick={handleClickAddFarm} 
-          >
-            Add
-          </Button>
+          {ApplicationArea==='admin'?
+            <Button
+              style={{
+                marginRight: "10px"          
+              }}
+              variant="outlined"
+              onClick={handleClickAddFarm} 
+            >
+              Add
+            </Button>
+            : null
+          }
 
           <Button          
-          variant="outlined"
-          onClick={handleClickRefresh} 
-          style={{
-            marginLeft: "10px"          
-          }} 
-        >
+            variant="outlined"
+            onClick={handleClickRefresh}           
+          >
           Refresh
         </Button>
-        <br/> <br/>
-        <Typography variant="h6">Important Note(s)</Typography>
-        <Typography variant="body2">
-          The selected user will have access to only the farm units on the table. <br/>
-          Only these farm units will be visible to the user            
-
-        </Typography>
+          {ApplicationArea==='admin'?
+            <>
+            <br/> <br/>
+            <Typography variant="h6">Important Note(s)</Typography>
+            <Typography variant="body2">
+              The selected user will have access to only the farm units on the table. <br/>
+              Only these farm units will be visible to the user 
+            </Typography>
+            </>       
+          : null
+          }
         
         </Grid>
       </Grid>
@@ -292,7 +298,8 @@ const Farm = props => {
 Farm.propTypes = {
   history: PropTypes.object.isRequired,
   match: PropTypes.object.isRequired,
-  UserDetails : PropTypes.object.isRequired
+  UserDetails : PropTypes.object.isRequired,
+  ApplicationArea: PropTypes.string.isRequired
 };
 
 export default Farm;

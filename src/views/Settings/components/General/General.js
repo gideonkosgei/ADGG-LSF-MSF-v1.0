@@ -8,6 +8,8 @@ import { default as AccessShuttle } from '../SwitchOrg';
 import authContext from '../../../../contexts/AuthContext';
 import {endpoint_user_profile_details,endpoint_timezones,endpoint_countries} from '../../../../configs/endpoints';
 import {getProfileDetails,getTimezones,getCountries}   from '../../../../utils/API';
+import {default as UnitAccess} from '../../../Administration/components/UnitAccess';
+
 
 const useStyles = makeStyles(() => ({
   root: {}
@@ -98,6 +100,16 @@ const General = props => {
       >
         <AccessShuttle/>
       </Grid>
+      <Grid
+        item        
+        xs={12}
+      >
+       <UnitAccess 
+          UserDetails = {{id: profile.id,name:profile.name}}
+          ApplicationArea = "user"
+       />
+      </Grid>
+
     </Grid>
   );
 };

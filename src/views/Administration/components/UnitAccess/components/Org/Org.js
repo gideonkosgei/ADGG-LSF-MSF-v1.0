@@ -39,7 +39,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const Org = props => {  
-  const {UserDetails} = props; 
+  const {UserDetails,ApplicationArea} = props; 
   const classes = useStyles();  
   const [values, setValues] = useState([]);
   const [selectedRowData, SetSelectedRows] = useState([]);  
@@ -48,7 +48,7 @@ const Org = props => {
   const [farmModalToggle, setOrgModalToggle] = useState(null);
   const [output, setOutput] = useState({status:null, message:""}); 
   const timer = React.useRef();
-  const account_id = UserDetails.id;  
+  const account_id = UserDetails.id;    
   /* 
     unit_type = 0 > org
     unit_type = 1 > farm 
@@ -65,7 +65,12 @@ const Org = props => {
    * display_option = 0 > display allocated units
    * display_option = 1 > display unallocated units
    */
-  const display_option = 0 ; 
+  const display_option = 0 ;
+
+  /**
+   * control whether to display checkbox or not on the org unit grid
+   * show for admin; hide for user
+   */ 
 
   async function getallunits(endpoint,desc,user,unit_type,display_option) { 
     setValues([]);    
@@ -141,7 +146,7 @@ const Org = props => {
     search: true,
     rowsPerPage: 5,       
     rowsPerPageOptions :[5,10,20,50,100],   
-    selectableRows: "multiple",  
+    selectableRows: (ApplicationArea==='admin')? "multiple" : "none", 
     selectableRowsHeader: true,       
     filterType: 'checkbox',
     responsive: 'stacked',                
@@ -208,30 +213,37 @@ const Org = props => {
         spacing={3}
       >
         <Grid item>
-          <Button
-          
-            variant="outlined"
-            onClick={handleClickAddFarm} 
-          >
-            Add
-          </Button>
+          {ApplicationArea==='admin'?
+            <Button
+              style={{
+                marginRight: "10px"          
+              }}
+              variant="outlined"
+              onClick={handleClickAddFarm} 
+            >
+              Add
+            </Button>
+          : null
+          } 
 
           <Button          
-          variant="outlined"
-          onClick={handleClickRefresh} 
-          style={{
-            marginLeft: "10px"          
-          }} 
-        >
+            variant="outlined"
+            onClick={handleClickRefresh}             
+          >
           Refresh
         </Button>
-        <br/> <br/>
-        <Typography variant="h6">Important Note(s)</Typography>
-        <Typography variant="body2">
-          Removing org unit(s) access will also automatically remove 
-          access to linked farm units(s) 
-        </Typography>
-        
+       
+        {ApplicationArea==='admin'?
+          <>
+            <br/> <br/>
+            <Typography variant="h6">Important Note(s)</Typography>
+            <Typography variant="body2">
+              Removing org unit(s) access will also automatically remove 
+              access to linked farm units(s) 
+            </Typography>
+          </>  
+        : null
+        }        
         </Grid>
       </Grid>
 
@@ -284,7 +296,8 @@ const Org = props => {
 Org.propTypes = {
   history: PropTypes.object.isRequired,
   match: PropTypes.object.isRequired,
-  UserDetails : PropTypes.object.isRequired
+  UserDetails : PropTypes.object.isRequired,
+  ApplicationArea: PropTypes.string.isRequired
 };
 
 export default Org;

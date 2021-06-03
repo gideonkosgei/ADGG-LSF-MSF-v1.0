@@ -70,7 +70,7 @@ const Edit = props => {
     unit2: 'District',
     unit3: 'Ward',
     unit4: 'Village'
-  });
+  }); 
   const [isLoading, setIsLoading] = useState(true);
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
@@ -81,6 +81,7 @@ const Edit = props => {
     [classes.buttonSuccess]: success,
   });
 
+  
   async function adminUnits (endpoint,unit,option){ 
     await  getAdminUnits(endpoint,unit,option)
     .then(response => {
@@ -746,7 +747,10 @@ const Edit = props => {
         item        
         xs={12}
       >
-       <UnitAccess UserDetails = {values}/>
+       <UnitAccess 
+          UserDetails = {{id: values.id,name:values.name}} 
+          ApplicationArea = "admin"        
+       />
       </Grid>
       
     </Grid>
