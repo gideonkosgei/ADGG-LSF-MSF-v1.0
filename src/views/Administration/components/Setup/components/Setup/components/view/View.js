@@ -44,13 +44,12 @@ const useStyles = makeStyles(theme => ({
 const Edit = props => {  
   const classes = useStyles();  
   const [values, setValues] = useState([]);
-  const [ {organization_id}  ] = useContext(authContext);
-  const option  =  0;
+  const [ {user_id}  ] = useContext(authContext);
+  const option  =  2;
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {     
     let mounted = true;
-
       (async  (endpoint,desc,option,id) => {     
         await  genericFunctionFourParameters(endpoint,desc,option,id)
         .then(response => {                        
@@ -60,20 +59,20 @@ const Edit = props => {
             console.log(response);               
           }
         });
-      })(endpoint_orgs,'get all orgs',option,null); 
+      })(endpoint_orgs,'get all orgs',option,user_id); 
       
     return () => {
       mounted = false;
            
     };
-  }, [organization_id]); 
+  }, [user_id]); 
 
   if (!values) {
     return null;
   } 
     const columns = [
     { name: "id",label: "ID",options: {filter: false,sort: false,display:true}},   
-    { name: "name",label: "ORGANIZATION NAME",options: {filter: false,sort: true,display:true}},
+    { name: "org_name",label: "ORGANIZATION NAME",options: {filter: false,sort: true,display:true}},
     { name: "country",label: "COUNTRY",options: {filter: false,sort: true,display:true}},
     { name: "created_at",label: "DATE CREATED",options: {filter: true,sort: false,display:true}},
     { name: "created_by",label: "CREATED BY",options: {filter: false,sort: true,display:true}}, 
@@ -117,7 +116,6 @@ const Edit = props => {
   }  
   };
 
-  console.log(values);
   return (
     <Page
       className={classes.root}
@@ -135,8 +133,8 @@ const Edit = props => {
         <LinearProgress/>
       }  
       <Divider />         
-      <Grid container spacing={1} justify="center">  
-        <Grid item xs={12}> 
+      <Grid container spacing={1} >  
+        <Grid item xs={7}> 
           <Card>
             <CardContent>                            
               <PerfectScrollbar>                
