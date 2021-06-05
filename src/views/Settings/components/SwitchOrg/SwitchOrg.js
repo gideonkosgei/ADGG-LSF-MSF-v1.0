@@ -1,7 +1,7 @@
 import React, { useState,useEffect,useContext } from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import {genericFunctionFiveParameters,putOrgAccessSwitch}   from '../../../../utils/API';
+import {genericFunctionSixParameters,putOrgAccessSwitch}   from '../../../../utils/API';
 import {endpoint_unit_access,endpoint_orgs_access_switch} from '../../../../configs/endpoints';
 import authContext from '../../../../contexts/AuthContext';
 import SuccessSnackbar from '../../../../components/SuccessSnackbar';
@@ -100,15 +100,15 @@ const SwitchOrg = props => {
 
   useEffect(() => {    
     let mounted = true;     
-    (async  (endpoint,desc,user,unit_type,display_option) => {     
-      await  genericFunctionFiveParameters(endpoint,desc,user,unit_type,display_option)
+    (async  (endpoint,desc,account,unit_type,display_option,user) => {     
+      await  genericFunctionSixParameters(endpoint,desc,account,unit_type,display_option,user)
       .then(response => {                        
         if (mounted) {   
           setIsLoading(false); 
           setOrgs(response.payload); 
         }
       });
-    })(endpoint_unit_access,'org unit access',user_id,unit_type,display_option); 
+    })(endpoint_unit_access,'org unit access',user_id,unit_type,display_option,user_id); 
  
     return () => {      
       mounted = false;      
@@ -119,8 +119,6 @@ const SwitchOrg = props => {
   if ( !orgs) {
     return null;
   }
-
-  console.log(orgs);
 
   const handleChange = event => {
     event.persist();

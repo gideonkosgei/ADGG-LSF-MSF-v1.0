@@ -71,7 +71,7 @@ const Edit = props => {
     return null;
   } 
     const columns = [
-    { name: "id",label: "ID",options: {filter: false,sort: false,display:true}},   
+    { name: "id",label: "ID",options: {filter: false,sort: false,display:false}},   
     { name: "org_name",label: "ORGANIZATION NAME",options: {filter: false,sort: true,display:true}},
     { name: "country",label: "COUNTRY",options: {filter: false,sort: true,display:true}},
     { name: "created_at",label: "DATE CREATED",options: {filter: true,sort: false,display:true}},
@@ -134,7 +134,7 @@ const Edit = props => {
       }  
       <Divider />         
       <Grid container spacing={1} >  
-        <Grid item xs={7}> 
+        <Grid item xs={9}> 
           <Card>
             <CardContent>                            
               <PerfectScrollbar>                

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import {Grid,Divider,Button,colors,Typography,Card,CardContent,LinearProgress} from '@material-ui/core';
 import { Page } from 'components';
-import {genericFunctionFiveParameters,UnitAccessAddRemove}   from '../../../../../../utils/API';
+import {genericFunctionSixParameters,UnitAccessAddRemove}   from '../../../../../../utils/API';
 import {endpoint_unit_access,endpoint_add_remove_unit_access} from '../../../../../../configs/endpoints';
 import authContext from '../../../../../../contexts/AuthContext';
 import MUIDataTable from "mui-datatables";
@@ -69,9 +69,9 @@ const Farm = props => {
    */
   const display_option = 0 ; 
 
-  async function getallunits(endpoint,desc,user,unit_type,display_option) { 
+  async function getallunits(endpoint,desc,account,unit_type,display_option,user) { 
     setValues([]);    
-    await  genericFunctionFiveParameters(endpoint,desc,user,unit_type,display_option)
+    await  genericFunctionSixParameters(endpoint,desc,account,unit_type,display_option,user)
     .then(response => {  
         setIsLoading(false);          
         setValues(response.payload);     
@@ -109,20 +109,20 @@ const Farm = props => {
 
   useEffect(() => {     
     let mounted = true;   
-      (async  (endpoint,desc,user,unit_type,display_option) => {     
-        await  genericFunctionFiveParameters(endpoint,desc,user,unit_type,display_option)
+      (async  (endpoint,desc,account,unit_type,display_option,user) => {     
+        await  genericFunctionSixParameters(endpoint,desc,account,unit_type,display_option,user)
         .then(response => {                        
           if (mounted) {   
             setIsLoading(false);          
             setValues(response.payload);                 
           }
         });
-      })(endpoint_unit_access,'org unit access',account_id,unit_type,display_option); 
+      })(endpoint_unit_access,'org unit access',account_id,unit_type,display_option,user_id); 
       
     return () => {
       mounted = false;           
     };
-  }, [account_id]); 
+  }, [account_id,user_id]); 
 
   if (!values) {
     return null;
@@ -191,7 +191,7 @@ const Farm = props => {
   };
 
   const handleClickRefresh = () => {
-    getallunits(endpoint_unit_access,'org unit access',account_id,unit_type,display_option);  
+    getallunits(endpoint_unit_access,'org unit access',account_id,unit_type,display_option,user_id);  
     setOutput({status:null, message:''});
   };
   
