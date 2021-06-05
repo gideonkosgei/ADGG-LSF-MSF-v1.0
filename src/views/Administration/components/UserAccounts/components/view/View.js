@@ -37,26 +37,26 @@ const useStyles = makeStyles(theme => ({
 const Edit = props => { 
   const classes = useStyles();  
   const [values, setValues] = useState([]);
-  const [ {organization_id} ] = useContext(authContext);
+  const [ {user_id} ] = useContext(authContext);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {     
     let mounted = true;
 
-      (async  (endpoint,desc,option,org) => {     
-        await  genericFunctionFourParameters(endpoint,desc,option,org)
+      (async  (endpoint,desc,option,user) => {     
+        await  genericFunctionFourParameters(endpoint,desc,option,user)
         .then(response => {                        
           if (mounted) {            
             setValues(response.payload[0]);   
             setIsLoading(false);                
           }
         });
-      })(endpoint_user_list,'Org user list',1,organization_id);
+      })(endpoint_user_list,'Org user list',1,user_id);
 
     return () => {
       mounted = false;           
     };
-  }, [organization_id]); 
+  }, [user_id]); 
 
   if (!values) {
     return null;
@@ -66,10 +66,12 @@ const Edit = props => {
     { name: "id",label: "ID",options: {filter: false,sort: false,display:false}},   
     { name: "name",label: "Name",options: {filter: false,sort: true,display:true}},
     { name: "username",label: "User Name",options: {filter: false,sort: true,display:true}},
+    { name: "country",label: "Country",options: {filter: true,sort: false,display:true}},
+    { name: "default_org",label: "Org",options: {filter: true,sort: false,display:true}},
     { name: "email",label: "Email Address",options: {filter: false,sort: false,display:true}},
     { name: "phone",label: "Phone",options: {filter:false,sort: true,display:true}},        
     { name: "role",label: "Role",options: {filter: true,sort: false,display:true}}, 
-    { name: "status",label: "Status",options: {filter: true,sort: false,display:true}},
+    { name: "status",label: "Status",options: {filter: true,sort: false,display:true}},        
     { name: "created_at",label: "Date Created",options: {filter: false,sort: false,display:true}},  
     { name: "",
       options: {
