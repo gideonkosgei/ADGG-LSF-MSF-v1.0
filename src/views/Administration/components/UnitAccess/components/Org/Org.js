@@ -110,14 +110,14 @@ const Org = props => {
     });      
   };
 
-  useEffect(() => {     
+  useEffect(() => {
     let mounted = true;   
       (async  (endpoint,desc,account,unit_type,display_option,user) => {     
         await  genericFunctionSixParameters(endpoint,desc,account,unit_type,display_option,user)
         .then(response => {                        
           if (mounted) {   
             setIsLoading(false);          
-            setValues(response.payload);                 
+            setValues(response.payload);  
           }
         });
       })(endpoint_unit_access,'org unit access',account_id,unit_type,display_option,user_id); 
@@ -131,6 +131,8 @@ const Org = props => {
   if (!values) {
     return null;
   } 
+
+  
 
   const columns = [
     { name: "id",label: "ID",options: {filter: false,sort: false,display:false}},   

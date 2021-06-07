@@ -1,35 +1,15 @@
-import React, { useState, useEffect,useContext } from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Grid} from '@material-ui/core';
-import authContext from '../../../../contexts/AuthContext';
-import {endpoint_org_details} from '../../../../configs/endpoints';
-import {genericFunctionThreeParameters}   from '../../../../utils/API';
 import {Farm,Org}   from './components';
 import { Page } from 'components';
 
 const UnitAccess = props => {
   const {UserDetails,ApplicationArea} = props; 
-  const [ { organization_id }  ] = useContext(authContext);  
-  const [profile, setProfile] = useState(null);
-
-  useEffect(() => {     
-    let mounted = true;
-      (async  (endpoint,desc,id) => {     
-        await  genericFunctionThreeParameters(endpoint,desc,id)
-        .then(response => {                        
-          if (mounted) {            
-            setProfile(response.payload[0][0]);                 
-          }
-        });
-      })(endpoint_org_details,'get org details',organization_id);
-    return () => {
-      mounted = false;           
-    };
-  }, [organization_id]);
-
-  if (!profile ) {
-    return null;
-  }
+  
+  useEffect(() => {   
+  }, []);
+ 
   return (
     <Page >
     <Grid  

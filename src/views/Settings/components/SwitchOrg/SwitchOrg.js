@@ -188,18 +188,18 @@ const SwitchOrg = props => {
       className={clsx(classes.root, className)}
     > 
       <form  onSubmit={handleSubmit}>
-      <CardContent>  
-      {output.status === 0 ?
-              <>
-              <Alert severity="error" >{output.message}</Alert>             
-              </>
-              :output.status === 1 ?
-              <>
+        <CardContent>  
+          {output.status === 0 ?
+            <>
+             <Alert severity="error" >{output.message}</Alert>             
+            </>
+            :output.status === 1 ?
+            <>
               <Alert severity="success" >{output.message}</Alert>           
-              </>
-              :null
-              }          
-              <br/>            
+            </>
+            :null
+          }          
+          <br/>            
           <Grid
             container
             spacing={3}
@@ -290,11 +290,8 @@ const SwitchOrg = props => {
                  </Button>
                  {loading && <CircularProgress size={24} className={classes.buttonProgress} />}
                </div>
-             </> 
-              
-              
-            }  
-     
+             </>               
+            }      
         
       </CardActions>
       </form>
