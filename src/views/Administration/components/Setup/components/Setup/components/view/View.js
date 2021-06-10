@@ -73,8 +73,8 @@ const Edit = props => {
     const columns = [
     { name: "id",label: "ID",options: {filter: false,sort: false,display:false}},   
     { name: "org_name",label: "ORGANIZATION NAME",options: {filter: false,sort: true,display:true}},
-    { name: "country",label: "COUNTRY",options: {filter: false,sort: true,display:true}},
-    { name: "created_at",label: "DATE CREATED",options: {filter: true,sort: false,display:true}},
+    { name: "country",label: "COUNTRY",options: {filter: true,sort: true,display:true}},
+    { name: "created_at",label: "DATE CREATED",options: {filter: false,sort: false,display:true}},
     { name: "created_by",label: "CREATED BY",options: {filter: false,sort: true,display:true}}, 
         
     { name: "",

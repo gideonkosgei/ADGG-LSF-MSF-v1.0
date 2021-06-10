@@ -308,21 +308,7 @@ const GeneralSettings = props => {
                 }}
               />
             </Grid>
-            <Grid
-              item
-              md={6}
-              xs={12}
-            >
-              <TextField
-                fullWidth
-                label="Client"
-                name="client"
-                onChange={handleChange}               
-                value={values.client}
-                variant="outlined"
-                disabled = "true"
-              />
-            </Grid>
+            
 
             <Grid
               item
@@ -341,26 +327,7 @@ const GeneralSettings = props => {
                   shrink: true,
                 }}
               />
-            </Grid>
-            <Grid
-              item
-              md={6}
-              xs={12}
-            >
-              <TextField
-                fullWidth
-                label="level"
-                name="level"
-                onChange={handleChange}               
-                value={values.level}
-                variant="outlined"
-                disabled = "true"
-                InputLabelProps={{
-                  shrink: true,
-                }}
-              />
-            </Grid>           
-           
+            </Grid>            
             
           </Grid>
         </CardContent>

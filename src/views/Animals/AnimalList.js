@@ -24,7 +24,7 @@ const AnimalList = props => {
   const classes = useStyles();
   const [animals, setAnimals] = useState([]);
   const [caption, setCaption] = useState('All');
-  const [ { organization_id }  ] = useContext(authContext);
+  const [ { user_id }  ] = useContext(authContext);
   const animal_categ_id = parseInt(props.match.params.id); 
   const herd_id = parseInt(props.match.params.herd);
   const [isLoading, setIsLoading] = useState(true);
@@ -64,11 +64,11 @@ const AnimalList = props => {
             setAnimals(res);
           }
         });
-      })(endpoint_animal_org,organization_id,1); 
+      })(endpoint_animal_org,user_id,2); 
     return () => {
       mounted = false;
     };
-  }, [organization_id,animal_categ_id,herd_id]);
+  }, [animal_categ_id,herd_id,user_id]);
 
   if (!animals) {
     return null;
