@@ -1098,6 +1098,13 @@ export const endpoint_add_remove_unit_access = {
   headers: headers   
 }; 
 
+// delink farm unit from org unit 
+export const endpoint_delink_farm_unit = {
+  url: `${api}/org/delink-farm-unit`,
+  method: 'PUT',
+  headers: headers   
+}; 
+
 
 
 

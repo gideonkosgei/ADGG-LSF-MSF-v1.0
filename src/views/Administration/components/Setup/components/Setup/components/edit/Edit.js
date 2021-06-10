@@ -357,13 +357,26 @@ const Edit = props => {
     justify="space-between"
     spacing={3}
   >
+    <Grid
+        item
+        md={12}
+        xs={12}
+      >
+      <Typography variant="h6">Important Notes</Typography>
+      <Typography variant="body2">
+        Farm Units are linked to organization units. <br/>
+        An organization unit can have zero(0) or more farm unit(s)<br/>
+        A farm unit can only belong to only one(1) organization unit<br/>        
+        Linked farm unit(s) for the current selected organization unit are listed on the grid below<br/>
+        To Link & Re-link, click the ORG-LINK button below
+      </Typography>
+    </Grid>
     <Grid item>
       <Button
-        color="primary"
-        variant="contained"
+        variant="outlined"  
         onClick={handleClickAddFarm} 
       >
-        Add Farm To Org
+        ORG-FARM LINKING
       </Button>
     </Grid>
 

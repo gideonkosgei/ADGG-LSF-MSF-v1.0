@@ -70,7 +70,8 @@ const Farm = props => {
   const display_option = 0 ; 
 
   async function getallunits(endpoint,desc,account,unit_type,display_option,user) { 
-    setValues([]);    
+    setValues([]); 
+    setIsLoading(true);    
     await  genericFunctionSixParameters(endpoint,desc,account,unit_type,display_option,user)
     .then(response => {  
         setIsLoading(false);          

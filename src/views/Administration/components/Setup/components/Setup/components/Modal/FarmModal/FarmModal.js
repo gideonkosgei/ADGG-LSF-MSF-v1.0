@@ -82,7 +82,7 @@ const FarmModal = props => {
   const [isLoading, setIsLoading] = useState(true);
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
-  const option  =  0;
+  const option  =  2;
   const timer = React.useRef();
 
   const buttonClassname = clsx({
@@ -96,20 +96,20 @@ const FarmModal = props => {
     setData([]);
     setNotes('');
     
-    (async  (endpoint,desc,org,type) => {     
-      await  genericFunctionFourParameters(endpoint,desc,org,type)
+    (async  (endpoint,desc,option,id) => {     
+      await  genericFunctionFourParameters(endpoint,desc,option,id)
       .then(response => {                        
         if (mounted) {            
           setValues(response.payload[0]); 
           setIsLoading(false);                  
         }
       });
-    })(endpoint_farms,'get all farms',option,null);       
+    })(endpoint_farms,'get all farms',option,user_id);       
       
     return () => {
       mounted = false;    
     };
-  }, []); 
+  }, [user_id]); 
 
   if (!open || !values) {
     return null;
@@ -228,7 +228,7 @@ const onClear =() =>  {
                 gutterBottom
                 variant="h3"
               >
-                FARM ALLOCATION
+                FARM LINKING
               </Typography>
 
             </Grid> 

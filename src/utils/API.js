@@ -4220,8 +4220,6 @@ export const UnitAccessAddRemove =  function (config,arr_ids,account_id,user_id,
     "units": arr_ids,
     "action": action
   }; 
-
-  console.log(body);
   
   const options = {
     url:`${config.url}`,
@@ -4238,6 +4236,38 @@ export const UnitAccessAddRemove =  function (config,arr_ids,account_id,user_id,
     .catch(err => reject(err));
   });       
 }
+
+
+
+// delink farm units from org units
+export const delinkFarmUnitsFromOrgUnit =  function (config,farm_id,user_id,org_id) {     
+  const body = {
+    "farm_id": farm_id,
+    "user_id": user_id,
+    "org_id": org_id
+  }; 
+  
+  const options = {
+    url:`${config.url}`,
+    method: config.method,
+    headers: config.headers,
+    data: body  
+  };
+
+  return new Promise((resolve, reject) => {
+    axios(options)
+    .then(res => {           
+        resolve(res.data);
+    })    
+    .catch(err => reject(err));
+  });       
+}
+
+
+
+
+
+
 
 
 

@@ -385,8 +385,8 @@ const Edit = props => {
                   shrink: true,
                 }}
                 inputProps={{
-                  readOnly: true,
-                  disabled: true                
+                  readOnly: Boolean(readOnly),
+                  disabled: Boolean(readOnly)                
                 }}
               />
             </Grid>
