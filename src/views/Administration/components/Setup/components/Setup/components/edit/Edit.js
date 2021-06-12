@@ -7,7 +7,6 @@ import {endpoint_org_update,endpoint_countries,endpoint_orgs} from '../../../../
 import authContext from '../../../../../../../../contexts/AuthContext';
 import {Header} from '../Header';
 import {default as Farms} from '../../../../../../../Farms/components/Farms/components/view'
-
 import { Page } from 'components';
 import { green } from '@material-ui/core/colors';
 import CheckIcon from '@material-ui/icons/Check';

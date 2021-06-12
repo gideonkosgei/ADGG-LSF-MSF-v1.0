@@ -1,15 +1,15 @@
 import React, { useState,useEffect,useContext } from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
-import {Card,Fab,Link,LinearProgress,CircularProgress,Box, CardContent,Typography, Grid, TextField,colors,Button,CardActions,Switch,Tooltip} from '@material-ui/core';
+import {Card,Fab,LinearProgress,CircularProgress,Box, CardContent,Typography, Grid, TextField,colors,Button,CardActions,Switch,Tooltip} from '@material-ui/core';
 import {putHerd,getCountries,getAdminUnits,genericFunctionFourParameters,genericFunctionFiveParameters}   from '../../../../../../utils/API';
-import {endpoint_herd_update,endpoint_countries,endpoint_admin_units,endpoint_farms,endpoint_herd,endpoint_herd_animals} from '../../../../../../configs/endpoints';
+import {endpoint_herd_update,endpoint_countries,endpoint_admin_units,endpoint_farms,endpoint_herd} from '../../../../../../configs/endpoints';
 import authContext from '../../../../../../contexts/AuthContext';
 import {Header} from '../Header';
 import {default as Statistics} from '../../../../../Overview/components/Statistics';
 import {default as AnimalCategorySegmentation} from '../../../../../DashboardAnalytics/components/AnimalCategorySegmentation';
 import {default as BreedDistribution} from '../../../../../DashboardAnalytics/components/BreedDistribution';
-
+import {default as Animals} from '../../../../../Animals'
 import { Page } from 'components';
 import { green } from '@material-ui/core/colors';
 import CheckIcon from '@material-ui/icons/Check';
@@ -19,12 +19,6 @@ import Alert from '@material-ui/lab/Alert';
 import OpenInNewIcon from '@material-ui/icons/OpenInNew';
 import {MetaData}  from '../Modal';
 import moment from 'moment';
-import CustomToolbar from "./CustomToolbar";
-import { Link as RouterLink } from 'react-router-dom';
-import MUIDataTable from "mui-datatables";
-import {MuiThemeProvider } from '@material-ui/core/styles';
-import PerfectScrollbar from 'react-perfect-scrollbar';
-
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -89,7 +83,6 @@ const Edit = props => {
   const [wards, setWards] = useState([]);
   const [villages, setVillages] = useState([]);  
   const [farms, setFarms] = useState([]);
-  const [animals, setAnimals] = useState([]);
   const [readOnly, setReadOnly] = useState(true);
   const [openMetadata, setMetadata] = useState(false); 
  
@@ -98,7 +91,6 @@ const Edit = props => {
   const [output, setOutput] = useState({status:null, message:""}); 
   const option  =  1;
   const [isLoading, setIsLoading] = useState(true);
-  const [isLoadingAnimals, setIsLoadingAnimals] = useState(true);
   const [units, setUnits] = useState({
     unit1: 'Regions',
     unit2: 'District',
@@ -162,18 +154,7 @@ const Edit = props => {
     let mounted_countries = true;
     let mounted_farms = true;
     let mounted = true;
-    let mounted_animals = true;
-
-    // get all animals that belongs to this herd
-    (async  (endpoint,desc,org,herd) => {     
-      await  genericFunctionFourParameters(endpoint,desc,org,herd)
-      .then(response => {                        
-        if (mounted_animals) {   
-          setIsLoadingAnimals(false);          
-          setAnimals(response.payload[0]);                           
-        }
-      });
-    })(endpoint_herd_animals,'get herd animals',organization_id,herd_id); 
+       
 
     (async  (endpoint) => {     
       await  getCountries(endpoint)
@@ -223,8 +204,7 @@ const Edit = props => {
     return () => {   
       mounted_countries = false;  
       mounted_farms = false;  
-      mounted = false; 
-      mounted_animals = false;            
+      mounted = false;            
     };    
   }, [organization_id,herd_id,country_id,user_id]);  
 
@@ -305,66 +285,6 @@ const Edit = props => {
     setMetadata(false);
   }; 
 
-  
-  const columns = [
-    { name: "animal_id",label: "id",options: {filter: false,sort: false,display:false}}, 
-    { name: "registration_date",label: "Reg Date",options: {filter: false,sort: true, display:true,hint:'Registration Date'}} ,
-    { name: "animal_id",label: "ID",options: {filter: false,sort: true,display:true}},    
-    { name: "tag_id",label: "Tag",options: {filter: false,sort: true,display:true}},
-    { name: "animal_name",label: "Name",options: {filter: false,sort: true,display:true}},       
-    { name: "org_id",label: "org_id",options: {filter: false,sort: true,display:false}},
-    { name: "sex_id",label: "sex_id",options: {filter: false,sort: true,display:false}},
-    { name: "sex",label: "Sex",options: {filter: true,sort: true,display:true}},    
-    { name: "farm_id",label: "farm_id",options: {filter: false,sort: true,display:false}},    
-    { name: "animalType",label: "Type",options: {filter: true,sort: true, display:true}},   
-    { name: "dateofBirth",label: "DOB",options: {filter: false,sort: true, display:true}} ,  
-    { name: "main_breed",label: "Breed",options: {filter: true,sort: true, display:true}},  
-    { name: "breedComposition",label: "Breed Comp",options: {filter: false,sort: false, display:true, hint:'Breed Composition'}},
-    
-     
-    { name: "",
-      options: {
-      filter: false,
-      sort: false,  
-      empty:true,    
-      customBodyRender: (value, tableMeta, updateValue) => {
-        return (
-          <Link
-              component={RouterLink}
-              to = {`/management/details/edit/${tableMeta.rowData[0]}`}
-          >
-            <OpenInNewIcon/>
-          </Link>
-          
-        );
-      }
-    }
-  }
-    
-  ];
-
-  const data = animals;  
-
-     const options = {       
-       filter: true,
-       rowsPerPage: 5,       
-       rowsPerPageOptions :[5,10,20,50,100],
-       selectableRows: 'none',      
-       filterType: 'checkbox',
-       responsive: 'stacked',                
-       rowHover: true,       
-       setTableProps: () => {
-        return {
-          padding: "none" ,         
-          size: "small",
-        };
-      }, 
-      customToolbar: () => {
-        return (
-          <CustomToolbar />
-        );
-      }       
-     };
 
   return (
     <Page
@@ -747,35 +667,15 @@ const Edit = props => {
     >
       <BreedDistribution org = {organization_id} level = {1} herd = {herd_id} />
     </Grid> 
+    <Grid
+      item
+      lg={12}
+      xl={12}
+      xs={12}
+    >
+     <Animals HerdIdProp={herd_id}/>
+    </Grid>
   </Grid>
- 
-
-  <Typography
-    component="h2"
-    gutterBottom
-    variant="h4"
-  >
-    <br/>
-    {`HERD ANIMALS - ${values.herd_name}`}    
-  </Typography>
-  <br/> 
-  { isLoadingAnimals  &&  <LinearProgress/>   } 
-  <Card> 
-        <CardContent className={classes.content}>
-          <PerfectScrollbar>           
-            <MuiThemeProvider>                
-              <MUIDataTable
-                title=""
-                data={data}
-                columns={columns}
-                options={options}
-              />
-            </MuiThemeProvider>           
-          </PerfectScrollbar>
-        </CardContent>
-      </Card>
-        
-    
      
    </Page>
   );

@@ -1,4 +1,5 @@
 import React, { useState, useEffect,useContext } from 'react';
+import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import { Page } from 'components';
 import { Results } from './components';
@@ -13,7 +14,7 @@ const useStyles = makeStyles(theme => ({
     width: theme.breakpoints.values.lg,
     maxWidth: '100%',
     margin: '0 auto',
-    padding: theme.spacing(3)
+    paddingTop: theme.spacing(3)
   },
   results: {
     marginTop: theme.spacing(3)
@@ -21,12 +22,31 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const AnimalList = props => {
+  const {HerdIdProp} = props;
   const classes = useStyles();
   const [animals, setAnimals] = useState([]);
-  const [caption, setCaption] = useState('All');
+  const [caption, setCaption] = useState(null);
   const [ { user_id }  ] = useContext(authContext);
-  const animal_categ_id = parseInt(props.match.params.id); 
-  const herd_id = parseInt(props.match.params.herd);
+
+  let animal_categ_id = null;
+  let herd_id = null;
+  let option = null;
+  let id = null;
+
+  if(typeof HerdIdProp ==="undefined"){
+    animal_categ_id = parseInt(props.match.params.id); 
+    herd_id = parseInt(props.match.params.herd);
+    option = 2;
+    id = user_id;   
+
+  } else {
+    animal_categ_id = parseInt(null); 
+    herd_id = parseInt(HerdIdProp);
+    option = 4;
+    id = herd_id;    
+  }  
+
+
   const [isLoading, setIsLoading] = useState(true); 
 
   useEffect(() => {   
@@ -36,8 +56,7 @@ const AnimalList = props => {
         .then(response => {       
           if (mounted) { 
           let filtered = [];
-          setIsLoading(false); 
-           //herd_id: 12740
+          setIsLoading(false);           
 
           if (typeof(animal_categ_id) !='undefined' && isNaN(herd_id) ){
             for (let i = 0; i<response.payload.length; i++){              
@@ -62,12 +81,12 @@ const AnimalList = props => {
             setAnimals(res);
           }
         });
-      })(endpoint_animal,'get animals -> by user',2,user_id); /* RAC of animals */
+      })(endpoint_animal,'get animals -> by user',option,id); /* RAC of animals */
       
     return () => {
       mounted = false;
     };
-  }, [animal_categ_id,herd_id,user_id]);
+  }, [animal_categ_id,herd_id,id,option]);
 
   if (!animals) {
     return null;
@@ -99,6 +118,10 @@ const AnimalList = props => {
       )}
     </Page>
   );
+};
+AnimalList.propTypes = {
+  history: PropTypes.object.isRequired,
+  HerdIdProp: PropTypes.object
 };
 
 export default AnimalList;

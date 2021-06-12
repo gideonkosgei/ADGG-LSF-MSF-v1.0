@@ -103,7 +103,7 @@ const Results = props => {
           <PerfectScrollbar>           
             <MuiThemeProvider>                
               <MUIDataTable
-                title={`Selected Category: ${caption}`}
+                title={caption}
                 data={data}
                 columns={columns}
                 options={options}
