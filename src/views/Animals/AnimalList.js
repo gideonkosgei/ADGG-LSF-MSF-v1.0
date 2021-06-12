@@ -27,8 +27,7 @@ const AnimalList = props => {
   const [ { user_id }  ] = useContext(authContext);
   const animal_categ_id = parseInt(props.match.params.id); 
   const herd_id = parseInt(props.match.params.herd);
-  const [isLoading, setIsLoading] = useState(true);
- 
+  const [isLoading, setIsLoading] = useState(true); 
 
   useEffect(() => {   
     let mounted = true;

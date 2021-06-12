@@ -2,7 +2,7 @@ import React, { useState,useEffect,useContext } from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import {Card,Fab,Link,LinearProgress,CircularProgress,Box, CardContent,Typography, Grid, TextField,colors,Button,CardActions,Switch,Tooltip} from '@material-ui/core';
-import {putHerd,getCountries,getAdminUnits,genericFunctionFiveParameters,genericFunctionFourParameters}   from '../../../../../../utils/API';
+import {putHerd,getCountries,getAdminUnits,genericFunctionFourParameters,genericFunctionFiveParameters}   from '../../../../../../utils/API';
 import {endpoint_herd_update,endpoint_countries,endpoint_admin_units,endpoint_farms,endpoint_herd,endpoint_herd_animals} from '../../../../../../configs/endpoints';
 import authContext from '../../../../../../contexts/AuthContext';
 import {Header} from '../Header';
@@ -196,8 +196,8 @@ const Edit = props => {
     })(endpoint_countries);
 
 
-    (async  (endpoint,desc,option,id,farm) => {     
-      await  genericFunctionFiveParameters(endpoint,desc,option,id,farm)
+    (async  (endpoint,desc,option,id,user) => {     
+      await  genericFunctionFiveParameters(endpoint,desc,option,id,user)
       .then(response => {                        
         if (mounted) {   
           setIsLoading(false);          
@@ -208,7 +208,7 @@ const Edit = props => {
           adminUnits(endpoint_admin_units,response.payload[0][0].ward,4); 
         }
       });
-    })(endpoint_herd,'get herd details',option,herd_id,null); 
+    })(endpoint_herd,'get herd details',option,herd_id,user_id); 
 
    
     (async  (endpoint,desc,option,id) => {     
@@ -226,7 +226,7 @@ const Edit = props => {
       mounted = false; 
       mounted_animals = false;            
     };    
-  }, [organization_id,herd_id,country_id]);  
+  }, [organization_id,herd_id,country_id,user_id]);  
 
   if (!countries || !farms || !values) {
     return null;
@@ -504,7 +504,8 @@ const Edit = props => {
                       disabled: Boolean(readOnly)                
                     }}
                     label="Country"
-                    name="country"   
+                    name="country"
+                    required   
                     value = {values.country}               
                     onChange={handleChange}
                     variant="outlined" select                    

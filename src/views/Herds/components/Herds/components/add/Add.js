@@ -336,6 +336,7 @@ console.log(farms);
                     InputLabelProps={{
                       shrink: true,
                     }}
+                    required
                     label="Country"
                     name="country"                
                     onChange={handleChange}

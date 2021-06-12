@@ -6,7 +6,7 @@ import {Button, Card,Fab,CardActions,CircularProgress, CardContent, LinearProgre
 import { green } from '@material-ui/core/colors';
 import CheckIcon from '@material-ui/icons/Check';
 import SaveIcon from '@material-ui/icons/Save';
-import {getLookups,getHerds,putAnimalDetails,getAnimal,getCountries}   from '../../../../../../utils/API';
+import {getLookups,genericFunctionFiveParameters,putAnimalDetails,getAnimal,getCountries}   from '../../../../../../utils/API';
 import {endpoint_lookup,endpoint_herd,endpoint_animal_update,endpoint_animal,endpoint_countries} from '../../../../../../configs/endpoints';
 import authContext from '../../../../../../contexts/AuthContext';
 import {AnimalDetailsMetaData}  from '../../../Modal';
@@ -196,14 +196,15 @@ const Edit = props => {
         });
       })(endpoint_lookup,'8,14,62,3,83,13,11,69');
 
-      (async  (endpoint,option,id) => {     
-        await  getHerds(endpoint,option,id)
+      (async  (endpoint,desc,option,id,user) => {     
+        await  genericFunctionFiveParameters(endpoint,desc,option,id,user)
         .then(response => {       
           if (mounted_herds) {             
             setHerds(response.payload[0]);               
           }
         });
-      })(endpoint_herd,0,organization_id);
+      })(endpoint_herd,'get all herds',0,user_id,user_id);
+      
 
       (async  (endpoint,id) => {             
         await  getAnimal(endpoint,id)
@@ -226,7 +227,7 @@ const Edit = props => {
       mounted_animal_details = false;
       mounted_countries = false;
     };
-  }, [organization_id,animal_id]); 
+  }, [organization_id,animal_id,user_id]); 
 
   if (!countries || !values || !animal_types || !main_breeds || !breed_composition || !gender || !colors || !sire_types || !entryTypes || !deformaties ||!herds) {
     return null;

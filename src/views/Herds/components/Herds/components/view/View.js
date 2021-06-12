@@ -18,13 +18,13 @@ const useStyles = makeStyles(theme => ({
     width: theme.breakpoints.values.lg,
     maxWidth: '100%',
     margin: '0 auto',
-    padding: theme.spacing(3)
+    paddingTop: theme.spacing(3)
   },
   inner: {
     width: theme.breakpoints.values.lg,
     maxWidth: '100%',
     margin: '0 auto',
-    padding: theme.spacing(3)
+    //padding: theme.spacing(3)
   },
   divider: {
     backgroundColor: colors.grey[300]
@@ -42,42 +42,51 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const Edit = props => {  
-  const {farm } = props; 
+  const {farm} = props; 
   const classes = useStyles();  
   const [values, setValues] = useState([]);
-  const [ {organization_id}  ] = useContext(authContext);
-  const option  =  0;
+  const [ {user_id}  ] = useContext(authContext);
   const [isLoading, setIsLoading] = useState(true); 
+
+  let id =  null;  
+  let option  =  null;
+
+  if (typeof farm === "undefined"){
+    id = user_id;
+    option = 0; 
+  } else {
+    id = farm;
+    option = 2;
+  }
 
   useEffect(() => {     
     let mounted = true;
 
-      (async  (endpoint,desc,option,id,farm_id) => {     
-        await  genericFunctionFiveParameters(endpoint,desc,option,id,farm_id)
+      (async  (endpoint,desc,option,id,user) => {     
+        await  genericFunctionFiveParameters(endpoint,desc,option,id,user)
         .then(response => {                        
           if (mounted) {   
             setIsLoading(false);          
             setValues(response.payload[0]);                 
           }
         });
-      })(endpoint_herd,'get all herds',option,organization_id,farm); 
+      })(endpoint_herd,'get all herds',option,id,user_id); 
       
     return () => {
-      mounted = false;
-           
+      mounted = false;           
     };
-  }, [organization_id,farm]); 
+  }, [id,option,user_id]); 
 
   if (!values) {
     return null;
   }  
  
     const columns = [
-    { name: "id",label: "ID",options: {filter: false,sort: false,display:false}},   
-    { name: "herd_name",label: "HERD NAME",options: {filter: false,sort: true,display:true}},
+    { name: "id",label: "ID",options: {filter: false,sort: false,display:true}},
+    { name: "reg_date",label: "REG DATE",options: {filter: true,sort: false,display:true}},  
     { name: "farm_name",label: "FARM NAME",options: {filter: false,sort: true,display:true}},
-    { name: "farm_code",label: "FARM CODE",options: {filter: false,sort: true,display:true}},
-    { name: "reg_date",label: "REG DATE",options: {filter: true,sort: false,display:true}},
+    { name: "farm_code",label: "FARM CODE",options: {filter: false,sort: true,display:true}}, 
+    { name: "herd_name",label: "HERD NAME",options: {filter: false,sort: true,display:true}},
     { name: "country",label: "COUNTRY",options: {filter: false,sort: true,display:true}}, 
     { name: "region",label: "REGION",options: {filter: false,sort: true,display:true}},  
     { name: "district",label: "DISTRICT",options: {filter:true,sort: true,display:true}}, 

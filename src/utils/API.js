@@ -302,22 +302,6 @@ export const getLookups =  function (config,id) {
 });       
 }
 
-// get lookup values
-export const getHerds =  function (config,option,id) {   
-  const options = {
-    url:`${config.url}/${option}/${id}`,
-    method: config.method,
-    headers: config.headers  
-  } 
- 
-  return new Promise((resolve, reject) => {
-    axios(options)
-    .then(res => {          
-        resolve(res.data);
-    })
-    .catch(err => reject(err));
-});       
-}
 
 // get weight & growth Detaills
   export const getWeights =  function (config,id,option) {   

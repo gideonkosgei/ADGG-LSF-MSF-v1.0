@@ -3,7 +3,7 @@ import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import {Button,Typography,Fab, Card,CardActions,CircularProgress, CardContent, Grid,Divider, TextField,colors,IconButton } from '@material-ui/core';
-import {getLookups,getHerds,postAnimalRegistration,getCountries}   from '../../../../utils/API';
+import {getLookups,genericFunctionFiveParameters,postAnimalRegistration,getCountries}   from '../../../../utils/API';
 import {endpoint_lookup,endpoint_herd,endpoint_animal_add,endpoint_countries} from '../../../../configs/endpoints';
 import authContext from '../../../../contexts/AuthContext';
 import InputAdornment from '@material-ui/core/InputAdornment';
@@ -174,15 +174,16 @@ const AnimalDetails = props => {
         });
       })(endpoint_lookup,'8,14,62,3,83,13,11,69');
 
-      (async  (endpoint,option,id) => {     
-        await  getHerds(endpoint,option,id)
+
+
+      (async  (endpoint,desc,option,id,user) => {     
+        await  genericFunctionFiveParameters(endpoint,desc,option,id,user)
         .then(response => {       
-          if (mounted_herds) { 
-            const data = response.payload[0];           
-            setHerds(data);               
+          if (mounted_herds) {             
+            setHerds(response.payload[0]);               
           }
         });
-      })(endpoint_herd,0,organization_id);
+      })(endpoint_herd,'get all herds',0,user_id,user_id);
       
       
     return () => {
@@ -190,7 +191,7 @@ const AnimalDetails = props => {
       mounted_herds  = false;
       mounted_countries  = false;      
     };
-  }, [organization_id]); 
+  }, [organization_id,user_id]); 
 
   if (!countries || !animal_types || !main_breeds || !breed_composition || !gender || !colors || !sire_types || !entryTypes || !deformaties ||!herds) {
     return null;
