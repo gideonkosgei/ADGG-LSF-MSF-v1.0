@@ -3,7 +3,7 @@ import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import {Card, CardContent, CardHeader, Grid,Divider, TextField,colors } from '@material-ui/core';
-import {getAnimal}   from '../../../../../../utils/API';
+import {genericFunctionFourParameters}   from '../../../../../../utils/API';
 import {endpoint_animal} from '../../../../../../configs/endpoints';
 import {Sidebar} from '../index';
 
@@ -28,7 +28,7 @@ const DetailsView = props => {
   useEffect(() => {     
     let mounted = true;
       (async  (endpoint,id) => {     
-        await  getAnimal(endpoint,id)
+        await  genericFunctionFourParameters(endpoint,id)
         .then(response => {       
           if (mounted) { 
             const data = response.payload[0];            

@@ -59,11 +59,11 @@ const Edit = props => {
 
   if (typeof org === 'undefined') {
     id =  user_id;
-    option = 2; 
+    option = 3; 
     title = "FARMS";   
   } else {
     id =  org;
-    option = 0;    
+    option = 4;    
     title = "LINKED FARMS";   
   }
 
@@ -98,7 +98,6 @@ const Edit = props => {
     }); 
        
   };
-
   useEffect(() => {     
     let mounted = true;
       (async  (endpoint,desc,_option,_id) => {     

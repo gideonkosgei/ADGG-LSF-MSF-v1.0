@@ -99,18 +99,11 @@ export const endpoint_animal_statistics = {
   url: `${api}/animalStats/`,
   method: 'GET',
   headers: headers   
-};  
+};
 
-//get all animals belonging to an organization
-export const endpoint_animal_org = {
-  url: `${api}/animals/org/`,
-  method: 'GET',
-  headers: headers   
-}; 
-
-//get all animal by id
+//get animal(s)
 export const endpoint_animal = {
-  url: `${api}/animal/`,
+  url: `${api}/animal`,
   method: 'GET',
   headers: headers   
 };

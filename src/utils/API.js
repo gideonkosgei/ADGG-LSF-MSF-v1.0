@@ -52,6 +52,7 @@ export const genericFunctionThreeParameters =  function (param1,param2,param3) {
     method: param1.method,
     headers: param1.headers  
   }   
+ 
   return new Promise((resolve, reject) => {
     axios(options)
     .then(res => {                    
@@ -245,40 +246,6 @@ export const getAnimalStats =  function (config,organisation_id,level,herd) {
   return new Promise((resolve, reject) => {
     axios(options)
     .then(res => {          
-        resolve(res.data);
-    })
-    .catch(err => reject(err));
-});       
-}
-
-
-// get all animals that belong to an organization
-export const getAnimalsOrg =  function (config,organisation_id,status) {   
-  const options = {
-    url:`${config.url}${organisation_id}/${status}`,
-    method: config.method,
-    headers: config.headers  
-  } 
-
-  return new Promise((resolve, reject) => {
-    axios(options)
-    .then(res => {          
-        resolve(res.data);
-    })
-    .catch(err => reject(err));
-});       
-}
-
-// get specific animal by ID
-export const getAnimal =  function (config,id) {   
-  const options = {
-    url:`${config.url}${id}`,
-    method: config.method,
-    headers: config.headers  
-  }  
-  return new Promise((resolve, reject) => {
-    axios(options)
-    .then(res => {               
         resolve(res.data);
     })
     .catch(err => reject(err));
@@ -2072,15 +2039,15 @@ export const putHealth =  function (config,event_id,values,user_id) {
 
 
 // new animal registration
-export const postAnimalRegistration =  function (config,org_id,values,user_id,sire,dam) { 
-     
-    const farm_id = null;
+export const postAnimalRegistration =  function (config,org_id,values,user_id,sire,dam) {      
+    
     let {
-      herd_id,main_breed_other,animal_name,animal_type, breed_composition,breed_composition_details,color,
+      farm_id,herd_id,main_breed_other,animal_name,animal_type, breed_composition,breed_composition_details,color,
       color_other,country_of_origin,deformaties,dob,entry_type,hair_sample_id,herd_book_number,
       main_breed,notes,purchase_cost, secondary_breed, secondary_breed_other, sire_type,tag_id
     } = values;
 
+    farm_id = (typeof farm_id === 'undefined' || farm_id ==='')? null:farm_id;
     herd_id = (typeof herd_id === 'undefined' || herd_id ==='')? null:herd_id;
     main_breed_other =  (typeof main_breed_other === 'undefined' || main_breed_other ==='')?null:main_breed_other;
     animal_name =  (typeof animal_name === 'undefined' || animal_name ==='')? null:animal_name; 
@@ -2157,15 +2124,15 @@ export const postAnimalRegistration =  function (config,org_id,values,user_id,si
 
 // new animal registration
 export const putAnimalDetails =  function (config,org_id,values,user_id,animal_id,sire,dam) { 
-     
-  const farm_id = null;
+  
   let {
-    herd_id,main_breed_other,animal_name,animal_type, breed_composition,breed_composition_details,color,
+    farm_id,herd_id,main_breed_other,animal_name,animal_type, breed_composition,breed_composition_details,color,
     color_other,country_of_origin,deformaties,dob,entry_type,hair_sample_id,herd_book_number,
     main_breed,notes,purchase_cost, secondary_breed, secondary_breed_other, sire_type,tag_id,reg_date,entry_date
   } = values;
 
   herd_id = (typeof herd_id === 'undefined' || herd_id ==='' || herd_id==='null' )? null:parseInt(herd_id);
+  farm_id = (typeof farm_id === 'undefined' || farm_id ==='' || farm_id==='null' )? null:parseInt(farm_id);
   main_breed_other =  (typeof main_breed_other === 'undefined' || main_breed_other ==='' || main_breed_other==='null' )?null:main_breed_other;
   animal_name =  (typeof animal_name === 'undefined' || animal_name ==='' || animal_name==='null')? null:animal_name; 
   animal_type =  (typeof animal_type === 'undefined' || animal_type ==='' || animal_type==='null')? null:animal_type; 
@@ -4013,7 +3980,8 @@ export const putHerd =  function (config,values,user_id,org) {
     "farm_id": farm_id,  
     "reg_date": reg_date,
     "org_id": org      
-  };   
+  };  
+
  
   const options = {
     url:`${config.url}`,

@@ -34,21 +34,19 @@ const useStyles = makeStyles(theme => ({
 
 const Results = props => {
   const {animals,caption} = props;
-  const classes = useStyles(); 
+  const classes = useStyles();  
 
-
-
-  const columns = [
-    { name: "animal_id",label: "id",options: {filter: false,sort: false,display:false}},
-    { name: "animal_id",label: "ID",options: {filter: false,sort: true,display:true}},  
+  const columns = [    
+    { name: "animal_id",label: "ID",options: {filter: false,sort: true,display:true}}, 
+    { name: "farm_id",label: "farm_id",options: {filter: false,sort: false,display:false}},  
     { name: "registration_date",label: "Reg Date",options: {filter: false,sort: true, display:true}} ,
     { name: "org_name",label: "Org",options: {filter: true,sort: true,display:true}},
     { name: "farm_name",label: "Farm",options: {filter: true,sort: true,display:true}}, 
+    { name: "farm_code",label: "Farm Code",options: {filter: false,sort: true,display:true}},
     { name: "herd_name",label: "Herd",options: {filter: true,sort: true,}}, 
     { name: "tag_id",label: "Tag",options: {filter: false,sort: true,display:true}},
     { name: "animal_name",label: "Name",options: {filter: false,sort: true,display:true}},
-    { name: "sex",label: "Sex",options: {filter: true,sort: true,display:true}},    
-    { name: "farm_id",label: "farm_id",options: {filter: false,sort: true,display:false}},    
+    { name: "sex",label: "Sex",options: {filter: true,sort: true,display:true}}, 
     { name: "animalType",label: "Type",options: {filter: true,sort: true, display:true}},   
     { name: "dateofBirth",label: "DOB",options: {filter: false,sort: true, display:true}} ,  
     { name: "main_breed",label: "Breed",options: {filter: true,sort: true, display:true}},  
@@ -64,11 +62,10 @@ const Results = props => {
         return (
           <Link
               component={RouterLink}
-              to = {`/management/details/edit/${tableMeta.rowData[0]}`}
+              to = {`/management/details/edit/${tableMeta.rowData[0]}/${tableMeta.rowData[1]}`}
           >
             <OpenInNewIcon/>
           </Link>
-          
         );
       }
     }
@@ -96,8 +93,7 @@ const Results = props => {
         return (
           <CustomToolbar />
         );
-      }  
-      
+      }
      };
 
   return (    

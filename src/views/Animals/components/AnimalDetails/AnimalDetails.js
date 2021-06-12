@@ -3,11 +3,10 @@ import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import {Button,Typography,Fab, Card,CardActions,CircularProgress, CardContent, Grid,Divider, TextField,colors,IconButton } from '@material-ui/core';
-import {getLookups,genericFunctionFiveParameters,postAnimalRegistration,getCountries}   from '../../../../utils/API';
-import {endpoint_lookup,endpoint_herd,endpoint_animal_add,endpoint_countries} from '../../../../configs/endpoints';
+import {getLookups,genericFunctionFourParameters,genericFunctionFiveParameters,postAnimalRegistration,getCountries}   from '../../../../utils/API';
+import {endpoint_lookup,endpoint_farms,endpoint_herd,endpoint_animal_add,endpoint_countries} from '../../../../configs/endpoints';
 import authContext from '../../../../contexts/AuthContext';
 import InputAdornment from '@material-ui/core/InputAdornment';
-import SettingsApplicationsIcon from '@material-ui/icons/SettingsApplications';
 import SearchIcon from '@material-ui/icons/Search';
 import moment from 'moment'; 
 import Alert from '@material-ui/lab/Alert';
@@ -74,7 +73,9 @@ const AnimalDetails = props => {
   const [gender, setGender] = useState([]);
   const [colors, setColors] = useState([]);
   const [sire_types, setSireTypes] = useState([]);
+  const [farms, setFarms] = useState([]);
   const [herds, setHerds] = useState([]);
+  const [allHerds, setAllHerds] = useState([]);
   const [entryTypes, setEntryTypes] = useState([]);
   const [deformaties, setDeformaties] = useState([]);
   const [countries, setCountries] = useState([]);
@@ -98,9 +99,20 @@ const AnimalDetails = props => {
   useEffect(() => {   
     let mounted_lookup = true;
     let mounted_herds = true;
+    let mounted_farms = true;
     let mounted_countries = true;
     sessionStorage.setItem('_sire_id','');
     sessionStorage.setItem('_dam_id','');
+
+    
+    (async  (endpoint,desc,_option,_id) => {     
+      await  genericFunctionFourParameters(endpoint,desc,_option,_id)
+      .then(response => {                        
+        if (mounted_farms) { 
+          setFarms(response.payload[0]);                 
+        }
+      });
+    })(endpoint_farms,'get all farms',3,user_id);
 
     (async  (endpoint) => {     
       await  getCountries(endpoint)
@@ -180,7 +192,8 @@ const AnimalDetails = props => {
         await  genericFunctionFiveParameters(endpoint,desc,option,id,user)
         .then(response => {       
           if (mounted_herds) {             
-            setHerds(response.payload[0]);               
+            setAllHerds(response.payload[0]); 
+                           
           }
         });
       })(endpoint_herd,'get all herds',0,user_id,user_id);
@@ -188,12 +201,13 @@ const AnimalDetails = props => {
       
     return () => {
       mounted_lookup = false;
-      mounted_herds  = false;
+      mounted_herds = false;
+      mounted_farms = false;
       mounted_countries  = false;      
     };
   }, [organization_id,user_id]); 
 
-  if (!countries || !animal_types || !main_breeds || !breed_composition || !gender || !colors || !sire_types || !entryTypes || !deformaties ||!herds) {
+  if (!countries || !farms || !animal_types || !main_breeds || !breed_composition || !gender || !colors || !sire_types || !entryTypes || !deformaties ||!herds) {
     return null;
   }
 
@@ -209,6 +223,16 @@ const AnimalDetails = props => {
     if (event.target.name ==='animal_type'){    
       let selectedSex = ( event.target.value === '1'  || event.target.value === '2'  || event.target.value === '4') ? 2 :1;  
       setSex(selectedSex);      
+    }
+
+    if (event.target.name ==='farm_id'){ 
+      let herd_array = [];
+       for(let i =0; i<allHerds.length; i++){
+         if(parseInt(allHerds[i].farm_id) === parseInt(event.target.value)){
+          herd_array.push(allHerds[i]);
+         }
+       }    
+       setHerds(herd_array);
     }
   };
 
@@ -299,10 +323,81 @@ const AnimalDetails = props => {
             container
             spacing={4}
           >
+
+            <Grid
+              item
+              md={4}
+              xs={12}
+            >
+              <TextField
+                fullWidth
+                InputLabelProps={{
+                  shrink: true,
+                }}               
+                required
+                label="Farm"
+                name="farm_id"
+                onChange={handleChange}                              
+                select
+                // eslint-disable-next-line react/jsx-sort-props
+                SelectProps={{ native: true }}                
+                variant="outlined"
+              >
+                 <option value=""></option>
+                {farms.map( farm => (
+                    <option                      
+                      value={farm.id}
+                    >
+                      {typeof farm.code=== 'undefined'? farm.name : `${farm.name} - ${farm.code}`}
+                    </option>
+                  ))
+                }    
+              
+              
+              </TextField>
+            </Grid>
+
+            { (typeof values.farm_id === "undefined" || values.farm_id === "")? null:
+            
+
+            <Grid
+              item
+              md={2}
+              xs={12}
+            >
+              <TextField
+                fullWidth
+                InputLabelProps={{
+                  shrink: true,
+                }}
+               
+                label="Herd"
+                name="herd_id"
+                onChange={handleChange}                              
+                select
+                // eslint-disable-next-line react/jsx-sort-props
+                SelectProps={{ native: true }}
+                //value={values.timezone}
+                variant="outlined"
+              >
+                 <option value=""></option>
+                {herds.map( herd => (
+                    <option                      
+                      value={herd.id}
+                    >
+                      {herd.herd_name}
+                    </option>
+                  ))
+                } 
+              </TextField>
+            </Grid>
+            }
+  
+    
             
         <Grid
           item
-          md={2}
+          md={4}
           xs={12}
         >
           <TextField
@@ -333,6 +428,58 @@ const AnimalDetails = props => {
             }           
           </TextField>
         </Grid>
+
+        { parseInt(values.entry_type) === 1 ?
+            <Grid
+              item
+              md={2}
+              xs={12}
+            >
+              <TextField
+                fullWidth
+                InputLabelProps={{
+                  shrink: true,
+                }}    
+                          
+                label="Purchase Cost"
+                name="purchase_cost"
+                onChange={handleChange}
+                variant="outlined"
+                type = "number"
+              />
+            </Grid>
+            :null }
+
+<Grid
+              item
+              md={2}
+              xs={12}
+            >
+              <TextField
+                fullWidth
+                InputLabelProps={{
+                  shrink: true,
+                }}    
+                          
+                label="Origin Country "
+                name="country_of_origin"
+                onChange={handleChange}
+                variant="outlined"
+                select                
+                SelectProps={{ native: true }}  
+              >
+                <option value=""></option>
+                {countries.map(country => (
+                      <option                    
+                        value={country.id}
+                      >
+                        {country.name}
+                      </option>
+                    ))
+                }           
+              </TextField>
+            </Grid>
+
    
         <Grid
           item
@@ -420,75 +567,14 @@ const AnimalDetails = props => {
                 onChange={handleChange}
                 required
                 //value={values.name}
-                variant="outlined"
-                InputProps={{
-                  endAdornment: (
-                    <InputAdornment position="end"  >
-                      <IconButton  
-                        edge="end"
-                        variant="outlined"
-                        color="inherit"
-                      >
-                           <SettingsApplicationsIcon /> 
-                      </IconButton>
-                    </InputAdornment>
-                  ),
-                }}
+                variant="outlined"               
                 
               />
             </Grid>
 
              
-            <Grid
-              item
-              md={2}
-              xs={12}
-            >
-              <TextField
-                fullWidth
-                InputLabelProps={{
-                  shrink: true,
-                }}    
-                          
-                label="Origin Country "
-                name="country_of_origin"
-                onChange={handleChange}
-                variant="outlined"
-                select                
-                SelectProps={{ native: true }}  
-              >
-                <option value=""></option>
-                {countries.map(country => (
-                      <option                    
-                        value={country.id}
-                      >
-                        {country.name}
-                      </option>
-                    ))
-                }           
-              </TextField>
-            </Grid>
-
-            { parseInt(values.entry_type) === 1 ?
-            <Grid
-              item
-              md={2}
-              xs={12}
-            >
-              <TextField
-                fullWidth
-                InputLabelProps={{
-                  shrink: true,
-                }}    
-                          
-                label="Purchase Cost"
-                name="purchase_cost"
-                onChange={handleChange}
-                variant="outlined"
-                type = "number"
-              />
-            </Grid>
-            :null }
+            
+            
             <Grid
               item
               md={2}
@@ -508,39 +594,7 @@ const AnimalDetails = props => {
               />
             </Grid>
 
-          <Grid
-              item
-              md={2}
-              xs={12}
-            >
-              <TextField
-                fullWidth
-                InputLabelProps={{
-                  shrink: true,
-                }}
-               
-                label="Herd"
-                name="herd_id"
-                onChange={handleChange}                              
-                select
-                // eslint-disable-next-line react/jsx-sort-props
-                SelectProps={{ native: true }}
-                //value={values.timezone}
-                variant="outlined"
-              >
-                 <option value=""></option>
-                {herds.map( herd => (
-                    <option                      
-                      value={herd.id}
-                    >
-                      {herd.herd_name}
-                    </option>
-                  ))
-                }    
-              
-              
-              </TextField>
-            </Grid>
+          
             <Grid
               item
               md={2}
@@ -566,6 +620,8 @@ const AnimalDetails = props => {
               />
             </Grid>
            
+            
+            
             <Grid
               item
               md={2}
@@ -577,8 +633,8 @@ const AnimalDetails = props => {
                   shrink: true,
                 }}
                
-                label="Color"
-                name="color"
+                label="Breed Composition"
+                name="breed_composition"
                 onChange={handleChange}               
                 select
                 // eslint-disable-next-line react/jsx-sort-props
@@ -587,36 +643,16 @@ const AnimalDetails = props => {
                 variant="outlined"
               > 
                 <option value=""></option>  
-                {colors.map( color => (
-                    <option                      
-                      value={color.id}
-                    >
-                      {color.value}
-                    </option>
-                  ))
-                }               
+                {breed_composition.map( breed_comp => (
+                      <option                        
+                        value={breed_comp.id}
+                      >
+                        {breed_comp.value}
+                      </option>
+                    ))
+                }
               </TextField>
             </Grid>
-            { parseInt(values.color) === -66 ?
-            <Grid
-              item
-              md={2}
-              xs={12}
-            >
-              <TextField
-                fullWidth
-                InputLabelProps={{
-                  shrink: true,
-                }}    
-                          
-                label="Color Other"
-                name="color_other"
-                onChange={handleChange}
-                variant="outlined"
-              />
-            </Grid>
-            :null}
-            
 
 
             <Grid
@@ -669,6 +705,8 @@ const AnimalDetails = props => {
               />
             </Grid>
             : null }
+
+          { parseInt(values.breed_composition) !== 1 ?
             <Grid
               item
               md={2}
@@ -699,6 +737,8 @@ const AnimalDetails = props => {
                 }              
               </TextField>
             </Grid>
+            :null}
+            
             { parseInt(values.secondary_breed) === -66 ?
             <Grid
               item
@@ -719,38 +759,7 @@ const AnimalDetails = props => {
             </Grid>
             :null }
             
-            <Grid
-              item
-              md={2}
-              xs={12}
-            >
-              <TextField
-                fullWidth
-                InputLabelProps={{
-                  shrink: true,
-                }}
-               
-                label="Breed Composition"
-                name="breed_composition"
-                onChange={handleChange}               
-                select
-                // eslint-disable-next-line react/jsx-sort-props
-                SelectProps={{ native: true }}
-                //value={values.timezone}
-                variant="outlined"
-              > 
-                <option value=""></option>  
-                {breed_composition.map( breed_comp => (
-                      <option                        
-                        value={breed_comp.id}
-                      >
-                        {breed_comp.value}
-                      </option>
-                    ))
-                }
-              </TextField>
-            </Grid>
-
+            { parseInt(values.breed_composition) !== 1 ?
             <Grid
               item
               md={4}
@@ -770,6 +779,7 @@ const AnimalDetails = props => {
                 variant="outlined"              
               />
             </Grid>
+            :null}
 
             <Grid
               item
@@ -782,8 +792,8 @@ const AnimalDetails = props => {
                   shrink: true,
                 }}
                
-                label="Deformaties"
-                name="deformaties"
+                label="Color"
+                name="color"
                 onChange={handleChange}               
                 select
                 // eslint-disable-next-line react/jsx-sort-props
@@ -792,16 +802,39 @@ const AnimalDetails = props => {
                 variant="outlined"
               > 
                 <option value=""></option>  
-                {deformaties.map( deformaty => (
-                      <option                        
-                        value={deformaty.id}
-                      >
-                        {deformaty.value}
-                      </option>
-                    ))
-                }
+                {colors.map( color => (
+                    <option                      
+                      value={color.id}
+                    >
+                      {color.value}
+                    </option>
+                  ))
+                }               
               </TextField>
             </Grid>
+
+            { parseInt(values.color) === -66 ?
+            <Grid
+              item
+              md={2}
+              xs={12}
+            >
+              <TextField
+                fullWidth
+                InputLabelProps={{
+                  shrink: true,
+                }}    
+                          
+                label="Color Other"
+                name="color_other"
+                onChange={handleChange}
+                variant="outlined"
+              />
+            </Grid>
+            :null}
+            
+
+            
             <Grid
               item
               md={2}
@@ -901,6 +934,38 @@ const AnimalDetails = props => {
                   ),
                 }}            
               />
+            </Grid>
+
+            <Grid
+              item
+              md={2}
+              xs={12}
+            >
+              <TextField
+                fullWidth
+                InputLabelProps={{
+                  shrink: true,
+                }}
+               
+                label="Deformaties"
+                name="deformaties"
+                onChange={handleChange}               
+                select
+                // eslint-disable-next-line react/jsx-sort-props
+                SelectProps={{ native: true }}
+                //value={values.timezone}
+                variant="outlined"
+              > 
+                <option value=""></option>  
+                {deformaties.map( deformaty => (
+                      <option                        
+                        value={deformaty.id}
+                      >
+                        {deformaty.value}
+                      </option>
+                    ))
+                }
+              </TextField>
             </Grid>
 
             <Grid

@@ -2,8 +2,8 @@ import React, { useState, useEffect,useContext } from 'react';
 import { makeStyles } from '@material-ui/styles';
 import { Page } from 'components';
 import { Results } from './components';
-import {endpoint_animal_org} from '../../configs/endpoints';
-import {getAnimalsOrg}   from '../../utils/API';
+import {endpoint_animal} from '../../configs/endpoints';
+import {genericFunctionFourParameters}   from '../../utils/API';
 import authContext from '../../contexts/AuthContext';
 import { LinearProgress,Typography } from '@material-ui/core';
 
@@ -31,14 +31,13 @@ const AnimalList = props => {
 
   useEffect(() => {   
     let mounted = true;
-    (async  (endpoint,id,status) => {     
-        await  getAnimalsOrg(endpoint,id,status)
+    (async  (endpoint,desc,_option,_id) => {     
+        await   genericFunctionFourParameters(endpoint,desc,_option,_id)
         .then(response => {       
           if (mounted) { 
           let filtered = [];
           setIsLoading(false); 
-         
-          //herd_id: 12740
+           //herd_id: 12740
 
           if (typeof(animal_categ_id) !='undefined' && isNaN(herd_id) ){
             for (let i = 0; i<response.payload.length; i++){              
@@ -63,7 +62,8 @@ const AnimalList = props => {
             setAnimals(res);
           }
         });
-      })(endpoint_animal_org,user_id,2); 
+      })(endpoint_animal,'get animals -> by user',2,user_id); /* RAC of animals */
+      
     return () => {
       mounted = false;
     };

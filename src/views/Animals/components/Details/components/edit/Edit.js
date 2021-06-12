@@ -6,8 +6,8 @@ import {Button, Card,Fab,CardActions,CircularProgress, CardContent, LinearProgre
 import { green } from '@material-ui/core/colors';
 import CheckIcon from '@material-ui/icons/Check';
 import SaveIcon from '@material-ui/icons/Save';
-import {getLookups,genericFunctionFiveParameters,putAnimalDetails,getAnimal,getCountries}   from '../../../../../../utils/API';
-import {endpoint_lookup,endpoint_herd,endpoint_animal_update,endpoint_animal,endpoint_countries} from '../../../../../../configs/endpoints';
+import {getLookups,genericFunctionFiveParameters,genericFunctionFourParameters,putAnimalDetails,getCountries}   from '../../../../../../utils/API';
+import {endpoint_lookup,endpoint_farms,endpoint_herd,endpoint_animal_update,endpoint_animal,endpoint_countries} from '../../../../../../configs/endpoints';
 import authContext from '../../../../../../contexts/AuthContext';
 import {AnimalDetailsMetaData}  from '../../../Modal';
 import OpenInNewIcon from '@material-ui/icons/OpenInNew';
@@ -18,7 +18,6 @@ import {AnimalModal}  from '../../../Modal';
 import { Page } from 'components';
 import {Header} from '../index';
 import Alert from '@material-ui/lab/Alert';
-
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -91,11 +90,14 @@ const Edit = props => {
   const [gender, setGender] = useState([]);
   const [colors, setColors] = useState([]);
   const [sire_types, setSireTypes] = useState([]);
+  const [allHerds, setAllHerds] = useState([]);
   const [herds, setHerds] = useState([]);
+  const [farms, setFarms] = useState([]);
   const [entryTypes, setEntryTypes] = useState([]);
   const [deformaties, setDeformaties] = useState([]);
   const [readOnly, setReadOnly] = useState(true);
   const animal_id  = parseInt(props.match.params.id);
+  const initial_farm_id  = parseInt(props.match.params.farm);
   const [openMetadata, setMetadata] = useState(false);
   const [countries, setCountries] = useState([]);
   const [sex, setSex] = useState();
@@ -120,6 +122,7 @@ const Edit = props => {
   useEffect(() => {   
     let mounted_lookup = true;
     let mounted_herds = true;
+    let mounted_farms = true;
     let mounted_animal_details = true;
     let mounted_countries = true;
     
@@ -200,17 +203,36 @@ const Edit = props => {
         await  genericFunctionFiveParameters(endpoint,desc,option,id,user)
         .then(response => {       
           if (mounted_herds) {             
-            setHerds(response.payload[0]);               
+            setAllHerds(response.payload[0]);  
+            if(typeof initial_farm_id !=="undefined"){
+              let herd_array = [];
+              for(let i =0; i<response.payload[0].length; i++){
+                if(parseInt(response.payload[0][i].farm_id) === initial_farm_id){
+                  herd_array.push(response.payload[0][i]);
+                }
+              }    
+              setHerds(herd_array);
+            }            
           }
         });
       })(endpoint_herd,'get all herds',0,user_id,user_id);
+
+
+      (async  (endpoint,desc,_option,_id) => {     
+        await  genericFunctionFourParameters(endpoint,desc,_option,_id)
+        .then(response => {                        
+          if (mounted_farms) { 
+            setFarms(response.payload[0]);                 
+          }
+        });
+      })(endpoint_farms,'get all farms',3,user_id);
       
 
-      (async  (endpoint,id) => {             
-        await  getAnimal(endpoint,id)
-        .then(response => {       
+      (async  (endpoint,desc,id,option) => {             
+        await  genericFunctionFourParameters(endpoint,desc,id,option)
+        .then(response => {           
           if (mounted_animal_details) { 
-            const data = response.payload[0][0];             
+            const data = response.payload[0];             
             setValues(data);    
             setSex(data.sex)    
             setIsLoading(false);       
@@ -218,18 +240,21 @@ const Edit = props => {
             sessionStorage.setItem('_dam_id',!data.dam_id ? '':data.dam_id);                    
           }
         });
-      })(endpoint_animal,animal_id);
+      })(endpoint_animal,'get animal details -> animal id',3,animal_id); /* option 3 -> get specific animal details */
+
+
       
       
     return () => {
       mounted_lookup = false;
       mounted_herds  = false;
+      mounted_farms  = false;
       mounted_animal_details = false;
       mounted_countries = false;
     };
-  }, [organization_id,animal_id,user_id]); 
+  }, [organization_id,animal_id,user_id,initial_farm_id]); 
 
-  if (!countries || !values || !animal_types || !main_breeds || !breed_composition || !gender || !colors || !sire_types || !entryTypes || !deformaties ||!herds) {
+  if (!countries || !values || !animal_types || !main_breeds || !breed_composition || !gender || !colors || !sire_types || !entryTypes || !deformaties ||!allHerds || !farms) {
     return null;
   }
 
@@ -243,6 +268,16 @@ const Edit = props => {
     if (event.target.name ==='animal_type'){    
       let selectedSex = ( event.target.value === '1'  || event.target.value === '2'  || event.target.value === '4') ? 2 :1;  
       setSex(selectedSex);      
+    }
+
+    if (event.target.name ==='farm_id'){ 
+      let herd_array = [];
+       for(let i =0; i<allHerds.length; i++){
+         if(parseInt(allHerds[i].farm_id) === parseInt(event.target.value)){
+          herd_array.push(allHerds[i]);
+         }
+       }    
+       setHerds(herd_array);
     }
   };
 
@@ -302,7 +337,7 @@ const Edit = props => {
   const handleClose = () => {
     setModalStatus(false);
   };
- 
+
   return (
     <Page
       className={classes.root}
@@ -368,9 +403,88 @@ const Edit = props => {
                 value = {values.registration_date}             
               />
             </Grid>       
+            <Grid
+              item
+              md={4}
+              xs={12}
+            >
+              <TextField
+                fullWidth
+                InputLabelProps={{
+                  shrink: true,
+                }}
+
+                inputProps={{
+                  readOnly: Boolean(readOnly),
+                  disabled: Boolean(readOnly)                
+                }}
+                required
+                label="Farm"
+                name="farm_id"
+                onChange={handleChange}                              
+                select
+                // eslint-disable-next-line react/jsx-sort-props
+                SelectProps={{ native: true }}
+                value = {values.farm_id}
+                variant="outlined"
+              >
+                 <option value=""></option>
+                {farms.map( farm => (
+                    <option                      
+                      value={farm.id}
+                    >
+                      {typeof farm.code=== 'undefined'? farm.name : `${farm.name} - ${farm.code}`}
+                    </option>
+                  ))
+                }    
+              
+              
+              </TextField>
+            </Grid>
+  
+
+          <Grid
+              item
+              md={2}
+              xs={12}
+            >
+              <TextField
+                fullWidth
+                InputLabelProps={{
+                  shrink: true,
+                }}
+
+                inputProps={{
+                  readOnly: Boolean(readOnly),
+                  disabled: Boolean(readOnly)                
+                }}
+               
+                label="Herd"
+                name="herd_id"
+                onChange={handleChange}                              
+                select
+                // eslint-disable-next-line react/jsx-sort-props
+                SelectProps={{ native: true }}
+                value = {values.herd_id}
+                variant="outlined"
+              >
+                 <option value=""></option>
+                {herds.map( herd => (
+                    <option                      
+                      value={herd.id}
+                    >
+                      {herd.herd_name}
+                    </option>
+                  ))
+                }  
+              
+              </TextField>
+            </Grid>
+
+        
         <Grid
           item
-          md={2}
+          md={4}
           xs={12}
         >
           <TextField
@@ -387,7 +501,7 @@ const Edit = props => {
             name="entry_type"
             onChange={handleChange}
             default = "" 
-            required              
+                          
             select
             // eslint-disable-next-line react/jsx-sort-props
             SelectProps={{ native: true }}            
@@ -405,6 +519,67 @@ const Edit = props => {
             }           
           </TextField>
         </Grid>
+        { parseInt(values.entry_type) === 1 ?
+            <Grid
+              item
+              md={2}
+              xs={12}
+            >
+              <TextField
+                fullWidth
+                InputLabelProps={{
+                  shrink: true,
+                }} 
+
+                inputProps={{
+                  readOnly: Boolean(readOnly),
+                  disabled: Boolean(readOnly)                
+                }}   
+                          
+                label="Purchase Cost"
+                name="purchase_cost"
+                onChange={handleChange}
+                variant="outlined"
+                type = "number"
+                value = {values.purchase_cost}
+              />
+            </Grid>
+            :null}
+
+        <Grid
+              item
+              md={2}
+              xs={12}
+            >
+              <TextField
+                fullWidth
+                InputLabelProps={{
+                  shrink: true,
+                }}  
+                inputProps={{
+                  readOnly: Boolean(readOnly),
+                  disabled: Boolean(readOnly)                
+                }}  
+                          
+                label="Origin Country "
+                name="country_of_origin"
+                onChange={handleChange}
+                variant="outlined"
+                value = {values.country_of_origin}select                
+                SelectProps={{ native: true }}  
+              >
+                <option value=""></option>
+                {countries.map(country => (
+                      <option                    
+                        value={country.id}
+                      >
+                        {country.name}
+                      </option>
+                    ))
+                }           
+              </TextField>
+            </Grid>
+  
    
         <Grid
           item
@@ -443,6 +618,7 @@ const Edit = props => {
             }           
           </TextField>
         </Grid>
+
         <Grid
               item
               md={2}
@@ -482,10 +658,8 @@ const Edit = props => {
               
               </TextField>
             </Grid>
-            
 
-    
-            <Grid
+        <Grid
               item
               md={2}
               xs={12}
@@ -508,68 +682,7 @@ const Edit = props => {
                 
               />
             </Grid>
-             
-            <Grid
-              item
-              md={2}
-              xs={12}
-            >
-              <TextField
-                fullWidth
-                InputLabelProps={{
-                  shrink: true,
-                }}  
-                inputProps={{
-                  readOnly: Boolean(readOnly),
-                  disabled: Boolean(readOnly)                
-                }}  
-                          
-                label="Origin Country "
-                name="country_of_origin"
-                onChange={handleChange}
-                variant="outlined"
-                value = {values.country_of_origin}select                
-                SelectProps={{ native: true }}  
-              >
-                <option value=""></option>
-                {countries.map(country => (
-                      <option                    
-                        value={country.id}
-                      >
-                        {country.name}
-                      </option>
-                    ))
-                }           
-              </TextField>
-            </Grid>
-            { parseInt(values.entry_type) === 1 ?
-            <Grid
-              item
-              md={2}
-              xs={12}
-            >
-              <TextField
-                fullWidth
-                InputLabelProps={{
-                  shrink: true,
-                }} 
 
-                inputProps={{
-                  readOnly: Boolean(readOnly),
-                  disabled: Boolean(readOnly)                
-                }}   
-                          
-                label="Purchase Cost"
-                name="purchase_cost"
-                onChange={handleChange}
-                variant="outlined"
-                type = "number"
-                value = {values.purchase_cost}
-              />
-            </Grid>
-            :null}
-            
-            
             <Grid
               item
               md={2}
@@ -595,46 +708,10 @@ const Edit = props => {
               />
             </Grid>
 
-          <Grid
-              item
-              md={2}
-              xs={12}
-            >
-              <TextField
-                fullWidth
-                InputLabelProps={{
-                  shrink: true,
-                }}
-
-                inputProps={{
-                  readOnly: Boolean(readOnly),
-                  disabled: Boolean(readOnly)                
-                }}
-
-               
-                label="Herd"
-                name="herd_id"
-                onChange={handleChange}                              
-                select
-                // eslint-disable-next-line react/jsx-sort-props
-                SelectProps={{ native: true }}
-                value = {values.herd_id}
-                variant="outlined"
-              >
-                 <option value=""></option>
-                {herds.map( herd => (
-                    <option                      
-                      value={herd.id}
-                    >
-                      {herd.herd_name}
-                    </option>
-                  ))
-                }    
-              
-              
-              </TextField>
-            </Grid>
-
+            
+            
+           
+        
             <Grid
               item
               md={2}
@@ -663,6 +740,8 @@ const Edit = props => {
               />
             </Grid>
            
+            
+            
             <Grid
               item
               md={2}
@@ -673,60 +752,33 @@ const Edit = props => {
                 InputLabelProps={{
                   shrink: true,
                 }}
-
-                inputProps={{
-                  readOnly: Boolean(readOnly),
-                  disabled: Boolean(readOnly)                
-                }}
-
-
                
-                label="Color"
-                name="color"
+                label="Breed Composition"
+                name="breed_composition"
                 onChange={handleChange}               
                 select
                 // eslint-disable-next-line react/jsx-sort-props
                 SelectProps={{ native: true }}
-                value = {values.color}
-                variant="outlined"
-              > 
-                <option value=""></option>  
-                {colors.map( color => (
-                    <option                      
-                      value={color.id}
-                    >
-                      {color.value}
-                    </option>
-                  ))
-                }               
-              </TextField>
-            </Grid>
-            { parseInt(values.color) === -66 ?
-            <Grid
-              item
-              md={2}
-              xs={12}
-            >
-              <TextField
-                fullWidth
-                InputLabelProps={{
-                  shrink: true,
-                }} 
-                
+
                 inputProps={{
                   readOnly: Boolean(readOnly),
                   disabled: Boolean(readOnly)                
                 }}
 
-                          
-                label="Color Other"
-                name="color_other"
-                onChange={handleChange}
+                value = {values.breed_composition}
                 variant="outlined"
-                value = {values.color_other}
-              />
+              > 
+                <option value=""></option>  
+                {breed_composition.map( breed_comp => (
+                      <option                        
+                        value={breed_comp.id}
+                      >
+                        {breed_comp.value}
+                      </option>
+                    ))
+                }
+              </TextField>
             </Grid>
-            :null }
             <Grid
               item
               md={2}
@@ -789,7 +841,7 @@ const Edit = props => {
               />
             </Grid>
             :null}
-            
+            { parseInt(values.breed_composition) !== 1 ?
             <Grid
               item
               md={2}
@@ -827,6 +879,8 @@ const Edit = props => {
                 }              
               </TextField>
             </Grid>
+            :null}
+            
             { parseInt(values.secondary_breed) === -66 ?
             
             <Grid
@@ -855,43 +909,7 @@ const Edit = props => {
             </Grid>
             :null}
             
-            <Grid
-              item
-              md={2}
-              xs={12}
-            >
-              <TextField
-                fullWidth
-                InputLabelProps={{
-                  shrink: true,
-                }}
-               
-                label="Breed Composition"
-                name="breed_composition"
-                onChange={handleChange}               
-                select
-                // eslint-disable-next-line react/jsx-sort-props
-                SelectProps={{ native: true }}
-
-                inputProps={{
-                  readOnly: Boolean(readOnly),
-                  disabled: Boolean(readOnly)                
-                }}
-
-                value = {values.breed_composition}
-                variant="outlined"
-              > 
-                <option value=""></option>  
-                {breed_composition.map( breed_comp => (
-                      <option                        
-                        value={breed_comp.id}
-                      >
-                        {breed_comp.value}
-                      </option>
-                    ))
-                }
-              </TextField>
-            </Grid>
+          { parseInt(values.breed_composition) !== 1 ?
 
             <Grid
               item
@@ -919,6 +937,7 @@ const Edit = props => {
                 value = {values.breed_composition_details}             
               />
             </Grid>
+            :null}
 
             <Grid
               item
@@ -930,33 +949,60 @@ const Edit = props => {
                 InputLabelProps={{
                   shrink: true,
                 }}
-               
-                label="Deformaties"
-                name="deformaties"
-                onChange={handleChange}               
-                select
-                // eslint-disable-next-line react/jsx-sort-props
-                SelectProps={{ native: true }}
+
                 inputProps={{
                   readOnly: Boolean(readOnly),
                   disabled: Boolean(readOnly)                
                 }}
-
-                value = {values.deformaties} 
+                label="Color"
+                name="color"
+                onChange={handleChange}               
+                select
+                // eslint-disable-next-line react/jsx-sort-props
+                SelectProps={{ native: true }}
+                value = {values.color}
                 variant="outlined"
               > 
-                <option value=""></option> 
-                {deformaties.map(deformaty => (
+                <option value=""></option>  
+                {colors.map( color => (
                     <option                      
-                      value={deformaty.id}
+                      value={color.id}
                     >
-                      {deformaty.value}
+                      {color.value}
                     </option>
                   ))
                 }               
               </TextField>
             </Grid>
 
+            { parseInt(values.color) === -66 ?
+            <Grid
+              item
+              md={2}
+              xs={12}
+            >
+              <TextField
+                fullWidth
+                InputLabelProps={{
+                  shrink: true,
+                }} 
+                
+                inputProps={{
+                  readOnly: Boolean(readOnly),
+                  disabled: Boolean(readOnly)                
+                }}
+
+                          
+                label="Color Other"
+                name="color_other"
+                onChange={handleChange}
+                variant="outlined"
+                value = {values.color_other}
+              />
+            </Grid>
+            :null }
+
+           
             <Grid
               item
               md={2}
@@ -1063,6 +1109,44 @@ const Edit = props => {
                 value = {sessionStorage.getItem('_dam_id')}                        
               />
             </Grid>
+
+            <Grid
+              item
+              md={2}
+              xs={12}
+            >
+              <TextField
+                fullWidth
+                InputLabelProps={{
+                  shrink: true,
+                }}
+               
+                label="Deformaties"
+                name="deformaties"
+                onChange={handleChange}               
+                select
+                // eslint-disable-next-line react/jsx-sort-props
+                SelectProps={{ native: true }}
+                inputProps={{
+                  readOnly: Boolean(readOnly),
+                  disabled: Boolean(readOnly)                
+                }}
+
+                value = {values.deformaties} 
+                variant="outlined"
+              > 
+                <option value=""></option> 
+                {deformaties.map(deformaty => (
+                    <option                      
+                      value={deformaty.id}
+                    >
+                      {deformaty.value}
+                    </option>
+                  ))
+                }               
+              </TextField>
+            </Grid>
+
 
             <Grid
               item

@@ -218,7 +218,7 @@ const Edit = props => {
           setFarms(response.payload[0]);                         
         }
       });
-    })(endpoint_farms,'get farms',0,organization_id);
+    })(endpoint_farms,'get farms',3,user_id);
 
     return () => {   
       mounted_countries = false;  
