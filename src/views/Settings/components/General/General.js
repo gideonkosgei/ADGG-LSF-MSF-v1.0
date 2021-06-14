@@ -63,8 +63,7 @@ const General = props => {
   if (!profile || !timezones || !countries) {
     return null;
   }
-
-
+  
   return (
     <Grid
       {...rest}
@@ -72,18 +71,41 @@ const General = props => {
       container
       spacing={3}
     >
+     
       <Grid
         item
-        lg={4}
+        lg={5}
         md={6}
         xl={3}
         xs={12}
       >
-        <ProfileDetails profile={profile} />
+        <Grid container >
+      
+          <Grid
+            item
+            lg={12}
+            md={12}
+            xl={12}
+            xs={12}
+          >
+            <ProfileDetails profile={profile} />
+          </Grid>
+          <Grid
+            item
+            lg={12}
+            md={6}
+            xl={9}
+            xs={12}
+          >
+            <AccessShuttle/>
+          </Grid>
+
+        </Grid>
       </Grid>
+
       <Grid
         item
-        lg={8}
+        lg={7}
         md={6}
         xl={9}
         xs={12}
@@ -91,15 +113,7 @@ const General = props => {
         <GeneralSettings profile={profile}  timezones = {timezones} countries ={countries}/>
       </Grid>
 
-      <Grid
-        item
-        lg={12}
-        md={6}
-        xl={9}
-        xs={12}
-      >
-        <AccessShuttle/>
-      </Grid>
+     
       <Grid
         item        
         xs={12}

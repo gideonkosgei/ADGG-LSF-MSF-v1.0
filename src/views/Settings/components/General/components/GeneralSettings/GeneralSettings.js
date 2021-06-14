@@ -48,11 +48,7 @@ const GeneralSettings = props => {
     unit3: getUnits.unit3_name,
     unit4: getUnits.unit4_name
   });
-
-
-
- 
-
+  
   const handleChange = event => {
     event.persist();
     setValues({
@@ -95,7 +91,7 @@ const GeneralSettings = props => {
       className={clsx(classes.root, className)}
     >
       <form onSubmit={handleSubmit}>
-        <CardHeader title="Profile" />
+        <CardHeader title="ACCOUNT INFO" />
         <Divider />
         <CardContent>
           <Grid

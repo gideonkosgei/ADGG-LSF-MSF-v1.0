@@ -4,7 +4,7 @@ import clsx from 'clsx';
 import PhotoCameraIcon from '@material-ui/icons/PhotoCamera';
 import { makeStyles } from '@material-ui/styles';
 import {
-  Card,Box,
+  Card,Box,CardHeader,Divider,
   CardContent,
   CardActions,
   Avatar,
@@ -160,7 +160,10 @@ const ProfileDetails = props => {
       className={clsx(classes.root, className)}
     >
       <form id ='event' onSubmit={handleSubmit} >
+      <CardHeader title="ACCOUNT AVATAR" />
+      <Divider />
       <CardContent className={classes.content}>
+    
         {output.status === 0 ?
             <>
             <Alert severity="error" >{output.message}</Alert>        

@@ -272,8 +272,7 @@ const Edit = props => {
 
     (async  (endpoint,id,values,user_id) => {     
       await  updateInsemination(endpoint,id,values,user_id)
-      .then((response) => {  
-        console.log(response);
+      .then((response) => {        
         setOutput({status:null, message:''});      
         timer.current = window.setTimeout(() => {
           setSuccess(true);
@@ -292,7 +291,6 @@ const Edit = props => {
 
     })(endpoint_insemination_update,event_id,values,user_id);    
   };
-  
   
 
   const handleSwitchChange = event => {

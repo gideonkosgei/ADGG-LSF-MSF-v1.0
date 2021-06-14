@@ -8,7 +8,7 @@ import SuccessSnackbar from '../../../../components/SuccessSnackbar';
 import ErrorSnackbar from '../../../../components/ErrorSnackbar';
 
 import { makeStyles } from '@material-ui/styles';
-import {Card,Typography,Fab,CircularProgress,LinearProgress, CardContent, CardActions, Grid, Button, TextField, colors} from '@material-ui/core';
+import {Card,Divider,CardHeader,Typography,Fab,CircularProgress,LinearProgress, CardContent, CardActions, Grid, Button, TextField, colors} from '@material-ui/core';
 import { Page } from 'components';
 import { green } from '@material-ui/core/colors';
 import CheckIcon from '@material-ui/icons/Check';
@@ -20,7 +20,7 @@ const useStyles = makeStyles(theme => ({
     width: theme.breakpoints.values.lg,
     maxWidth: '100%',
     margin: '0 auto',
-    padding: theme.spacing(3)
+    paddingTop: theme.spacing(2)
   },
   saveButton: {
     color: theme.palette.white,
@@ -33,7 +33,7 @@ const useStyles = makeStyles(theme => ({
     width: theme.breakpoints.values.lg,
     maxWidth: '100%',
     margin: '0 auto',
-    padding: theme.spacing(3)
+    //padding: theme.spacing(3)
   },
   divider: {
     backgroundColor: colors.grey[300]
@@ -69,7 +69,6 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const SwitchOrg = props => {
-  const { className, ...rest } = props;
   const classes = useStyles();
   const [values, setValues] = useState([]);
   const [orgs, setOrgs] = useState([]);
@@ -171,23 +170,13 @@ const SwitchOrg = props => {
       className={classes.root}
       title="Switch Org"
     >
-      <Typography
-        component="h1"
-        gutterBottom
-        variant="h3"
-      >
-        ACCESS SHUTTLE
-      </Typography> 
-      <br/>    
-      { isLoading  &&
-       
+      { isLoading  &&       
         <LinearProgress/>
       } 
-    <Card
-      {...rest}
-      className={clsx(classes.root, className)}
-    > 
+    <Card > 
       <form  onSubmit={handleSubmit}>
+      <CardHeader title="ACCESS SHUTTLE" />
+        <Divider />
         <CardContent>  
           {output.status === 0 ?
             <>
@@ -201,8 +190,7 @@ const SwitchOrg = props => {
           }          
           <br/>            
           <Grid
-            container
-            spacing={3}
+            container            
           >
 
             <Grid
@@ -216,13 +204,14 @@ const SwitchOrg = props => {
               >
                 Current Context <b> {`${organization}`} </b>
                 <Typography variant="h6">Important Note(s)</Typography>
-                <Typography variant="body2">
-                  A user can be given access to more that one organization. This facility is controlled by the admin.<br/>   
-                  A listing of the orgs the user has access to will appear on the drop down list<br/>              
-                  A user can only access one org at a time and changes only take effect on the next login                               
+                {/*
+                     A user can be given access to more that one organization. This facility is controlled by the admin.<br/>   
+                     A listing of the orgs the user has access to will appear on the drop down list<br/>  
+                */ 
+                }
+                <Typography variant="body2">                          
+                  A user can only access one org at a time. Changes only take effect on the next login                               
                 </Typography> 
-                    
-                <br/>            
                 {(orgs.length<1) ? "User not allowed to switch organization/farms. Contact Admin!" : 
                 null
                 }

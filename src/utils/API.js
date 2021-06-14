@@ -133,15 +133,13 @@ export const authenticate =  function (config,username,password) {
     }).catch(err => reject(err));
 });       
 }
-
-
 // user profile  
 export const getProfileDetails =  function (config,user_id) {   
   const options = {
     url: `${config.url}${user_id}`,
     method: config.method,
     headers: config.headers    
-  }  
+  } 
   return new Promise((resolve, reject) => {
     axios(options)
     .then(res => {              
@@ -794,7 +792,7 @@ export const updateInsemination =  function (config,event_id,values,user_id) {
     "ai_cost": cost,      
     "field_agent_id": field_agent_id,
     "updated_by": user_id
-};
+  };
 
  
   const options = {
@@ -2799,10 +2797,7 @@ export const putOrgFarmAllocation =  function (config,org,farm,user,) {
     method: config.method,
     headers: config.headers,
     data: body  
-  }; 
-
-  console.log(options);
-
+  };
   return new Promise((resolve, reject) => {
     axios(options)
     .then(res => {           
