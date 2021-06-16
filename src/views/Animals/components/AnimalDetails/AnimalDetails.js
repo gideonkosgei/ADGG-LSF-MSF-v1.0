@@ -348,7 +348,7 @@ const AnimalDetails = props => {
                     <option                      
                       value={farm.id}
                     >
-                      {typeof farm.code === 'undefined' || farm.code === 'null' ? farm.name : `${farm.name} - ${farm.code}`}
+                      {farm.farm_name_code}
                     </option>
                   ))
                 }    
