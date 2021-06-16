@@ -29,8 +29,7 @@ const Health = props => {
   const { match, history } = props;
   const classes = useStyles();
   const { tab } = match.params; 
-  const animal_tag  = sessionStorage.getItem('animal_tag');
-  const animal_name  = sessionStorage.getItem('animal_name');  
+  const animal_tag  = sessionStorage.getItem('animal_tag'); 
 
   const handleTabsChange = (event, value) => {
     history.push(value);
@@ -62,7 +61,7 @@ const Health = props => {
         gutterBottom
         variant="h3"
       >
-       {`HEALTH RECORDS  - ${animal_name}(${animal_tag}) `}
+       {`HEALTH RECORDS : ${animal_tag}`}
       </Typography>
       <br/>
       <Header />      

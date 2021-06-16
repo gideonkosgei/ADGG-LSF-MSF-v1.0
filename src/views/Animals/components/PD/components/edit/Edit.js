@@ -82,8 +82,7 @@ const Edit = props => {
   const [readOnly, setReadOnly] = useState(true);
   const [openMetadata, setMetadata] = useState(false);  
   const event_id  = localStorage.getItem('pd_event_id'); 
-  const animal_tag  = sessionStorage.getItem('animal_tag');
-  const animal_name  = sessionStorage.getItem('animal_name');
+  const animal_tag  = sessionStorage.getItem('animal_tag');  
   const [agents, setAgents] = useState([]);
   const option  =  0;
   const [isLoading, setIsLoading] = useState(true);
@@ -232,7 +231,7 @@ const Edit = props => {
       gutterBottom
       variant="h3"
       >
-       { readOnly ? `PREGNANCY DIAGNOSIS - ${animal_name}(${animal_tag})` :`EDIT PREGNANCY DIAGNOSIS - ${animal_name}(${animal_tag})`} 
+       { readOnly ? `PREGNANCY DIAGNOSIS : ${animal_tag} ` :`EDIT PREGNANCY DIAGNOSIS : ${animal_tag}`} 
       </Typography>
       <br/>         
       <Header />

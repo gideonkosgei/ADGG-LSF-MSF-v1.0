@@ -46,8 +46,7 @@ const Edit = props => {
   const classes = useStyles(); 
   const [values, setValues] = useState([]);
   const animal_id  = localStorage.getItem('animal_id');  
-  const animal_tag  = sessionStorage.getItem('animal_tag');
-  const animal_name  = sessionStorage.getItem('animal_name');
+  const animal_tag  = sessionStorage.getItem('animal_tag');  
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {     
@@ -138,7 +137,7 @@ const Edit = props => {
         gutterBottom
         variant="h3"
       >
-       {`CALVING RECORDS  - ${animal_name}(${animal_tag}) `}
+       {`CALVING RECORDS : ${animal_tag}`}
       </Typography>
       { isLoading  &&
         <LinearProgress/>

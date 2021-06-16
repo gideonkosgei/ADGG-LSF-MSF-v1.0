@@ -131,7 +131,7 @@ const Edit = props => {
         gutterBottom
         variant="h3"
       >
-       {`INSEMINATION RECORDS  - ${animal_name}(${animal_tag}) `}
+       {`INSEMINATION RECORDS : ${animal_tag}`}
       </Typography>
       { isLoading  &&
         <LinearProgress/>

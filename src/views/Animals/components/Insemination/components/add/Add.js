@@ -84,8 +84,7 @@ const Edit = props => {
   const [agents, setAgents] = useState([]);
   const option  =  0;
   const animal_id  = localStorage.getItem('animal_id');
-  const animal_tag  = sessionStorage.getItem('animal_tag');
-  const animal_name  = sessionStorage.getItem('animal_name');
+  const animal_tag  = sessionStorage.getItem('animal_tag');  
   const [straws, setStraws] = useState([]);
   const [countries, setCountries] = useState([]);
   const [override, setOverride] = useState(false);
@@ -302,7 +301,7 @@ const Edit = props => {
       gutterBottom
       variant="h3"
       >
-       {`NEW INSEMINATION RECORD - ${animal_name}(${animal_tag}) `}
+       {`NEW INSEMINATION RECORD : ${animal_tag}`}
       </Typography>
       <br/> 
       <Header />

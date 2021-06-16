@@ -92,8 +92,7 @@ const Edit = props => {
   }); 
   
   const animal_id  = localStorage.getItem('animal_id');
-  const animal_tag  = sessionStorage.getItem('animal_tag');
-  const animal_name  = sessionStorage.getItem('animal_name');
+  const animal_tag  = sessionStorage.getItem('animal_tag');  
 
   useEffect(() => {   
     let mounted_lookup = true;
@@ -230,7 +229,7 @@ const Edit = props => {
       gutterBottom
       variant="h3"
       >
-       {`NEW PREGNANCY DIAGNOSIS RECORD - ${animal_name}(${animal_tag}) `}
+       {`NEW PREGNANCY DIAGNOSIS RECORD : ${animal_tag}`}
       </Typography>
       <br/>   
       <Header />

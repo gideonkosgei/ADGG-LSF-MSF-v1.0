@@ -77,7 +77,6 @@ const Edit = props => {
   const [limitParameters, setBodyLimitParameters] = useState([]);  
   const animal_id  = localStorage.getItem('animal_id');
   const animal_tag  = sessionStorage.getItem('animal_tag');
-  const animal_name  = sessionStorage.getItem('animal_name');
   const  dob = sessionStorage.getItem('animal_dob'); 
   const is_calf = parseInt(sessionStorage.getItem('animal_type')) === 3 || parseInt(sessionStorage.getItem('animal_type')) === 4 ? true : false;
   const [loading, setLoading] = useState(false);
@@ -216,7 +215,7 @@ const Edit = props => {
       gutterBottom
       variant="h3"
       >
-        {`NEW WEIGHT & GROWTH RECORD  - ${animal_name}(${animal_tag}) `}
+        {`NEW WEIGHT & GROWTH RECORD : ${animal_tag}`}
       </Typography>
       <br/>           
       <Header />

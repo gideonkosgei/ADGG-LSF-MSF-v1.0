@@ -80,8 +80,7 @@ const Edit = props => {
   const [openMetadata, setMetadata] = useState(false); 
   const [limitParameters, setBodyLimitParameters] = useState([]);   
   const event_id  = localStorage.getItem('event_id');
-  const animal_tag  = sessionStorage.getItem('animal_tag');
-  const animal_name  = sessionStorage.getItem('animal_name');  
+  const animal_tag  = sessionStorage.getItem('animal_tag'); 
   const is_calf = parseInt(sessionStorage.getItem('animal_type')) === 3 || parseInt(sessionStorage.getItem('animal_type')) === 4 ? true : false;
   const [isLoading, setIsLoading] = useState(true);
   const [loading, setLoading] = useState(false);
@@ -244,7 +243,7 @@ const Edit = props => {
       gutterBottom
       variant="h3"
       >
-      { readOnly ? `WEIGHT & GROWTH  - ${animal_name}(${animal_tag})`:`EDIT WEIGHT & GROWTH -${animal_name}(${animal_tag})` }
+      { readOnly ? `WEIGHT & GROWTH : ${animal_tag}`:`EDIT WEIGHT & GROWTH : ${animal_tag}` }
       </Typography>
       <br/>         
       <Header />

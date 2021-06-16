@@ -96,7 +96,6 @@ const Edit = props => {
   const [agents, setAgents] = useState([]); 
   const record_id  = localStorage.getItem('calving_event_id'); 
   const animal_tag  = sessionStorage.getItem('animal_tag');
-  const animal_name  = sessionStorage.getItem('animal_name');
   const option  =  0;
   const [isLoading, setIsLoading] = useState(true);
   const [output, setOutput] = useState({status:null, message:""}); 
@@ -327,7 +326,7 @@ const Edit = props => {
       gutterBottom
       variant="h3"
       >
-       {`CALVING RECORD - ${animal_name}(${animal_tag}) `}
+       {`CALVING RECORD : ${animal_tag}`}
       </Typography>
       <br/>         
       <Header />

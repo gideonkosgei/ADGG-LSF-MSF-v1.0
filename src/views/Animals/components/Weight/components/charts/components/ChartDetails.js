@@ -25,8 +25,7 @@ const ChartDetails = props => {
   const {className, ...rest } = props;   
   const classes = useStyles(); 
   
-  const animal_tag  = sessionStorage.getItem('animal_tag');
-  const animal_name  = sessionStorage.getItem('animal_name');
+  const animal_tag  = sessionStorage.getItem('animal_tag');  
  
   useEffect(() => { 
     return () => {          
@@ -38,7 +37,7 @@ const ChartDetails = props => {
       {...rest}
       className={clsx(classes.root, className)}
     >           
-        <CardHeader title= {`WEIGHT & GROWTH CHARTS - ${animal_name}(${animal_tag}) `}/> 
+        <CardHeader title= {`WEIGHT & GROWTH CHARTS : ${animal_tag}`}/> 
         <Divider />
         <CardContent> 
           <Grid container spacing={1} justify="center">            

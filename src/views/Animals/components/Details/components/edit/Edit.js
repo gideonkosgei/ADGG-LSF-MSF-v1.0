@@ -348,7 +348,7 @@ const Edit = props => {
         gutterBottom
         variant="h3"
       >
-       {`ANIMAL RECORD  - ${values.animal_name}(${values.tag_id}) `}
+       { `ANIMAL DETAILS : ${values.tag_id}`}
       </Typography>
       <br/> 
       <Header />
@@ -698,20 +698,13 @@ const Edit = props => {
                   readOnly: Boolean(readOnly),
                   disabled: Boolean(readOnly)                
                 }}
-                required
-               
                 label="Animal Name"
                 name="animal_name"
                 onChange={handleChange}
                 variant="outlined" 
                 value = {values.animal_name}   
               />
-            </Grid>
-
-            
-            
-           
-        
+            </Grid>        
             <Grid
               item
               md={2}
@@ -739,9 +732,6 @@ const Edit = props => {
                 value = {values.dob}             
               />
             </Grid>
-           
-            
-            
             <Grid
               item
               md={2}

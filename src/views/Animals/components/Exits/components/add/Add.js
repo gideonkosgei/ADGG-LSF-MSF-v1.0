@@ -76,7 +76,6 @@ const Edit = props => {
   const [exitTypes, setExitTypes] = useState([]);   
   const animal_id  = localStorage.getItem('animal_id');
   const animal_tag  = sessionStorage.getItem('animal_tag');
-  const animal_name  = sessionStorage.getItem('animal_name');
   const [countries, setCountries] = useState([]);
   const [regions, setRegions] = useState([]);
   const [districts, setDistricts] = useState([]);
@@ -258,7 +257,7 @@ const Edit = props => {
       gutterBottom
       variant="h3"
       >
-       {`EXIT/DISPOSAL - ${animal_name}(${animal_tag}) `}
+       {`EXIT/DISPOSAL : ${animal_tag}`}
       </Typography>
       <br/>        
       <Header />

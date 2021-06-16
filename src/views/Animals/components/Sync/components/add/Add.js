@@ -88,8 +88,7 @@ const Edit = props => {
   const timer = React.useRef();
   
   const animal_id  = localStorage.getItem('animal_id');
-  const animal_tag  = sessionStorage.getItem('animal_tag');
-  const animal_name  = sessionStorage.getItem('animal_name');
+  const animal_tag  = sessionStorage.getItem('animal_tag');  
   const option  =  0;
 
   
@@ -233,7 +232,7 @@ const Edit = props => {
       gutterBottom
       variant="h3"
       >
-       {`NEW SYNCHRONIZATION RECORD - ${animal_name}(${animal_tag}) `}
+       {`NEW SYNCHRONIZATION RECORD : ${animal_tag}`}
       </Typography>
       <br/>         
       <Header />

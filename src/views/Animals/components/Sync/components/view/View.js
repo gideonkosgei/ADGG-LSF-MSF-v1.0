@@ -40,7 +40,8 @@ const Edit = props => {
   const [values, setValues] = useState([]);
   const animal_id  = localStorage.getItem('animal_id');
   const animal_tag  = sessionStorage.getItem('animal_tag');
-  const animal_name  = sessionStorage.getItem('animal_name'); 
+  const animal_name  = sessionStorage.getItem('animal_name');
+  
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {     
@@ -132,7 +133,7 @@ const Edit = props => {
           gutterBottom
           variant="h3"
         >
-        {`SYNCHRONIZATION RECORDS  - ${animal_name}(${animal_tag}) `}
+        {`SYNCHRONIZATION RECORDS : ${animal_tag}`}
         </Typography>
         { isLoading  &&
           <LinearProgress/>

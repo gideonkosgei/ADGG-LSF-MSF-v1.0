@@ -84,8 +84,7 @@ const Edit = props => {
   const [readOnly, setReadOnly] = useState(true);
   const [openMetadata, setMetadata] = useState(false);   
   const event_id  = localStorage.getItem('insemination_event_id');   
-  const animal_tag  = sessionStorage.getItem('animal_tag');
-  const animal_name  = sessionStorage.getItem('animal_name');  
+  const animal_tag  = sessionStorage.getItem('animal_tag');  
   const [agents, setAgents] = useState([]);
   const option_agent = 0;
   const [countries, setCountries] = useState([]);
@@ -316,7 +315,7 @@ const Edit = props => {
       gutterBottom
       variant="h3"
       >
-       { readOnly ? `INSEMINATION - ${animal_name}(${animal_tag})` :`EDIT INSEMINATION RECORD - ${animal_name}(${animal_tag})`} 
+       { readOnly ? `INSEMINATION : ${animal_tag}` :`EDIT INSEMINATION RECORD : ${animal_tag}`} 
       </Typography>
       <br/>         
       <Header />

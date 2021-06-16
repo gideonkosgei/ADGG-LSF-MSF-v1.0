@@ -84,7 +84,6 @@ const Edit = props => {
   const event_id  = sessionStorage.getItem('milking_event_id'); 
   const [ { organization_id }  ] = useContext(authContext); 
   const animal_tag  = sessionStorage.getItem('animal_tag');
-  const animal_name  = sessionStorage.getItem('animal_name');
   const [isLoading, setIsLoading] = useState(true);
   const [output, setOutput] = useState({status:null, message:""}); 
   const [loading, setLoading] = useState(false);
@@ -305,9 +304,8 @@ const Edit = props => {
   const handleQualitySwitchChange = event => {
     event.persist();
     setQualityFieldsView(!quality_fields_view);   
-  };  
-  
-console.log(values);
+  }; 
+
   return (
     <Page
       className={classes.root}
@@ -318,7 +316,7 @@ console.log(values);
       gutterBottom
       variant="h3"
       >
-      { readOnly ? `MILKING RECORD - ${animal_name}(${animal_tag})`:`EDIT MILKING RECORD - ${animal_name}(${animal_tag})` }
+      { readOnly ? `MILKING RECORD : ${animal_tag}`:`EDIT MILKING RECORD : ${animal_tag}` }
       </Typography>
       <br/>         
       <Header />

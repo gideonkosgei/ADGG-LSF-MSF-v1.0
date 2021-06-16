@@ -348,7 +348,7 @@ const AnimalDetails = props => {
                     <option                      
                       value={farm.id}
                     >
-                      {typeof farm.code=== 'undefined'? farm.name : `${farm.name} - ${farm.code}`}
+                      {typeof farm.code === 'undefined' || farm.code === 'null' ? farm.name : `${farm.name} - ${farm.code}`}
                     </option>
                   ))
                 }    
@@ -450,7 +450,7 @@ const AnimalDetails = props => {
             </Grid>
             :null }
 
-<Grid
+            <Grid
               item
               md={2}
               xs={12}
@@ -584,9 +584,7 @@ const AnimalDetails = props => {
                 fullWidth
                 InputLabelProps={{
                   shrink: true,
-                }}
-                required
-               
+                }}               
                 label="Animal Name"
                 name="animal_name"
                 onChange={handleChange}
