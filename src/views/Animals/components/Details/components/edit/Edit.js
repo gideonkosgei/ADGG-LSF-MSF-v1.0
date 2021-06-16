@@ -117,7 +117,7 @@ const Edit = props => {
   sessionStorage.setItem('animal_name', values.animal_name); 
   sessionStorage.setItem('animal_dob', values.dob); 
   sessionStorage.setItem('animal_type', values.animal_type); 
-  
+  sessionStorage.setItem('farm_id', values.farm_id);
 
   useEffect(() => {   
     let mounted_lookup = true;
@@ -233,7 +233,8 @@ const Edit = props => {
         .then(response => {           
           if (mounted_animal_details) { 
             const data = response.payload[0];             
-            setValues(data);    
+            setValues(data); 
+            sessionStorage.setItem('farm_id', data.farm_id);   
             setSex(data.sex)    
             setIsLoading(false);       
             sessionStorage.setItem('_sire_id',!data.sire_id ? '':data.sire_id);
@@ -433,7 +434,7 @@ const Edit = props => {
                     <option                      
                       value={farm.id}
                     >
-                      {typeof farm.code=== 'undefined'? farm.name : `${farm.name} - ${farm.code}`}
+                      { (typeof farm.code === 'undefined' || farm.code === '' ) ? farm.name : `${farm.name}:${farm.code}`}
                     </option>
                   ))
                 }    

@@ -24,6 +24,7 @@ const Header = props => {
   const {className, ...rest } = props; 
   const classes = useStyles();
   const animal_id  = localStorage.getItem('animal_id');
+  const farm_id  = sessionStorage.getItem('farm_id');  
   const [values, setValues] = useState({ });
 
   useEffect(() => {     
@@ -59,7 +60,7 @@ const Header = props => {
                 className={classes.button}
                 startIcon={<PermIdentityIcon />}
               >
-                <Link style={{ textDecoration: 'none',textTransform: 'none' }} component = {RouterLink} to = {`/management/details/edit/${animal_id}`}>
+                <Link style={{ textDecoration: 'none',textTransform: 'none' }} component = {RouterLink} to = {`/management/details/edit/${animal_id}/${farm_id}`}>
                   Bio
                 </Link>
               </Button>
