@@ -434,7 +434,7 @@ const Edit = props => {
                     <option                      
                       value={farm.id}
                     >
-                      { (typeof farm.code === 'undefined' || farm.code === '' ) ? farm.name : `${farm.name}:${farm.code}`}
+                      {farm.farm_name_code}
                     </option>
                   ))
                 }    
