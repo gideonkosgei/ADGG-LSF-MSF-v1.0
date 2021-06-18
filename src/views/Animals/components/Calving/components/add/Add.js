@@ -670,8 +670,7 @@ const Edit = props => {
                         InputLabelProps={{
                           shrink: true,
                         }}
-                        required = {parseInt(values.calving_status) ===1 ? true: false}
-                       
+                        required = {parseInt(values.calving_status) ===1 ? true: false}                       
                         label="Calf Tag ID"
                         name="calf_tag_id"                
                         onChange={handleChange}
@@ -690,9 +689,7 @@ const Edit = props => {
                       fullWidth
                       InputLabelProps={{
                         shrink: true,
-                      }}
-                      required = {parseInt(values.calving_status) ===1 ? true: false}
-                     
+                      }} 
                       label="Calf Name"
                       name="calf_name"                
                       onChange={handleChange}
@@ -1145,8 +1142,7 @@ const Edit = props => {
                             fullWidth
                             InputLabelProps={{
                               shrink: true,
-                            }}
-                            required = {parseInt(values.calving_status2) ===1 ? true: false}
+                            }}                         
                            
                             label="Calf Name"
                             name="calf_name2"                

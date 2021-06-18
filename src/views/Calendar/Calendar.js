@@ -104,31 +104,28 @@ const Calendar = () => {
   });
   
 
-  useEffect(() => {     
-    let mounted = true;
-      (async  (endpoint,org_id,step,user_id) => {     
-        await  getCalenderItems(endpoint,org_id,step,user_id)
-        .then(response => {                        
-          if (mounted) {                       
-            setEvents(response.payload);                 
-          }
-        });
-      })(endpoint_calender_items,organization_id); 
-      
-    return () => {
-      mounted = false;
-           
-    };
-  }, [organization_id]);
-
-
   useEffect(() => {
+    let mounted = true;
     const calendarApi = calendarRef.current.getApi();
     const newView = mobileDevice ? 'listWeek' : 'dayGridMonth';
-
     calendarApi.changeView(newView);
     setView(newView);
-  }, [mobileDevice]);
+
+    (async  (endpoint,org_id,step,user_id) => {     
+      await  getCalenderItems(endpoint,org_id,step,user_id)
+      .then(response => {                        
+        if (mounted) {                       
+          setEvents(response.payload);                 
+        }
+      });
+    })(endpoint_calender_items,organization_id);
+
+    return () => {
+      mounted = false;           
+    };
+
+
+  }, [mobileDevice,organization_id]);
 
   const handleEventClick = info => {
     const selected = events.find(event => event.id === info.event.id);

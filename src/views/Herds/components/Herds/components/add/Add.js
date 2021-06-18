@@ -169,13 +169,13 @@ const Add = props => {
           setFarms(response.payload[0]);                 
         }
       });
-    })(endpoint_farms,'get farms',0,organization_id);
+    })(endpoint_farms,'get farms',3,user_id);
 
     return () => {   
       mounted_countries = false;  
       mounted_farms = false;        
     };    
-  }, [organization_id,country_id]);  
+  }, [country_id,user_id]);  
 
   if (!countries || !farms) {
     return null;
