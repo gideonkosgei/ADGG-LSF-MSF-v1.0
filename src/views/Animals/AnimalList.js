@@ -109,7 +109,7 @@ const AnimalList = props => {
         <LinearProgress/>
       }
 
-      {animals && (     
+      {animals && (      
         <Results
           className={classes.results}
           animals={animals}

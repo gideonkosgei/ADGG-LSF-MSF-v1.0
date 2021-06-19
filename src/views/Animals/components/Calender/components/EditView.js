@@ -94,8 +94,7 @@ const AnimalDetails = props => {
         .then(response => {       
           if (mounted_herds) { 
             const data = response.payload;
-            setHerds(data);
-            console.log(data);      
+            setHerds(data);            
           }
         });
       })(endpoint_herd,organization_id);

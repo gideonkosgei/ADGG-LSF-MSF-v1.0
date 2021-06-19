@@ -16,6 +16,7 @@ import {
   Toolbar,
   Hidden,
   Typography,
+  Avatar ,
   Input,
   colors,
   Popper,
@@ -42,8 +43,8 @@ const useStyles = makeStyles(theme => ({
   flexGrow: {
     flexGrow: 1
   },
-  search: {
-    backgroundColor: 'rgba(255,255,255, 0.1)',
+  search: {    
+    backgroundColor: 'rgba(104,38,34, 0.1)',
     borderRadius: 4,
     flexBasis: 300,
     height: 36,
@@ -94,7 +95,14 @@ const useStyles = makeStyles(theme => ({
   },
   username: {      
     color: 'inherit',
-  }
+  },
+  person: {
+   // marginTop: theme.spacing(2),
+    display: 'flex'
+  },
+  avatar: {
+    marginRight: theme.spacing(2)
+  },
 }));
 
 const TopBar = props => {
@@ -145,16 +153,39 @@ const TopBar = props => {
       {...rest}
       className={clsx(classes.root, className)}
       color="primary"
-      style={{ background: '#723fb5' }}
+      style={{ background: '#682622' }}
     >    
 
       <Toolbar>
-        <RouterLink to="/">
-          <img
-            alt=""
-            //src="/images/logos/logo--white.svg"
-          />
+      <div className={classes.person}>
+        <RouterLink to="/">         
+            <Avatar
+              alt="Person"
+              className={classes.avatar}
+              src="/images/adgg_avatar.png"          
+            />        
         </RouterLink>
+        </div>
+        <div>
+              <Typography
+                color="inherit"
+                variant="body1"
+              >
+                ADGG v1.0
+              </Typography>
+              <Typography
+                color="inherit"
+                variant="body2"
+              >
+                African Dairy Genetics Gain
+              </Typography>
+              <Typography
+                color="inherit"
+                variant="body2"
+              >
+                More Productive & Profitable Dairy Cows
+              </Typography>
+            </div>
         <div className={classes.flexGrow} />
         <Hidden mdDown>
           <Typography className={classes.username} variant="h5" >
