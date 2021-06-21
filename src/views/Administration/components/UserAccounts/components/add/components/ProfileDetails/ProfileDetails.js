@@ -3,8 +3,8 @@ import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import {Card, CardContent,CardActions,Button, CardHeader, Grid,Divider, TextField,colors } from '@material-ui/core';
-import { getTimezones, getCountries,getAdminUnits,createUpdateUserAccount,genericFunctionTwoParameters}   from '../../../../../../../../utils/API';
-import {endpoint_timezones,endpoint_countries,endpoint_admin_units,endpoint_new_user_account,endpoint_auth_roles} from '../../../../../../../../configs/endpoints';
+import { getTimezones,genericFunctionFourParameters, getCountries,getAdminUnits,createUpdateUserAccount,genericFunctionTwoParameters}   from '../../../../../../../../utils/API';
+import {endpoint_timezones,endpoint_orgs,endpoint_countries,endpoint_admin_units,endpoint_new_user_account,endpoint_auth_roles} from '../../../../../../../../configs/endpoints';
 import ErrorSnackbar from '../../../../../../../../components/ErrorSnackbar';
 import authContext from '../../../../../../../../contexts/AuthContext';
 import Alert from '@material-ui/lab/Alert';
@@ -25,13 +25,14 @@ const ProfileDetails = props => {
   const [values, setValues] = useState({});
   const [timezones, setTimezones] = useState(null);
   const [countries, setCountries] = useState(null);
+  const [orgs, setOrgs] = useState([]);  
   const [regions, setRegions] = useState([]);
   const [districts, setDistricts] = useState([]);
   const [wards, setWards] = useState([]);
   const [villages, setVillages] = useState([]);
   const [output, setOutput] = useState({status:null, message:""}); 
   const [openSnackbarError, setopenSnackbarError] = useState(false);
-  const [ {user_id,organization_id,country_id} ] = useContext(authContext); 
+  const [ {user_id,country_id} ] = useContext(authContext); 
   const [units, setUnits] = useState({
     unit1: 'Regions',
     unit2: 'District',
@@ -87,7 +88,7 @@ const ProfileDetails = props => {
     let mounted_time = true;
     let mounted_countries = true;
     let mounted_auth_roles = true;
-          
+    let mounted_orgs = true; 
 
       (async  (endpoint,desc) => {     
         await  genericFunctionTwoParameters(endpoint,desc)
@@ -122,20 +123,29 @@ const ProfileDetails = props => {
                 unit3: getUnits.unit3_name,
                 unit4: getUnits.unit4_name
               }); 
-            }     
-
+            }   
           }
         });
       })(endpoint_countries);
+
+      (async  (endpoint,desc,option,id) => {     
+        await  genericFunctionFourParameters(endpoint,desc,option,id)
+        .then(response => {                        
+          if (mounted_orgs) {
+            setOrgs(response.payload);                            
+          }
+        });
+      })(endpoint_orgs,'get all orgs',2,user_id); 
 
     return () => {
       mounted_time = false;  
       mounted_countries = false;  
       mounted_auth_roles  = false;
+      mounted_orgs  = false;      
     };
-  }, [country_id]); 
+  }, [country_id,user_id]); 
 
-  if (!timezones || !countries || !authRoles) {
+  if (!timezones || !countries || !authRoles || !orgs) {
     return null;
   } 
 
@@ -179,8 +189,8 @@ const ProfileDetails = props => {
      * 1 > Edit
      */
    
-    (async  (endpoint,option,id,org,values,user_id) => {     
-      await  createUpdateUserAccount(endpoint,option,id,org,values,user_id)
+    (async  (endpoint,option,id,values,user_id) => {     
+      await  createUpdateUserAccount(endpoint,option,id,values,user_id)
       .then((response) => { 
         setOutput({status:null, message:''})
         if (parseInt(response.payload[0][0].status) === 1){           
@@ -195,13 +205,13 @@ const ProfileDetails = props => {
         //setopenSnackbarError(true); 
         setOutput({status:0, message:error.message})
       });
-    })(endpoint_new_user_account,0,null,organization_id,values,user_id);    
+    })(endpoint_new_user_account,0,null,values,user_id);    
   };
 
   const handleSnackbarErrorClose = () => {
     setopenSnackbarError(false);
-  };  
- 
+  }; 
+
   return (
     <Card
       {...rest}
@@ -307,8 +317,39 @@ const ProfileDetails = props => {
                     InputLabelProps={{
                       shrink: true,
                     }}
-                    //required
-                   
+                    required                   
+                    label="Organization"
+                    name="org_id"                                   
+                    onChange={handleChange}                   
+                    variant="outlined"  
+                    select                    
+                    SelectProps={{ native: true }} 
+                  >
+                    <option value=""></option>
+                    {orgs.map(org => (
+                          <option                    
+                            value={org.id}
+                          >
+                            {org.org_name}
+                          </option>
+                        ))
+                    }           
+                  </TextField>
+                </Grid>
+               
+             
+
+                <Grid
+                  item
+                  md={3}
+                  xs={12}
+                  >
+                  <TextField
+                    fullWidth
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                    required                   
                     label="Country"
                     name="country"                                   
                     onChange={handleChange}                   

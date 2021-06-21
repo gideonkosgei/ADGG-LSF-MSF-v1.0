@@ -1086,7 +1086,7 @@ export const endpoint_farm_update= {
 
 // remove unit access 
 export const endpoint_add_remove_unit_access = {
-  url: `${api}/unit-remove-access`,
+  url: `${api}/unit-add-remove-access`,
   method: 'PUT',
   headers: headers   
 }; 

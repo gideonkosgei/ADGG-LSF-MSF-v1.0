@@ -3582,7 +3582,7 @@ export const getHealthManagementSummary =  function (config,option,id,date_start
 
 
 // add new exit event
-export const createUpdateUserAccount =  function (config,option,id,org,values,user_id) {  
+export const createUpdateUserAccount =  function (config,option,id,values,user_id) {  
   /**
    * OPTIONS
    * 0 - create new
@@ -3603,10 +3603,12 @@ export const createUpdateUserAccount =  function (config,option,id,org,values,us
       village,
       ward,
       role,
-      status
+      status,
+      org_id
   } = values;
 
     country = (typeof country === 'undefined' || country === '')? null:country;  
+    org_id = (typeof org_id === 'undefined' || org_id === '')? null:org_id;  
     district = (typeof district === 'undefined' || district === '')? null:district;  
     email = (typeof email === 'undefined' || email === '')? null:email;  
     name = (typeof name === 'undefined' || name === '')? null:name;  
@@ -3634,10 +3636,12 @@ export const createUpdateUserAccount =  function (config,option,id,org,values,us
       "user":user_id,
       "option":option,
       "id":id,
-      "org":org,
+      "org":org_id,
       "role":role,  
       "status":status         
     };
+
+  console.log(body);
   
   const options = {
     url:`${config.url}`,

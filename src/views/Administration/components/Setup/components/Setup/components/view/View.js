@@ -55,8 +55,7 @@ const Edit = props => {
         .then(response => {                        
           if (mounted) {   
             setIsLoading(false);          
-            setValues(response.payload);  
-            console.log(response);               
+            setValues(response.payload);                         
           }
         });
       })(endpoint_orgs,'get all orgs',option,user_id); 

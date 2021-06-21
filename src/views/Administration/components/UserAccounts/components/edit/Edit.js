@@ -3,8 +3,8 @@ import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import {CircularProgress,Card,Fab, CardContent,CardActions,Button, Grid,Divider,Box,Switch,TextField,Typography,LinearProgress } from '@material-ui/core';
-import { getTimezones, getCountries,getAdminUnits,createUpdateUserAccount,genericFunctionTwoParameters,genericFunctionThreeParameters}   from '../../../../../../utils/API';
-import {endpoint_user_account_info,endpoint_timezones,endpoint_countries,endpoint_admin_units,endpoint_new_user_account,endpoint_auth_roles} from '../../../../../../configs/endpoints';
+import { getTimezones,genericFunctionFourParameters, getCountries,getAdminUnits,createUpdateUserAccount,genericFunctionTwoParameters,genericFunctionThreeParameters}   from '../../../../../../utils/API';
+import {endpoint_orgs,endpoint_user_account_info,endpoint_timezones,endpoint_countries,endpoint_admin_units,endpoint_new_user_account,endpoint_auth_roles} from '../../../../../../configs/endpoints';
 import ErrorSnackbar from '../../../../../../components/ErrorSnackbar';
 import authContext from '../../../../../../contexts/AuthContext';
 import {default as UnitAccess} from '../../../UnitAccess';
@@ -55,6 +55,7 @@ const Edit = props => {
   const classes = useStyles();   
   const [values, setValues] = useState({});
   const [timezones, setTimezones] = useState(null);
+  const [orgs, setOrgs] = useState([]); 
   const [countries, setCountries] = useState(null);
   const [regions, setRegions] = useState([]);
   const [districts, setDistricts] = useState([]);
@@ -62,7 +63,7 @@ const Edit = props => {
   const [villages, setVillages] = useState([]);
   const [output, setOutput] = useState({status:null, message:""}); 
   const [openSnackbarError, setopenSnackbarError] = useState(false);
-  const [ {user_id,organization_id,country_id} ] = useContext(authContext); 
+  const [ {user_id,country_id} ] = useContext(authContext); 
   const [authRoles, setAuthRoles] = useState([]);  
   const [readOnly, setReadOnly] = useState(true);
   const [units, setUnits] = useState({
@@ -130,6 +131,7 @@ const Edit = props => {
     let mounted_countries = true;
     let mounted_auth_roles = true;
     let mounted_acc_info = true;
+    let mounted_orgs = true; 
     
 
      (async  (endpoint,desc,id) => {     
@@ -183,15 +185,26 @@ const Edit = props => {
         });
       })(endpoint_countries);
 
+
+      (async  (endpoint,desc,option,id) => {     
+        await  genericFunctionFourParameters(endpoint,desc,option,id)
+        .then(response => {                        
+          if (mounted_orgs) {
+            setOrgs(response.payload);                            
+          }
+        });
+      })(endpoint_orgs,'get all orgs',2,user_id); 
+
     return () => {
       mounted_time = false;  
       mounted_countries = false;  
       mounted_auth_roles  = false;
       mounted_acc_info = false;
+      mounted_orgs  = false; 
     };
-  }, [record_id,country_id]); 
+  }, [record_id,country_id,user_id]); 
 
-  if (!timezones || !countries || !authRoles || !values) {
+  if (!timezones || !countries || !authRoles || !values || !orgs) {
     return null;
   }
 
@@ -241,8 +254,8 @@ const Edit = props => {
      * 1 > Edit
      */
    
-    (async  (endpoint,option,id,org,values,user_id) => {     
-      await  createUpdateUserAccount(endpoint,option,id,org,values,user_id)
+    (async  (endpoint,option,id,values,user_id) => {     
+      await  createUpdateUserAccount(endpoint,option,id,values,user_id)
       .then((response) => {       
         setOutput({status:null, message:''});
         timer.current = window.setTimeout(() => {
@@ -253,10 +266,7 @@ const Edit = props => {
           } else {
             setOutput({status:parseInt(response.payload[0][0].status), message:response.payload[0][0].message})
           } 
-        }, 500);  
-
-
-
+        }, 500); 
         
         /*if (parseInt(response.payload[0][0].status) === 1){    
           setOutput({status:parseInt(response.payload[0][0].status), message:response.payload[0][0].message})      
@@ -269,7 +279,7 @@ const Edit = props => {
         setSuccess(false);
         setLoading(false);
       });
-    })(endpoint_new_user_account,1,record_id,organization_id,values,user_id);    
+    })(endpoint_new_user_account,1,record_id,values,user_id);    
   };
 
   const handleSnackbarErrorClose = () => {
@@ -412,6 +422,44 @@ const Edit = props => {
                 }}
               />
             </Grid>
+
+            <Grid
+                  item
+                  md={3}
+                  xs={12}
+                  >
+                  <TextField
+                    fullWidth
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                    inputProps={{
+                      readOnly: Boolean(readOnly),
+                      disabled: Boolean(readOnly)                
+                    }}
+                    required                   
+                    label="Organization"
+                    name="org_id" 
+                    value = {values.org_id}                                   
+                    onChange={handleChange}                   
+                    variant="outlined"  
+                    select                    
+                    SelectProps={{ native: true }} 
+                  >
+                    <option value=""></option>
+                    {orgs.map(org => (
+                          <option                    
+                            value={org.id}
+                          >
+                            {org.org_name}
+                          </option>
+                        ))
+                    }           
+                  </TextField>
+                </Grid>
+
+
+
             
             <Grid
                   item
@@ -427,7 +475,7 @@ const Edit = props => {
                       readOnly: Boolean(readOnly),
                       disabled: Boolean(readOnly)                
                     }}
-                    //required
+                    required
                    
                     label="Country"
                     name="country"  
