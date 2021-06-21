@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import Cookies from 'js-cookie';
 import { makeStyles } from '@material-ui/styles';
-import { Paper, Typography, Link, Button } from '@material-ui/core';
+import { Paper, Typography, Button } from '@material-ui/core';
 
 const useStyles = makeStyles(theme => ({
   root: {
-    maxWidth: 420,
+    maxWidth: 350,
     position: 'fixed',
     bottom: 0,
     right: 0,
@@ -62,28 +62,18 @@ const CookiesNotification = () => {
       <div className={classes.media}>
         <img
           alt="Cookies"
-          src="/images/undraw_cookie_love_ulvn.svg"
+          src="/images/cookies-image.PNG"
         />
       </div>
       <div className={classes.content}>
         <Typography variant="body1">
-          We use Cookies to ensure that we give you the best experience on our
-          website. Read our{' '}
-          <Link
-            className={classes.link}
-            component="a"
-            href="https://devias.io/privacy-policy"
-            target="_blank"
-          >
-            Privacy Policy
-          </Link>
-          .
+          We use Cookies to ensure that we give you the best experience.      
         </Typography>
       </div>
       <div className={classes.actions}>
         <Button
-          className={classes.agreeButton}
-          color="primary"
+          className={classes.agreeButton}    
+          style={{backgroundColor: '#682622', color: '#FFFFFF'}}
           onClick={handleClose}
           variant="contained"
         >

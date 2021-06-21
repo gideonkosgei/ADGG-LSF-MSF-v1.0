@@ -11,9 +11,7 @@ import {
   Avatar  
 } from '@material-ui/core';
 import LockIcon from '@material-ui/icons/Lock';
-
 import { Page } from 'components';
-import gradients from 'utils/gradients';
 import { LoginForm } from './components';
 //import InputAdornment from '@material-ui/core/InputAdornment';
 
@@ -52,8 +50,8 @@ const useStyles = makeStyles(theme => ({
       display: 'none'
     }
   },
-  icon: {
-    backgroundImage: gradients.green,
+  icon: {   
+    backgroundColor: '#682622',
     color: theme.palette.white,
     borderRadius: theme.shape.borderRadius,
     padding: theme.spacing(1),
@@ -127,8 +125,7 @@ const Login = () => {
             >
             Forgot Password?
             </Link>
-          </span>
-          
+          </span>          
         
         </CardContent>
         <CardMedia
