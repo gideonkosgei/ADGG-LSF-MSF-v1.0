@@ -521,13 +521,13 @@ export const endpoint_batch_exit_upload = {
 
 // view  batched on validation queue
 export const endpoint_batch_validation_view = {
-  url: `${api}/batches/validation/`,
+  url: `${api}/batches/validation`,
   method: 'GET',
   headers: headers   
 };
 
 export const endpoint_batch_validation_un_processed_view= {
-  url: `${api}/batches/view/`,
+  url: `${api}/batches/view`,
   method: 'GET',
   headers: headers   
 };

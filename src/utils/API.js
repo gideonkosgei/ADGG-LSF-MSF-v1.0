@@ -35,7 +35,8 @@ export const genericFunctionThreeParameters =  function (param1,param2,param3) {
     url:`${param1.url}/${param3}`,
     method: param1.method,
     headers: param1.headers  
-  }     
+  }  
+     
   return new Promise((resolve, reject) => {
     axios(options)
     .then(res => {             
@@ -100,7 +101,8 @@ export const genericFunctionSevenParameters =  function (param1,param2,param3,pa
     url:`${param1.url}/${param3}/${param4}/${param5}/${param6}/${param7}`,
     method: param1.method,
     headers: param1.headers  
-  }   
+  }  
+  
   return new Promise((resolve, reject) => {
     axios(options)
     .then(res => {             
@@ -2460,14 +2462,15 @@ return new Promise((resolve, reject) => {
 
 
 //Batch upload
-export const postBatchUpload =  function (config,rows,cols,user_id,org_id,uuid) {  
- 
+export const postBatchUpload =  function (config,rows,cols,user_id,org_id,batch_type,uuid) { 
+
   const body = {          
     "rows": rows, 
     "cols": cols ,   
     "created_by": user_id ,
     "org_id": org_id,
-    "uuid": uuid   
+    "uuid": uuid,
+    "batch_type": batch_type   
   };
 
   const options = {
@@ -2494,7 +2497,6 @@ export const getBatchValidation =  function (config,uuid) {
     method: config.method,
     headers: config.headers  
   } 
-  
 
   return new Promise((resolve, reject) => {
     axios(options)

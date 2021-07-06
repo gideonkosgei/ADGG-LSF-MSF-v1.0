@@ -685,10 +685,81 @@ const routes = [
         path: '/background-processes/org/edit/:id',
         exact: true,
         component: lazy(() => import('views/Administration/components/BackgroundProcesses/components/edit'))        
+      },       
+
+      //uploads      
+      // Batch processes Routes
+      {
+        path: '/batch-processing',
+        exact: true,
+        component: lazy(() => import('views/BatchProcessing'))
+      },
+      {
+        path: '/batch-processing/:tab',
+        exact: true,
+        component: lazy(() => import('views/BatchProcessing'))
+      },
+
+      {
+        path: '/batch-processing/:tab/:uuid/:batch_type',
+        exact: true,
+        component: lazy(() => import('views/BatchProcessing'))
+      },
+  
+
+     
+      {
+        path: '/management/health/injury/view/:id',
+        exact: true,
+        component: lazy(() => import('views/Animals/components/Health/components/Injury'))  
+      },
+     /*
+      {
+        path: '/management/health/:tab',
+        exact: true,
+        component: lazy(() => import('views/Animals/components/Health'))
+      },
+      
+      
+      {
+        path: '/batch-processing',
+        exact: true,
+        component: lazy(() => import('views/BatchProcessing'))        
       }, 
+
+      {
+        path: 'batch-processing/:tab',
+        exact: true,
+        component: lazy(() => import('views/BatchProcessing/components/Batch'))
+      },
+
+      {
+        path: 'batch-processing/workflow',
+        exact: true,
+        component: lazy(() => import('views/BatchProcessing/components/Batch'))
+      },
+
+      {
+        path: 'batch-processing/instructions',
+        exact: true,
+        component: lazy(() => import('views/BatchProcessing/components/Instructions'))
+      },
+      */
       
 
-      //uploads
+
+
+
+
+
+
+
+
+
+
+
+
+
 
       // Batch processes Routes
       {
@@ -1070,15 +1141,22 @@ const routes = [
       path: '/batch-process/animal/stage/:step',
       exact: true,
       component: lazy(() => import('views/Batch/components/Animal/components/view'))        
-    },  
+    },
+
+    {
+      path: '/batch-process/animal/stage/:step',
+      exact: true,
+      component: lazy(() => import('views/Batch/components/Animal/components/view'))        
+    },
+    
+    
+
     // Batch processes Routes subsequent Steps
     {
       path: '/batch-process/animal/add/:uuid',
       exact: true,
       component: lazy(() => import('views/Batch/components/Animal/components/add'))        
     },
-
-
     
       /*
         Calving Batch Processes
@@ -1230,25 +1308,6 @@ const routes = [
       exact: true,
       component: lazy(() => import('views/Reports/components/Batches/components/home'))        
     },
-  
-
-
-
-
-
-
-
-       
-      
-      {
-        path: '/downloads',
-        exact: true,
-        component: lazy(() => import('views/Downloads'))        
-      }, 
-      
-      
-      
-      
       
       {
         path: '/social-feed',

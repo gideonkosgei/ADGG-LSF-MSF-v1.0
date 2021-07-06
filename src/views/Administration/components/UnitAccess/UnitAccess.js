@@ -26,11 +26,8 @@ const UnitAccess = props => {
         <Org 
           UserDetails = {UserDetails}
           ApplicationArea = {ApplicationArea}
-        />
-       
+        />       
       </Grid>
-      
-    
       <Grid
         item
         lg={8}

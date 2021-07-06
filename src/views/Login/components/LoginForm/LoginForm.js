@@ -109,10 +109,15 @@ const LoginForm = props => {
     authenticate(endpoint_user_authentication,username,password)  
       .then((userData) => {
        let is_active = true; 
+       let is_admin = false; 
        if (userData.payload[0].length ===1){
         is_active = userData.payload[0][0].status === 1? true : false;
+        const role_id = parseInt(userData.payload[0][0].role_id);
+        is_admin = (role_id === 7 || role_id === 9 || role_id === 10 || role_id === 14) ? 1 : 0;       
+        sessionStorage.setItem("is_admin1", is_admin);
+        
        }
-        if(userData.auth_status && is_active ){         
+        if(userData.auth_status && is_active ){                
             dispatch({
               type: 'LOGIN',
               payload: {

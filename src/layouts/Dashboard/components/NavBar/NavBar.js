@@ -72,6 +72,8 @@ const NavBar = props => {
     }; 
     
   }, [router.location.pathname,user_id,type,onMobileClose,openMobile]);
+
+
  
 
   const navbarContent = (

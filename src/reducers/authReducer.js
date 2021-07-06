@@ -1,4 +1,5 @@
 
+let is_admin = 0;
 export const initialAuthState = {	
 	isLoggedIn: sessionStorage.getItem('isLoggedIn')?sessionStorage.getItem('isLoggedIn'):false,
 	isLoading:sessionStorage.getItem('isLoading')?sessionStorage.getItem('isLoading'):false,
@@ -7,6 +8,8 @@ export const initialAuthState = {
 	name: sessionStorage.getItem('name')?sessionStorage.getItem('name'):'',
 	email:sessionStorage.getItem('email')?sessionStorage.getItem('email'):'',	
 	status:sessionStorage.getItem('status')?sessionStorage.getItem('status'):'',
+	role_id:sessionStorage.getItem('role_id')?sessionStorage.getItem('role_id'):'',
+	is_admin: sessionStorage.getItem('is_admin')?sessionStorage.getItem('is_admin'):0,
 	role:sessionStorage.getItem('role')?sessionStorage.getItem('role'):'',  
 	error: sessionStorage.getItem('error')?sessionStorage.getItem('error'):'',
 	organization_id: sessionStorage.getItem('organization_id')?sessionStorage.getItem('organization_id'):'',
@@ -15,17 +18,23 @@ export const initialAuthState = {
 	country_id: sessionStorage.getItem('country_id') ? sessionStorage.getItem('country_id'):''
 	
 };
+
+
 export const authReducer = (state, action) => {	
 	switch (action.type) {
 		case 'LOGIN':
-				const data = action.payload.userData.payload[0][0];					
-				sessionStorage.setItem("user_id",data.id);
+				const data = action.payload.userData.payload[0][0];	
+				const role_id = parseInt(data.role_id);			
+				is_admin = (role_id === 7 || role_id === 9 || role_id === 10 || role_id === 14) ? 1 : 0;
+			   	sessionStorage.setItem("user_id",data.id);
 				sessionStorage.setItem("isLoggedIn",true);
 				sessionStorage.setItem("isLoading",true);
 				sessionStorage.setItem("username", data.username);
 				sessionStorage.setItem("name", data.name);
 				sessionStorage.setItem("email",data.email);			
 				sessionStorage.setItem("role", data.role);
+				sessionStorage.setItem("role_id", data.role_id);
+				sessionStorage.setItem("is_admin", is_admin);
 				sessionStorage.setItem("organization_id", data.org_id);
 				sessionStorage.setItem("organization", data.organization);
 				sessionStorage.setItem("password", data.password);
@@ -40,6 +49,8 @@ export const authReducer = (state, action) => {
 				email:data.email,				
 				status:data.status,
 				role:data.role,  
+				role_id:data.role_id,
+				is_admin: is_admin,
 				organization_id:data.org_id,  
 				organization:data.organization,  	
 				password:data.password, 
@@ -56,6 +67,8 @@ export const authReducer = (state, action) => {
 				email:'',				
 				status:'',				
 				role:'', 
+				role_id:'',
+				is_admin: 0, 
 				organization_id:'',
 				country_id:'',
 				organization:'',
@@ -72,6 +85,8 @@ export const authReducer = (state, action) => {
 				email:'',			
 				status:'',				
 				role:'', 
+				role_id:'',
+				is_admin : 0,
 				organization_id:'',
 				organization:'',
 				password:'',

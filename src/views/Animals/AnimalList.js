@@ -27,6 +27,7 @@ const AnimalList = props => {
   const [animals, setAnimals] = useState([]);
   const [caption, setCaption] = useState(null);
   const [ { user_id }  ] = useContext(authContext);
+  const [isLoading, setIsLoading] = useState(true);
 
   let animal_categ_id = null;
   let herd_id = null;
@@ -47,7 +48,7 @@ const AnimalList = props => {
   }  
 
 
-  const [isLoading, setIsLoading] = useState(true); 
+   
 
   useEffect(() => {   
     let mounted = true;

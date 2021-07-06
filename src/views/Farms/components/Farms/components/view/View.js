@@ -1,13 +1,13 @@
-import React, { useState,useEffect,useContext } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
-import {Grid,Divider,Button,colors,Link,Typography,Card,CardContent,LinearProgress} from '@material-ui/core';
+import { Grid, Divider, Button, colors, Link, Typography, Card, CardContent, LinearProgress } from '@material-ui/core';
 import { Page } from 'components';
-import {genericFunctionFourParameters,delinkFarmUnitsFromOrgUnit}   from '../../../../../../utils/API';
-import {endpoint_farms,endpoint_delink_farm_unit} from '../../../../../../configs/endpoints';
+import { genericFunctionFourParameters, delinkFarmUnitsFromOrgUnit } from '../../../../../../utils/API';
+import { endpoint_farms, endpoint_delink_farm_unit } from '../../../../../../configs/endpoints';
 import authContext from '../../../../../../contexts/AuthContext';
 import MUIDataTable from "mui-datatables";
-import {MuiThemeProvider } from '@material-ui/core/styles';
+import { MuiThemeProvider } from '@material-ui/core/styles';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import CustomToolbar from "../CustomToolbar";
 import { Link as RouterLink } from 'react-router-dom';
@@ -27,12 +27,12 @@ const useStyles = makeStyles(theme => ({
   inner: {
     width: theme.breakpoints.values.lg,
     maxWidth: '100%',
-    margin: '0 auto',    
+    margin: '0 auto',
   },
   divider: {
     backgroundColor: colors.grey[300]
   },
-  content: {    
+  content: {
   },
   saveButton: {
     color: theme.palette.white,
@@ -43,225 +43,231 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const Edit = props => {  
-  const {org} = props; 
-  const classes = useStyles();  
+const Edit = props => {
+  const { org } = props;
+  const classes = useStyles();
   const [values, setValues] = useState([]);
-  const [ {user_id}  ] = useContext(authContext);  
+  const [{ user_id, is_admin }] = useContext(authContext);
   const [isLoading, setIsLoading] = useState(true);
-  const [selectedRowData, SetSelectedRows] = useState([]);  
-  const [output, setOutput] = useState({status:null, message:""}); 
+  const [selectedRowData, SetSelectedRows] = useState([]);
+  const [output, setOutput] = useState({ status: null, message: "" });
   const timer = React.useRef();
+  const display_add = parseInt(is_admin) === 1 ? true : false;
 
   let option = null;
-  let id =  null;
+  let id = null;
   let title = null;
 
   if (typeof org === 'undefined') {
-    id =  user_id;
-    option = 3; 
-    title = "FARMS";   
+    id = user_id;
+    option = 3;
+    title = "FARMS";
   } else {
-    id =  org;
-    option = 4;    
-    title = "LINKED FARMS";   
+    id = org;
+    option = 4;
+    title = "LINKED FARMS";
   }
 
-  async function getallfarms(endpoint,desc,_option,_id) { 
-    setValues([]);    
-    setIsLoading(true);  
-    await  genericFunctionFourParameters(endpoint,desc,_option,_id)
-    .then(response => {  
-        setIsLoading(false);          
-        setValues(response.payload[0]);     
-    });
+  async function getallfarms(endpoint, desc, _option, _id) {
+    setValues([]);
+    setIsLoading(true);
+    await genericFunctionFourParameters(endpoint, desc, _option, _id)
+      .then(response => {
+        setIsLoading(false);
+        setValues(response.payload[0]);
+      });
   };
 
 
-  async function remove_link(endpoint,data_array,user,org) {  
+  async function remove_link(endpoint, data_array, user, org) {
     setIsLoading(true);
     const record_id = data_array[0].id;
-    await  delinkFarmUnitsFromOrgUnit(endpoint,record_id,user,org)
-    .then(response => {     
-      setOutput({status:null, message:''});
-      timer.current = window.setTimeout(() => {
+    await delinkFarmUnitsFromOrgUnit(endpoint, record_id, user, org)
+      .then(response => {
+        setOutput({ status: null, message: '' });
+        timer.current = window.setTimeout(() => {
+          setIsLoading(false);
+          if (parseInt(response.status) === 1) {
+            setOutput({ status: parseInt(response.status), message: response.message })
+          } else {
+            setOutput({ status: parseInt(response.status), message: response.message })
+          }
+        }, 500);
+      }).catch((error) => {
+        setOutput({ status: 0, message: error.message });
         setIsLoading(false);
-        if (parseInt(response.status) === 1){               
-          setOutput({status:parseInt(response.status), message:response.message}) 
-        } else {
-          setOutput({status:parseInt(response.status), message:response.message})
-        } 
-      }, 500); 
-    }).catch((error) => {        
-      setOutput({status:0, message:error.message}); 
-      setIsLoading(false);         
-    }); 
-       
+      });
+
   };
-  useEffect(() => {     
+  useEffect(() => {
     let mounted = true;
-      (async  (endpoint,desc,_option,_id) => {     
-        await  genericFunctionFourParameters(endpoint,desc,_option,_id)
-        .then(response => {                        
-          if (mounted) {   
-            setIsLoading(false);          
-            setValues(response.payload[0]);                 
+    (async (endpoint, desc, _option, _id) => {
+      await genericFunctionFourParameters(endpoint, desc, _option, _id)
+        .then(response => {
+          if (mounted) {
+            setIsLoading(false);
+            setValues(response.payload[0]);
           }
         });
-      })(endpoint_farms,'get all farms',option,id); 
-      
+    })(endpoint_farms, 'get all farms', option, id);
+
     return () => {
-      mounted = false;           
+      mounted = false;
     };
-  }, [id,option]); 
+  }, [id, option]);
 
   if (!values) {
     return null;
   }
 
 
-  
-    const columns = [
-    { name: "id",label: "ID",options: {filter: false,sort: false,display:false}},   
-    { name: "name",label: "FARM NAME",options: {filter: false,sort: true,display:true}},
-    { name: "farmer_name",label: "FARMER NAME",options: {filter: false,sort: true,display:true}},
-    { name: "code",label: "FARM CODE",options: {filter: false,sort: false,display:true}},
-    { name: "farm_type",label: "FARM TYPE",options: {filter: false,sort: true,display:true}}, 
-    { name: "org_name",label: "ORG",options: {filter: true,sort: true,display:true}},
+
+  const columns = [
+    { name: "id", label: "ID", options: { filter: false, sort: false, display: false } },
+    { name: "name", label: "FARM NAME", options: { filter: false, sort: true, display: true } },
+    { name: "farmer_name", label: "FARMER NAME", options: { filter: false, sort: true, display: true } },
+    { name: "code", label: "FARM CODE", options: { filter: false, sort: false, display: true } },
+    { name: "farm_type", label: "FARM TYPE", options: { filter: false, sort: true, display: true } },
+    { name: "org_name", label: "ORG", options: { filter: true, sort: true, display: true } },
     //{ name: "phone",label: "PHONE",options: {filter: false,sort: true,display:true}},
     //{ name: "email",label: "EMAIL",options: {filter: false,sort: true,display:true}},
-    { name: "country",label: "COUNTRY",options: {filter: true,sort: true,display:true}},  
-    { name: "region",label: "REGION",options: {filter: true,sort: true,display:true}},  
-    { name: "district",label: "DISTRICT",options: {filter:true,sort: true,display:true}}, 
-    { name: "ward",label: "WARD",options: {filter: true,sort: false,display:true}}, 
-    { name: "village",label: "VILLAGE",options: {filter: true,sort: false,display:true}},  
-    { name: "reg_date",label: "REG DATE",options: {filter: false,sort: false,display:true}},      
-    { name: "",
+    { name: "country", label: "COUNTRY", options: { filter: true, sort: true, display: true } },
+    { name: "region", label: "REGION", options: { filter: true, sort: true, display: true } },
+    { name: "district", label: "DISTRICT", options: { filter: true, sort: true, display: true } },
+    { name: "ward", label: "WARD", options: { filter: true, sort: false, display: true } },
+    { name: "village", label: "VILLAGE", options: { filter: true, sort: false, display: true } },
+    { name: "reg_date", label: "REG DATE", options: { filter: false, sort: false, display: true } },
+    {
+      name: "",
       options: {
-      filter: false,
-      sort: false,  
-      empty:true,    
-      customBodyRender: (value, tableMeta, updateValue) => {        
-        return (
-          <Link
+        filter: false,
+        sort: false,
+        empty: true,
+        customBodyRender: (value, tableMeta, updateValue) => {
+          return (
+            <Link
               component={RouterLink}
-              to = {`/management/farms/edit/${tableMeta.rowData[0]}`}              
-          >
-            <OpenInNewIcon/>
-          </Link>          
-        );
+              to={`/management/farms/edit/${tableMeta.rowData[0]}`}
+            >
+              <OpenInNewIcon />
+            </Link>
+          );
+        }
       }
     }
-  }    
-  ];   
-  const options = {       
+  ];
+
+
+
+  const options = {
     filter: true,
-    rowsPerPage: 10,       
-    rowsPerPageOptions :[5,10,20,50,100], 
-    selectableRows:  (typeof org !== 'undefined')? "single" : "none", 
-    selectableRowsHeader: true, 
+    rowsPerPage: 10,
+    rowsPerPageOptions: [5, 10, 20, 50, 100],
+    selectableRows: (typeof org !== 'undefined') ? "single" : "none",
+    selectableRowsHeader: true,
     onRowsSelect: (rowsSelected, allRows) => {
-      const data = [];    
+      const data = [];
       allRows.forEach(row => {
-        data.push(values[row.dataIndex]);      
-      });         
+        data.push(values[row.dataIndex]);
+      });
       SetSelectedRows(data);
-   },       
+    },
     filterType: 'checkbox',
-    responsive: 'stacked',                
-    rowHover: true,       
+    responsive: 'stacked',
+    rowHover: true,
     setTableProps: () => {
-     return {
-       padding: "none" ,         
-       size: "small",
-     };
-   },
-   customToolbar: () => {
-    return (
-      <CustomToolbar />
-    );
-  },
-  customToolbarSelect: selectedRows => (    
-    <Tooltip title="remove link">
-      <IconButton
-        onClick={() => {    
-          remove_link(endpoint_delink_farm_unit,selectedRowData,user_id,id);
-        }} 
-        style={{
-          marginRight: "24px"          
-        }}      
-      >
-        <DeleteIcon />
-      </IconButton>
-    </Tooltip>
-  )   
+      return {
+        padding: "none",
+        size: "small",
+      };
+    },
+
+    customToolbar: () => {
+      return (
+        display_add && <CustomToolbar />
+      );
+    },
+    customToolbarSelect: selectedRows => (
+      <Tooltip title="remove link">
+        <IconButton
+          onClick={() => {
+            remove_link(endpoint_delink_farm_unit, selectedRowData, user_id, id);
+          }}
+          style={{
+            marginRight: "24px"
+          }}
+        >
+          <DeleteIcon />
+        </IconButton>
+      </Tooltip>
+    )
   };
 
   const handleClickRefresh = () => {
-    getallfarms(endpoint_farms,'get all farms',option,id);
-    setOutput({status:null, message:''});      
+    getallfarms(endpoint_farms, 'get all farms', option, id);
+    setOutput({ status: null, message: '' });
   };
-  
+
   return (
     <Page
       className={classes.root}
       title="farms"
     >
-      <Grid container spacing={1} justify="center">  
+      <Grid container spacing={1} justify="center">
         <Grid item xs={11}>
           <Typography
             component="h1"
             gutterBottom
             variant="h3"
           >
-            {title} 
+            {title}
           </Typography>
         </Grid>
         <Grid item xs={1}>
-          <Button          
-              variant="outlined"
-              onClick={handleClickRefresh}             
-          > 
+          <Button
+            variant="outlined"
+            onClick={handleClickRefresh}
+          >
             Refresh
           </Button>
         </Grid>
       </Grid>
-      
 
 
-      <br/>
-      { isLoading  &&
-        <LinearProgress/>
-      }  
-      <Divider />         
-      <Grid container spacing={1} justify="center">  
-        <Grid item xs={12}> 
+
+      <br />
+      {isLoading &&
+        <LinearProgress />
+      }
+      <Divider />
+      <Grid container spacing={1} justify="center">
+        <Grid item xs={12}>
           <Card>
-            <CardContent> 
+            <CardContent>
               {output.status === 0 ?
-                  <>
-                    <Alert severity="error" >{output.message}</Alert>
-                    <br/><br/>
-                  </>
-                :output.status === 1 ?
                 <>
-                  <Alert severity="success" >{output.message}</Alert>
-                  <br/><br/>
+                  <Alert severity="error" >{output.message}</Alert>
+                  <br /><br />
                 </>
-                  :null
-                }                                 
-              <PerfectScrollbar>                
-                <MuiThemeProvider>                
+                : output.status === 1 ?
+                  <>
+                    <Alert severity="success" >{output.message}</Alert>
+                    <br /><br />
+                  </>
+                  : null
+              }
+              <PerfectScrollbar>
+                <MuiThemeProvider>
                   <MUIDataTable
-                    title = ""
+                    title=""
                     data={values}
                     columns={columns}
                     options={options}
                   />
-                </MuiThemeProvider>                
-              </PerfectScrollbar>   
-            </CardContent>   
-          </Card>            
+                </MuiThemeProvider>
+              </PerfectScrollbar>
+            </CardContent>
+          </Card>
         </Grid>
       </Grid>
     </Page>

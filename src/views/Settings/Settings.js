@@ -1,14 +1,16 @@
-import React from 'react';
+import React,{useContext} from 'react';
 import { Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import { Tabs, Tab, Divider, colors } from '@material-ui/core';
+import authContext from '../../contexts/AuthContext';
 
 import { Page } from 'components';
 import {
   Header,
   General,  
-  Security
+  Security,
+  Admin
 } from './components';
 
 const useStyles = makeStyles(theme => ({
@@ -31,6 +33,7 @@ const useStyles = makeStyles(theme => ({
 
 const Settings = props => {
   const { match, history } = props;
+  const [ {is_admin}  ] = useContext(authContext);  
   const classes = useStyles();
   const { tab } = match.params;
 
@@ -40,8 +43,12 @@ const Settings = props => {
 
   const tabs = [
     { value: 'general', label: 'General' },  
-    { value: 'security', label: 'Security' }
+    { value: 'security', label: 'Security' }    
   ];
+
+  if (parseInt(is_admin) ===1){
+    tabs.push({ value: 'admin-tools', label: 'Admin tools' });
+  }
 
   if (!tab) {
     return <Redirect to="/settings/general" />;
@@ -75,6 +82,7 @@ const Settings = props => {
       <div className={classes.content}>
         {tab === 'general' && <General />}       
         {tab === 'security' && <Security />}
+        {tab === 'admin-tools' && <Admin />}
       </div>
     </Page>
   );
