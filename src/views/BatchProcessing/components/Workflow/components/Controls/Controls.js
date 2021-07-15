@@ -28,12 +28,13 @@ const Controls = (props) => {
     const [action, setAction] = useState((typeof batchInfo.uuid === 'undefined') ? null : 1);
     const [batch_stage, setBatchStage] = useState(null);
     const [batch_status, setBatchStatus] = useState(null);
-    const [batch_type, setBatchType] = useState(isNaN(batchInfo.batch_type)? null:batchInfo.batch_type);
+    const [batch_type, setBatchType] = useState(isNaN(batchInfo.batch_type) ? null : batchInfo.batch_type);
     const [values, setValues] = useState({});
     const [shouldOriginate, setShouldOriginate] = useState((typeof batchInfo.uuid === 'undefined') ? false : true);
     const [shouldViewReport, setShouldViewReport] = useState(false);
-    const [shouldProcessQueue, setShouldProcessQueue] = useState(false); 
-       
+    const [shouldProcessQueue, setShouldProcessQueue] = useState(false);
+    
+
     useEffect(() => {
         let mounted_batch_types = true;
         let mounted_batch_stages = true;
@@ -96,14 +97,14 @@ const Controls = (props) => {
 
             //filter batch states based on user action selected
             let filtered_stages = batchStages.filter(value => {
-                return action === 2 ? (value.id === 1 || value.id === 2 || value.id === 3) : (value.id === 1 || value.id === 2);
+                return parseInt(event.target.value) === 3 ? (value.id === 1 || value.id === 2 || value.id === 3) : (value.id === 1 || value.id === 2);
             });
 
             setRequiredStages(filtered_stages);
 
             //filter batch statuses based on user action selected
             let filtered_statuses = batchStatuses.filter(value => {
-                return action === 2 ? (value.id !== 0) : (value.id !== 4);
+                return parseInt(event.target.value) === 3 ? (value.id !== 0) : (value.id !== 4);
             });
             setRequiredStatuses(filtered_statuses);
         }
@@ -121,7 +122,7 @@ const Controls = (props) => {
 
     if (!batchTypes || !batchStages || !batchStatuses) {
         return null;
-    }
+    } 
 
     return (
 
@@ -254,7 +255,7 @@ const Controls = (props) => {
             >
                 {shouldOriginate &&
                     <Process
-                    batchInfo={batchInfo}                                              
+                        batchInfo={batchInfo}
                     />
                 }
             </Grid>

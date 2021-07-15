@@ -376,9 +376,7 @@ const Edit = props => {
                     fullWidth
                     InputLabelProps={{
                       shrink: true,
-                    }}
-                  
-                    required
+                    }}  
                     label="Description"
                     name="description"  
                     multiline      
@@ -398,8 +396,6 @@ const Edit = props => {
                     InputLabelProps={{
                       shrink: true,
                     }}
-                  
-                    required
                     label="Services Offered"
                     name="services_offered"  
                     multiline      

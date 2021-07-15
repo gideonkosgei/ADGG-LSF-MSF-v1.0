@@ -1,9 +1,9 @@
-import React, { useState, useEffect, useContext, Fragment } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
-import { Card, CardContent, Grid, colors, CardActions, Button, Fab, CircularProgress } from '@material-ui/core';
-import { batchProcessActions, genericFunctionSixParameters } from '../../../../../../../../utils/API';
-import { endpoint_batch_validation_un_processed_view, endpoint_batch_actions } from '../../../../../../../../configs/endpoints';
+import { Card, CardContent, LinearProgress, Grid, colors, CardActions, Fab, Button, CircularProgress, TextField } from '@material-ui/core';
+import { batchProcessActions, genericFunctionThreeParameters } from '../../../../../../../../utils/API';
+import { endpoint_batch_validation_view, endpoint_batch_actions } from '../../../../../../../../configs/endpoints';
 import MUIDataTable from "mui-datatables";
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import PerfectScrollbar from 'react-perfect-scrollbar';
@@ -13,11 +13,13 @@ import { ErrorDetails } from '../errorDetailsModal';
 import { Details } from '../DetailsModal';
 import ErrorOutlineIcon from '@material-ui/icons/ErrorOutline';
 import { green } from '@material-ui/core/colors';
-import CheckIcon from '@material-ui/icons/Check';
 import clsx from 'clsx';
-import SlowMotionVideoIcon from '@material-ui/icons/SlowMotionVideo';
-import { Redirect } from 'react-router-dom';
-
+import Alert from '@material-ui/lab/Alert';
+import CheckIcon from '@material-ui/icons/Check';
+import SaveIcon from '@material-ui/icons/Save';
+import DeleteIcon from '@material-ui/icons/Delete';
+import RefreshIcon from '@material-ui/icons/Refresh';
+import SettingsIcon from '@material-ui/icons/Settings';
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -29,7 +31,7 @@ const useStyles = makeStyles(theme => ({
     }
   },
   wrapper: {
-    margin: theme.spacing(1),
+    marginTop: theme.spacing(2),
     position: 'relative',
   },
   buttonSuccess: {
@@ -67,94 +69,134 @@ const getMuiTheme = () => createMuiTheme({
 });
 
 const Validate = props => {
-  const { step, UploadedRecords, batchInfo } = props;
+  const { UploadedRecords, batchInfo } = props;
   const classes = useStyles();
-  const [values, setValues] = useState(UploadedRecords);
-  const [{ organization_id }] = useContext(authContext);
+  const [data, setData] = useState(UploadedRecords);
+  const [values, setValues] = useState({});
   const [{ user_id }] = useContext(authContext);
   const [openErrorLog, setErrorLog] = useState(false);
   const [record_id, setRecordID] = useState();
   const [openDetails, setDetails] = useState(false);
   const [success, setSuccess] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [sent, setSent] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const timer = React.useRef();
+  const [output, setOutput] = useState({ status: null, message: "" });
+  const [batchStatus, setBatchStatus] = useState(UploadedRecords.length > 0 ? UploadedRecords[0].batch_status_id : null);
+  
 
   const uuid = batchInfo.uuid;
-  const batch_type = batchInfo.batch_type;
-
   const buttonClassname = clsx({
     [classes.buttonSuccess]: success,
   });
 
-
   useEffect(() => {
-    console.log('xxx');
-    let mounted = true;
-    (async (endpoint, desc, type, org_id, step, user_id) => {
-      await genericFunctionSixParameters(endpoint, desc, type, org_id, step, user_id)
-        .then(response => {
-          if (mounted) {
-            setValues(response.payload);
-          }
-        });
-    })(endpoint_batch_validation_un_processed_view, 'unfinalzed batches', batch_type, organization_id, step, user_id);
+  }, []);
 
-    return () => {
-      mounted = false;
-
-    };
-  }, [organization_id, step, user_id, batch_type]);
-
-
-  if (!values) {
-    return null;
+  async function refresh(endpoint, desc, batch_uuid) {
+    if (!loading) {
+      setSuccess(false);
+      setLoading(true);
+    }
+    setIsLoading(true);
+    await genericFunctionThreeParameters(endpoint, desc, batch_uuid)
+      .then(response => {
+        timer.current = window.setTimeout(() => {
+          setSuccess(true);
+          setLoading(false);
+          setIsLoading(false);
+          setData(response.payload);
+          setBatchStatus(response.payload.length > 0 ? response.payload[0].batch_status_id : null);
+        }, 500);
+      }).catch((error) => {
+        setSuccess(false);
+        setLoading(false);
+        setIsLoading(true);
+      })
   }
 
-  const handleValidate = event => {
-    event.preventDefault();
-    (async (_endpoint, _uuid, _action, _user_id) => {
-      await batchProcessActions(_endpoint, _uuid, _action, _user_id)
-        .then(() => {
-          setSent(true);
-        }).catch(() => {
+  async function validate(_endpoint, _uuid, _action, _user_id) {
+    if (!loading) {
+      setSuccess(false);
+      setLoading(true);
+    }
+    setIsLoading(true);
+    await batchProcessActions(_endpoint, _uuid, _action, _user_id)
+      .then((response) => {
+        setOutput({ status: null, message: '' });
+        timer.current = window.setTimeout(() => {
+          setSuccess(true);
+          setLoading(false);
+          setIsLoading(false);
+          if (parseInt(response.status) === 1) {
+            setOutput({ status: parseInt(response.status), message: response.message });
+          } else {
+            setOutput({ status: parseInt(response.status), message: response.message })
+          }
+        }, 500);
 
-        });
-    })(endpoint_batch_actions, uuid, 1, user_id);
-  };
+      }).catch((error) => {
+        setOutput({ status: 0, message: error.message })
+        setSuccess(false);
+        setLoading(false);
+        setIsLoading(false);
+      });
+  }
 
-  const handleDiscard = event => {
-    event.preventDefault();
-    (async (_endpoint, _uuid, _action, _user_id) => {
-      await batchProcessActions(_endpoint, _uuid, _action, _user_id)
-        .then(() => {
-          var delayInMilliseconds = 1000; //1 second
-          setTimeout(function () {
-            window.location.reload();
-          }, delayInMilliseconds);
+  async function discard(_endpoint, _uuid, _action, _user_id) {
+    if (!loading) {
+      setSuccess(false);
+      setLoading(true);
+    }
+    setIsLoading(true);
+    await batchProcessActions(_endpoint, _uuid, _action, _user_id)
+      .then((response) => {
+        setOutput({ status: null, message: '' });
+        timer.current = window.setTimeout(() => {
+          setSuccess(true);
+          setLoading(false);
+          setIsLoading(false);
+          if (parseInt(response.status) === 1) {
+            setOutput({ status: parseInt(response.status), message: response.message });
+          } else {
+            setOutput({ status: parseInt(response.status), message: response.message })
+          }
+        }, 500);
+      }).catch((error) => {
+        setOutput({ status: 0, message: error.message })
+        setSuccess(false);
+        setLoading(false);
+        setIsLoading(false);
+      });
+  }
 
-        }).catch(() => {
+  async function save(_endpoint, _uuid, _action, _user_id) {
+    if (!loading) {
+      setSuccess(false);
+      setLoading(true);
+    }
+    setIsLoading(true);
+    await batchProcessActions(_endpoint, _uuid, _action, _user_id)
+      .then((response) => {
+        setOutput({ status: null, message: '' });
+        timer.current = window.setTimeout(() => {
+          setSuccess(true);
+          setLoading(false);
+          setIsLoading(false);
+          if (parseInt(response.status) === 1) {
+            setOutput({ status: parseInt(response.status), message: response.message });
+          } else {
+            setOutput({ status: parseInt(response.status), message: response.message })
+          }
+        }, 500);
 
-        });
-    })(endpoint_batch_actions, uuid, 2, user_id);
-  };
-
-  const handleProgressToPostingQueue = event => {
-    event.preventDefault();
-    (async (_endpoint, _uuid, _action, _user_id) => {
-      await batchProcessActions(_endpoint, _uuid, _action, _user_id)
-        .then(() => {
-
-          var delayInMilliseconds = 1000; //1 second
-          setTimeout(function () {
-            window.location.reload();
-          }, delayInMilliseconds);
-
-        }).catch(() => {
-
-        });
-    })(endpoint_batch_actions, uuid, 3, user_id);
-  };
-
+      }).catch((error) => {
+        setOutput({ status: 0, message: error.message })
+        setSuccess(false);
+        setLoading(false);
+        setIsLoading(false);
+      });
+  }
 
   const handleErrorLogOpen = (record_id) => {
     setRecordID(record_id);
@@ -173,7 +215,27 @@ const Validate = props => {
   const handleDetailsClose = () => {
     setDetails(false);
   };
-  //purchase_cost
+
+  const handleClickExecute = () => {
+    setOutput({ status: null, message: '' });
+    const action = parseInt(values.action);
+    switch (action) {
+      case 1: // refresh
+        refresh(endpoint_batch_validation_view, 'view batches', uuid);
+        break;
+      case 2: // validate
+        validate(endpoint_batch_actions, uuid, 1, user_id);
+        break;
+      case 3: // save
+        save(endpoint_batch_actions, uuid, 3, user_id);
+        break;
+      case 4: //discard
+        discard(endpoint_batch_actions, uuid, 2, user_id);
+        break;
+      default:
+      // Do nothing: Invalid option
+    }
+  };
 
   const columns = [
     { name: "record_id", label: "record_id", options: { filter: false, sort: false, display: false } },
@@ -234,7 +296,6 @@ const Validate = props => {
     }
   ];
 
-
   const options = {
     filter: false,
     rowsPerPage: 10,
@@ -251,76 +312,140 @@ const Validate = props => {
     }
   };
 
+  const handleChange = event => {
+    event.persist();
+    setSuccess(false);
+    setValues({
+      ...values,
+      [event.target.name]: event.target.type === 'checkbox' ? event.target.checked : event.target.value
+
+    });
+  }; 
+
+  function get_actions(status) {
+    let actions = [];
+    switch (status) {
+      case 1:
+        actions = [{ id: 1, name: "Refresh" }, { id: 2, name: "Validate" }, { id: 4, name: "Discard" }];
+        break;
+      case 4:
+        actions = [{ id: 1, name: "Refresh" }];
+        break;
+      default:
+        actions = [{ id: 1, name: "Refresh" }, { id: 2, name: "Validate" }, { id: 3, name: "Save" }, { id: 4, name: "Discard" }];
+    }
+    return actions;
+  }
+
   return (
-    <Fragment>
-      {sent ? (
-        <Redirect to= {`/batch-processing/workflow/${uuid}/${batch_type}`} />
-      ) : (
-        <Fragment>
-          <Grid container spacing={1} justify="center">
-            <Grid item xs={12}>
-              <Card style={{ border: "none", boxShadow: "none" }}>
-                <CardContent>
-                  <div className={classes.inner}>
-                    <PerfectScrollbar>
-                      <MuiThemeProvider theme={getMuiTheme()}>
-                        <MUIDataTable
-                          title=""
-                          data={values}
-                          columns={columns}
-                          options={options}
-                        />
-                      </MuiThemeProvider>
-                    </PerfectScrollbar>
-                  </div>
+    <Grid container spacing={1} justify="center">
+      <Grid item xs={12}>
+        {isLoading &&
+          <>
+            <LinearProgress />
+            <br />
+          </>
+        }
+        {
+          output.status === 0 ?
+            <>
+              <Alert severity="error" >{output.message}</Alert>
+            </>
+            : output.status === 1 ?
+              <>
+                <Alert severity="success" >{output.message}</Alert>
+              </>
+              : null
+        }
 
-                </CardContent>
-                <CardActions>
-                  <form onSubmit={handleValidate}>
-                    <>
-                      <div className={classes.wrapper}>
-                        <Fab
-                          color="primary"
-                          aria-label="save"
-                          className={buttonClassname}
-                        >
-                          {success ? <CheckIcon /> : <SlowMotionVideoIcon />}
-                        </Fab>
-                        {loading && <CircularProgress size={68} className={classes.fabProgress} />}
-                      </div>
-                      <div className={classes.wrapper}>
-                        <Button
-                          variant="contained"
-                          color="primary"
-                          className={buttonClassname}
-                          disabled={loading}
-                          type="submit"
-                        >
-                          validate
-                        </Button>
-                        {loading && <CircularProgress size={24} className={classes.buttonProgress} />}
-                      </div>
-                    </>
-                  </form>
+        <Card style={{ border: "none", boxShadow: "none" }}>
+          <CardContent>
+            <div className={classes.inner}>
+              <PerfectScrollbar>
+                <MuiThemeProvider theme={getMuiTheme()}>
+                  <MUIDataTable
+                    title=""
+                    data={data}
+                    columns={columns}
+                    options={options}
+                  />
+                </MuiThemeProvider>
+              </PerfectScrollbar>
+            </div>
+          </CardContent>
+          <CardActions>
+            <TextField
+              fullWidth={false}
+              InputLabelProps={{
+                shrink: true,
+              }}
+              required
+              size="medium"
+              margin='normal'
+              label="ACTION"
+              name="action"
+              select
+              SelectProps={{ native: true }}
+              variant="outlined"
+              onChange={handleChange}
+            >
+              <option value=""></option>
+              {get_actions(batchStatus).map(action => (
+                <option
+                  value={action.id}
+                >
+                  {action.name}
+                </option>
+              ))
+              }
+            </TextField>
 
-                </CardActions>
-                <ErrorDetails
-                  record_id={record_id}
-                  onClose={handleErrorLogClose}
-                  open={openErrorLog}
-                />
-                <Details
-                  record_id={record_id}
-                  data={values}
-                  onClose={handleDetailsClose}
-                  open={openDetails}
-                />
-              </Card>
-            </Grid>
-          </Grid>
-        </Fragment>
-      )}
-    </Fragment>
+            <>
+              <div className={classes.wrapper}>
+                <Fab
+                  aria-label="save"
+                  color="primary"
+                  className={buttonClassname}
+                >
+                  {
+                    success ? <CheckIcon /> :
+                      parseInt(values.action) === 1 ? <RefreshIcon /> :
+                        parseInt(values.action) === 2 ? <SettingsIcon /> :
+                          parseInt(values.action) === 3 ? <SaveIcon /> :
+                            parseInt(values.action) === 4 ? <DeleteIcon /> : null
+                  }
+                </Fab>
+                {loading && <CircularProgress size={68} className={classes.fabProgress} />}
+              </div>
+              <div className={classes.wrapper}>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  className={buttonClassname}
+                  disabled={loading}
+                  onClick={handleClickExecute}
+                  size='large'
+                >
+                  EXECUTE
+                </Button>
+                {loading && <CircularProgress size={24} className={classes.buttonProgress} />}
+              </div>
+            </>
+
+          </CardActions>
+          <ErrorDetails
+            record_id={record_id}
+            onClose={handleErrorLogClose}
+            open={openErrorLog}
+          />
+          <Details
+            record_id={record_id}
+            onClose={handleDetailsClose}
+            open={openDetails}
+          />
+        </Card>
+      </Grid>
+    </Grid>
   );
 };
 
@@ -330,5 +455,4 @@ Validate.propTypes = {
   step: PropTypes.number.isRequired,
   UploadedRecords: PropTypes.object.isRequired
 };
-
 export default Validate;

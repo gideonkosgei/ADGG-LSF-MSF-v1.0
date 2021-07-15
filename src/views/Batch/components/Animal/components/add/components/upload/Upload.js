@@ -1,7 +1,7 @@
 import React,{useState,useContext} from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
-import {OutTable, ExcelRenderer} from 'react-excel-renderer';
+import {ExcelRenderer} from 'react-excel-renderer';
 import { makeStyles} from '@material-ui/styles';
 import {Card, CardContent,Grid,Divider,Button,CardActions,Input} from '@material-ui/core';
 import authContext from '../../../../../../../../contexts/AuthContext';
@@ -12,6 +12,8 @@ import SuccessSnackbar from '../../../../../../../../components/SuccessSnackbar'
 import ErrorSnackbar from '../../../../../../../../components/ErrorSnackbar';
 import uuid from 'uuid';
 import PerfectScrollbar from 'react-perfect-scrollbar';
+import MUIDataTable from "mui-datatables";
+import {createMuiTheme, MuiThemeProvider} from '@material-ui/core/styles';
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -33,6 +35,16 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
+const getMuiTheme = () => createMuiTheme({
+  overrides: {
+    MUIDataTableBodyCell: {
+      root: {
+        backgroundColor: "#FFF",
+        width: "125px"
+      }
+    }
+  }
+});
 
 
 const Upload = props => {
@@ -46,18 +58,49 @@ const Upload = props => {
   const [uploadedFileName, setUploadedFileName] = useState("");
   const [openSnackbarSuccess, setopenSnackbarSuccess] = useState(false);
   const [openSnackbarError, setopenSnackbarError] = useState(false);
-  const [ {user_id,organization_id} ] = useContext(authContext);
+  const [ {user_id,organization_id} ] = useContext(authContext); 
+
 
   const fileInput = React.createRef();
-  const renderFile = (fileObj) => {    
+  const renderFile = (fileObj) => {      
     ExcelRenderer(fileObj, (err, resp) => {      
       if(err){
         console.log(err.message);            
       }
-      else{ 
-        setCols(resp.cols); 
-        setRows(resp.rows);
-        setDataLoaded(true);
+      else{
+        
+               
+        for (let i = 0; i< resp.rows.length; i++){         
+          for(let r = 0 ; r<resp.rows[i].length; r++){
+            
+            /* Replace whitespaces with underscore on column headers */
+            if(i === 0) { 
+              resp.rows[i][r] =  resp.rows[i][r].split(" ").join("_").toUpperCase();             
+            }              
+            /* replace empty slots with null */
+            if(typeof resp.rows[i][r] === 'undefined') {
+              resp.rows[i][r] = null;
+            }
+            
+            /* Convert numeric dates to normal date */
+            if ((r === 7 || r === 8 || r === 9)){
+              if(resp.rows[i][r]  && !isNaN(resp.rows[i][r])){
+                resp.rows[i][r] = new Date(Math.round((resp.rows[i][r] - 25569)*86400*1000)).toLocaleDateString() 
+              }
+            }
+          }
+        }  
+        
+        /* remove the 1st row. it contains the column headers */
+        let file_rows = [];  
+        for (let i = 0; i<resp.rows.length; i++) {
+          if (i !== 0) {
+            file_rows.push(resp.rows[i]);
+          }          
+        }
+        setCols(resp.rows[0]);
+        setRows(file_rows);
+        setDataLoaded(true);        
       }
     }); 
   };
@@ -84,6 +127,7 @@ const Upload = props => {
   const openFileBrowser = () => {
     fileInput.current.click();
   } 
+
   const handleSubmit = event => {
     const batch_uuid = uuid();
     localStorage.setItem("batch_upload_uuid", batch_uuid);
@@ -110,6 +154,50 @@ const Upload = props => {
   const handleSnackbarErrorClose = () => {
     setopenSnackbarError(false);
   };
+
+  const options = {       
+    filter: true,
+    rowsPerPage: 20,       
+    rowsPerPageOptions :[5,10,20,50,100],
+    selectableRows: 'none',      
+    filterType: 'checkbox',
+    responsive: 'stacked',                
+    rowHover: true,       
+    setTableProps: () => {
+     return {
+       padding: "none" ,         
+       size: "small",
+     };
+   }  
+  };
+
+ 
+
+  /** set datatable columns */
+ let columns = [];
+ if (cols) {
+  for (let i = 0; i<cols.length; i++){
+    columns.push(
+      { 
+        name: cols[i],
+        label: cols[i],
+        options: {
+          filter: false,
+          sort: false, 
+          display:true  
+        }
+      }
+    );
+  }
+
+  
+
+}
+
+  
+  
+
+  
   
   return (
     <Grid container spacing={1} justify="center"> 
@@ -129,6 +217,7 @@ const Upload = props => {
              <Button color="info"  onClick={openFileBrowser}><i className="cui-file"></i> Browse</Button>
              <input type="file" hidden onChange={fileHandler} ref={fileInput} onClick={(event)=> { event.target.value = null }}/> 
              <Input type="text"  value={uploadedFileName} readOnly invalid={isFormInvalid} />              
+          
           </Grid>   
 
           <Grid container spacing={4}> 
@@ -137,7 +226,14 @@ const Upload = props => {
               <div>             
                 <Card  className="restrict-card">   
                    <PerfectScrollbar>                 
-                      <OutTable data={rows} columns={cols} tableClassName="ExcelTable2007" tableHeaderRowClass="heading" />
+                    <MuiThemeProvider theme={getMuiTheme()}>                
+                      <MUIDataTable
+                        title = "BATCH LISTING - PEDIGREE FILE"
+                        data={rows}
+                        columns={columns}
+                        options={options}
+                      />
+                    </MuiThemeProvider>
                     </PerfectScrollbar>
                 </Card>  
                        

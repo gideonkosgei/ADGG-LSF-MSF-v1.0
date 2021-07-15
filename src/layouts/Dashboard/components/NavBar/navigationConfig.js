@@ -5,6 +5,7 @@ import HomeIcon from '@material-ui/icons/HomeOutlined';
 import ListAltIcon from '@material-ui/icons/ListAlt';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import LibraryBooksIcon from '@material-ui/icons/LibraryBooks';
+import AccountTreeIcon from '@material-ui/icons/AccountTree';
 
 let p = [
   {
@@ -54,7 +55,22 @@ let p = [
           {
             title: 'Graduation',
             href: '/management/graduation/view/0'
-          }
+          },
+          {
+            title: 'Partners',
+            icon: AccountTreeIcon,
+            href: '/settings/partners/service-providers',
+            children: [
+              {
+                title: 'Service Providers',
+                href: '/settings/partners/service-providers'
+              },
+              {
+                title: 'Agents',
+                href: '/settings/partners/agents'
+              }
+            ]
+          } 
         ]
       },
       {
@@ -103,6 +119,7 @@ let p = [
           },
         ]
       },
+      */
 
       {
         title: 'Batch Processing',
@@ -115,7 +132,7 @@ let p = [
           }
         ]
       },
-      */
+      
       {
         title: 'Account Settings',
         href: '/settings',

@@ -186,9 +186,8 @@ const Edit = props => {
                              inputProps={{
                               readOnly: Boolean(readOnly),
                               disabled: Boolean(readOnly)                
-                            }}
-                             
-                           
+                            }}                             
+                             required
                              label="Agent Name"
                              name="name"                
                              onChange={handleChange}
@@ -438,9 +437,7 @@ const Edit = props => {
                              inputProps={{
                               readOnly: Boolean(readOnly),
                               disabled: Boolean(readOnly)                
-                            }}
-                           
-                             required
+                            }}                             
                              label="Specialization"
                              name="speciality"  
                              multiline      

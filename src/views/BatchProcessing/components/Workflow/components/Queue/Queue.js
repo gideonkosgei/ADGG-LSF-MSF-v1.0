@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import { Grid, Typography, Card, CardContent, Link, LinearProgress } from '@material-ui/core';
-import { genericFunctionFiveParameters } from '../../../../../../utils/API';
+import { genericFunctionEightParameters } from '../../../../../../utils/API';
 import { endpoint_batch_validation_un_processed_view } from '../../../../../../configs/endpoints';
 import MUIDataTable from "mui-datatables";
 import { MuiThemeProvider } from '@material-ui/core/styles';
@@ -23,30 +23,29 @@ const useStyles = makeStyles(theme => ({
 
 const Queue = (props) => {
     const classes = useStyles();
-    const { batch_type } = props;
+    const { batch_type,batch_stage,batch_status,action } = props;
     const [data, setData] = useState([]);
     const [{ organization_id, user_id }] = useContext(authContext);
     const [isLoading, setIsLoading] = useState(true);
 
-    let title = "BATCH DETAILS";
+    let title = "BATCH LIST";  
 
     useEffect(() => {
         let mounted = true;
-
-        (async (endpoint, desc, type, org_id, user_id) => {
-            await genericFunctionFiveParameters(endpoint, desc, type, org_id, user_id)
+        (async (endpoint, desc,type,stage,status, org_id,user_id,action) => {
+            await genericFunctionEightParameters(endpoint, desc,type,stage,status,org_id,user_id,action)
                 .then(response => {
                     if (mounted) {
                         setData(response.payload);
                         setIsLoading(false);
                     }
                 });
-        })(endpoint_batch_validation_un_processed_view, 'unfinalized Batches', batch_type, organization_id, user_id);
+        })(endpoint_batch_validation_un_processed_view, 'unfinalized Batches', batch_type,batch_stage,batch_status, organization_id, user_id,action);
 
         return () => {
             mounted = false;
         };
-    }, [organization_id, batch_type, user_id]);
+    }, [organization_id, batch_type,batch_stage,batch_status, user_id,action]);
 
     if (!data) {
         return null;
@@ -58,9 +57,9 @@ const Queue = (props) => {
         { name: "batch_type", label: "BATCH TYPE", options: { filter: false, sort: true, display: true } },
         { name: "record_count", label: "RECORDS", options: { filter: false, sort: false, display: true } },
         { name: "step", label: "CURRENT STAGE", options: { filter: true, sort: true, display: true } },
-        { name: "status", label: "STATUS", options: { filter: true, sort: true, display: true } },
+        { name: "batch_status", label: "STATUS", options: { filter: true, sort: true, display: true } },
         { name: "created_by", label: "CREATED BY", options: { filter: true, sort: true, display: true } },
-        { name: "created_at", label: "DATE CREATED", options: { filter: false, sort: true, display: true } },
+        { name: "created_date", label: "DATE CREATED", options: { filter: false, sort: true, display: true } },
         { name: "created_time", label: "TIME CREATED", options: { filter: false, sort: true, display: true } },
         { name: "batch_type_id", label: "BATCH TYPE ID", options: { filter: false, sort: false, display: false } },
         {
@@ -141,6 +140,9 @@ const Queue = (props) => {
 Queue.propTypes = {
     batch_type: PropTypes.number.isRequired,
     batch_stage: PropTypes.number.isRequired,
-    batch_status: PropTypes.number.isRequired
+    batch_status: PropTypes.number.isRequired,
+    action: PropTypes.number.isRequired
 };
 export default Queue;
+
+

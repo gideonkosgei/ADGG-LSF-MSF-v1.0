@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useContext } from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
-import { Grid, Typography, Card, CardContent } from '@material-ui/core';
-import { genericFunctionSevenParameters } from '../../../../../../utils/API';
-import { endpoint_batch_report_all } from '../../../../../../configs/endpoints';
+import { Grid, Typography,LinearProgress, Card, CardContent } from '@material-ui/core';
+import { genericFunctionEightParameters } from '../../../../../../utils/API';
+import { endpoint_batch_validation_un_processed_view } from '../../../../../../configs/endpoints';
 import MUIDataTable from "mui-datatables";
 import { MuiThemeProvider } from '@material-ui/core/styles';
 import PerfectScrollbar from 'react-perfect-scrollbar';
@@ -22,31 +22,32 @@ const useStyles = makeStyles(theme => ({
 
 const Report = (props) => {
     const classes = useStyles();
-    const { batch_type, batch_stage, batch_status } = props;
+    const { batch_type, batch_stage, batch_status,action } = props;
     const [data, setData] = useState([]);
     const [showReportDetails, setShowReportDetails] = useState(false);    
     const [rowData, setTableRowData] = useState([]);
-    const [{ organization_id, user_id }] = useContext(authContext);    
+    const [{ organization_id, user_id }] = useContext(authContext); 
+    const [isLoading, setIsLoading] = useState(true);   
 
     let title = "BATCH DETAILS";
 
     useEffect(() => {
         let mounted = true;
 
-        (async (endpoint, desc, org, type, stage, status, user) => {
-            await genericFunctionSevenParameters(endpoint, desc, org, type, stage, status, user)
+        (async (endpoint, desc,type,stage,status, org_id,user_id,action) => {
+            await genericFunctionEightParameters(endpoint, desc,type,stage,status,org_id,user_id,action)
                 .then(response => {
                     if (mounted) {
-                        setData(response.payload[0]);
+                        setData(response.payload);
+                        setIsLoading(false);
                     }
                 });
-        })(endpoint_batch_report_all, 'Batch Types', organization_id, batch_type, batch_stage, batch_status, user_id);
-
+        })(endpoint_batch_validation_un_processed_view, 'unfinalized Batches', batch_type,batch_stage,batch_status, organization_id, user_id,action);
 
         return () => {
             mounted = false;
         };
-    }, [organization_id, batch_type, batch_stage, batch_status, user_id]);
+    }, [organization_id, batch_type, batch_stage, batch_status, user_id,action]);
 
     if (!data) {
         return null;
@@ -106,6 +107,10 @@ const Report = (props) => {
                 </Typography>
                 
                 <br />
+                <br />
+                {isLoading &&
+                    <LinearProgress />
+                }
             </Grid>
             <Grid item xs={12}>
                 <Card>
@@ -138,6 +143,7 @@ const Report = (props) => {
 Report.propTypes = {
     batch_type: PropTypes.number.isRequired,
     batch_stage: PropTypes.number.isRequired,
-    batch_status: PropTypes.number.isRequired   
+    batch_status: PropTypes.number.isRequired,
+    action: PropTypes.number.isRequired  
 };
 export default Report;

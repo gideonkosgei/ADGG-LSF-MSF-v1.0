@@ -10,26 +10,26 @@ import { Page } from 'components';
 const useStyles = makeStyles(theme => ({
   root: {},
   saveButton: {
-      color: theme.palette.white,
-      backgroundColor: colors.green[600],
-      '&:hover': {
-          backgroundColor: colors.green[900]
-      }
+    color: theme.palette.white,
+    backgroundColor: colors.green[600],
+    '&:hover': {
+      backgroundColor: colors.green[900]
+    }
   }
 }));
 
 function getSteps() {
-  return ['Upload Batch', 'Validate Batch', 'Post Batch', 'Post Successful'];
+  return ['Upload Batch', 'Validate Batch', 'Post Batch'];
 }
 
-function getStepContent(step, records, batch_info) {  
+function getStepContent(step, records, batch_info) {
   switch (step) {
     case 0:
       return <Upload />;
     case 1:
-      return <Validate UploadedRecords={records} step = {step} batchInfo = {batch_info}/>;
+      return <Validate UploadedRecords={records} step={step} batchInfo={batch_info} />;
     case 2:
-      return <Post UploadedRecords={records} />;
+      return <Post UploadedRecords={records} batchInfo={batch_info} />;
     default:
       return 'Unknown step';
   }
@@ -40,22 +40,22 @@ const Process = props => {
   const { batchInfo } = props;
   const uuid = batchInfo.uuid;
   const [values, setValues] = useState([]);
-  const [activeStep, setActiveStep] = useState(0); 
-  const steps = getSteps();  
+  const [activeStep, setActiveStep] = useState(0);
+  const steps = getSteps();
 
   useEffect(() => {
     let mounted = true;
-    (async (endpoint,desc, batch_uuid) => {
-      await genericFunctionThreeParameters(endpoint,desc, batch_uuid)
-        .then(response => {                 
-          if (mounted) {                               
-            if (response.payload.length > 0) {              
-              setValues(response.payload);
-              setActiveStep(parseInt(response.payload[0].step_id));                         
+    (async (endpoint, desc, batch_uuid) => {
+      await genericFunctionThreeParameters(endpoint, desc, batch_uuid)
+        .then(response => {
+          if (mounted) {
+            if (response.payload.length > 0) {
+              setValues(response.payload);            
+              setActiveStep(parseInt(response.payload[0].step_id));
             }
           }
         });
-    })(endpoint_batch_validation_view,'view batches', uuid);
+    })(endpoint_batch_validation_view, 'view batches', uuid);
     return () => {
       mounted = false;
     };
@@ -64,7 +64,6 @@ const Process = props => {
   if (!values) {
     return null;
   }
-
 
   return (
     <Page
@@ -107,7 +106,7 @@ const Process = props => {
                     </div>
                   ) : (
                     <div>
-                      {getStepContent(activeStep, values,batchInfo)}
+                      {getStepContent(activeStep, values, batchInfo)}
                     </div>
                   )}
                 </div>
@@ -121,7 +120,7 @@ const Process = props => {
 };
 
 Process.propTypes = {
-  batchInfo: PropTypes.object.isRequired 
+  batchInfo: PropTypes.object.isRequired
 };
 
 export default Process;

@@ -23,7 +23,7 @@ const Header = props => {
         component="h1"
         variant="h3"
       >
-        Change account information
+       Account Settings
       </Typography>
     </div>
   );

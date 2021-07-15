@@ -559,6 +559,12 @@ export const endpoint_batch_errors= {
   headers: headers   
 };
 
+export const endpoint_batch_details= {
+  url: `${api}/batches/details`,
+  method: 'GET',
+  headers: headers   
+};
+
 export const endpoint_batch_template= {
   url: `${api}/batches/template/`,
   method: 'GET',

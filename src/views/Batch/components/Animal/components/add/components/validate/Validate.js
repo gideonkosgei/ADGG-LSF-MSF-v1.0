@@ -19,7 +19,6 @@ import {Details} from '../DetailsModal';
 import ErrorOutlineIcon from '@material-ui/icons/ErrorOutline';
 
 
-
 const useStyles = makeStyles(theme => ({
   root: {},
   saveButton: {
@@ -50,6 +49,7 @@ const Validate = props => {
 
   useEffect(() => {     
     let mounted = true;
+
       (async  (endpoint,type,org_id,step,user_id) => {     
         await  getBatchUnprocessed(endpoint,type,org_id,step,user_id)
         .then(response => {                        

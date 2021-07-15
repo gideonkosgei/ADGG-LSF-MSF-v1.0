@@ -1,21 +1,21 @@
-import React,{useState,useContext,Fragment} from 'react';
+import React, { useState, useContext } from 'react';
 import PropTypes from 'prop-types';
-import {ExcelRenderer} from 'react-excel-renderer';
-import { makeStyles} from '@material-ui/styles';
-import {Grid,Button,Card,CardActions,Input,Fab,CircularProgress} from '@material-ui/core';
+import { ExcelRenderer } from 'react-excel-renderer';
+import { makeStyles } from '@material-ui/styles';
+import { Grid, Button, Card, CardActions, Input, Fab, CircularProgress } from '@material-ui/core';
 import authContext from '../../../../../../../../contexts/AuthContext';
-import {postBatchUpload}   from '../../../../../../../../utils/API';
-import {endpoint_batch_animal_upload} from '../../../../../../../../configs/endpoints';
+import { postBatchUpload } from '../../../../../../../../utils/API';
+import { endpoint_batch_animal_upload } from '../../../../../../../../configs/endpoints';
 import uuid from 'uuid';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import MUIDataTable from "mui-datatables";
-import {createMuiTheme, MuiThemeProvider} from '@material-ui/core/styles';
+import { createMuiTheme, MuiThemeProvider } from '@material-ui/core/styles';
 import { green } from '@material-ui/core/colors';
 import CheckIcon from '@material-ui/icons/Check';
 import SaveIcon from '@material-ui/icons/Save';
 import Alert from '@material-ui/lab/Alert';
 import clsx from 'clsx';
-import { Redirect } from 'react-router-dom';
+
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -25,7 +25,7 @@ const useStyles = makeStyles(theme => ({
     flexDirection: 'column',
     textAlgin: 'center'
   },
-  submitButton: {   
+  submitButton: {
     backgroundColor: '#682622',
   },
   name: {
@@ -83,249 +83,237 @@ const Upload = props => {
   const [isFormInvalid, setIsFormInvalid] = useState(false);
   const [rows, setRows] = useState(null);
   const [cols, setCols] = useState(null);
-  const [uploadedFileName, setUploadedFileName] = useState(""); 
-  const [ {user_id,organization_id} ] = useContext(authContext);
+  const [uploadedFileName, setUploadedFileName] = useState("");
+  const [{ user_id, organization_id }] = useContext(authContext);
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
-  const [output, setOutput] = useState({status:null, message:""}); 
-  const [sent, setSent] = useState(false);
+  const [output, setOutput] = useState({ status: null, message: "" });
   const batch_uuid = uuid();
-  const batch_type =  8;
+  const batch_type = 8;
 
-  const timer = React.useRef();  
+  const timer = React.useRef();
   const buttonClassname = clsx({
     [classes.buttonSuccess]: success,
   });
 
-
   const fileInput = React.createRef();
-  const renderFile = (fileObj) => {      
-    ExcelRenderer(fileObj, (err, resp) => {      
-      if(err){
-        console.log(err.message);            
+  const renderFile = (fileObj) => {
+    ExcelRenderer(fileObj, (err, resp) => {
+      if (err) {
+        console.log(err.message);
       }
-      else{        
-          
-        for (let i = 0; i< resp.rows.length; i++){         
-          for(let r = 0 ; r<resp.rows[i].length; r++){
-            
+      else {
+
+        for (let i = 0; i < resp.rows.length; i++) {
+          for (let r = 0; r < resp.rows[i].length; r++) {
+
             /* Replace whitespaces with underscore on column headers */
-            if(i === 0) { 
-              resp.rows[i][r] =  resp.rows[i][r].split(" ").join("_").toUpperCase();             
-            }              
+            if (i === 0) {
+              resp.rows[i][r] = resp.rows[i][r].split(" ").join("_").toUpperCase();
+            }
             /* replace empty slots with null */
-            if(typeof resp.rows[i][r] === 'undefined') {
+            if (typeof resp.rows[i][r] === 'undefined') {
               resp.rows[i][r] = null;
             }
-            
+
             /* Convert numeric dates to normal date */
-            if ((r === 7 || r === 8 || r === 9)){
-              if(resp.rows[i][r]  && !isNaN(resp.rows[i][r])){
-                resp.rows[i][r] = new Date(Math.round((resp.rows[i][r] - 25569)*86400*1000)).toLocaleDateString() 
+            if ((r === 7 || r === 8 || r === 9)) {
+              if (resp.rows[i][r] && !isNaN(resp.rows[i][r])) {
+                resp.rows[i][r] = new Date(Math.round((resp.rows[i][r] - 25569) * 86400 * 1000)).toLocaleDateString()
               }
             }
           }
-        }  
-        
+        }
+
         /* remove the 1st row. it contains the column headers */
-        let file_rows = [];  
-        for (let i = 0; i<resp.rows.length; i++) {
+        let file_rows = [];
+        for (let i = 0; i < resp.rows.length; i++) {
           if (i !== 0) {
             file_rows.push(resp.rows[i]);
-          }          
+          }
         }
         setCols(resp.rows[0]);
         setRows(file_rows);
-        setDataLoaded(true);        
+        setDataLoaded(true);
       }
-    }); 
+    });
   };
-  
-  const fileHandler = (event) => {    
-    if(event.target.files.length){
+
+  const fileHandler = (event) => {
+    if (event.target.files.length) {
       let fileObj = event.target.files[0];
-      let fileName = fileObj.name;   
-      
-   
-      if(fileName.slice(fileName.lastIndexOf('.')+1) === "csv" || fileName.slice(fileName.lastIndexOf('.')+1) === "xls" ||fileName.slice(fileName.lastIndexOf('.')+1) === "xlsx"){
+      let fileName = fileObj.name;
+
+
+      if (fileName.slice(fileName.lastIndexOf('.') + 1) === "csv" || fileName.slice(fileName.lastIndexOf('.') + 1) === "xls" || fileName.slice(fileName.lastIndexOf('.') + 1) === "xlsx") {
         setIsFormInvalid(false);
-        setUploadedFileName(fileName);        
+        setUploadedFileName(fileName);
         renderFile(fileObj)
-      }    
-      else{
-        setIsFormInvalid(true);
-        setUploadedFileName("");        
       }
-    }               
+      else {
+        setIsFormInvalid(true);
+        setUploadedFileName("");
+      }
+    }
   };
   const openFileBrowser = () => {
     fileInput.current.click();
   }
 
-  const handleSubmit = event => {   
+  const handleSubmit = event => {
     sessionStorage.setItem("batch_upload_uuid", batch_uuid);
     event.preventDefault();
     if (!loading) {
       setSuccess(false);
       setLoading(true);
     }
-    (async  (endpoint,rows,cols,user_id,org_id,batch_type,uuid) => {     
-      await  postBatchUpload(endpoint,rows,cols,user_id,org_id,batch_type,uuid)
-      .then((response) => { 
-        
-        setOutput({status:null, message:''});      
-        timer.current = window.setTimeout(() => {
-          setSuccess(true);
-          setLoading(false);          
-          if (parseInt(response.status) === 1){               
-            setOutput({status:parseInt(response.status), message:response.message});           
-           setSent(true);
-          } else {
-            setOutput({status:parseInt(response.status), message:response.message})
-          } 
-        }, 500);
-       
+    (async (endpoint, rows, cols, user_id, org_id, batch_type, uuid) => {
+      await postBatchUpload(endpoint, rows, cols, user_id, org_id, batch_type, uuid)
+        .then((response) => {
+          setOutput({ status: null, message: '' });
+          timer.current = window.setTimeout(() => {
+            setSuccess(true);
+            setLoading(false);
 
-      }).catch((error) => { 
-        setOutput({status:0, message:error.message})
-        setSuccess(false);
-        setLoading(false); 
-      });
-    })(endpoint_batch_animal_upload,rows,cols,user_id,organization_id,batch_type,batch_uuid);    
+            if (parseInt(response.status) === 1) {
+              setOutput({ status: parseInt(response.status), message: response.message });           
+            } else {
+              setOutput({ status: parseInt(response.status), message: response.message })
+            }
+            
+          }, 500);
+
+        }).catch((error) => {
+          setOutput({ status: 0, message: error.message })
+          setSuccess(false);
+          setLoading(false);
+        });
+    })(endpoint_batch_animal_upload, rows, cols, user_id, organization_id, batch_type, batch_uuid);
   };
 
-  const options = {       
+  const options = {
     filter: true,
-    rowsPerPage: 10,       
-    rowsPerPageOptions :[5,10,20,50,100],
-    selectableRows: 'none',      
+    rowsPerPage: 10,
+    rowsPerPageOptions: [5, 10, 20, 50, 100],
+    selectableRows: 'none',
     filterType: 'checkbox',
-    responsive: 'stacked',                
-    rowHover: true,       
+    responsive: 'stacked',
+    rowHover: true,
     setTableProps: () => {
-     return {
-       padding: "none" ,         
-       size: "small",
-     };
-   }  
-  }; 
+      return {
+        padding: "none",
+        size: "small",
+      };
+    }
+  };
 
   /** set datatable columns */
- let columns = [];
- if (cols) {
-  for (let i = 0; i<cols.length; i++){
-    columns.push(
-      { 
-        name: cols[i],
-        label: cols[i],
-        options: {
-          filter: false,
-          sort: false, 
-          display:true  
+  let columns = [];
+  if (cols) {
+    for (let i = 0; i < cols.length; i++) {
+      columns.push(
+        {
+          name: cols[i],
+          label: cols[i],
+          options: {
+            filter: false,
+            sort: false,
+            display: true
+          }
         }
-      }
-    );
+      );
+    }
   }
-}
 
   return (
-    <Fragment>       
-			{sent ? (       
-				<Redirect to={`/batch-processing/workflow/${batch_uuid}/${batch_type}`}/>       
-			) : (
-        <Fragment> 
-    <Grid container spacing={1} justify="center"> 
+    <Grid container spacing={1} justify="center">
       <Grid item xs={12}>
-        <form onSubmit={handleSubmit} id = "event">  
+        <form onSubmit={handleSubmit} id="event">
           {
             output.status === 0 ?
               <>
-                <Alert severity="error" >{output.message}</Alert>             
+                <Alert severity="error" >{output.message}</Alert>
               </>
-                :output.status === 1 ?
-              <>
-                <Alert severity="success" >{output.message}</Alert>           
-              </>
-            :null
-          }          
-          <br/>  
+              : output.status === 1 ?
+                <>
+                  <Alert severity="success" >{output.message}</Alert>
+                </>
+                : null
+          }
+          <br />
           <Grid
-            container            
-          > 
+            container
+          >
             <Grid
-                item
-                md={6}
-                xs={12}
-              > 
-              <br/>
-              <Button color="info"  onClick={openFileBrowser}><i className="cui-file"></i> Browse</Button>
-              <input type="file" hidden onChange={fileHandler} ref={fileInput} onClick={(event)=> { event.target.value = null }}/> 
-              <Input type="text"  value={uploadedFileName} readOnly invalid={isFormInvalid} />              
-                           
-            </Grid>  
+              item
+              md={6}
+              xs={12}
+            >
+              <br />
+              <Button color="info" onClick={openFileBrowser}><i className="cui-file"></i> Browse</Button>
+              <input type="file" hidden onChange={fileHandler} ref={fileInput} onClick={(event) => { event.target.value = null }} />
+              <Input type="text" value={uploadedFileName} readOnly invalid={isFormInvalid} />
 
-            <Grid container > 
-            <Grid item md={12} xs={12} >                        
-              {dataLoaded && 
-                <div>   
-                    <PerfectScrollbar>                 
-                      <MuiThemeProvider theme={getMuiTheme()}>                
+            </Grid>
+
+            <Grid container >
+              <Grid item md={12} xs={12} >
+                {dataLoaded &&
+                  <div>
+                    <PerfectScrollbar>
+                      <MuiThemeProvider theme={getMuiTheme()}>
                         <MUIDataTable
-                          title = ""
+                          title=""
                           data={rows}
                           columns={columns}
                           options={options}
                         />
                       </MuiThemeProvider>
                     </PerfectScrollbar>
-                </div>
-              }
-              </Grid>            
-            </Grid>   
-          </Grid>    
-      <br/>    
-        {dataLoaded &&         
-         <Card style={{ border: "none", boxShadow: "none" }}> 
-            <CardActions> 
-              <> 
-                <div className={classes.wrapper}>
-                  <Fab
-                    color = "primary" 
-                    aria-label="save"                                   
-                    className={buttonClassname}
-                  >
-                    {success ? <CheckIcon /> : <SaveIcon />}
-                  </Fab>
-                   {loading && <CircularProgress size={68} className={classes.fabProgress} />}               
-                </div>
+                  </div>
+                }
+              </Grid>
+            </Grid>
+          </Grid>
+          <br />
+          {dataLoaded &&
+            <Card style={{ border: "none", boxShadow: "none" }}>
+              <CardActions>
+                <>
+                  <div className={classes.wrapper}>
+                    <Fab
+                      color="primary"
+                      aria-label="save"
+                      className={buttonClassname}
+                    >
+                      {success ? <CheckIcon /> : <SaveIcon />}
+                    </Fab>
+                    {loading && <CircularProgress size={68} className={classes.fabProgress} />}
+                  </div>
 
-                <div className={classes.wrapper}>
-                  <Button
-                    variant="contained"                      
-                    color = "primary"          
-                    className={buttonClassname}
-                    disabled={loading}                
-                    type="submit"
-                  >
-                    upload
-                  </Button>
-                  {loading && <CircularProgress size={24} className={classes.buttonProgress} />}
-                </div>
-              </>
-            </CardActions> 
-          </Card>
-        }  
-    </form>        
-    
+                  <div className={classes.wrapper}>
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      className={buttonClassname}
+                      disabled={loading}
+                      type="submit"
+                    >
+                      upload
+                    </Button>
+                    {loading && <CircularProgress size={24} className={classes.buttonProgress} />}
+                  </div>
+                </>
+              </CardActions>
+            </Card>
+          }
+        </form>
       </Grid>
     </Grid>
-    </Fragment>
-    )}
-		</Fragment>
- );
+  );
 };
 
 Upload.propTypes = {
-  className: PropTypes.string  
+  className: PropTypes.string
 }
 export default Upload;

@@ -147,7 +147,7 @@ const Edit = props => {
                     InputLabelProps={{
                       shrink: true,
                     }}
-                  
+                    required
                     label="Agent Name"
                     name="name"                
                     onChange={handleChange}
@@ -347,9 +347,8 @@ const Edit = props => {
                     fullWidth
                     InputLabelProps={{
                       shrink: true,
-                    }}
-                  
-                    required
+                    }}                 
+                    
                     label="Specialization"
                     name="speciality"  
                     multiline      
