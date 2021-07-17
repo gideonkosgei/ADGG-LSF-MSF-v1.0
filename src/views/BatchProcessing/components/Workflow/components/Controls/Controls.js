@@ -33,7 +33,7 @@ const Controls = (props) => {
     const [shouldOriginate, setShouldOriginate] = useState((typeof batchInfo.uuid === 'undefined') ? false : true);
     const [shouldViewReport, setShouldViewReport] = useState(false);
     const [shouldProcessQueue, setShouldProcessQueue] = useState(false);
-    
+
 
     useEffect(() => {
         let mounted_batch_types = true;
@@ -122,7 +122,8 @@ const Controls = (props) => {
 
     if (!batchTypes || !batchStages || !batchStatuses) {
         return null;
-    } 
+    }
+    console.log(batch_stage);
 
     return (
 
@@ -215,35 +216,38 @@ const Controls = (props) => {
                         </TextField>
                     </Grid>
 
-                    <Grid
-                        item
-                        md={2}
-                        xs={12}
-                    >
-                        <TextField
-                            fullWidth
-                            InputLabelProps={{
-                                shrink: true,
-                            }}
-                            margin="normal"
-                            variant="outlined"
-                            label="STATUS"
-                            name="batch_status"
-                            select
-                            SelectProps={{ native: true }}
-                            onChange={handleChange}
+                    {batch_stage === 3 ? null :
+
+                        <Grid
+                            item
+                            md={2}
+                            xs={12}
                         >
-                            <option value=""></option>
-                            {required_statuses.map(types => (
-                                <option
-                                    value={types.id}
-                                >
-                                    {types.name}
-                                </option>
-                            ))
-                            }
-                        </TextField>
-                    </Grid>
+                            <TextField
+                                fullWidth
+                                InputLabelProps={{
+                                    shrink: true,
+                                }}
+                                margin="normal"
+                                variant="outlined"
+                                label="STATUS"
+                                name="batch_status"
+                                select
+                                SelectProps={{ native: true }}
+                                onChange={handleChange}
+                            >
+                                <option value=""></option>
+                                {required_statuses.map(types => (
+                                    <option
+                                        value={types.id}
+                                    >
+                                        {types.name}
+                                    </option>
+                                ))
+                                }
+                            </TextField>
+                        </Grid>
+                    }
                 </>
                 : null
             }

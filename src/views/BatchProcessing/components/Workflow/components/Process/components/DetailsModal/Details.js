@@ -2,12 +2,16 @@ import React, { useState, useEffect, useContext } from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
-import { Modal, CircularProgress, Card, Box, Switch, Typography, CardContent, LinearProgress, CardHeader, Grid, Divider, TextField, colors, Button, CardActions } from '@material-ui/core';
+import { Modal, CircularProgress, Card, Fab, Box, Switch, Typography, CardContent, LinearProgress, CardHeader, Grid, Divider, TextField, colors, Button, CardActions } from '@material-ui/core';
 import authContext from '../../../../../../../../contexts/AuthContext';
 import { genericFunctionFiveParameters, batchProcessActions, animalBatchModifyRevalidate, getLookups } from '../../../../../../../../utils/API';
 import { endpoint_batch_details, endpoint_batch_actions, endpoint_animalRevalidate, endpoint_lookup } from '../../../../../../../../configs/endpoints';
 import Alert from '@material-ui/lab/Alert';
 import { green } from '@material-ui/core/colors';
+import CheckIcon from '@material-ui/icons/Check';
+import SaveIcon from '@material-ui/icons/Save';
+import RefreshIcon from '@material-ui/icons/Refresh';
+import SettingsIcon from '@material-ui/icons/Settings';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -40,7 +44,7 @@ const useStyles = makeStyles(theme => ({
   },
   wrapper: {
     margin: theme.spacing(1),
-    position: 'absolute',
+    position: 'relative',
   },
   buttonSuccess: {
     backgroundColor: green[500],
@@ -62,7 +66,6 @@ const Details = props => {
   const { open, onClose, className, record_id, ...rest } = props;
   const classes = useStyles();
   const [isLoading, setIsLoading] = useState(true);
-  const [readOnly, setReadOnly] = useState(true);
   const [values, setValues] = useState({});
   const [errors, setErrors] = useState([]);
   const [{ organization_id, user_id }] = useContext(authContext);
@@ -78,6 +81,7 @@ const Details = props => {
   const [deformaties, setDeformaties] = useState([]);
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [action, setAction] = useState(1);
   const batch_type = 8; // pedigree batch  
   const option_errors = 0;
   const option_details = 1;
@@ -101,13 +105,13 @@ const Details = props => {
           setLoading(false);
           setIsLoading(false);
           setErrors(response.payload);
-        }, 500);  
+        }, 500);
       }).catch(() => {
-          setSuccess(false);
-          setLoading(false);
-          setIsLoading(true);
-        });
-    }  
+        setSuccess(false);
+        setLoading(false);
+        setIsLoading(true);
+      });
+  }
 
   async function validate(_endpoint, _uuid, _action, _user_id) {
     setIsLoading(true);
@@ -116,14 +120,44 @@ const Details = props => {
       setLoading(true);
     }
     await batchProcessActions(_endpoint, _uuid, _action, _user_id)
-      .then(() => {
+      .then((response) => {
+        setOutput({ status: null, message: '' });
         timer.current = window.setTimeout(() => {
           setSuccess(true);
           setLoading(false);
           setIsLoading(false);
+          setOutput({ status: 1, message: "Validation complete. Execute refresh to check status"  }); 
         }, 500);
 
-      }).catch(() => {
+      }).catch((error) => {
+        setOutput({ status: 0, message: error.message })
+        setSuccess(false);
+        setLoading(false);
+        setIsLoading(false);
+      });
+  }
+
+  async function save(endpoint, values, record_id, user_id, batch_type) {
+    setIsLoading(true);
+    if (!loading) {
+      setSuccess(false);
+      setLoading(true);
+    }
+    await animalBatchModifyRevalidate(endpoint, values, record_id, user_id, batch_type)
+      .then((response) => {
+        setOutput({ status: null, message: '' });
+        timer.current = window.setTimeout(() => {
+          setSuccess(true);
+          setLoading(false);
+          setIsLoading(false);
+          if (parseInt(response.status) === 1) {
+            setOutput({ status: parseInt(response.status), message: response.message })
+          } else {
+            setOutput({ status: parseInt(response.status), message: response.message })
+          }
+        }, 500);
+      }).catch((error) => {
+        setOutput({ status: 0, message: error.message })
         setSuccess(false);
         setLoading(false);
         setIsLoading(true);
@@ -231,6 +265,7 @@ const Details = props => {
     return null;
   }
 
+
   const handleChange = event => {
     event.persist();
     setValues({
@@ -240,50 +275,29 @@ const Details = props => {
     });
   };
 
-  const handleSubmit = event => {
-    event.preventDefault();
-    setIsLoading(true);
-    if (!loading) {
-      setSuccess(false);
-      setLoading(true);
-    }
-    (async (endpoint, values, record_id, user_id, batch_type) => {
-      await animalBatchModifyRevalidate(endpoint, values, record_id, user_id, batch_type)
-        .then((response) => {
-          setOutput({ status: null, message: '' });
-          timer.current = window.setTimeout(() => {
-            setSuccess(true);
-            setLoading(false);
-            setIsLoading(false);
-            if (parseInt(response.status) === 1) {
-              setOutput({ status: parseInt(response.status), message: response.message })
-            } else {
-              setOutput({ status: parseInt(response.status), message: response.message })
-            }
-          }, 500);
-        }).catch((error) => {
-          setOutput({ status: 0, message: error.message })
-          setSuccess(false);
-          setLoading(false);
-          setIsLoading(true);
-        });
-    })(endpoint_animalRevalidate, values, record_id, user_id, batch_type);
-  };
-
-  const handleSwitchChange = event => {
+  const handleChangeAction = event => {
+    setSuccess(false);
     event.persist();
-    setReadOnly(!readOnly);
+    setAction(parseInt(event.target.value));
   };
 
-  const handleClickRefresh = () => {
-    refresh(endpoint_batch_details, 'error details', record_id, batch_type, option_errors);
+  const handleClickExecute = () => {
     setOutput({ status: null, message: '' });
+    switch (action) {
+      case 1: // refresh
+        refresh(endpoint_batch_details, 'error details', record_id, batch_type, option_errors);
+        break;
+      case 2: // validate
+        validate(endpoint_batch_actions, values.uuid, 1, user_id);
+        break;
+      case 3: // save
+        save(endpoint_animalRevalidate, values, record_id, user_id, batch_type);
+        break;
+      default:
+      // Do nothing: Invalid option
+    }
   };
 
-  const handleClickValidate = () => {
-    validate(endpoint_batch_actions, values.uuid, 1, user_id);
-    setOutput({ status: null, message: '' });
-  };
 
 
 
@@ -297,1036 +311,889 @@ const Details = props => {
         {...rest}
         className={clsx(classes.root, className)}
       >
-        <form id='event' onSubmit={handleSubmit} >
-          <CardContent>
-            <CardHeader title="ANIMAL REGISTRATION RECORD" />
-            <Divider />
-            {output.status === 0 ?
+
+        <CardContent>
+          <CardHeader title="ANIMAL REGISTRATION RECORD" />
+          <Divider />
+          {output.status === 0 ?
+            <>
+              <Alert severity="error" >{output.message}</Alert>
+            </>
+            : output.status === 1 ?
               <>
-                <Alert severity="error" >{output.message}</Alert>
+                <Alert severity="success" >{output.message}</Alert>
               </>
-              : output.status === 1 ?
-                <>
-                  <Alert severity="success" >{output.message}</Alert>
-                </>
-                : null
+              : null
+          }
+          <div className={classes.inner}>
+            <br />
+            {errors.length > 0 ?
+              <Alert severity="error" >
+                {
+                  errors.map(error => (
+                    <>{error.error_condition} <br /></>
+                  ))
+                }
+              </Alert>
+              : null
             }
-            <div className={classes.inner}>
-              <br />
-              {errors.length > 0 ?
-                <Alert severity="error" >
-                  {
-                    errors.map(error => (
-                      <>{error.error_condition} <br /></>
-                    ))
-                  }
-                </Alert>
-                : null
-              }
 
-              <br />
-              {isLoading &&
-                <>
-                  <LinearProgress />
-                  <br />
-                </>
-              }
-              <Grid
-                container
-                spacing={4}
-              >
-
-                <Grid
-                  item
-                  md={2}
-                  xs={12}
-                >
-                  <TextField
-                    fullWidth
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-                    inputProps={{
-                      readOnly: Boolean(readOnly),
-                      disabled: Boolean(readOnly)
-                    }}
-                    margin='dense'
-                    label="Farmer Name"
-                    value={values.farmer_name}
-                    variant="outlined"
-                    name="farmer_name"
-                    onChange={handleChange} required
-                  />
-                </Grid>
-
-                <Grid
-                  item
-                  md={2}
-                  xs={12}
-                >
-                  <TextField
-                    fullWidth
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-                    inputProps={{
-                      readOnly: Boolean(readOnly),
-                      disabled: Boolean(readOnly)
-                    }}
-                    margin='dense'
-                    type="date"
-                    label="Registration Date"
-                    value={values.reg_date}
-                    variant="outlined"
-                    name="reg_date"
-                    onChange={handleChange} required
-                  />
-                </Grid>
-
-                <Grid
-                  item
-                  md={2}
-                  xs={12}
-                >
-                  <TextField
-                    fullWidth
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-                    inputProps={{
-                      readOnly: Boolean(readOnly),
-                      disabled: Boolean(readOnly)
-                    }}
-                    margin='dense'
-                    type="date"
-                    label="Entry Date"
-                    value={values.entry_date}
-                    variant="outlined"
-                    name="entry_date"
-                    onChange={handleChange} required
-                  />
-                </Grid>
-
-                <Grid
-                  item
-                  md={2}
-                  xs={12}
-                >
-                  <TextField
-                    fullWidth
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-                    inputProps={{
-                      readOnly: Boolean(readOnly),
-                      disabled: Boolean(readOnly)
-                    }}
-                    margin='dense'
-                    label="Entry Type"
-                    value={values.entry_type_id}
-                    variant="outlined"
-                    name="entry_type_id"
-                    onChange={handleChange} required
-                    select
-                    SelectProps={{ native: true }}
-                  >
-                    <option value=""></option>
-                    {entryTypes.map(types => (
-                      <option
-                        value={types.id}
-                      >
-                        {types.value}
-                      </option>
-                    ))
-                    }
-                  </TextField>
-
-                </Grid>
-
-                <Grid
-                  item
-                  md={2}
-                  xs={12}
-                >
-                  <TextField
-                    fullWidth
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-                    inputProps={{
-                      readOnly: Boolean(readOnly),
-                      disabled: Boolean(readOnly)
-                    }}
-                    margin='dense'
-                    label="Tag Prefix"
-                    value={values.tag_prefix}
-                    variant="outlined"
-                    name="tag_prefix"
-                    onChange={handleChange}
-                  />
-                </Grid>
-
-                <Grid
-                  item
-                  md={2}
-                  xs={12}
-                >
-                  <TextField
-                    fullWidth
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-                    inputProps={{
-                      readOnly: Boolean(readOnly),
-                      disabled: Boolean(readOnly)
-                    }}
-                    margin='dense'
-                    label="Tag Sequence"
-                    value={values.tag_sequence}
-                    variant="outlined"
-                    name="tag_sequence"
-                    onChange={handleChange}
-                  />
-                </Grid>
-
-                <Grid
-                  item
-                  md={2}
-                  xs={12}
-                >
-                  <TextField
-                    fullWidth
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-                    inputProps={{
-                      readOnly: Boolean(readOnly),
-                      disabled: Boolean(readOnly)
-                    }}
-                    margin='dense'
-                    label="Tag ID"
-                    value={values.tag_id}
-                    variant="outlined"
-                    name="tag_id"
-                    onChange={handleChange}
-                  />
-                </Grid>
-
-                <Grid
-                  item
-                  md={2}
-                  xs={12}
-                >
-                  <TextField
-                    fullWidth
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-                    inputProps={{
-                      readOnly: Boolean(readOnly),
-                      disabled: Boolean(readOnly)
-                    }}
-                    margin='dense'
-                    label="Animal Name"
-                    value={values.animal_name}
-                    variant="outlined"
-                    name="animal_name"
-                    onChange={handleChange}
-                  />
-                </Grid>
-
-                <Grid
-                  item
-                  md={2}
-                  xs={12}
-                >
-                  <TextField
-                    fullWidth
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-                    inputProps={{
-                      readOnly: Boolean(readOnly),
-                      disabled: Boolean(readOnly)
-                    }}
-                    type="date"
-                    margin='dense'
-                    label="DOB"
-                    value={values.date_of_birth}
-                    variant="outlined"
-                    name="date_of_birth"
-                    onChange={handleChange}
-
-                  />
-                </Grid>
-
-                <Grid
-                  item
-                  md={2}
-                  xs={12}
-                >
-                  <TextField
-                    fullWidth
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-                    inputProps={{
-                      readOnly: Boolean(readOnly),
-                      disabled: Boolean(readOnly)
-                    }}
-                    type="date"
-                    margin='dense'
-                    label="Derived Birth Date"
-                    value={values.derived_birth_date}
-                    variant="outlined"
-                    name="derived_birth_date"
-                    onChange={handleChange}
-                  />
-                </Grid>
-
-                <Grid
-                  item
-                  md={2}
-                  xs={12}
-                >
-                  <TextField
-                    fullWidth
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-                    inputProps={{
-                      readOnly: Boolean(readOnly),
-                      disabled: Boolean(readOnly)
-                    }}
-                    margin='dense'
-                    label="Approximate Age"
-                    value={values.approx_age}
-                    variant="outlined"
-                    name="approx_age"
-                    onChange={handleChange}
-                  />
-                </Grid>
-
-                <Grid
-                  item
-                  md={2}
-                  xs={12}
-                >
-                  <TextField
-                    fullWidth
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-
-                    inputProps={{
-                      readOnly: Boolean(readOnly),
-                      disabled: Boolean(readOnly)
-                    }}
-                    //required
-                    margin='dense'
-                    label="Main Breed"
-                    variant="outlined"
-                    value={values.main_breed_id}
-                    name="main_breed_id"
-                    onChange={handleChange}
-                    select
-                    SelectProps={{ native: true }}
-
-                  >
-                    <option value=""></option>
-                    {main_breeds.map(main_breed => (
-                      <option
-                        value={main_breed.id}
-                      >
-                        {main_breed.value}
-                      </option>
-                    ))
-                    }
-                  </TextField>
-                </Grid>
-                <Grid
-                  item
-                  md={2}
-                  xs={12}
-                >
-                  <TextField
-                    fullWidth
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-
-                    inputProps={{
-                      readOnly: Boolean(readOnly),
-                      disabled: Boolean(readOnly)
-                    }}
-                    margin='dense'
-                    label="Secondary Breed"
-                    variant="outlined"
-                    value={values.secondary_breed_id}
-                    name="secondary_breed_id"
-                    onChange={handleChange}
-                    select
-                    SelectProps={{ native: true }}
-
-                  >
-                    <option value=""></option>
-                    {main_breeds.map(main_breed => (
-                      <option
-                        value={main_breed.id}
-                      >
-                        {main_breed.value}
-                      </option>
-                    ))
-                    }
-                  </TextField>
-                </Grid>
-
-                <Grid
-                  item
-                  md={2}
-                  xs={12}
-                >
-                  <TextField
-                    fullWidth
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-
-                    inputProps={{
-                      readOnly: Boolean(readOnly),
-                      disabled: Boolean(readOnly)
-                    }}
-                    margin='dense'
-                    label="Breed Composition"
-                    variant="outlined"
-                    value={values.breed_composition_id}
-                    name="breed_composition_id"
-                    onChange={handleChange}
-                    select
-                    SelectProps={{ native: true }}
-                  >
-                    <option value=""></option>
-                    {breed_composition.map(breed_comp => (
-                      <option
-                        value={breed_comp.id}
-                      >
-                        {breed_comp.value}
-                      </option>
-                    ))
-                    }
-                  </TextField>
-                </Grid>
-
-                <Grid
-                  item
-                  md={2}
-                  xs={12}
-                >
-                  <TextField
-                    fullWidth
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-
-                    inputProps={{
-                      readOnly: Boolean(readOnly),
-                      disabled: Boolean(readOnly)
-                    }}
-                    margin='dense'
-                    label="Sex"
-                    variant="outlined"
-                    value={values.sex_id}
-                    name="sex_id"
-                    onChange={handleChange} select
-                    SelectProps={{ native: true }}
-
-                  >
-                    <option value=""></option>
-                    {gender.map(sex => (
-                      <option
-                        value={sex.id}
-                      >
-                        {sex.value}
-                      </option>
-                    ))
-                    }
-
-                  </TextField>
-                </Grid>
-
-                <Grid
-                  item
-                  md={2}
-                  xs={12}
-                >
-                  <TextField
-                    fullWidth
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-
-                    inputProps={{
-                      readOnly: Boolean(readOnly),
-                      disabled: Boolean(readOnly)
-                    }}
-                    margin='dense'
-                    label="Color"
-                    variant="outlined"
-                    value={values.color_id}
-                    name="color_id"
-                    onChange={handleChange}
-                    select
-                    SelectProps={{ native: true }}
-                  >
-                    <option value=""></option>
-                    {colors.map(color => (
-                      <option
-                        value={color.id}
-                      >
-                        {color.value}
-                      </option>
-                    ))
-                    }
-                  </TextField>
-                </Grid>
-                <Grid
-                  item
-                  md={2}
-                  xs={12}
-                >
-                  <TextField
-                    fullWidth
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-                    inputProps={{
-                      readOnly: Boolean(readOnly),
-                      disabled: Boolean(readOnly)
-                    }}
-                    margin='dense'
-                    label="Dam Known"
-                    variant="outlined"
-                    value={values.dam_known_id}
-                    name="dam_known_id"
-                    onChange={handleChange}
-                    select
-                    SelectProps={{ native: true }}
-                  >
-                    <option value=""></option>
-                    {yesNo.map(yn => (
-                      <option
-                        value={yn.id}
-                      >
-                        {yn.value}
-                      </option>
-                    ))
-                    }
-                  </TextField>
-                </Grid>
-
-                <Grid
-                  item
-                  md={2}
-                  xs={12}
-                >
-                  <TextField
-                    fullWidth
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-
-                    inputProps={{
-                      readOnly: Boolean(readOnly),
-                      disabled: Boolean(readOnly)
-                    }}
-                    margin='dense'
-                    label="Dam Tag ID"
-                    variant="outlined"
-                    value={values.dam_tag_id}
-                    name="dam_tag_id"
-                    onChange={handleChange}
-                  />
-                </Grid>
-
-                <Grid
-                  item
-                  md={2}
-                  xs={12}
-                >
-                  <TextField
-                    fullWidth
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-
-                    inputProps={{
-                      readOnly: Boolean(readOnly),
-                      disabled: Boolean(readOnly)
-                    }}
-                    margin='dense'
-                    label="Sire Known"
-                    value={values.sire_known_id}
-                    variant="outlined"
-                    name="sire_known_id"
-                    onChange={handleChange}
-                    select
-                    SelectProps={{ native: true }}
-                  >
-                    <option value=""></option>
-                    {yesNo.map(yn => (
-                      <option
-                        value={yn.id}
-                      >
-                        {yn.value}
-                      </option>
-                    ))
-                    }
-                  </TextField>
-
-                </Grid>
-
-
-                <Grid
-                  item
-                  md={2}
-                  xs={12}
-                >
-                  <TextField
-                    fullWidth
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-
-                    inputProps={{
-                      readOnly: Boolean(readOnly),
-                      disabled: Boolean(readOnly)
-                    }}
-
-                    margin='dense'
-                    label="Sire Type"
-                    value={values.sire_type_id}
-                    variant="outlined"
-                    name="sire_type_id"
-                    onChange={handleChange}
-                    select
-                    SelectProps={{ native: true }}
-                  >
-                    <option value=""></option>
-                    {sire_types.map(sire_type => (
-                      <option
-                        value={sire_type.id}
-                      >
-                        {sire_type.value}
-                      </option>
-                    ))
-                    }
-                  </TextField>
-
-                </Grid>
-
-                <Grid
-                  item
-                  md={2}
-                  xs={12}
-                >
-                  <TextField
-                    fullWidth
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-
-                    inputProps={{
-                      readOnly: Boolean(readOnly),
-                      disabled: Boolean(readOnly)
-                    }}
-                    margin='dense'
-                    label="Sire Tag ID"
-                    value={values.sire_tag_id}
-                    variant="outlined"
-                    name="sire_tag_id"
-                    onChange={handleChange}
-                  />
-                </Grid>
-
-                <Grid
-                  item
-                  md={2}
-                  xs={12}
-                >
-                  <TextField
-                    fullWidth
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-
-                    inputProps={{
-                      readOnly: Boolean(readOnly),
-                      disabled: Boolean(readOnly)
-                    }}
-                    margin='dense'
-                    type="number"
-                    label="Purchase Cost"
-                    value={values.Purchase_cost}
-                    variant="outlined"
-                    name="Purchase_cost"
-                    onChange={handleChange}
-                  />
-                </Grid>
-
-                <Grid
-                  item
-                  md={2}
-                  xs={12}
-                >
-                  <TextField
-                    fullWidth
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-
-                    inputProps={{
-                      readOnly: Boolean(readOnly),
-                      disabled: Boolean(readOnly)
-                    }}
-                    margin='dense'
-                    label="Deformaties"
-                    value={values.deformaties_id}
-                    variant="outlined"
-                    name="deformaties_id"
-                    onChange={handleChange}
-                    select
-                    SelectProps={{ native: true }}
-                  >
-                    <option value=""></option>
-                    {deformaties.map(d => (
-                      <option
-                        value={d.id}
-                      >
-                        {d.value}
-                      </option>
-                    ))
-                    }
-                  </TextField>
-                </Grid>
-                <Grid
-                  item
-                  md={2}
-                  xs={12}
-                >
-                  <TextField
-                    fullWidth
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-                    inputProps={{
-                      readOnly: Boolean(readOnly),
-                      disabled: Boolean(readOnly)
-                    }}
-                    type="number"
-                    margin='dense'
-                    label="Altitude"
-                    value={values.altitude}
-                    variant="outlined"
-                    name="altitude"
-                    onChange={handleChange}
-                  />
-                </Grid>
-
-                <Grid
-                  item
-                  md={2}
-                  xs={12}
-                >
-                  <TextField
-                    fullWidth
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-                    inputProps={{
-                      readOnly: Boolean(readOnly),
-                      disabled: Boolean(readOnly)
-                    }}
-                    margin='dense'
-                    type="number"
-                    label="Latitude"
-                    value={values.latitude}
-                    variant="outlined"
-                    name="latitude"
-                    onChange={handleChange}
-                  />
-                </Grid>
-
-                <Grid
-                  item
-                  md={2}
-                  xs={12}
-                >
-                  <TextField
-                    fullWidth
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-
-                    inputProps={{
-                      readOnly: Boolean(readOnly),
-                      disabled: Boolean(readOnly)
-                    }}
-                    margin='dense'
-                    type="number"
-                    label="Longitute"
-                    value={values.longitude}
-                    variant="outlined"
-                    name="longitude"
-                    onChange={handleChange}
-                  />
-                </Grid>
-
-                <Grid
-                  item
-                  md={2}
-                  xs={12}
-                >
-                  <TextField
-                    fullWidth
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-                    inputProps={{
-                      readOnly: Boolean(readOnly),
-                      disabled: Boolean(readOnly)
-                    }}
-                    type="number"
-                    margin='dense'
-                    label="GPRS accuracy"
-                    value={values.grps_accuracy}
-                    variant="outlined"
-                    name="grps_accuracy"
-                    onChange={handleChange}
-                  />
-                </Grid>
-
-                <Grid
-                  item
-                  md={2}
-                  xs={12}
-                >
-                  <TextField
-                    fullWidth
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-                    inputProps={{
-                      readOnly: Boolean(readOnly),
-                      disabled: Boolean(readOnly)
-                    }}
-                    margin='dense'
-                    label="Hair Sample ID"
-                    value={values.hair_sample_id}
-                    variant="outlined"
-                    name="hair_sample_id"
-                    onChange={handleChange}
-                  />
-                </Grid>
-
-                <Grid
-                  item
-                  md={2}
-                  xs={12}
-                >
-                  <TextField
-                    fullWidth
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-                    inputProps={{
-                      readOnly: true,
-                      disabled: true
-                    }}
-                    margin='dense'
-                    label="Created By"
-                    value={values.created_by}
-                    variant="outlined"
-                    onChange={handleChange}
-                  />
-                </Grid>
-                <Grid
-                  item
-                  md={2}
-                  xs={12}
-                >
-                  <TextField
-                    fullWidth
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-
-                    inputProps={{
-                      readOnly: true,
-                      disabled: true
-                    }}
-                    margin='dense'
-                    label='Created Date'
-                    value={values.created_date}
-                    variant="outlined"
-                    onChange={handleChange}
-                  />
-                </Grid>
-
-                <Grid
-                  item
-                  md={2}
-                  xs={12}
-                >
-                  <TextField
-                    fullWidth
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-                    inputProps={{
-                      readOnly: true,
-                      disabled: true
-                    }}
-                    margin='dense'
-                    label="Time Created"
-                    value={values.created_time}
-                    variant="outlined"
-                    onChange={handleChange}
-                  />
-                </Grid>
-                <Grid
-                  item
-                  md={2}
-                  xs={12}
-                >
-                  <Box >
-                    <Typography variant="h6">{values.remove ? "Remove(Yes)" : "Remove(No)"} </Typography>
-                  </Box>
-                  <Box>
-                    <Switch
-                      inputProps={{
-                        readOnly: Boolean(readOnly),
-                        disabled: Boolean(readOnly)
-                      }}
-                      name="remove"
-                      className={classes.toggle}
-                      onChange={handleChange}
-                      checked={(values.remove) ? true : false}
-                      color="secondary"
-                      edge="start"
-                    />
-                  </Box>
-                </Grid>
-              </Grid>
-            </div>
-          </CardContent>
-          <CardActions className={classes.actions}>
+            <br />
+            {isLoading &&
+              <>
+                <LinearProgress />
+                <br />
+              </>
+            }
             <Grid
               container
               spacing={4}
             >
-            </Grid>
-            {!readOnly &&
 
               <Grid
                 item
                 md={2}
                 xs={12}
               >
-                <div className={classes.wrapper}>
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    className={buttonClassname}
-                    disabled={loading}
-                    type="submit"
-                  >
-                    Save
-                  </Button>
-                  {loading && <CircularProgress size={24} className={classes.buttonProgress} />}
-                </div>
+                <TextField
+                  fullWidth
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
 
+                  margin='dense'
+                  label="Farmer Name"
+                  value={values.farmer_name}
+                  variant="outlined"
+                  name="farmer_name"
+                  onChange={handleChange}
+                  required
+                />
               </Grid>
-            }
-            {!readOnly &&
+
               <Grid
                 item
                 md={2}
                 xs={12}
               >
-                <div className={classes.wrapper}>
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    className={buttonClassname}
-                    disabled={loading}
-                    onClick={handleClickValidate}
-                  >
-                    validate
-                  </Button>
-                  {loading && <CircularProgress size={24} className={classes.buttonProgress} />}
-                </div>
+                <TextField
+                  fullWidth
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                  margin='dense'
+                  type="date"
+                  label="Registration Date"
+                  value={values.reg_date}
+                  variant="outlined"
+                  name="reg_date"
+                  onChange={handleChange}
+                />
               </Grid>
-            }
 
-            {!readOnly &&
               <Grid
                 item
                 md={2}
                 xs={12}
               >
-                <div className={classes.wrapper}>
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    className={buttonClassname}
-                    disabled={loading}
-                    onClick={handleClickRefresh}
-                  >
-                    Refresh
-                  </Button>
-                  {loading && <CircularProgress size={24} className={classes.buttonProgress} />}
-                </div>
+                <TextField
+                  fullWidth
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+
+                  margin='dense'
+                  type="date"
+                  label="Entry Date"
+                  value={values.entry_date}
+                  variant="outlined"
+                  name="entry_date"
+                  onChange={handleChange}
+                />
               </Grid>
-            }
 
-            <Grid
-              item
-              md={2}
-              xs={12}
-            >
-              <Typography variant="h6">{readOnly ? "Enable Form" : "Disable Form"} </Typography>
-            </Grid>
-
-            <Grid
-              item
-              md={1}
-              xs={12}
-            >
-              <Switch
-                className={classes.toggle}
-                checked={values.readOnly}
-                color="secondary"
-                edge="start"
-                onChange={handleSwitchChange}
-              />
-            </Grid>
-
-
-            <Grid
-              item
-              md={1}
-              xs={12}
-            >
-              <Button
-                className={classes.saveButton}
-                onClick={onClose}
-                variant="contained"
+              <Grid
+                item
+                md={2}
+                xs={12}
               >
-                Close
-              </Button>
+                <TextField
+                  fullWidth
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+
+                  margin='dense'
+                  label="Entry Type"
+                  value={values.entry_type_id}
+                  variant="outlined"
+                  name="entry_type_id"
+                  onChange={handleChange}
+                  select
+                  SelectProps={{ native: true }}
+                >
+                  <option value=""></option>
+                  {entryTypes.map(types => (
+                    <option
+                      value={types.id}
+                    >
+                      {types.value}
+                    </option>
+                  ))
+                  }
+                </TextField>
+
+              </Grid>
+
+              <Grid
+                item
+                md={2}
+                xs={12}
+              >
+                <TextField
+                  fullWidth
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+
+                  margin='dense'
+                  label="Tag Prefix"
+                  value={values.tag_prefix}
+                  variant="outlined"
+                  name="tag_prefix"
+                  onChange={handleChange}
+                />
+              </Grid>
+
+              <Grid
+                item
+                md={2}
+                xs={12}
+              >
+                <TextField
+                  fullWidth
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+
+                  margin='dense'
+                  label="Tag Sequence"
+                  value={values.tag_sequence}
+                  variant="outlined"
+                  name="tag_sequence"
+                  onChange={handleChange}
+                />
+              </Grid>
+
+              <Grid
+                item
+                md={2}
+                xs={12}
+              >
+                <TextField
+                  fullWidth
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+
+                  margin='dense'
+                  label="Tag ID"
+                  value={values.tag_id}
+                  variant="outlined"
+                  name="tag_id"
+                  onChange={handleChange}
+                />
+              </Grid>
+
+              <Grid
+                item
+                md={2}
+                xs={12}
+              >
+                <TextField
+                  fullWidth
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+
+                  margin='dense'
+                  label="Animal Name"
+                  value={values.animal_name}
+                  variant="outlined"
+                  name="animal_name"
+                  onChange={handleChange}
+                />
+              </Grid>
+
+              <Grid
+                item
+                md={2}
+                xs={12}
+              >
+                <TextField
+                  fullWidth
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+
+                  type="date"
+                  margin='dense'
+                  label="DOB"
+                  value={values.date_of_birth}
+                  variant="outlined"
+                  name="date_of_birth"
+                  onChange={handleChange}
+
+                />
+              </Grid>
+
+              <Grid
+                item
+                md={2}
+                xs={12}
+              >
+                <TextField
+                  fullWidth
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+
+                  type="date"
+                  margin='dense'
+                  label="Derived Birth Date"
+                  value={values.derived_birth_date}
+                  variant="outlined"
+                  name="derived_birth_date"
+                  onChange={handleChange}
+                />
+              </Grid>
+
+              <Grid
+                item
+                md={2}
+                xs={12}
+              >
+                <TextField
+                  fullWidth
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+
+                  margin='dense'
+                  label="Approximate Age"
+                  value={values.approx_age}
+                  variant="outlined"
+                  name="approx_age"
+                  onChange={handleChange}
+                />
+              </Grid>
+
+              <Grid
+                item
+                md={2}
+                xs={12}
+              >
+                <TextField
+                  fullWidth
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                  required
+                  margin='dense'
+                  label="Main Breed"
+                  variant="outlined"
+                  value={values.main_breed_id}
+                  name="main_breed_id"
+                  onChange={handleChange}
+                  select
+                  SelectProps={{ native: true }}
+
+                >
+                  <option value=""></option>
+                  {main_breeds.map(main_breed => (
+                    <option
+                      value={main_breed.id}
+                    >
+                      {main_breed.value}
+                    </option>
+                  ))
+                  }
+                </TextField>
+              </Grid>
+              <Grid
+                item
+                md={2}
+                xs={12}
+              >
+                <TextField
+                  fullWidth
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+
+
+                  margin='dense'
+                  label="Secondary Breed"
+                  variant="outlined"
+                  value={values.secondary_breed_id}
+                  name="secondary_breed_id"
+                  onChange={handleChange}
+                  select
+                  SelectProps={{ native: true }}
+
+                >
+                  <option value=""></option>
+                  {main_breeds.map(main_breed => (
+                    <option
+                      value={main_breed.id}
+                    >
+                      {main_breed.value}
+                    </option>
+                  ))
+                  }
+                </TextField>
+              </Grid>
+
+              <Grid
+                item
+                md={2}
+                xs={12}
+              >
+                <TextField
+                  fullWidth
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+
+                  margin='dense'
+                  label="Breed Composition"
+                  variant="outlined"
+                  value={values.breed_composition_id}
+                  name="breed_composition_id"
+                  onChange={handleChange}
+                  select
+                  SelectProps={{ native: true }}
+                >
+                  <option value=""></option>
+                  {breed_composition.map(breed_comp => (
+                    <option
+                      value={breed_comp.id}
+                    >
+                      {breed_comp.value}
+                    </option>
+                  ))
+                  }
+                </TextField>
+              </Grid>
+
+              <Grid
+                item
+                md={2}
+                xs={12}
+              >
+                <TextField
+                  fullWidth
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+
+
+                  margin='dense'
+                  label="Sex"
+                  variant="outlined"
+                  value={values.sex_id}
+                  name="sex_id"
+                  onChange={handleChange} select
+                  SelectProps={{ native: true }}
+
+                >
+                  <option value=""></option>
+                  {gender.map(sex => (
+                    <option
+                      value={sex.id}
+                    >
+                      {sex.value}
+                    </option>
+                  ))
+                  }
+
+                </TextField>
+              </Grid>
+
+              <Grid
+                item
+                md={2}
+                xs={12}
+              >
+                <TextField
+                  fullWidth
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+
+
+                  margin='dense'
+                  label="Color"
+                  variant="outlined"
+                  value={values.color_id}
+                  name="color_id"
+                  onChange={handleChange}
+                  select
+                  SelectProps={{ native: true }}
+                >
+                  <option value=""></option>
+                  {colors.map(color => (
+                    <option
+                      value={color.id}
+                    >
+                      {color.value}
+                    </option>
+                  ))
+                  }
+                </TextField>
+              </Grid>
+              <Grid
+                item
+                md={2}
+                xs={12}
+              >
+                <TextField
+                  fullWidth
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+
+                  margin='dense'
+                  label="Dam Known"
+                  variant="outlined"
+                  value={values.dam_known_id}
+                  name="dam_known_id"
+                  onChange={handleChange}
+                  select
+                  SelectProps={{ native: true }}
+                >
+                  <option value=""></option>
+                  {yesNo.map(yn => (
+                    <option
+                      value={yn.id}
+                    >
+                      {yn.value}
+                    </option>
+                  ))
+                  }
+                </TextField>
+              </Grid>
+
+              <Grid
+                item
+                md={2}
+                xs={12}
+              >
+                <TextField
+                  fullWidth
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+
+
+                  margin='dense'
+                  label="Dam Tag ID"
+                  variant="outlined"
+                  value={values.dam_tag_id}
+                  name="dam_tag_id"
+                  onChange={handleChange}
+                />
+              </Grid>
+
+              <Grid
+                item
+                md={2}
+                xs={12}
+              >
+                <TextField
+                  fullWidth
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+
+
+                  margin='dense'
+                  label="Sire Known"
+                  value={values.sire_known_id}
+                  variant="outlined"
+                  name="sire_known_id"
+                  onChange={handleChange}
+                  select
+                  SelectProps={{ native: true }}
+                >
+                  <option value=""></option>
+                  {yesNo.map(yn => (
+                    <option
+                      value={yn.id}
+                    >
+                      {yn.value}
+                    </option>
+                  ))
+                  }
+                </TextField>
+
+              </Grid>
+
+
+              <Grid
+                item
+                md={2}
+                xs={12}
+              >
+                <TextField
+                  fullWidth
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                  margin='dense'
+                  label="Sire Type"
+                  value={values.sire_type_id}
+                  variant="outlined"
+                  name="sire_type_id"
+                  onChange={handleChange}
+                  select
+                  SelectProps={{ native: true }}
+                >
+                  <option value=""></option>
+                  {sire_types.map(sire_type => (
+                    <option
+                      value={sire_type.id}
+                    >
+                      {sire_type.value}
+                    </option>
+                  ))
+                  }
+                </TextField>
+
+              </Grid>
+              <Grid
+                item
+                md={2}
+                xs={12}
+              >
+                <TextField
+                  fullWidth
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                  margin='dense'
+                  label="Sire Tag ID"
+                  value={values.sire_tag_id}
+                  variant="outlined"
+                  name="sire_tag_id"
+                  onChange={handleChange}
+                />
+              </Grid>
+              <Grid
+                item
+                md={2}
+                xs={12}
+              >
+                <TextField
+                  fullWidth
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                  margin='dense'
+                  type="number"
+                  label="Purchase Cost"
+                  value={values.Purchase_cost}
+                  variant="outlined"
+                  name="Purchase_cost"
+                  onChange={handleChange}
+                />
+              </Grid>
+              <Grid
+                item
+                md={2}
+                xs={12}
+              >
+                <TextField
+                  fullWidth
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                  margin='dense'
+                  label="Deformaties"
+                  value={values.deformaties_id}
+                  variant="outlined"
+                  name="deformaties_id"
+                  onChange={handleChange}
+                  select
+                  SelectProps={{ native: true }}
+                >
+                  <option value=""></option>
+                  {deformaties.map(d => (
+                    <option
+                      value={d.id}
+                    >
+                      {d.value}
+                    </option>
+                  ))
+                  }
+                </TextField>
+              </Grid>
+              <Grid
+                item
+                md={2}
+                xs={12}
+              >
+                <TextField
+                  fullWidth
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+
+                  type="number"
+                  margin='dense'
+                  label="Altitude"
+                  value={values.altitude}
+                  variant="outlined"
+                  name="altitude"
+                  onChange={handleChange}
+                />
+              </Grid>
+              <Grid
+                item
+                md={2}
+                xs={12}
+              >
+                <TextField
+                  fullWidth
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                  margin='dense'
+                  type="number"
+                  label="Latitude"
+                  value={values.latitude}
+                  variant="outlined"
+                  name="latitude"
+                  onChange={handleChange}
+                />
+              </Grid>
+
+              <Grid
+                item
+                md={2}
+                xs={12}
+              >
+                <TextField
+                  fullWidth
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                  margin='dense'
+                  type="number"
+                  label="Longitute"
+                  value={values.longitude}
+                  variant="outlined"
+                  name="longitude"
+                  onChange={handleChange}
+                />
+              </Grid>
+              <Grid
+                item
+                md={2}
+                xs={12}
+              >
+                <TextField
+                  fullWidth
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                  type="number"
+                  margin='dense'
+                  label="GPRS accuracy"
+                  value={values.grps_accuracy}
+                  variant="outlined"
+                  name="grps_accuracy"
+                  onChange={handleChange}
+                />
+              </Grid>
+
+              <Grid
+                item
+                md={2}
+                xs={12}
+              >
+                <TextField
+                  fullWidth
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                  margin='dense'
+                  label="Hair Sample ID"
+                  value={values.hair_sample_id}
+                  variant="outlined"
+                  name="hair_sample_id"
+                  onChange={handleChange}
+                />
+              </Grid>
+
+              <Grid
+                item
+                md={2}
+                xs={12}
+              >
+                <TextField
+                  fullWidth
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+
+                  margin='dense'
+                  label="Created By"
+                  value={values.created_by}
+                  variant="outlined"
+                  onChange={handleChange}
+                />
+              </Grid>
+              <Grid
+                item
+                md={2}
+                xs={12}
+              >
+                <TextField
+                  fullWidth
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                  margin='dense'
+                  label='Created Date'
+                  value={values.created_date}
+                  variant="outlined"
+                  onChange={handleChange}
+                />
+              </Grid>
+
+              <Grid
+                item
+                md={2}
+                xs={12}
+              >
+                <TextField
+                  fullWidth
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+
+                  margin='dense'
+                  label="Time Created"
+                  value={values.created_time}
+                  variant="outlined"
+                  onChange={handleChange}
+                />
+              </Grid>
+              <Grid
+                item
+                md={2}
+                xs={12}
+              >
+                <Box >
+                  <Typography variant="h6">{values.remove ? "Remove(Yes)" : "Remove(No)"} </Typography>
+                </Box>
+                <Box>
+                  <Switch
+                    name="remove"
+                    className={classes.toggle}
+                    onChange={handleChange}
+                    checked={(values.remove) ? true : false}
+                    color="secondary"
+                    edge="start"
+                  />
+                </Box>
+              </Grid>
             </Grid>
-          </CardActions>
-        </form>
+          </div>
+        </CardContent>
+        <CardActions className={classes.actions}>
+          <Grid
+            container
+            spacing={2}
+            className={classes.wrapper}
+          >
+          </Grid>
+
+          <Grid
+            item
+            md={2}
+            xs={12}
+          >
+
+            <TextField
+              fullWidth
+              InputLabelProps={{
+                shrink: true,
+              }}
+              size="medium"
+              margin='normal'
+              label="ACTION"
+              name="action"
+              select
+              SelectProps={{ native: true }}
+              variant="outlined"
+              onChange={handleChangeAction}
+            >
+              <option value="1">Refresh</option>
+              <option value="2">Validate</option>
+              <option value="3">Save</option>
+            </TextField>
+          </Grid>
+          <Grid
+            item
+            md={1}
+            xs={12}
+          >
+            <Fab
+              aria-label="save"
+              color="primary"
+              className={buttonClassname}
+            >
+              {
+                success ? <CheckIcon /> :
+                  parseInt(action) === 1 ? <RefreshIcon /> :
+                    parseInt(action) === 2 ? <SettingsIcon /> :
+                      parseInt(action) === 3 ? <SaveIcon /> : null
+              }
+            </Fab>
+          </Grid>
+          <Grid
+            item
+            md={1}
+            xs={12}
+          >
+            <Button
+              variant="contained"
+              color="primary"
+              className={buttonClassname}
+              disabled={loading}
+              onClick={handleClickExecute}
+            >
+              execute
+            </Button>
+            {loading && <CircularProgress size={24} className={classes.buttonProgress} />}
+
+          </Grid>
+          <Grid
+            item
+            md={2}
+            xs={12}
+          >
+            <Button
+              className={classes.saveButton}
+              onClick={onClose}
+              variant="contained"
+            >
+              Close
+            </Button>
+          </Grid>
+        </CardActions>
       </Card>
     </Modal>
   );

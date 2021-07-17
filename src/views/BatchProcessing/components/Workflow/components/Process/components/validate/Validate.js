@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
-import { Card, CardContent, LinearProgress, Grid, colors, CardActions, Fab, Button, CircularProgress, TextField } from '@material-ui/core';
+import { Card, Typography, CardContent, LinearProgress, Grid, colors, CardActions, Fab, Button, CircularProgress, TextField } from '@material-ui/core';
 import { batchProcessActions, genericFunctionThreeParameters } from '../../../../../../../../utils/API';
 import { endpoint_batch_validation_view, endpoint_batch_actions } from '../../../../../../../../configs/endpoints';
 import MUIDataTable from "mui-datatables";
@@ -83,7 +83,8 @@ const Validate = props => {
   const timer = React.useRef();
   const [output, setOutput] = useState({ status: null, message: "" });
   const [batchStatus, setBatchStatus] = useState(UploadedRecords.length > 0 ? UploadedRecords[0].batch_status_id : null);
-  
+  const [batchStatusOther, setBatchStatusOther] = useState(UploadedRecords.length > 0 ? UploadedRecords[0].batch_status_id_other : null);
+
 
   const uuid = batchInfo.uuid;
   const buttonClassname = clsx({
@@ -107,6 +108,7 @@ const Validate = props => {
           setIsLoading(false);
           setData(response.payload);
           setBatchStatus(response.payload.length > 0 ? response.payload[0].batch_status_id : null);
+          setBatchStatusOther(response.payload.length > 0 ? response.payload[0].batch_status_id_other : null);
         }, 500);
       }).catch((error) => {
         setSuccess(false);
@@ -320,7 +322,7 @@ const Validate = props => {
       [event.target.name]: event.target.type === 'checkbox' ? event.target.checked : event.target.value
 
     });
-  }; 
+  };
 
   function get_actions(status) {
     let actions = [];
@@ -338,7 +340,37 @@ const Validate = props => {
   }
 
   return (
-    <Grid container spacing={1} justify="center">
+    <Grid container spacing={2} justify="center">
+      <Grid
+        item
+        md={11}
+        xs={12}
+      >
+        {
+          batchStatusOther === 2 ?
+            <>
+              <Typography variant="h6">Important Notes</Typography>
+              <br />
+              <Typography variant="body2">
+                1. All records <b>failed</b> validation<br />
+                2. This batch <b>cannot</b> be progressed to posting stage <br />
+                2. Individual records can be <b>editted</b> and <b>re-validated</b> <br />
+              </Typography>
+            </>
+            : batchStatusOther === 3 ?
+              <>
+                <br />
+                <Typography variant="body2">
+                  1. Some records have  <b>failed</b> validation<br />
+                  2. <b>Only</b> sucessfully validated records will be progressed to posting stage <br />
+                  2. Individual records can be <b>editted</b> and <b>re-validated</b> <br />
+                </Typography>
+              </>
+              : null
+        }
+
+      </Grid>
+
       <Grid item xs={12}>
         {isLoading &&
           <>
@@ -399,7 +431,6 @@ const Validate = props => {
               ))
               }
             </TextField>
-
             <>
               <div className={classes.wrapper}>
                 <Fab
@@ -431,7 +462,6 @@ const Validate = props => {
                 {loading && <CircularProgress size={24} className={classes.buttonProgress} />}
               </div>
             </>
-
           </CardActions>
           <ErrorDetails
             record_id={record_id}
