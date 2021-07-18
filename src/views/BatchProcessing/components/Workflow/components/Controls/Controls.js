@@ -34,7 +34,6 @@ const Controls = (props) => {
     const [shouldViewReport, setShouldViewReport] = useState(false);
     const [shouldProcessQueue, setShouldProcessQueue] = useState(false);
 
-
     useEffect(() => {
         let mounted_batch_types = true;
         let mounted_batch_stages = true;
@@ -292,7 +291,6 @@ const Controls = (props) => {
                         action={action}
                     />
                 }
-
             </Grid>
         </Grid>
     );
