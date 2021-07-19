@@ -2,32 +2,32 @@ import SettingsIcon from '@material-ui/icons/SettingsOutlined';
 import AccountTreeIcon from '@material-ui/icons/AccountTree';
 import PeopleIcon from '@material-ui/icons/People';
 import PhonelinkSetupIcon from '@material-ui/icons/PhonelinkSetup';
+import StorageIcon from '@material-ui/icons/Storage';
 
 let p = [
   {
-    pages: [      
+    pages: [
       {
         title: 'User Accounts',
         icon: PeopleIcon,
         href: '/administration/org/user-accounts',
         children: [
-          
+
           {
             title: 'User Accounts',
             href: '/administration/org/user-accounts'
-          }          
+          }
         ],
       },
- 
+
       {
         title: 'Setup',
         icon: SettingsIcon,
-        href: '',
         children: [
           {
             title: 'Org profile',
             href: '/administration/org/profile'
-          },         
+          },
           {
             title: 'Org Setup',
             href: '/administration/org/setup'
@@ -54,6 +54,7 @@ let p = [
           }
         ]
       },
+
       {
         title: 'Partners',
         icon: AccountTreeIcon,
@@ -68,7 +69,18 @@ let p = [
             href: '/settings/partners/agents'
           }
         ]
-      }    
+      },
+
+      {
+        title: 'Entities',
+        icon: StorageIcon,
+        children: [
+          {
+            title: 'Farms',
+            href: '/management/farms/view/1'
+          }
+        ]
+      }
     ]
   },
 ];

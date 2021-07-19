@@ -7,7 +7,7 @@ import AddIcon from '@material-ui/icons/Add';
 import { Link as RouterLink } from 'react-router-dom';
 import HomeIcon from '@material-ui/icons/Home';
 import ListIcon from '@material-ui/icons/List';
-import authContext from '../../../../../../contexts/AuthContext';
+import authContext from '../../../../contexts/AuthContext';
 
 const useStyles = makeStyles(theme => ({
   root: {},

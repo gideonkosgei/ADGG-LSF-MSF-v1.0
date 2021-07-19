@@ -3,9 +3,9 @@ import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import { Grid, Divider, Button, colors, Link, Typography, Card, CardContent, LinearProgress } from '@material-ui/core';
 import { Page } from 'components';
-import { genericFunctionFourParameters, delinkFarmUnitsFromOrgUnit } from '../../../../../../utils/API';
-import { endpoint_farms, endpoint_delink_farm_unit } from '../../../../../../configs/endpoints';
-import authContext from '../../../../../../contexts/AuthContext';
+import { genericFunctionFourParameters, delinkFarmUnitsFromOrgUnit } from '../../../../utils/API';
+import { endpoint_farms, endpoint_delink_farm_unit } from '../../../../configs/endpoints';
+import authContext from '../../../../contexts/AuthContext';
 import MUIDataTable from "mui-datatables";
 import { MuiThemeProvider } from '@material-ui/core/styles';
 import PerfectScrollbar from 'react-perfect-scrollbar';
@@ -60,7 +60,7 @@ const Edit = props => {
 
   if (typeof org === 'undefined') {
     id = user_id;
-    option = 3;
+    option = parseInt(props.match.params.admin) === 0 ? 3 : 2; // props.match.params.admin > when 0 -> normal user  1-> admin area
     title = "FARMS";
   } else {
     id = org;

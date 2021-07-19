@@ -333,20 +333,25 @@ const routes = [
         exact: true,
         component: lazy(() => import('views/Herds/components/Herds/components/edit'))        
       },    
-      {
+     {
         path: '/management/farms',
         exact: true,
-        component: lazy(() => import('views/Farms/components/Farms/components/view'))
+        component: lazy(() => import('views/Farms'))
+      },
+      {    
+        path: '/management/farms/view/:admin',
+        exact: true,
+        component: lazy(() => import('views/Farms'))
       },
       {
         path: '/management/farms/add',
         exact: true,
-        component: lazy(() => import('views/Farms/components/Farms/components/add'))        
+        component: lazy(() => import('views/Farms/components/add'))        
       },
       {
         path: '/management/farms/edit/:id',
         exact: true,
-        component: lazy(() => import('views/Farms/components/Farms/components/edit'))        
+        component: lazy(() => import('views/Farms/components/edit'))        
       },
      
 

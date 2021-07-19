@@ -34,7 +34,7 @@ let p = [
         children: [
           {
             title: 'Farms',
-            href: '/management/farms'
+            href: '/management/farms/view/0'
           },
           {
             title: 'Herds',
@@ -70,7 +70,7 @@ let p = [
                 href: '/settings/partners/agents'
               }
             ]
-          } 
+          }
         ]
       },
       {
@@ -132,7 +132,7 @@ let p = [
           }
         ]
       },
-      
+
       {
         title: 'Account Settings',
         href: '/settings',
@@ -197,7 +197,7 @@ let p = [
             href: '/reports/batches'
           },
         ]
-      }     
+      }
     ]
   },
 ];

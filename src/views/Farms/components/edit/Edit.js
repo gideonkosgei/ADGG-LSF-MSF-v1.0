@@ -2,12 +2,11 @@ import React, { useState,useEffect,useContext } from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import {Card,Fab,LinearProgress,CircularProgress,Box, CardContent,Typography, Grid, TextField,colors,Button,CardActions,Switch,Tooltip} from '@material-ui/core';
-import {putFarm,getLookups,getCountries,getAdminUnits,genericFunctionFourParameters}   from '../../../../../../utils/API';
-import {endpoint_lookup,endpoint_farm_update,endpoint_countries,endpoint_admin_units,endpoint_farms} from '../../../../../../configs/endpoints';
-import authContext from '../../../../../../contexts/AuthContext';
+import {putFarm,getLookups,getCountries,getAdminUnits,genericFunctionFourParameters}   from '../../../../utils/API';
+import {endpoint_lookup,endpoint_farm_update,endpoint_countries,endpoint_admin_units,endpoint_farms} from '../../../../configs/endpoints';
+import authContext from '../../../../contexts/AuthContext';
 import {Header} from '../Header';
-import {default as Herds} from '../../../../../Herds/components/Herds/components/view'
-
+import {default as Herds} from '../../../Herds/components/Herds/components/view'
 import { Page } from 'components';
 import { green } from '@material-ui/core/colors';
 import CheckIcon from '@material-ui/icons/Check';
