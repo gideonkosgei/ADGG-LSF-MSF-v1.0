@@ -232,7 +232,7 @@ const Edit = props => {
         .then(response => {
           if (mounted_lactation_no) {
             setLactationNo(response.payload[0].lactation_number);
-            setValues({"lactation_number": response.payload[0].lactation_number });
+            setValues({ "lactation_number": response.payload[0].lactation_number });
           }
         });
     })(endpoint_get_lactation_number, 1, animal_id);
@@ -317,8 +317,6 @@ const Edit = props => {
     setOverride(!override);
   };
 
-  console.log(values);
-
   return (
     <Page
       className={classes.root}
@@ -398,7 +396,7 @@ const Edit = props => {
                             onChange={handleChange}
                             variant="outlined"
                             value={values.lactation_number}
-                            //defaultValue={lactation_number}
+                          //defaultValue={lactation_number}
                           />
                         </Grid>
                         <Grid
@@ -681,7 +679,6 @@ const Edit = props => {
                                               name="calf_name"
                                               onChange={handleChange}
                                               variant="outlined"
-
                                             />
                                           </Grid>
 
@@ -1119,7 +1116,6 @@ const Edit = props => {
                                               InputLabelProps={{
                                                 shrink: true,
                                               }}
-
                                               label="Calf Name"
                                               name="calf_name2"
                                               onChange={handleChange}

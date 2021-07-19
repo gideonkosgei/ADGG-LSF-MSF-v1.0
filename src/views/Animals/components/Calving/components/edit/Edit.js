@@ -394,11 +394,10 @@ const Edit = props => {
                       shrink: true,
                     }}
                     inputProps={{
-                      readOnly: true,
-                      disabled: true                
+                      readOnly: Boolean(readOnly),
+                      disabled: Boolean(readOnly)               
                     }}
-                    required
-                                         
+                    required                                         
                     label="Lactation Number"
                     name="lactation_number"                
                     onChange={handleChange}
@@ -736,8 +735,6 @@ const Edit = props => {
                       readOnly:true,
                       disabled: true               
                     }} 
-                    required = {parseInt(values.calving_status) ===1 ? true: false}
-                   
                     label="Calf Name"
                     name="calf_name"  
                     value = {values.calf_name}                    
@@ -1260,8 +1257,6 @@ const Edit = props => {
                             readOnly:true,
                             disabled: true               
                           }} 
-                          required = {parseInt(values.calving_status2) ===1 ? true: false}
-                         
                           label="Calf Name"
                           name="calf_name2"  
                           value = {values.calf_name2}                 

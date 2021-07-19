@@ -43,7 +43,7 @@ const Results = props => {
     { name: "org_name", label: "Org", options: { filter: true, sort: true, display: false } },
     { name: "farm_name", label: "Farm", options: { filter: true, sort: true, display: false } },
     { name: "farm_code", label: "Farm Code", options: { filter: false, sort: true, display: false } },
-    { name: "herd_name", label: "Herd", options: { filter: true, sort: false, } },
+    { name: "herd_name", label: "Herd", options: { filter: true, sort: false, display: false} },
     { name: "tag_id", label: "Tag", options: { filter: false, sort: true, display: true } },
     { name: "animal_name", label: "Name", options: { filter: false, sort: true, display: true } },
     { name: "sex", label: "Sex", options: { filter: true, sort: true, display: true } },
@@ -127,5 +127,4 @@ Results.propTypes = {
 Results.defaultProps = {
   clients: []
 };
-
 export default Results;
