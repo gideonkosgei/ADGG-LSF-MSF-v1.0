@@ -1804,23 +1804,6 @@ export const getMilking = function (config, id, option) {
   });
 };
 
-//get milking parameters
-export const getMilkingParameters = function (config, id, milk_date) {
-  const options = {
-    url: `${config.url}${id}/${milk_date}`,
-    method: config.method,
-    headers: config.headers
-  }
-
-  return new Promise((resolve, reject) => {
-    axios(options)
-      .then(res => {
-        resolve(res.data);
-      })
-      .catch(err => reject(err));
-  });
-};
-
 
 // add new Milking event
 export const postMilking = function (config, animal_id, values, user_id, quality_toggle, lactation_id, lactation_number, days_in_milk, test_day_no) {

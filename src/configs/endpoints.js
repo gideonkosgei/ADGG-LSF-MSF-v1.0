@@ -341,7 +341,7 @@ export const endpoint_milking = {
 
 //get milking parameter
 export const endpoint_milking_parameter = {
-  url: `${api}/events/milking/parameters/`,
+  url: `${api}/events/milking/parameters`,
   method: 'GET',
   headers: headers   
 };
