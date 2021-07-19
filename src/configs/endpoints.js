@@ -56,6 +56,13 @@ export const endpoint_countries = {
   headers: headers   
 };  
 
+//country list
+export const endpoint_countries_all = {
+  url: `${api}/countries-all`,
+  method: 'GET',
+  headers: headers   
+};
+
   
 
 //get admin units

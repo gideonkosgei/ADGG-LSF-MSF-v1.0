@@ -3,8 +3,8 @@ import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import {Card, CardContent,Fab,CircularProgress, Grid,Divider, TextField,colors,Button,CardActions,Box,Typography,Switch } from '@material-ui/core';
-import {getLookups,postInsemination,getAgents,getStraws,getCountries,getServiceProviders,genericFunctionFourParameters}   from '../../../../../../utils/API';
-import {endpoint_lookup,endpoint_insemination_add,endpoint_agent,endpoint_straw,endpoint_countries,endpoint_service_provider,endpoint_dp_validations} from '../../../../../../configs/endpoints';
+import {getLookups,postInsemination,getAgents,getStraws,genericFunctionTwoParameters,getServiceProviders,genericFunctionFourParameters}   from '../../../../../../utils/API';
+import {endpoint_lookup,endpoint_insemination_add,endpoint_agent,endpoint_straw,endpoint_countries_all,endpoint_service_provider,endpoint_dp_validations} from '../../../../../../configs/endpoints';
 import authContext from '../../../../../../contexts/AuthContext';
 import {Sidebar} from '../index';
 import {EventValidation}  from '../../../ValidationMessages';
@@ -139,16 +139,16 @@ const Edit = props => {
           setSemenSources(response.payload);                 
         }
       });
-    })(endpoint_service_provider,organization_id,sp_option); 
+    })(endpoint_service_provider,organization_id,sp_option);     
 
-    (async  (endpoint) => {     
-      await  getCountries(endpoint)
-      .then(response => {                        
-        if (mounted_countries) {            
-          setCountries(response.payload);                 
-        }
-      });
-    })(endpoint_countries); 
+    (async (endpoint,desc) => {
+      await genericFunctionTwoParameters(endpoint,desc)
+        .then(response => {
+          if (mounted_countries) {
+            setCountries(response.payload);
+          }
+        });
+    })(endpoint_countries_all,'get all countries');
 
       (async  (endpoint,org_id,option,is_active) => {     
         await  getStraws(endpoint,org_id,option,is_active)

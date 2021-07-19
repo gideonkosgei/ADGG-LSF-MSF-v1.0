@@ -2,8 +2,8 @@ import React, { useState, useEffect, useContext } from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import { Card, Fab, CircularProgress, CardContent, Typography, Grid, TextField, colors, Button, CardActions } from '@material-ui/core';
-import { getLookups, postStraw, getServiceProviders, getCountries } from '../../../../../../utils/API';
-import { endpoint_lookup, endpoint_straw_add, endpoint_service_provider, endpoint_countries } from '../../../../../../configs/endpoints';
+import { getLookups, postStraw, getServiceProviders, genericFunctionTwoParameters } from '../../../../../../utils/API';
+import { endpoint_lookup, endpoint_straw_add, endpoint_service_provider, endpoint_countries_all } from '../../../../../../configs/endpoints';
 import authContext from '../../../../../../contexts/AuthContext';
 import { Sidebar } from '../index';
 import moment from 'moment';
@@ -92,14 +92,14 @@ const Edit = props => {
     let mounted_sp = true;
     let mounted_countries = true;
 
-    (async (endpoint) => {
-      await getCountries(endpoint)
+    (async (endpoint,desc) => {
+      await genericFunctionTwoParameters(endpoint,desc)
         .then(response => {
           if (mounted_countries) {
             setCountries(response.payload);
           }
         });
-    })(endpoint_countries);
+    })(endpoint_countries_all,'get all countries');
 
     (async (endpoint, org_id, option) => {
       await getServiceProviders(endpoint, org_id, option)
@@ -184,8 +184,7 @@ const Edit = props => {
         });
 
     })(endpoint_straw_add, values, user_id, organization_id);
-  };
-
+  }; 
 
   return (
     <Page

@@ -2,8 +2,8 @@ import React, { useState,useEffect,useContext } from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import {Card,Fab,CircularProgress, CardContent,LinearProgress, Grid,Divider, TextField,colors,Button,CardActions,Box,Switch ,Typography,Tooltip } from '@material-ui/core';
-import {getLookups,updateInsemination,getInseminationEventById,getAgents,getStraws,getCountries,getServiceProviders}   from '../../../../../../utils/API';
-import {endpoint_lookup,endpoint_insemination_update,endpoint_insemination_specific,endpoint_agent,endpoint_straw,endpoint_countries,endpoint_service_provider} from '../../../../../../configs/endpoints';
+import {getLookups,updateInsemination,getInseminationEventById,getAgents,getStraws,genericFunctionTwoParameters,getServiceProviders}   from '../../../../../../utils/API';
+import {endpoint_lookup,endpoint_insemination_update,endpoint_insemination_specific,endpoint_agent,endpoint_straw,endpoint_countries_all,endpoint_service_provider} from '../../../../../../configs/endpoints';
 import authContext from '../../../../../../contexts/AuthContext';
 import {Sidebar} from '../index';
 import OpenInNewIcon from '@material-ui/icons/OpenInNew';
@@ -138,14 +138,14 @@ const Edit = props => {
       });
     })(endpoint_straw,organization_id,option_straw,is_active); 
 
-    (async  (endpoint) => {     
-      await  getCountries(endpoint)
-      .then(response => {                        
-        if (mounted_countries) {            
-          setCountries(response.payload);                 
-        }
-      });
-    })(endpoint_countries); 
+    (async (endpoint,desc) => {
+      await genericFunctionTwoParameters(endpoint,desc)
+        .then(response => {
+          if (mounted_countries) {
+            setCountries(response.payload);
+          }
+        });
+    })(endpoint_countries_all,'get all countries'); 
 
     (async  (endpoint,org_id,option) => {     
       await  getAgents(endpoint,org_id,option)
@@ -419,18 +419,20 @@ const Edit = props => {
                     InputLabelProps={{
                       shrink: true,
                     }}
+
                     inputProps={{
                       readOnly: Boolean(readOnly),
                       disabled: Boolean(readOnly)                
                     }}
+
                     value = {values.straw_record_id}
-                    required
-                    
+                    required                    
                     label="Straw ID"
                     name="straw_record_id"                
                     onChange={handleChange}
-                    variant="outlined" select                    
-                    SelectProps={{ native: true }} 
+                    variant="outlined" 
+                    select                    
+                    SelectProps={{ native: true }}  
                   >
                     <option value=""></option>
                     {straws.map(straw => (
