@@ -72,6 +72,13 @@ export const endpoint_admin_units = {
   headers: headers   
 };  
 
+//get admin units all
+export const endpoint_admin_units_all = {
+  url: `${api}/admin-units-all`,
+  method: 'GET',
+  headers: headers   
+};  
+
 //POST NEW USER ACCOUNT PROFILE
 export const endpoint_new_user_account = {
   url: `${api}/users/org/create-user-account`,
