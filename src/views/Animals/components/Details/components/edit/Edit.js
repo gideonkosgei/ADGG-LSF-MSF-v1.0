@@ -312,7 +312,7 @@ const Edit = props => {
           setSuccess(false);
           setLoading(false);
         });
-    })(endpoint_animal_update, organization_id, values, user_id, animal_id, sessionStorage.getItem('_dam_id'), sessionStorage.getItem('_sire_id'));
+    })(endpoint_animal_update, organization_id, values, user_id, animal_id,sessionStorage.getItem('_sire_id'), sessionStorage.getItem('_dam_id'));
   };
 
   const handleMetadataOpen = () => {
@@ -339,7 +339,7 @@ const Edit = props => {
     setModalStatus(false);
   };
 
-  console.log(values);
+
 
   return (
     <Page
