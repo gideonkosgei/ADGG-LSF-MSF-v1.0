@@ -38,12 +38,12 @@ const Results = props => {
 
   const columns = [
     { name: "animal_id", label: "ID", options: { filter: false, sort: true, display: true } },
-    { name: "farm_id", label: "farm_id", options: { filter: false, sort: false, display: false } },
+    { name: "farm_id", label: "Farm Id", options: { filter: false, sort: false, display: false } },
     { name: "registration_date", label: "Reg Date", options: { filter: false, sort: true, display: true } },
     { name: "org_name", label: "Org", options: { filter: true, sort: true, display: false } },
     { name: "farm_name", label: "Farm", options: { filter: true, sort: true, display: false } },
     { name: "farm_code", label: "Farm Code", options: { filter: false, sort: true, display: false } },
-    { name: "herd_name", label: "Herd", options: { filter: true, sort: false, display: false} },
+    { name: "herd_name", label: "Herd", options: { filter: true, sort: false, display: false } },
     { name: "tag_id", label: "Tag", options: { filter: false, sort: true, display: true } },
     { name: "animal_name", label: "Name", options: { filter: false, sort: true, display: true } },
     { name: "sex", label: "Sex", options: { filter: true, sort: true, display: true } },
@@ -98,8 +98,6 @@ const Results = props => {
     }
   };
 
-  console.log(data);
-
   return (
     <Card>
       <Divider />
@@ -121,10 +119,8 @@ const Results = props => {
 
 Results.propTypes = {
   className: PropTypes.string,
-  clients: PropTypes.array.isRequired
 };
 
 Results.defaultProps = {
-  clients: []
 };
 export default Results;

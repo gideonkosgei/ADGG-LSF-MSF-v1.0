@@ -3,8 +3,8 @@ import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import {Button,Typography,Fab, Card,CardActions,CircularProgress, CardContent, Grid,Divider, TextField,colors,IconButton } from '@material-ui/core';
-import {getLookups,genericFunctionFourParameters,genericFunctionFiveParameters,postAnimalRegistration,getCountries}   from '../../../../utils/API';
-import {endpoint_lookup,endpoint_farms,endpoint_herd,endpoint_animal_add,endpoint_countries} from '../../../../configs/endpoints';
+import {getLookups,genericFunctionFourParameters,genericFunctionFiveParameters,postAnimalRegistration,genericFunctionTwoParameters}   from '../../../../utils/API';
+import {endpoint_lookup,endpoint_farms,endpoint_herd,endpoint_animal_add,endpoint_countries_all} from '../../../../configs/endpoints';
 import authContext from '../../../../contexts/AuthContext';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import SearchIcon from '@material-ui/icons/Search';
@@ -114,14 +114,14 @@ const AnimalDetails = props => {
       });
     })(endpoint_farms,'get all farms',3,user_id);
 
-    (async  (endpoint) => {     
-      await  getCountries(endpoint)
-      .then(response => {                        
-        if (mounted_countries) {            
-          setCountries(response.payload);                 
-        }
-      });
-    })(endpoint_countries); 
+    (async (endpoint,desc) => {
+      await genericFunctionTwoParameters(endpoint,desc)
+        .then(response => {
+          if (mounted_countries) {
+            setCountries(response.payload);
+          }
+        });
+    })(endpoint_countries_all,'get all countries');
 
     (async  (endpoint,id) => {     
         await  getLookups(endpoint,id)
