@@ -117,15 +117,14 @@ const Edit = props => {
   sessionStorage.setItem('animal_name', values.animal_name);
   sessionStorage.setItem('animal_dob', values.dob);
   sessionStorage.setItem('animal_type', values.animal_type);
-  sessionStorage.setItem('farm_id', values.farm_id);
+  sessionStorage.setItem('farm_id', values.farm_id);  
 
   useEffect(() => {
     let mounted_lookup = true;
     let mounted_herds = true;
     let mounted_farms = true;
     let mounted_animal_details = true;
-    let mounted_countries = true;
-
+    let mounted_countries = true;    
 
     (async (endpoint, desc) => {
       await genericFunctionTwoParameters(endpoint, desc)
@@ -183,7 +182,6 @@ const Edit = props => {
               if (data[i].list_type_id === 69) {
                 lookup_entry_types.push(data[i]);
               }
-
             }
             setAnimalTypes(lookup_animal_types);
             setMainBreeds(lookup_main_breeds);
@@ -193,8 +191,6 @@ const Edit = props => {
             setSireTypes(lookup_sire_types);
             setEntryTypes(lookup_entry_types);
             setDeformaties(lookup_deformaties);
-
-
           }
         });
     })(endpoint_lookup, '8,14,62,3,83,13,11,69');
@@ -339,8 +335,6 @@ const Edit = props => {
     setModalStatus(false);
   };
 
-
-
   return (
     <Page
       className={classes.root}
@@ -363,7 +357,6 @@ const Edit = props => {
         {...rest}
         className={clsx(classes.root, className)}
       >
-
         <form id='new_reg' onSubmit={handleSubmit}>
           <CardContent>
             {output.status === 0 ?
@@ -1041,7 +1034,7 @@ const Edit = props => {
                   InputLabelProps={{
                     shrink: true,
                   }}
-                  InputProps={{
+                  InputProps={{  
                     readOnly: true,
                     endAdornment: (
                       <InputAdornment position="end"  >

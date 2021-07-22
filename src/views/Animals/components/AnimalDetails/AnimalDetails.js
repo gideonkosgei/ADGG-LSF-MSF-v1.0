@@ -90,11 +90,9 @@ const AnimalDetails = props => {
   let _sire_id = sessionStorage.getItem('_sire_id');  
   let _dam_id = sessionStorage.getItem('_dam_id'); 
 
-
   const buttonClassname = clsx({
     [classes.buttonSuccess]: success,
   });
-
 
   useEffect(() => {   
     let mounted_lookup = true;
@@ -180,8 +178,6 @@ const AnimalDetails = props => {
             setSireTypes(lookup_sire_types);
             setEntryTypes(lookup_entry_types);
             setDeformaties(lookup_deformaties);
-            
-            
           }
         });
       })(endpoint_lookup,'8,14,62,3,83,13,11,69');
@@ -210,10 +206,9 @@ const AnimalDetails = props => {
   if (!countries || !farms || !animal_types || !main_breeds || !breed_composition || !gender || !colors || !sire_types || !entryTypes || !deformaties ||!herds) {
     return null;
   }
-
-
     const handleChange = event => {
     event.persist();
+    setOutput({status:null, message:''});
     setValues({
       ...values,
       [event.target.name]:event.target.type === 'checkbox' ? event.target.checked: event.target.value  
@@ -235,7 +230,6 @@ const AnimalDetails = props => {
        setHerds(herd_array);
     }
   };
-
 
   const handleSubmit = event => {
     event.preventDefault();
