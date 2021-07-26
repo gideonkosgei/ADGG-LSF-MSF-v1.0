@@ -94,8 +94,6 @@ export const genericFunctionSixParameters = function (param1, param2, param3, pa
   });
 }
 
-
-
 /*  GENERIC 7 PARAMETERS  */
 export const genericFunctionSevenParameters = function (param1, param2, param3, param4, param5, param6, param7) {
   const options = {
@@ -112,7 +110,6 @@ export const genericFunctionSevenParameters = function (param1, param2, param3, 
   });
 }
 
-
 /*  GENERIC 8 PARAMETERS  */
 export const genericFunctionEightParameters = function (param1, param2, param3, param4, param5, param6, param7, param8) {
   const options = {
@@ -128,10 +125,6 @@ export const genericFunctionEightParameters = function (param1, param2, param3, 
       }).catch(err => reject(err));
   });
 }
-
-
-
-
 
 // user Authentication  
 export const authenticate = function (config, username, password) {
@@ -750,12 +743,8 @@ export const getInseminationEventById = function (config, id) {
   });
 }
 
-
-
-
-// add new insemination event
-export const postInsemination = function (config, animal_id, values, user_id, sire_id) {
-
+// add or edit new insemination event
+export const postOrPutInsemination = function (config, id, values, user_id, sire_id) {
   let { ai_type, body_condition_score, cost, field_agent_id, service_date, source_of_semen, straw_semen_type,semen_batch,breeding_type } = values;
   semen_batch = (typeof semen_batch === 'undefined' || semen_batch === '') ? null : semen_batch;
   breeding_type = (typeof breeding_type === 'undefined' || breeding_type === '') ? null : breeding_type;
@@ -773,17 +762,15 @@ export const postInsemination = function (config, animal_id, values, user_id, si
     "semen_batch": semen_batch,
     "source_of_semen": source_of_semen,
     "straw_semen_type": straw_semen_type,
-    "animal_id": animal_id,
+    "id": id,
     "ai_date": service_date,
     "type_of_ai": ai_type,
     "sire_id": sire_id,
     "body_condition_score": body_condition_score,
     "ai_cost": cost,
     "field_agent_id": field_agent_id,
-    "created_by": user_id
+    "user": user_id
   };
-
-  console.log(body);
 
   const options = {
     url: `${config.url}`,
@@ -801,45 +788,6 @@ export const postInsemination = function (config, animal_id, values, user_id, si
   });
 };
 
-
-//update insemination event record
-export const updateInsemination = function (config, event_id, values, user_id) {
-
-  let { ai_type, body_condition_score, cost, field_agent_id, service_date, straw_record_id } = values;
-
-  ai_type = (typeof ai_type === 'undefined' || ai_type === '') ? null : ai_type;
-  body_condition_score = (typeof body_condition_score === 'undefined' || body_condition_score === '') ? null : body_condition_score;
-  field_agent_id = (typeof field_agent_id === 'undefined' || field_agent_id === '') ? null : field_agent_id;
-  straw_record_id = (typeof straw_record_id === 'undefined' || straw_record_id === '') ? null : straw_record_id;
-  cost = (typeof cost === 'undefined' || cost === '') ? null : cost;
-  service_date = (typeof service_date === 'undefined' || service_date === '') ? moment(new Date()).format('YYYY-MM-DD') : service_date;
-
-  const body = {
-    "ai_date": service_date,
-    "type_of_ai": ai_type,
-    "straw_record_id": straw_record_id,
-    "body_condition_score": body_condition_score,
-    "ai_cost": cost,
-    "field_agent_id": field_agent_id,
-    "updated_by": user_id
-  };
-
-
-  const options = {
-    url: `${config.url}${event_id}`,
-    method: config.method,
-    headers: config.headers,
-    data: body
-  };
-
-  return new Promise((resolve, reject) => {
-    axios(options)
-      .then(res => {
-        resolve(res.data);
-      })
-      .catch(err => reject(err));
-  });
-};
 
 //exit & disposal event
 
@@ -2602,8 +2550,6 @@ export const batchProcessActions = function (config, uuid, action, user_id) {
     headers: config.headers,
     data: body
   };
-
-  console.log(options);
 
   return new Promise((resolve, reject) => {
     axios(options)

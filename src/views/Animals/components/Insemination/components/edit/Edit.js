@@ -2,7 +2,7 @@ import React, { useState,useEffect,useContext } from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import {Card,Fab,CircularProgress,InputAdornment, CardContent,LinearProgress, Grid,Divider, TextField,colors,Button,CardActions,Box,Switch ,Typography,Tooltip,IconButton } from '@material-ui/core';
-import {getLookups,updateInsemination,getInseminationEventById,getAgents,getStraws,genericFunctionTwoParameters,getServiceProviders}   from '../../../../../../utils/API';
+import {getLookups,postOrPutInsemination,getInseminationEventById,getAgents,getStraws,genericFunctionTwoParameters,getServiceProviders}   from '../../../../../../utils/API';
 import {endpoint_lookup,endpoint_insemination_update,endpoint_insemination_specific,endpoint_agent,endpoint_straw,endpoint_countries_all,endpoint_service_provider} from '../../../../../../configs/endpoints';
 import authContext from '../../../../../../contexts/AuthContext';
 import {Sidebar} from '../index';
@@ -105,9 +105,6 @@ const Edit = props => {
     [classes.buttonSuccess]: success,
   });
  
- 
- 
-
   useEffect(() => {   
     let mounted_lookup = true;
     let mounted_insemination = true;
@@ -264,26 +261,26 @@ const Edit = props => {
       setLoading(true);
     }
 
-    (async  (endpoint,id,values,user_id) => {     
-      await  updateInsemination(endpoint,id,values,user_id)
-      .then((response) => {        
-        setOutput({status:null, message:''});      
-        timer.current = window.setTimeout(() => {
-          setSuccess(true);
-          setLoading(false);          
-          if (parseInt(response.status) === 1){               
-            setOutput({status:parseInt(response.status), message:response.message}) 
-          } else {
-            setOutput({status:parseInt(response.status), message:response.message})
-          } 
-        }, 500);                      
-    }).catch((error) => {
-      setOutput({status:0, message:error.message})
-      setSuccess(false);
-      setLoading(false);
-    });
-
-    })(endpoint_insemination_update,event_id,values,user_id);    
+    (async (endpoint, id, values, user_id,sire_id) => {
+      await postOrPutInsemination(endpoint, id, values, user_id,sire_id)
+        .then((response) => {
+          setOutput({ status: null, message: '' });
+          timer.current = window.setTimeout(() => {
+            setSuccess(true);
+            setLoading(false);
+            if (parseInt(response.status) === 1) {
+              setBreedingType(null);
+              setOutput({ status: parseInt(response.status), message: response.message });              
+            } else {
+              setOutput({ status: parseInt(response.status), message: response.message })
+            }
+          }, 500);
+        }).catch((error) => {
+          setOutput({ status: 0, message: error.message })
+          setSuccess(false);
+          setLoading(false);
+        });
+    })(endpoint_insemination_update, event_id, values, user_id,sessionStorage.getItem('_sire_id'));
   };
   
 
@@ -368,7 +365,9 @@ const Edit = props => {
                               shrink: true,
                             }}
                             inputProps={{
-                              max: moment(new Date()).format('YYYY-MM-DD')
+                              max: moment(new Date()).format('YYYY-MM-DD'),
+                              readOnly: Boolean(readOnly),
+                              disabled: Boolean(readOnly)
                             }}
                             required
                             value = {values.service_date}
@@ -389,6 +388,11 @@ const Edit = props => {
                             fullWidth
                             InputLabelProps={{
                               shrink: true,
+                            }}
+
+                            inputProps={{
+                              readOnly: Boolean(readOnly),
+                              disabled: Boolean(readOnly)
                             }}
 
                             label="Cow Body Condition"
@@ -422,6 +426,10 @@ const Edit = props => {
                             InputLabelProps={{
                               shrink: true,
                             }}
+                            inputProps={{
+                              readOnly: Boolean(readOnly),
+                              disabled: Boolean(readOnly)
+                            }}
                             label="Breeding Type"
                             name="breeding_type"
                             value = {values.breeding_type}
@@ -447,6 +455,10 @@ const Edit = props => {
                               fullWidth
                               InputLabelProps={{
                                 shrink: true,
+                              }}
+                              inputProps={{
+                                readOnly: Boolean(readOnly),
+                                disabled: Boolean(readOnly)
                               }}
 
                               label="AI Type"
@@ -485,6 +497,7 @@ const Edit = props => {
                                 InputLabelProps={{
                                   shrink: true,
                                 }}
+
                                 required
                                 label="Bull ID / Straw ID"
                                 name="sire_id"
@@ -634,6 +647,10 @@ const Edit = props => {
                                 InputLabelProps={{
                                   shrink: true,
                                 }}
+                                inputProps={{
+                                  readOnly: Boolean(readOnly),
+                                  disabled: Boolean(readOnly)
+                                }}
                                 label="Semen Batch"
                                 name="semen_batch"
                                 onChange={handleChange}
@@ -651,6 +668,10 @@ const Edit = props => {
                                 fullWidth
                                 InputLabelProps={{
                                   shrink: true
+                                }}
+                                inputProps={{
+                                  readOnly: Boolean(readOnly),
+                                  disabled: Boolean(readOnly)
                                 }}
 
                                 label="Straw Semen Type"
@@ -683,6 +704,10 @@ const Edit = props => {
                                 InputLabelProps={{
                                   shrink: true,
                                 }}
+                                inputProps={{
+                                  readOnly: Boolean(readOnly),
+                                  disabled: Boolean(readOnly)
+                                }}
                                 label="Semen Source"
                                 name="source_of_semen"
                                 onChange={handleChange}
@@ -713,6 +738,10 @@ const Edit = props => {
                                 InputLabelProps={{
                                   shrink: true,
                                 }}
+                                inputProps={{
+                                  readOnly: Boolean(readOnly),
+                                  disabled: Boolean(readOnly)
+                                }}
                                 label="AI Cost"
                                 name="cost"
                                 value={values.cost}
@@ -730,6 +759,10 @@ const Edit = props => {
                                 fullWidth
                                 InputLabelProps={{
                                   shrink: true,
+                                }}
+                                inputProps={{
+                                  readOnly: Boolean(readOnly),
+                                  disabled: Boolean(readOnly)
                                 }}
                                 required
                                 label="AI Tech"
@@ -757,8 +790,6 @@ const Edit = props => {
                         }
 
                       </Grid>
-                    
-         
           </CardContent>
           <Divider />
           <CardActions>       
@@ -823,6 +854,7 @@ const Edit = props => {
         parentType="sire"
         onClose={handleClose}
         open={modalStatus}
+        option={breedingType === 1 ? 0 : 1}
       />
    </Page>
   );

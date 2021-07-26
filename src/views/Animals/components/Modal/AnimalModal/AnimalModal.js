@@ -43,11 +43,11 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const AnimalModal = props => {
-  const { open, onClose, parentType, className,option, ...rest } = props;
+  const { open, onClose, parentType, className, option, ...rest } = props;
   const classes = useStyles();
   const [values, setValues] = useState([]);
   const [data, setData] = useState([]);
-  const [{user_id }] = useContext(authContext);
+  const [{ user_id }] = useContext(authContext);
   const [output, setOutput] = useState({ status: null, message: "" });
 
   useEffect(() => {
@@ -55,38 +55,34 @@ const AnimalModal = props => {
     setOutput({ status: null, message: '' });
     setData([]);
 
-    (async (endpoint, desc, org, type,option) => {
-      await genericFunctionFiveParameters(endpoint, desc, org, type,option)
+    (async (endpoint, desc, org, type, option) => {
+      await genericFunctionFiveParameters(endpoint, desc, org, type, option)
         .then(response => {
           if (mounted) {
             setValues(response.payload[0]);
           }
         });
-    })(endpoint_animals_by_type, 'Animal by Type', user_id, parentType === 'sire' ? 5 : 2,option);
+    })(endpoint_animals_by_type, 'Animal by Type', user_id, parentType === 'sire' ? 5 : 2, option);
 
     return () => {
       mounted = false;
     };
-  }, [user_id, parentType,option]);
+  }, [user_id, parentType, option]);
 
   if (!open || !values) {
     return null;
   }
-
-
-
 
   const columns = [
     { name: "animal_id", label: "ID", options: { filter: false, sort: true, display: true } },
     { name: "tag_id", label: "TAG ID", options: { filter: false, sort: true, display: true } },
     { name: "animal_name", label: "NAME", options: { filter: false, sort: true, display: true } },
     { name: "dateofBirth", label: "DOB", options: { filter: false, sort: true, display: true } },
-    { name: "main_breed", label: "BREED", options: { filter: false, sort: true, display: true } },
-    { name: "breedComposition", label: "BREED COMPOSITION", options: { filter: false, sort: true, display: true } },
-    { name: "sex", label: "SEX", options: { filter: false, sort: true, display: true } },
-    { name: "animalType", label: "ANIMAL TYPE", options: { filter: false, sort: true, display: true } },
-    { name: "countryofOriginName", label: "COUNTRY ORIGIN", options: { filter: false, sort: true, display: true}},
-
+    { name: "main_breed", label: "BREED", options: { filter: true, sort: true, display: true } },
+    { name: "breedComposition", label: "BREED COMPOSITION", options: { filter: true, sort: true, display: true } },
+    { name: "sex", label: "SEX", options: { filter: true, sort: true, display: true } },
+    { name: "animalType", label: "ANIMAL TYPE", options: { filter: true, sort: true, display: true } },
+    { name: "countryofOriginName", label: "COUNTRY ORIGIN", options: { filter: true, sort: true, display: true } },
     { name: "main_breed_id", label: "Breed ID", options: { filter: false, sort: false, display: false } },
     { name: "breedComposition_id", label: "Breed Composition ID", options: { filter: false, sort: false, display: false } },
     { name: "countryofOrigin", label: "Country Of Origin ID", options: { filter: false, sort: false, display: false } }
@@ -120,7 +116,6 @@ const AnimalModal = props => {
     setData({
       ...data,
       [event.target.name]: event.target.type === 'checkbox' ? event.target.checked : event.target.value
-
     });
   };
 
@@ -128,19 +123,17 @@ const AnimalModal = props => {
     event.preventDefault();
     let id = typeof data[0] === 'undefined' ? '' : data[0];
     parentType === 'sire' ? sessionStorage.setItem('_sire_id', id) : sessionStorage.setItem('_dam_id', id);
-
     sessionStorage.setItem('_sire_tag_id', data[1]);
     sessionStorage.setItem('_sire_breed', data[9]);
     sessionStorage.setItem('_sire_breed_composition', data[10]);
     sessionStorage.setItem('_sire_country_of_origin', data[11]);
-    
+
     let _message = parentType === 'sire' ? 'Sire Selected Successfully' : 'Dam Selected Successfully';
     if (id === '') {
       setOutput({ status: 0, message: "Nothing Was Selected!" });
     } else {
       setOutput({ status: 1, message: _message });
     }
-
   }
 
   const onClear = () => {
@@ -172,7 +165,6 @@ const AnimalModal = props => {
                 : null
             }
             <br />
-
             {
               data.length > 0 ?
                 <Grid container spacing={2} >
@@ -219,7 +211,6 @@ const AnimalModal = props => {
                     />
 
                   </Grid>
-
                   <Grid
                     item
                     md={3}
@@ -262,7 +253,6 @@ const AnimalModal = props => {
                       onChange={handleChange}
                     />
                   </Grid>
-
                   <Grid
                     item
                     md={2}
@@ -284,7 +274,6 @@ const AnimalModal = props => {
                       onChange={handleChange}
                     />
                   </Grid>
-
                   <Grid
                     item
                     md={2}
@@ -306,8 +295,6 @@ const AnimalModal = props => {
                       onChange={handleChange}
                     />
                   </Grid>
-
-
                 </Grid>
                 : null
             }
@@ -333,7 +320,6 @@ const AnimalModal = props => {
             >
               Confirm
             </Button>
-
 
             <Button
               className={classes.saveButton}
@@ -362,7 +348,7 @@ AnimalModal.displayName = 'AnimalModal';
 AnimalModal.propTypes = {
   className: PropTypes.string,
   option: PropTypes.number.isRequired,
-  parentType: PropTypes.string.isRequired,  
+  parentType: PropTypes.string.isRequired,
   onClose: PropTypes.func,
   open: PropTypes.bool
 };

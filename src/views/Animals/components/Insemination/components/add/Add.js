@@ -3,7 +3,7 @@ import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import { Card, CardContent, Fab, CircularProgress, Grid, Divider, TextField, colors, Button, CardActions, Box, Typography, Switch, IconButton } from '@material-ui/core';
-import { getLookups, postInsemination, getAgents, getStraws, genericFunctionTwoParameters, getServiceProviders, genericFunctionFourParameters } from '../../../../../../utils/API';
+import { getLookups, postOrPutInsemination, getAgents, getStraws, genericFunctionTwoParameters, getServiceProviders, genericFunctionFourParameters } from '../../../../../../utils/API';
 import { endpoint_lookup, endpoint_insemination_add, endpoint_agent, endpoint_straw, endpoint_countries_all, endpoint_service_provider, endpoint_dp_validations } from '../../../../../../configs/endpoints';
 import authContext from '../../../../../../contexts/AuthContext';
 import { Sidebar } from '../index';
@@ -264,7 +264,7 @@ const Edit = props => {
     }
 
     (async (endpoint, id, values, user_id,sire_id) => {
-      await postInsemination(endpoint, id, values, user_id,sire_id)
+      await postOrPutInsemination(endpoint, id, values, user_id,sire_id)
         .then((response) => {
           setOutput({ status: null, message: '' });
           timer.current = window.setTimeout(() => {
@@ -799,6 +799,7 @@ const Edit = props => {
     </Page>
   );
 };
+
 
 Edit.propTypes = {
   history: PropTypes.object.isRequired,
