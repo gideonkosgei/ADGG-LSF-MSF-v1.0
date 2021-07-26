@@ -36,7 +36,7 @@ const AnimalList = props => {
   if (typeof HerdIdProp === "undefined") {
     animal_categ_id = parseInt(props.match.params.id);
     herd_id = parseInt(props.match.params.herd);
-    option = 2;
+    option = 5;
     id = user_id;
 
   } else {
