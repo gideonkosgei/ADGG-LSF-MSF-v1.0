@@ -238,8 +238,7 @@ const Edit = props => {
     setValues({
       ...values,
       [event.target.name]:event.target.type === 'checkbox' ? event.target.checked: event.target.value           
-    });
-    
+    });    
   
     if (event.target.name === 'breeding_type') {
       sessionStorage.setItem('_sire_tag_id', '');
@@ -248,39 +247,47 @@ const Edit = props => {
       sessionStorage.setItem('_sire_country_of_origin', '');
       sessionStorage.setItem('_sire_id', '');
       setBreedingType(isNaN(parseInt(event.target.value)) ? null : parseInt(event.target.value));
-
     }
 
   };
 
 
   const handleSubmit = event => {
-    event.preventDefault();
+    event.preventDefault();    
     if (!loading) {
       setSuccess(false);
       setLoading(true);
     }
 
-    (async (endpoint, id, values, user_id,sire_id) => {
-      await postOrPutInsemination(endpoint, id, values, user_id,sire_id)
-        .then((response) => {
-          setOutput({ status: null, message: '' });
-          timer.current = window.setTimeout(() => {
-            setSuccess(true);
+    if (sessionStorage.getItem('_sire_id') === ''){   
+      setOutput({ status: 0, message: 'Sire not selected'});
+      setSuccess(false);
+      setLoading(false);   
+
+    } else {
+
+      (async (endpoint, id, values, user_id,sire_id) => {
+        await postOrPutInsemination(endpoint, id, values, user_id,sire_id)
+          .then((response) => {
+            setOutput({ status: null, message: '' });
+            timer.current = window.setTimeout(() => {
+              setSuccess(true);
+              setLoading(false);
+              if (parseInt(response.status) === 1) {
+                setBreedingType(null);
+                setOutput({ status: parseInt(response.status), message: response.message });              
+              } else {
+                setOutput({ status: parseInt(response.status), message: response.message })
+              }
+            }, 500);
+          }).catch((error) => {
+            setOutput({ status: 0, message: error.message })
+            setSuccess(false);
             setLoading(false);
-            if (parseInt(response.status) === 1) {
-              setBreedingType(null);
-              setOutput({ status: parseInt(response.status), message: response.message });              
-            } else {
-              setOutput({ status: parseInt(response.status), message: response.message })
-            }
-          }, 500);
-        }).catch((error) => {
-          setOutput({ status: 0, message: error.message })
-          setSuccess(false);
-          setLoading(false);
-        });
-    })(endpoint_insemination_update, event_id, values, user_id,sessionStorage.getItem('_sire_id'));
+          });
+      })(endpoint_insemination_update, event_id, values, user_id,sessionStorage.getItem('_sire_id'));
+
+    }
   };
   
 
@@ -298,6 +305,7 @@ const Edit = props => {
 
   
   const handleClickSire = () => {
+    setOutput({ status: null, message: '' });
     setModalStatus(true);
   };
 

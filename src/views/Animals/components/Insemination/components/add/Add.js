@@ -263,30 +263,37 @@ const Edit = props => {
       setLoading(true);
     }
 
-    (async (endpoint, id, values, user_id,sire_id) => {
-      await postOrPutInsemination(endpoint, id, values, user_id,sire_id)
-        .then((response) => {
-          setOutput({ status: null, message: '' });
-          timer.current = window.setTimeout(() => {
-            setSuccess(true);
-            setLoading(false);
-            if (parseInt(response.status) === 1) {
-              setValues({});
-              document.forms["event"].reset();
-              setBreedingType(null);
-              setOutput({ status: parseInt(response.status), message: response.message });              
-            } else {
-              setOutput({ status: parseInt(response.status), message: response.message })
-            }
-          }, 500);
+    if (sessionStorage.getItem('_sire_id') === '') {
+      setOutput({ status: 0, message: 'Sire not selected' });
+      setSuccess(false);
+      setLoading(false);
 
-        }).catch((error) => {
-          setOutput({ status: 0, message: error.message })
-          setSuccess(false);
-          setLoading(false);
-        });
-        
-    })(endpoint_insemination_add, animal_id, values, user_id,sessionStorage.getItem('_sire_id'));
+    } else {
+
+      (async (endpoint, id, values, user_id, sire_id) => {
+        await postOrPutInsemination(endpoint, id, values, user_id, sire_id)
+          .then((response) => {
+            setOutput({ status: null, message: '' });
+            timer.current = window.setTimeout(() => {
+              setSuccess(true);
+              setLoading(false);
+              if (parseInt(response.status) === 1) {
+                setValues({});
+                document.forms["event"].reset();
+                setBreedingType(null);
+                setOutput({ status: parseInt(response.status), message: response.message });
+              } else {
+                setOutput({ status: parseInt(response.status), message: response.message })
+              }
+            }, 500);
+
+          }).catch((error) => {
+            setOutput({ status: 0, message: error.message })
+            setSuccess(false);
+            setLoading(false);
+          });
+      })(endpoint_insemination_add, animal_id, values, user_id, sessionStorage.getItem('_sire_id'));
+    }
   };
 
   const handleSwitchChange = event => {
@@ -295,6 +302,7 @@ const Edit = props => {
   };
 
   const handleClickSire = () => {
+    setOutput({ status: null, message: '' });
     setModalStatus(true);
   };
 
@@ -312,7 +320,7 @@ const Edit = props => {
       title="Breeding"
     >
       <Typography
-        component="h1"  
+        component="h1"
         gutterBottom
         variant="h3"
       >
@@ -475,7 +483,7 @@ const Edit = props => {
                                 label="Bull ID / Straw ID"
                                 name="sire_id"
                                 onChange={handleChange}
-                                value={sessionStorage.getItem('_sire_id') === ''? '' :sessionStorage.getItem('_sire_tag_id')}
+                                value={sessionStorage.getItem('_sire_id') === '' ? '' : sessionStorage.getItem('_sire_tag_id')}
                                 variant="outlined"
                                 InputProps={{
                                   readOnly: true,
@@ -800,10 +808,9 @@ const Edit = props => {
   );
 };
 
-
 Edit.propTypes = {
   history: PropTypes.object.isRequired,
-  match: PropTypes.object.isRequired  
+  match: PropTypes.object.isRequired
 };
 
 export default Edit;

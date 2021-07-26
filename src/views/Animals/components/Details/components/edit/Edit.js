@@ -237,9 +237,6 @@ const Edit = props => {
         });
     })(endpoint_animal, 'get animal details -> animal id', 3, animal_id); /* option 3 -> get specific animal details */
 
-
-
-
     return () => {
       mounted_lookup = false;
       mounted_herds = false;

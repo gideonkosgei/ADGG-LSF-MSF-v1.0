@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
-import { Modal, Card, Grid, TextField, CardContent, CardActions, Button, colors } from '@material-ui/core';
+import { Modal, Card, Grid, TextField, LinearProgress, CardContent, CardActions, Button, colors } from '@material-ui/core';
 import { genericFunctionFiveParameters } from '../../../../../utils/API';
 import { endpoint_animals_by_type } from '../../../../../configs/endpoints';
 import authContext from '../../../../../contexts/AuthContext';
@@ -46,6 +46,7 @@ const AnimalModal = props => {
   const { open, onClose, parentType, className, option, ...rest } = props;
   const classes = useStyles();
   const [values, setValues] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [data, setData] = useState([]);
   const [{ user_id }] = useContext(authContext);
   const [output, setOutput] = useState({ status: null, message: "" });
@@ -54,12 +55,15 @@ const AnimalModal = props => {
     let mounted = true;
     setOutput({ status: null, message: '' });
     setData([]);
+    setValues([]);
+    setIsLoading(true);
 
     (async (endpoint, desc, org, type, option) => {
       await genericFunctionFiveParameters(endpoint, desc, org, type, option)
         .then(response => {
           if (mounted) {
             setValues(response.payload[0]);
+            setIsLoading(false);
           }
         });
     })(endpoint_animals_by_type, 'Animal by Type', user_id, parentType === 'sire' ? 5 : 2, option);
@@ -142,6 +146,7 @@ const AnimalModal = props => {
     let _message = parentType === 'sire' ? 'Sire Cleared Successfully' : 'Dam Cleared Successfully';
     setOutput({ status: 1, message: _message });
   };
+
   return (
     <Modal
       onClose={onClose}
@@ -165,139 +170,155 @@ const AnimalModal = props => {
                 : null
             }
             <br />
-            {
-              data.length > 0 ?
-                <Grid container spacing={2} >
-                  <Grid
-                    item
-                    md={1}
-                    xs={12}
-                  >
-                    <TextField
-                      fullWidth
-                      InputLabelProps={{
-                        shrink: true,
-                      }}
-                      inputProps={{
-                        readOnly: true
-                      }}
-                      margin='dense'
-                      label="ID "
-                      name='id'
-                      variant="outlined"
-                      value={data[0]}
-                      onChange={handleChange}
-                    />
-                  </Grid>
-                  <Grid
-                    item
-                    md={2}
-                    xs={12}
-                  >
-                    <TextField
-                      fullWidth
-                      InputLabelProps={{
-                        shrink: true,
-                      }}
-                      inputProps={{
-                        readOnly: true
-                      }}
-                      margin='dense'
-                      label="Tag ID"
-                      variant="outlined"
-                      value={data[1]}
-                      name='tag_id'
-                      onChange={handleChange}
-                    />
 
-                  </Grid>
-                  <Grid
-                    item
-                    md={3}
-                    xs={12}
-                  >
-                    <TextField
-                      fullWidth
-                      InputLabelProps={{
-                        shrink: true,
-                      }}
-                      inputProps={{
-                        readOnly: true
-                      }}
-                      margin='dense'
-                      label="Name"
-                      variant="outlined"
-                      name='name'
-                      value={data[2]}
-                      onChange={handleChange}
-                    />
-                  </Grid>
-                  <Grid
-                    item
-                    md={2}
-                    xs={12}
-                  >
-                    <TextField
-                      fullWidth
-                      InputLabelProps={{
-                        shrink: true,
-                      }}
-                      inputProps={{
-                        readOnly: true
-                      }}
-                      margin='dense'
-                      label="Breed"
-                      variant="outlined"
-                      name='breed'
-                      value={data[4]}
-                      onChange={handleChange}
-                    />
-                  </Grid>
-                  <Grid
-                    item
-                    md={2}
-                    xs={12}
-                  >
-                    <TextField
-                      fullWidth
-                      InputLabelProps={{
-                        shrink: true,
-                      }}
-                      inputProps={{
-                        readOnly: true
-                      }}
-                      margin='dense'
-                      label="Breed Composition"
-                      variant="outlined"
-                      name='breed_composition'
-                      value={data[5]}
-                      onChange={handleChange}
-                    />
-                  </Grid>
-                  <Grid
-                    item
-                    md={2}
-                    xs={12}
-                  >
-                    <TextField
-                      fullWidth
-                      InputLabelProps={{
-                        shrink: true,
-                      }}
-                      inputProps={{
-                        readOnly: true
-                      }}
-                      margin='dense'
-                      label="Country of origin"
-                      variant="outlined"
-                      name='country_of_origin'
-                      value={data[8]}
-                      onChange={handleChange}
-                    />
-                  </Grid>
-                </Grid>
-                : null
-            }
+            <Grid container spacing={2} >
+
+              {
+                data.length > 0 ?
+                  <>
+
+                    <Grid
+                      item
+                      md={1}
+                      xs={12}
+                    >
+                      <TextField
+                        fullWidth
+                        InputLabelProps={{
+                          shrink: true,
+                        }}
+                        inputProps={{
+                          readOnly: true
+                        }}
+                        margin='dense'
+                        label="ID "
+                        name='id'
+                        variant="outlined"
+                        value={data[0]}
+                        onChange={handleChange}
+                      />
+                    </Grid>
+                    <Grid
+                      item
+                      md={2}
+                      xs={12}
+                    >
+                      <TextField
+                        fullWidth
+                        InputLabelProps={{
+                          shrink: true,
+                        }}
+                        inputProps={{
+                          readOnly: true
+                        }}
+                        margin='dense'
+                        label="Tag ID"
+                        variant="outlined"
+                        value={data[1]}
+                        name='tag_id'
+                        onChange={handleChange}
+                      />
+
+                    </Grid>
+                    <Grid
+                      item
+                      md={3}
+                      xs={12}
+                    >
+                      <TextField
+                        fullWidth
+                        InputLabelProps={{
+                          shrink: true,
+                        }}
+                        inputProps={{
+                          readOnly: true
+                        }}
+                        margin='dense'
+                        label="Name"
+                        variant="outlined"
+                        name='name'
+                        value={data[2]}
+                        onChange={handleChange}
+                      />
+                    </Grid>
+                    <Grid
+                      item
+                      md={2}
+                      xs={12}
+                    >
+                      <TextField
+                        fullWidth
+                        InputLabelProps={{
+                          shrink: true,
+                        }}
+                        inputProps={{
+                          readOnly: true
+                        }}
+                        margin='dense'
+                        label="Breed"
+                        variant="outlined"
+                        name='breed'
+                        value={data[4]}
+                        onChange={handleChange}
+                      />
+                    </Grid>
+                    <Grid
+                      item
+                      md={2}
+                      xs={12}
+                    >
+                      <TextField
+                        fullWidth
+                        InputLabelProps={{
+                          shrink: true,
+                        }}
+                        inputProps={{
+                          readOnly: true
+                        }}
+                        margin='dense'
+                        label="Breed Composition"
+                        variant="outlined"
+                        name='breed_composition'
+                        value={data[5]}
+                        onChange={handleChange}
+                      />
+                    </Grid>
+                    <Grid
+                      item
+                      md={2}
+                      xs={12}
+                    >
+                      <TextField
+                        fullWidth
+                        InputLabelProps={{
+                          shrink: true,
+                        }}
+                        inputProps={{
+                          readOnly: true
+                        }}
+                        margin='dense'
+                        label="Country of origin"
+                        variant="outlined"
+                        name='country_of_origin'
+                        value={data[8]}
+                        onChange={handleChange}
+                      />
+                    </Grid>
+                  </>
+
+                  : null
+              }
+
+              <Grid
+                item
+                md={12}
+                xs={12}
+              >
+                {isLoading &&
+                  <LinearProgress />
+                }
+              </Grid>
+            </Grid>
 
             <PerfectScrollbar>
               <div className={classes.inner}>
@@ -344,7 +365,6 @@ const AnimalModal = props => {
 };
 
 AnimalModal.displayName = 'AnimalModal';
-
 AnimalModal.propTypes = {
   className: PropTypes.string,
   option: PropTypes.number.isRequired,
