@@ -106,8 +106,6 @@ const Edit = props => {
     [classes.buttonSuccess]: success,
   });
 
-
-
   useEffect(() => {
     let mounted_lookup = true;
     let mounted_agents = true;
@@ -796,6 +794,7 @@ const Edit = props => {
         parentType="sire"
         onClose={handleClose}
         open={modalStatus}
+        option={breedingType === 1 ? 0 : 1}
       />
     </Page>
   );
@@ -803,7 +802,7 @@ const Edit = props => {
 
 Edit.propTypes = {
   history: PropTypes.object.isRequired,
-  match: PropTypes.object.isRequired
+  match: PropTypes.object.isRequired  
 };
 
 export default Edit;

@@ -1266,6 +1266,7 @@ const Edit = props => {
           parentType={parent}
           onClose={handleClose}
           open={modalStatus}
+          option={0}
         />
       </Card>
     </Page>

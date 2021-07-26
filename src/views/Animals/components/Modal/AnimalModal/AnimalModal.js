@@ -3,7 +3,7 @@ import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import { Modal, Card, Grid, TextField, CardContent, CardActions, Button, colors } from '@material-ui/core';
-import { genericFunctionFourParameters } from '../../../../../utils/API';
+import { genericFunctionFiveParameters } from '../../../../../utils/API';
 import { endpoint_animals_by_type } from '../../../../../configs/endpoints';
 import authContext from '../../../../../contexts/AuthContext';
 import MUIDataTable from "mui-datatables";
@@ -43,11 +43,11 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const AnimalModal = props => {
-  const { open, onClose, parentType, className, ...rest } = props;
+  const { open, onClose, parentType, className,option, ...rest } = props;
   const classes = useStyles();
   const [values, setValues] = useState([]);
   const [data, setData] = useState([]);
-  const [{ organization_id }] = useContext(authContext);
+  const [{user_id }] = useContext(authContext);
   const [output, setOutput] = useState({ status: null, message: "" });
 
   useEffect(() => {
@@ -55,19 +55,19 @@ const AnimalModal = props => {
     setOutput({ status: null, message: '' });
     setData([]);
 
-    (async (endpoint, desc, org, type) => {
-      await genericFunctionFourParameters(endpoint, desc, org, type)
+    (async (endpoint, desc, org, type,option) => {
+      await genericFunctionFiveParameters(endpoint, desc, org, type,option)
         .then(response => {
           if (mounted) {
             setValues(response.payload[0]);
           }
         });
-    })(endpoint_animals_by_type, 'Animal by Type', organization_id, parentType === 'sire' ? 5 : 2);
+    })(endpoint_animals_by_type, 'Animal by Type', user_id, parentType === 'sire' ? 5 : 2,option);
 
     return () => {
       mounted = false;
     };
-  }, [organization_id, parentType]);
+  }, [user_id, parentType,option]);
 
   if (!open || !values) {
     return null;
@@ -358,9 +358,11 @@ const AnimalModal = props => {
 };
 
 AnimalModal.displayName = 'AnimalModal';
+
 AnimalModal.propTypes = {
   className: PropTypes.string,
-  customer: PropTypes.any,
+  option: PropTypes.number.isRequired,
+  parentType: PropTypes.string.isRequired,  
   onClose: PropTypes.func,
   open: PropTypes.bool
 };
