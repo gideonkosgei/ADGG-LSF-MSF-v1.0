@@ -85,7 +85,7 @@ export const genericFunctionSixParameters = function (param1, param2, param3, pa
     url: `${param1.url}/${param3}/${param4}/${param5}/${param6}`,
     method: param1.method,
     headers: param1.headers
-  }  
+  }
   return new Promise((resolve, reject) => {
     axios(options)
       .then(res => {
@@ -114,7 +114,7 @@ export const genericFunctionSevenParameters = function (param1, param2, param3, 
 
 
 /*  GENERIC 8 PARAMETERS  */
-export const genericFunctionEightParameters = function (param1, param2, param3, param4, param5, param6, param7,param8) {
+export const genericFunctionEightParameters = function (param1, param2, param3, param4, param5, param6, param7, param8) {
   const options = {
     url: `${param1.url}/${param3}/${param4}/${param5}/${param6}/${param7}/${param8}`,
     method: param1.method,
@@ -754,27 +754,36 @@ export const getInseminationEventById = function (config, id) {
 
 
 // add new insemination event
-export const postInsemination = function (config, animal_id, values, user_id) {
-  let { ai_type, body_condition_score, cost, field_agent_id, service_date, straw_id } = values;
+export const postInsemination = function (config, animal_id, values, user_id, sire_id) {
 
+  let { ai_type, body_condition_score, cost, field_agent_id, service_date, source_of_semen, straw_semen_type,semen_batch,breeding_type } = values;
+  semen_batch = (typeof semen_batch === 'undefined' || semen_batch === '') ? null : semen_batch;
+  breeding_type = (typeof breeding_type === 'undefined' || breeding_type === '') ? null : breeding_type;
   ai_type = (typeof ai_type === 'undefined' || ai_type === '') ? null : ai_type;
   body_condition_score = (typeof body_condition_score === 'undefined' || body_condition_score === '') ? null : body_condition_score;
   field_agent_id = (typeof field_agent_id === 'undefined' || field_agent_id === '') ? null : field_agent_id;
-  straw_id = (typeof straw_id === 'undefined' || straw_id === '') ? null : straw_id;
   cost = (typeof cost === 'undefined' || cost === '') ? null : cost;
+  semen_batch = (typeof semen_batch === 'undefined' || semen_batch === '') ? null : semen_batch;
+  source_of_semen = (typeof source_of_semen === 'undefined' || source_of_semen === '') ? null : source_of_semen;
+  straw_semen_type = (typeof straw_semen_type === 'undefined' || straw_semen_type === '') ? null : straw_semen_type;
   service_date = (typeof service_date === 'undefined' || service_date === '') ? moment(new Date()).format('YYYY-MM-DD') : service_date;
 
-
   const body = {
+    "breeding_type": breeding_type,
+    "semen_batch": semen_batch,
+    "source_of_semen": source_of_semen,
+    "straw_semen_type": straw_semen_type,
     "animal_id": animal_id,
     "ai_date": service_date,
     "type_of_ai": ai_type,
-    "straw_id": straw_id,
+    "sire_id": sire_id,
     "body_condition_score": body_condition_score,
     "ai_cost": cost,
     "field_agent_id": field_agent_id,
     "created_by": user_id
   };
+
+  console.log(body);
 
   const options = {
     url: `${config.url}`,
@@ -808,7 +817,7 @@ export const updateInsemination = function (config, event_id, values, user_id) {
   const body = {
     "ai_date": service_date,
     "type_of_ai": ai_type,
-    "straw_id": straw_record_id,
+    "straw_record_id": straw_record_id,
     "body_condition_score": body_condition_score,
     "ai_cost": cost,
     "field_agent_id": field_agent_id,
@@ -2586,7 +2595,7 @@ export const batchProcessActions = function (config, uuid, action, user_id) {
     "action": action,
     "uuid": uuid,
     "user": user_id
-  }; 
+  };
   const options = {
     url: `${config.url}`,
     method: config.method,
@@ -3647,7 +3656,7 @@ export const createUpdateUserAccount = function (config, option, id, values, use
     "status": status
   };
 
-   const options = {
+  const options = {
     url: `${config.url}`,
     method: config.method,
     headers: config.headers,
@@ -3957,8 +3966,8 @@ export const animalBatchModifyRevalidate = function (config, values, record_id, 
     "record_id": record_id,
     "user_id": user_id,
     "batch_type": batch_type,
-    "remove" : remove
-  }; 
+    "remove": remove
+  };
 
   const options = {
     url: `${config.url}`,

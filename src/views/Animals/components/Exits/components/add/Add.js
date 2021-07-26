@@ -17,7 +17,6 @@ import Alert from '@material-ui/lab/Alert';
 
 const useStyles = makeStyles(theme => ({
   root: {
-    width: theme.breakpoints.values.lg,
     maxWidth: '100%',
     margin: '0 auto',
     padding: theme.spacing(3)

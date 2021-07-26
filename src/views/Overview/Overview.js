@@ -9,8 +9,7 @@ import {
 } from './components';
 
 const useStyles = makeStyles(theme => ({
-  root: {
-    width: theme.breakpoints.values.lg,
+  root: {   
     maxWidth: '100%',
     margin: '0 auto',
     padding: theme.spacing(3)

@@ -15,13 +15,11 @@ import OpenInNewIcon from '@material-ui/icons/OpenInNew';
 
 const useStyles = makeStyles(theme => ({
   root: {
-    width: theme.breakpoints.values.lg,
     maxWidth: '100%',
     margin: '0 auto',
     padding: theme.spacing(3)
   },
   inner: {
-    width: theme.breakpoints.values.lg,
     maxWidth: '100%',
     margin: '0 auto',
     padding: theme.spacing(3)

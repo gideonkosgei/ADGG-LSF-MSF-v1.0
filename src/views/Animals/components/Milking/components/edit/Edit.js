@@ -19,7 +19,6 @@ import SaveIcon from '@material-ui/icons/Save';
 
 const useStyles = makeStyles(theme => ({
   root: {
-    width: theme.breakpoints.values.lg,
     maxWidth: '100%',
     margin: '0 auto',
     padding: theme.spacing(3)
@@ -32,7 +31,6 @@ const useStyles = makeStyles(theme => ({
     }
   },
   inner: {
-    width: theme.breakpoints.values.lg,
     maxWidth: '100%',
     margin: '0 auto',
     padding: theme.spacing(3)

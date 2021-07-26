@@ -17,13 +17,11 @@ import {Header} from '../index';
 
 const useStyles = makeStyles(theme => ({
   root: {
-    width: theme.breakpoints.values.lg,
     maxWidth: '100%',
     margin: '0 auto',
     padding: theme.spacing(3)
   },
   inner: {
-    width: theme.breakpoints.values.lg,
     maxWidth: '100%',
     margin: '0 auto',
     padding: theme.spacing(3)
@@ -41,7 +39,6 @@ const Edit = props => {
   const [values, setValues] = useState([]);
   const animal_id  = localStorage.getItem('animal_id');
   const animal_tag  = sessionStorage.getItem('animal_tag');
-  const animal_name  = sessionStorage.getItem('animal_name');
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {     
@@ -68,16 +65,13 @@ const Edit = props => {
 
     const columns = [
     { name: "event_id",label: "Event ID",options: {filter: false,sort: false,display:false}},
-    { name: "ai_date",label: "AI Date",options: {filter: false,sort: true,display:true}},    
-    { name: "type_of_ai",label: "AI Type",options: {filter: false,sort: true,display:true}},
-    //{ name: "semen_batch",label: "Batch",options: {filter: false,sort: true,display:true}},    
-    { name: "straw_id_scan_sire_code",label: "Straw ID",options: {filter: true,sort: true, display:true}},
-    { name: "source_of_semen",label: "Semen Source",options: {filter: false,sort: true,display:true}},
-    { name: "straw_semen_type",label: "Semen Type",options: {filter: true,sort: true,display:true}},
-    //{ name: "country_of_sire_bull_origin",label: "Bull Origin",options: {filter: true,sort: true,display:true}},
+    { name: "ai_date",label: "AI Date",options: {filter: false,sort: true,display:true}}, 
+    { name: "breeding_type",label: "Breeding Type",options: {filter: true,sort: true,display:true}},     
+    { name: "straw_id_scan_sire_code",label: "Straw/Bull ID",options: {filter: true,sort: true, display:true}},
     { name: "breed_of_the_bull",label: "Bull Breed",options: {filter: true,sort: true,display:true}},     
     { name: "breed_composition_of_bull",label: "Breed Comp.",options: {filter: true,sort: true,display:true}},
-    //{ name: "ai_cost",label: "AI Cost",options: {filter: true,sort: true,display:true}},
+    { name: "country_of_sire_bull_origin_name",label: "Bull Origin",options: {filter: true,sort: true,display:true}},
+    { name: "ai_cost",label: "Cost",options: {filter: true,sort: true,display:true}},
     { name: "",
       options: {
       filter: false,
@@ -131,7 +125,7 @@ const Edit = props => {
         gutterBottom
         variant="h3"
       >
-       {`INSEMINATION RECORDS : ${animal_tag}`}
+       {`BREEDING RECORDS : ${animal_tag}`}
       </Typography>
       { isLoading  &&
         <LinearProgress/>
@@ -150,7 +144,7 @@ const Edit = props => {
               <PerfectScrollbar>                    
                 <MuiThemeProvider>                
                   <MUIDataTable
-                    title = {`INSEMINATION - ${animal_name}(${animal_tag})`}
+                    title = ""
                     data={values}
                     columns={columns}
                     options={options}

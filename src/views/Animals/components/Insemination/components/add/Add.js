@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
-import { Card, CardContent, Fab, CircularProgress, Grid, Divider, TextField, colors, Button, CardActions, Box, Typography, Switch } from '@material-ui/core';
+import { Card, CardContent, Fab, CircularProgress, Grid, Divider, TextField, colors, Button, CardActions, Box, Typography, Switch, IconButton } from '@material-ui/core';
 import { getLookups, postInsemination, getAgents, getStraws, genericFunctionTwoParameters, getServiceProviders, genericFunctionFourParameters } from '../../../../../../utils/API';
 import { endpoint_lookup, endpoint_insemination_add, endpoint_agent, endpoint_straw, endpoint_countries_all, endpoint_service_provider, endpoint_dp_validations } from '../../../../../../configs/endpoints';
 import authContext from '../../../../../../contexts/AuthContext';
@@ -15,11 +15,13 @@ import { green } from '@material-ui/core/colors';
 import CheckIcon from '@material-ui/icons/Check';
 import SaveIcon from '@material-ui/icons/Save';
 import Alert from '@material-ui/lab/Alert';
+import InputAdornment from '@material-ui/core/InputAdornment';
+import SearchIcon from '@material-ui/icons/Search';
+import { AnimalModal } from '../../../Modal';
 
 
 const useStyles = makeStyles(theme => ({
   root: {
-    width: theme.breakpoints.values.lg,
     maxWidth: '100%',
     margin: '0 auto',
     padding: theme.spacing(3)
@@ -32,7 +34,6 @@ const useStyles = makeStyles(theme => ({
     }
   },
   inner: {
-    width: theme.breakpoints.values.lg,
     maxWidth: '100%',
     margin: '0 auto',
     padding: theme.spacing(3)
@@ -73,7 +74,6 @@ const useStyles = makeStyles(theme => ({
 const Edit = props => {
   const [{ user_id, organization_id }] = useContext(authContext);
   const classes = useStyles();
-
   const [values, setValues] = useState({});
   const [body_scores, setBodyScores] = useState([]);
   const [breed_compositions, setBreedCompositions] = useState([]);
@@ -88,20 +88,16 @@ const Edit = props => {
   const [straws, setStraws] = useState([]);
   const [countries, setCountries] = useState([]);
   const [override, setOverride] = useState(false);
-
+  const [modalStatus, setModalStatus] = useState(false);
   const [strawSemenBatch, setStrawSemenBatch] = useState(null);
   const [strawSemenType, setStrawSemenType] = useState(null);
   const [strawSemenSource, setStrawSemenSource] = useState(null);
-  const [strawBullBreed, setStrawBullBreed] = useState(null);
-  const [strawBullBreedComposition, setStrawBullBreedComposition] = useState(null);
-  const [strawBullOriginCountry, setStrawBullOriginCountry] = useState(null);
   const [validations, setValidations] = useState([]);
-
+  const [breedingType, setBreedingType] = useState(null);
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [output, setOutput] = useState({ status: null, message: "" });
   const timer = React.useRef();
-
   const option_straw = 0;
   const sp_option = 0;
   const is_active = 1;
@@ -109,6 +105,8 @@ const Edit = props => {
   const buttonClassname = clsx({
     [classes.buttonSuccess]: success,
   });
+
+
 
   useEffect(() => {
     let mounted_lookup = true;
@@ -192,7 +190,7 @@ const Edit = props => {
               }
 
               //semen types
-              if (data[i].list_type_id === 20001) {
+              if (data[i].list_type_id === 73) {
                 lookup_semen_types.push(data[i]);
               }
 
@@ -206,7 +204,6 @@ const Edit = props => {
                 lookup_breed.push(data[i]);
               }
             }
-
             setBodyScores(lookup_body_scores);
             setBreedCompositions(lookup_breed_compositions);
             setBullBreeds(lookup_breed);
@@ -214,7 +211,7 @@ const Edit = props => {
             setAiTypes(lookup_ai_types);
           }
         });
-    })(endpoint_lookup, '8,14,71,72,20001');
+    })(endpoint_lookup, '8,14,71,72,73');
 
     return () => {
       mounted_lookup = false;
@@ -233,6 +230,7 @@ const Edit = props => {
 
   const handleChange = event => {
     event.persist();
+    setOutput({ status: null, message: '' });
     setValues({
       ...values,
       [event.target.name]: event.target.type === 'checkbox' ? event.target.checked : event.target.value
@@ -245,14 +243,20 @@ const Edit = props => {
           setStrawSemenBatch(straws[i].batch_number);
           setStrawSemenType(straws[i].specification_id);
           setStrawSemenSource(straws[i].semen_source_id);
-          setStrawBullBreed(straws[i].breed_id);
-          setStrawBullBreedComposition(straws[i].breed_composition_id);
-          setStrawBullOriginCountry(straws[i].origin_country);
         }
       }
     }
-  };
 
+    if (event.target.name === 'breeding_type') {
+      sessionStorage.setItem('_sire_tag_id', '');
+      sessionStorage.setItem('_sire_breed', '');
+      sessionStorage.setItem('_sire_breed_composition', '');
+      sessionStorage.setItem('_sire_country_of_origin', '');
+      sessionStorage.setItem('_sire_id', '');
+      setBreedingType(isNaN(parseInt(event.target.value)) ? null : parseInt(event.target.value));
+    }
+
+  };
 
   const handleSubmit = event => {
     event.preventDefault();
@@ -260,10 +264,10 @@ const Edit = props => {
       setSuccess(false);
       setLoading(true);
     }
-    (async (endpoint, id, values, user_id) => {
-      await postInsemination(endpoint, id, values, user_id)
-        .then((response) => {
 
+    (async (endpoint, id, values, user_id,sire_id) => {
+      await postInsemination(endpoint, id, values, user_id,sire_id)
+        .then((response) => {
           setOutput({ status: null, message: '' });
           timer.current = window.setTimeout(() => {
             setSuccess(true);
@@ -271,7 +275,8 @@ const Edit = props => {
             if (parseInt(response.status) === 1) {
               setValues({});
               document.forms["event"].reset();
-              setOutput({ status: parseInt(response.status), message: response.message })
+              setBreedingType(null);
+              setOutput({ status: parseInt(response.status), message: response.message });              
             } else {
               setOutput({ status: parseInt(response.status), message: response.message })
             }
@@ -282,8 +287,8 @@ const Edit = props => {
           setSuccess(false);
           setLoading(false);
         });
-
-    })(endpoint_insemination_add, animal_id, values, user_id);
+        
+    })(endpoint_insemination_add, animal_id, values, user_id,sessionStorage.getItem('_sire_id'));
   };
 
   const handleSwitchChange = event => {
@@ -291,17 +296,29 @@ const Edit = props => {
     setOverride(!override);
   };
 
+  const handleClickSire = () => {
+    setModalStatus(true);
+  };
+
+  const handleMouseDownSire = (event) => {
+    event.preventDefault();
+  };
+
+  const handleClose = () => {
+    setModalStatus(false);
+  };
+
   return (
     <Page
       className={classes.root}
-      title="Insemination"
+      title="Breeding"
     >
       <Typography
-        component="h1"
+        component="h1"  
         gutterBottom
         variant="h3"
       >
-        {`NEW INSEMINATION RECORD : ${animal_tag}`}
+        {`NEW BREEDING RECORD : ${animal_tag}`}
       </Typography>
       <br />
       <Header />
@@ -368,10 +385,8 @@ const Edit = props => {
                             label="Cow Body Condition"
                             name="body_condition_score"
                             onChange={handleChange}
-                            //required
                             default=""
                             select
-                            // eslint-disable-next-line react/jsx-sort-props
                             SelectProps={{ native: true }}
                             variant="outlined"
                           >
@@ -405,80 +420,49 @@ const Edit = props => {
                             SelectProps={{ native: true }}
                             variant="outlined"
                           >
-                            <option value="0"></option>
+                            <option value=""></option>
                             <option value="1"> Artificial Insemination</option>
                             <option value="2"> Natural Mating</option>
                           </TextField>
                         </Grid>
 
-
-                        <Grid
-                          item
-                          md={3}
-                          xs={12}
-                        >
-                          <TextField
-                            fullWidth
-                            InputLabelProps={{
-                              shrink: true,
-                            }}
-
-                            label="AI Type"
-                            name="ai_type"
-                            onChange={handleChange}
-                            required
-                            default=""
-                            select
-                            // eslint-disable-next-line react/jsx-sort-props
-                            SelectProps={{ native: true }}
-                            variant="outlined"
+                        {breedingType === 1 ?
+                          <Grid
+                            item
+                            md={3}
+                            xs={12}
                           >
-                            <option value=""></option>
-                            {ai_types.map(ai_type => (
-                              <option
-                                value={ai_type.id}
-                              >
-                                {ai_type.value}
-                              </option>
-                            ))
-                            }
-                          </TextField>
-                        </Grid>
+                            <TextField
+                              fullWidth
+                              InputLabelProps={{
+                                shrink: true,
+                              }}
 
-                        <Grid
-                          item
-                          md={3}
-                          xs={12}
-                        >
-                          <TextField
-                            fullWidth
-                            InputLabelProps={{
-                              shrink: true,
-                            }}
+                              label="AI Type"
+                              name="ai_type"
+                              onChange={handleChange}
+                              required
+                              default=""
+                              select
+                              SelectProps={{ native: true }}
+                              variant="outlined"
+                            >
+                              <option value=""></option>
+                              {ai_types.map(ai_type => (
+                                <option
+                                  value={ai_type.id}
+                                >
+                                  {ai_type.value}
+                                </option>
+                              ))
+                              }
+                            </TextField>
+                          </Grid>
+                          : null
+                        }
 
-                            required
-                            label="Straw ID"
-                            name="straw_id"
-                            onChange={handleChange}
-                            variant="outlined"
-                            default=""
-                            select
-                            SelectProps={{ native: true }}
-
-                          >
-                            <option value=""></option>
-                            {straws.map(straw => (
-                              <option
-                                value={straw.id}
-                              >
-                                {straw.straw_id}
-                              </option>
-                            ))
-                            }
-                          </TextField>
-                        </Grid>
-                        {
-                          isNaN(values.straw_id) || values.straw_id === '' ? null :
+                        {(breedingType === 1 || breedingType === 2) ?
+                          <>
                             <Grid
                               item
                               md={3}
@@ -489,23 +473,162 @@ const Edit = props => {
                                 InputLabelProps={{
                                   shrink: true,
                                 }}
-
-                                inputProps={{
+                                required
+                                label="Bull ID / Straw ID"
+                                name="sire_id"
+                                onChange={handleChange}
+                                value={sessionStorage.getItem('_sire_id') === ''? '' :sessionStorage.getItem('_sire_tag_id')}
+                                variant="outlined"
+                                InputProps={{
                                   readOnly: true,
-                                  disabled: true
+                                  endAdornment: (
+                                    <InputAdornment position="end"  >
+                                      <IconButton
+                                        onClick={handleClickSire}
+                                        onMouseDown={handleMouseDownSire}
+                                        edge="end"
+                                        variant="outlined"
+                                        color="inherit"
+                                      >
+                                        <SearchIcon />
+                                      </IconButton>
+                                    </InputAdornment>
+                                  ),
                                 }}
+                              />
+                            </Grid>
+                            {sessionStorage.getItem('_sire_id') === '' ? null :
 
+                              <>
+                                <Grid
+                                  item
+                                  md={3}
+                                  xs={12}
+                                >
+                                  <TextField
+                                    fullWidth
+                                    InputLabelProps={{
+                                      shrink: true,
+                                    }}
+                                    inputProps={{
+                                      readOnly: true,
+                                      disabled: true
+                                    }}
+
+                                    label="Bull Breed"
+                                    name="sire_breed_of_bull"
+                                    onChange={handleChange}
+                                    value={sessionStorage.getItem('_sire_breed')}
+                                    select
+                                    SelectProps={{ native: true }}
+                                    variant="outlined"
+                                  >
+                                    <option value=""></option>
+                                    {bull_breeds.map(bull_breed => (
+                                      <option
+                                        value={bull_breed.id}
+                                      >
+                                        {bull_breed.value}
+                                      </option>
+                                    ))
+                                    }
+                                  </TextField>
+                                </Grid>
+
+                                <Grid
+                                  item
+                                  md={3}
+                                  xs={12}
+                                >
+                                  <TextField
+                                    fullWidth
+                                    InputLabelProps={{
+                                      shrink: true,
+                                    }}
+                                    inputProps={{
+                                      readOnly: true,
+                                      disabled: true
+                                    }}
+                                    label="Bull Breed Composition"
+                                    name="sire_breed_composition"
+                                    value={sessionStorage.getItem('_sire_breed_composition')}
+                                    onChange={handleChange}
+                                    default=""
+                                    select
+                                    SelectProps={{ native: true }}
+                                    variant="outlined"
+                                  >
+                                    <option value=""></option>
+                                    {breed_compositions.map(breed_composition => (
+                                      <option
+                                        value={breed_composition.id}
+                                      >
+                                        {breed_composition.value}
+                                      </option>
+                                    ))
+                                    }
+                                  </TextField>
+                                </Grid>
+
+                                <Grid
+                                  item
+                                  md={3}
+                                  xs={12}
+                                >
+                                  <TextField
+                                    fullWidth
+                                    InputLabelProps={{
+                                      shrink: true,
+                                    }}
+
+                                    inputProps={{
+                                      readOnly: true,
+                                      disabled: true
+                                    }}
+                                    label="Bull Origin Country"
+                                    name="sire_origin_country_bull"
+                                    value={sessionStorage.getItem('_sire_country_of_origin')}
+                                    onChange={handleChange}
+                                    variant="outlined"
+                                    select
+                                    SelectProps={{ native: true }}
+                                  >
+                                    <option value=""></option>
+                                    {countries.map(country => (
+                                      <option
+                                        value={country.id}
+                                      >
+                                        {country.name}
+                                      </option>
+                                    ))
+                                    }
+                                  </TextField>
+                                </Grid>
+                              </>
+                            }
+
+                          </>
+                          : null
+                        }
+                        {breedingType === 1 && sessionStorage.getItem('_sire_id') !== '' ?
+                          <>
+                            <Grid
+                              item
+                              md={3}
+                              xs={12}
+                            >
+                              <TextField
+                                fullWidth
+                                InputLabelProps={{
+                                  shrink: true,
+                                }}
                                 label="Semen Batch"
                                 name="semen_batch"
                                 onChange={handleChange}
                                 variant="outlined"
                                 value={strawSemenBatch}
-
                               />
                             </Grid>
-                        }
-                        {
-                          isNaN(values.straw_id) || values.straw_id === '' ? null :
 
                             <Grid
                               item
@@ -518,18 +641,11 @@ const Edit = props => {
                                   shrink: true
                                 }}
 
-                                inputProps={{
-                                  readOnly: true,
-                                  disabled: true
-                                }}
-
-
                                 label="Straw Semen Type"
                                 name="straw_semen_type"
                                 onChange={handleChange}
                                 value={strawSemenType}
                                 select
-                                // eslint-disable-next-line react/jsx-sort-props
                                 SelectProps={{ native: true }}
                                 variant="outlined"
                               >
@@ -544,9 +660,6 @@ const Edit = props => {
                                 }
                               </TextField>
                             </Grid>
-                        }
-                        {
-                          isNaN(values.straw_id) || values.straw_id === '' ? null :
 
                             <Grid
                               item
@@ -558,19 +671,11 @@ const Edit = props => {
                                 InputLabelProps={{
                                   shrink: true,
                                 }}
-
-                                inputProps={{
-                                  readOnly: true,
-                                  disabled: true
-                                }}
-
-
                                 label="Semen Source"
                                 name="source_of_semen"
                                 onChange={handleChange}
                                 default=""
                                 select
-                                // eslint-disable-next-line react/jsx-sort-props
                                 SelectProps={{ native: true }}
                                 variant="outlined"
                                 value={strawSemenSource}
@@ -586,9 +691,6 @@ const Edit = props => {
                                 }
                               </TextField>
                             </Grid>
-                        }
-                        {
-                          isNaN(values.straw_id) || values.straw_id === '' ? null :
                             <Grid
                               item
                               md={3}
@@ -599,36 +701,13 @@ const Edit = props => {
                                 InputLabelProps={{
                                   shrink: true,
                                 }}
-                                inputProps={{
-                                  readOnly: true,
-                                  disabled: true
-                                }}
-
-                                label="Bull Breed"
-                                name="breed_of_bull"
+                                label="AI Cost"
+                                name="cost"
                                 onChange={handleChange}
-                                //required
-                                default=""
-                                select
-                                // eslint-disable-next-line react/jsx-sort-props
-                                SelectProps={{ native: true }}
+                                type="number"
                                 variant="outlined"
-                                value={strawBullBreed}
-                              >
-                                <option value=""></option>
-                                {bull_breeds.map(bull_breed => (
-                                  <option
-                                    value={bull_breed.id}
-                                  >
-                                    {bull_breed.value}
-                                  </option>
-                                ))
-                                }
-                              </TextField>
+                              />
                             </Grid>
-                        }
-                        {
-                          isNaN(values.straw_id) || values.straw_id === '' ? null :
                             <Grid
                               item
                               md={3}
@@ -639,123 +718,29 @@ const Edit = props => {
                                 InputLabelProps={{
                                   shrink: true,
                                 }}
-                                inputProps={{
-                                  readOnly: true,
-                                  disabled: true
-                                }}
-
-                                label="Bull Breed Composition"
-                                name="breed_composition"
+                                required
+                                label="AI Tech"
+                                name="field_agent_id"
                                 onChange={handleChange}
-                                //required
-                                default=""
-                                select
-                                // eslint-disable-next-line react/jsx-sort-props
-                                SelectProps={{ native: true }}
                                 variant="outlined"
-                                value={strawBullBreedComposition}
+                                select
+                                SelectProps={{ native: true }}
                               >
                                 <option value=""></option>
-                                {breed_compositions.map(breed_composition => (
+                                {agents.map(agent => (
                                   <option
-                                    value={breed_composition.id}
+                                    value={agent.id}
                                   >
-                                    {breed_composition.value}
+                                    {agent.name}
                                   </option>
                                 ))
                                 }
                               </TextField>
                             </Grid>
+
+                          </>
+                          : null
                         }
-                        {
-                          isNaN(values.straw_id) || values.straw_id === '' ? null :
-                            <Grid
-                              item
-                              md={3}
-                              xs={12}
-                            >
-                              <TextField
-                                fullWidth
-                                InputLabelProps={{
-                                  shrink: true,
-                                }}
-
-                                inputProps={{
-                                  readOnly: true,
-                                  disabled: true
-                                }}
-
-                                label="Bull Origin Country"
-                                name="origin_country_bull"
-                                onChange={handleChange}
-                                variant="outlined"
-                                select
-                                SelectProps={{ native: true }}
-                                value={strawBullOriginCountry}
-                              >
-                                <option value=""></option>
-                                {countries.map(country => (
-                                  <option
-                                    value={country.id}
-                                  >
-                                    {country.name}
-                                  </option>
-                                ))
-                                }
-                              </TextField>
-                            </Grid>
-                        }
-
-
-                        <Grid
-                          item
-                          md={3}
-                          xs={12}
-                        >
-                          <TextField
-                            fullWidth
-                            InputLabelProps={{
-                              shrink: true,
-                            }}
-                            //required
-
-                            label="AI Cost"
-                            name="cost"
-                            onChange={handleChange}
-                            type="number"
-                            variant="outlined"
-                          />
-                        </Grid>
-                        <Grid
-                          item
-                          md={3}
-                          xs={12}
-                        >
-                          <TextField
-                            fullWidth
-                            InputLabelProps={{
-                              shrink: true,
-                            }}
-
-                            required
-                            label="AI Tech"
-                            name="field_agent_id"
-                            onChange={handleChange}
-                            variant="outlined"
-                            select
-                            SelectProps={{ native: true }}
-                          >
-                            <option value=""></option>
-                            {agents.map(agent => (
-                              <option
-                                value={agent.id}
-                              >
-                                {agent.name}
-                              </option>
-                            ))
-                            }
-                          </TextField>
-                        </Grid>
 
                       </Grid>
                     </CardContent>
@@ -785,29 +770,33 @@ const Edit = props => {
                       </div>
                     </CardActions>
                   </form>
-
                 </Card>
               </Grid>
             </Grid>
           </>
           : <EventValidation validations={validations} />
       }
-      {parseInt(validations.length) === 0 || override ? null :
-        <>
-          <Box>
-            <Typography variant="h6"> Override Validations </Typography>
-          </Box>
-          <Box>
-            <Switch
-              className={classes.toggle}
-              // checked={values.readOnly}
-              color="secondary"
-              edge="start"
-              onChange={handleSwitchChange}
-            />
-          </Box>
-        </>
+      {
+        parseInt(validations.length) === 0 || override ? null :
+          <>
+            <Box>
+              <Typography variant="h6"> Override Validations </Typography>
+            </Box>
+            <Box>
+              <Switch
+                className={classes.toggle}
+                color="secondary"
+                edge="start"
+                onChange={handleSwitchChange}
+              />
+            </Box>
+          </>
       }
+      <AnimalModal
+        parentType="sire"
+        onClose={handleClose}
+        open={modalStatus}
+      />
     </Page>
   );
 };

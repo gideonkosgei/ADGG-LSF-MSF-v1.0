@@ -130,17 +130,15 @@ const Header = props => {
         : null 
         }
 
-        
-
         {values.insemination ?
-        <Tooltip  title="Inseminations">   
+        <Tooltip  title="Breeding">   
           <Button
             color="default"
             className={classes.button}
             startIcon={<ColorizeIcon />}
           >
             <Link style={{ textDecoration: 'none',textTransform: 'none' }} component = {RouterLink} to = {`/management/insemination/view/${animal_id}`}>
-              Insemination
+              Breeding
             </Link>
           </Button>
         </Tooltip>          

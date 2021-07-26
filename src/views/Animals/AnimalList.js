@@ -11,10 +11,9 @@ import { LinearProgress, Typography } from '@material-ui/core';
 
 const useStyles = makeStyles(theme => ({
   root: {
-    width: theme.breakpoints.values.lg,
     maxWidth: '100%',
     margin: '0 auto',
-    paddingTop: theme.spacing(3)
+    padding: theme.spacing(3)
   },
   results: {
     marginTop: theme.spacing(3)
