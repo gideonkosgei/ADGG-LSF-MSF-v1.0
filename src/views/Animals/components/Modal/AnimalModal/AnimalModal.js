@@ -108,6 +108,11 @@ const AnimalModal = props => {
         size: "small",
       };
     },
+    textLabels: {
+      body: {
+        noMatch: isLoading ? 'Loading...' : 'Sorry, there is no matching records to display',
+      },
+    },
     onRowClick: (rowData) => {
       setOutput({ status: null, message: '' });
       setData([]);

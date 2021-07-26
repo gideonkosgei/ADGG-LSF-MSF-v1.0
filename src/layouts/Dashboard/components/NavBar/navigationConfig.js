@@ -187,11 +187,7 @@ let p = [
                 href: '/reports/events/exit'
               },
             ]
-          },
-          {
-            title: 'Animal Registration',
-            href: '/management/animals'
-          },
+          },          
           {
             title: 'Batches',
             href: '/reports/batches'

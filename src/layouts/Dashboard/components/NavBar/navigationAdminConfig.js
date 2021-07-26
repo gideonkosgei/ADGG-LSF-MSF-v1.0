@@ -20,6 +20,7 @@ let p = [
         ],
       },
 
+
       {
         title: 'Setup',
         icon: SettingsIcon,
@@ -78,7 +79,11 @@ let p = [
           {
             title: 'Farms',
             href: '/management/farms/view/1'
-          }
+          },
+          {
+            title: 'Animals',
+            href: '/management/animals/view/1'
+          },
         ]
       }
     ]
