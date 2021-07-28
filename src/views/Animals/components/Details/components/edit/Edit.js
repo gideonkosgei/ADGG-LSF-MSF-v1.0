@@ -78,9 +78,8 @@ const Edit = props => {
   const classes = useStyles();
   localStorage.setItem('animal_id', parseInt(props.match.params.id));
   const { className, ...rest } = props;
-  const [{ organization_id }] = useContext(authContext);
+  const [{ organization_id }] = useContext(authContext); 
   const [{ user_id }] = useContext(authContext);
-
   const [values, setValues] = useState({});
   const [animal_types, setAnimalTypes] = useState([]);
   const [main_breeds, setMainBreeds] = useState([]);
@@ -111,18 +110,15 @@ const Edit = props => {
     [classes.buttonSuccess]: success,
   });
 
-  sessionStorage.setItem('animal_tag', values.tag_id);
-  sessionStorage.setItem('animal_name', values.animal_name);
-  sessionStorage.setItem('animal_dob', values.dob);
-  sessionStorage.setItem('animal_type', values.animal_type);
-  sessionStorage.setItem('farm_id', values.farm_id);  
-
+  
   useEffect(() => {
     let mounted_lookup = true;
     let mounted_herds = true;
     let mounted_farms = true;
     let mounted_animal_details = true;
-    let mounted_countries = true;    
+    let mounted_countries = true; 
+    
+    
 
     (async (endpoint, desc) => {
       await genericFunctionTwoParameters(endpoint, desc)
@@ -227,15 +223,23 @@ const Edit = props => {
         .then(response => {
           if (mounted_animal_details) {
             const data = response.payload[0];
+
+            console.log(data.dam_id);
+            console.log(data.sire_id);
             setValues(data);
             sessionStorage.setItem('farm_id', data.farm_id);
             setSex(data.sex)
             setIsLoading(false);
-            sessionStorage.setItem('_sire_id', !data.sire_id ? '' : data.sire_id);
-            sessionStorage.setItem('_dam_id', !data.dam_id ? '' : data.dam_id);
+            sessionStorage.setItem('_sire_id',data.sire_id);
+            sessionStorage.setItem('_dam_id', data.dam_id);
+            sessionStorage.setItem('_sire_tag_id', data.sire_tag_id);
+            sessionStorage.setItem('_dam_tag_id', data.dam_tag_id);
           }
         });
     })(endpoint_animal, 'get animal details -> animal id', 3, animal_id); /* option 3 -> get specific animal details */
+
+    sessionStorage.getItem('_dam_id');
+    sessionStorage.getItem('_sire_id');
 
     return () => {
       mounted_lookup = false;
@@ -1050,6 +1054,7 @@ const Edit = props => {
                   onChange={handleChange}
                   variant="outlined"
                   value={sessionStorage.getItem('_sire_id')}
+                  default={values.deformaties}
                 />
               </Grid>
 
@@ -1260,10 +1265,11 @@ const Edit = props => {
           open={openMetadata}
         />
         <AnimalModal
-          parentType={parent}
-          onClose={handleClose}
-          open={modalStatus}
-          option={0}
+          animal_id = {animal_id}
+          parentType = {parent}
+          onClose = {handleClose}
+          open = {modalStatus}
+          option = {0}
         />
       </Card>
     </Page>

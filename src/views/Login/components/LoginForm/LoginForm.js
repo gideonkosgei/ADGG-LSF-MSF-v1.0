@@ -99,10 +99,10 @@ const LoginForm = props => {
   const handleMouseDownPassword = (event) => {
     event.preventDefault();
   };
+
   
   const handleSubmit =  event => {  
     event.preventDefault();    
-    //setLoad({load: true});  
     const username = formState.values.email;
     const password = formState.values.password;
 

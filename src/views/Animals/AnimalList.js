@@ -94,10 +94,10 @@ const AnimalList = props => {
   if (!animals) {
     return null;
   }
-
+  
   const columns = [
     { name: "animal_id", label: "ID", options: { filter: false, sort: true, display: true } },
-    { name: "farm_id", label: "Farm Id", options: { filter: false, sort: false, display: false } },
+    { name: "farm_id", label: "Farm Id", options: { filter: false, sort: true, display: false } },
     { name: "registration_date", label: "Reg Date", options: { filter: false, sort: true, display: true } },
     { name: "org_name", label: "Org", options: { filter: true, sort: true, display: false } },
     { name: "farm_name", label: "Farm", options: { filter: true, sort: true, display: false } },

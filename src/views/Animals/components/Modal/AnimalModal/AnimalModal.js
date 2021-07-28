@@ -43,7 +43,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const AnimalModal = props => {
-  const { open, onClose, parentType, className, option, ...rest } = props;
+  const { open, onClose, parentType, className, option,animal_id, ...rest } = props;
   const classes = useStyles();
   const [values, setValues] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -62,7 +62,8 @@ const AnimalModal = props => {
       await genericFunctionFiveParameters(endpoint, desc, org, type, option)
         .then(response => {
           if (mounted) {
-            setValues(response.payload[0]);
+            var data = response.payload[0].filter(function(x) { return x.animal_id !== animal_id; }); 
+            setValues(data);
             setIsLoading(false);
           }
         });
@@ -71,7 +72,7 @@ const AnimalModal = props => {
     return () => {
       mounted = false;
     };
-  }, [user_id, parentType, option]);
+  }, [user_id, parentType, option,animal_id]);
 
   if (!open || !values) {
     return null;
@@ -151,6 +152,8 @@ const AnimalModal = props => {
     let _message = parentType === 'sire' ? 'Sire Cleared Successfully' : 'Dam Cleared Successfully';
     setOutput({ status: 1, message: _message });
   };
+
+  
 
   return (
     <Modal
@@ -373,6 +376,7 @@ AnimalModal.displayName = 'AnimalModal';
 AnimalModal.propTypes = {
   className: PropTypes.string,
   option: PropTypes.number.isRequired,
+  animal_id: PropTypes.number.isRequired,  
   parentType: PropTypes.string.isRequired,
   onClose: PropTypes.func,
   open: PropTypes.bool
@@ -382,5 +386,4 @@ AnimalModal.defaultProps = {
   open: false,
   onClose: () => { }
 };
-
 export default AnimalModal;
