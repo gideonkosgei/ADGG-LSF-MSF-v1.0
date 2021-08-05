@@ -895,9 +895,8 @@ const Edit = props => {
                                                 max: (calf_weight_limits_status) ? calf_weight_limits_max_value : "any",
                                                 step: "any"
                                               }}
-                                              required={parseInt(values.calving_status) === 1 ? true : false}
+                                              //required={parseInt(values.calving_status) === 1 ? true : false}
                                               type="number"
-
                                               label="Calf Weight(kg)"
                                               name="Calf_weight"
                                               onChange={handleChange}
@@ -1335,10 +1334,8 @@ const Edit = props => {
                                                 max: (calf_weight_limits_status) ? calf_weight_limits_max_value : "any",
                                                 step: "any"
                                               }}
-
-                                              required={parseInt(values.calving_status2) === 1 ? true : false}
+                                             // required={parseInt(values.calving_status2) === 1 ? true : false}
                                               type="number"
-
                                               label="Calf Weight(kg)"
                                               name="Calf_weight2"
                                               onChange={handleChange}

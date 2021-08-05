@@ -516,6 +516,12 @@ export const endpoint_batch_animal_upload = {
   headers: headers   
 };
 
+export const endpoint_batch_upload = {
+  url: `${api}/batches/upload`,
+  method: 'POST',
+  headers: headers   
+};
+
 //upload Batch calving Records
 export const endpoint_batch_calving_upload = {
   url: `${api}/batches/calving/upload`,

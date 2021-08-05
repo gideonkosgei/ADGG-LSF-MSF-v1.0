@@ -80,7 +80,6 @@ const Edit = props => {
   const [deformaties, setDeformaties] = useState([]);
   const [genders, setGenders] = useState([]); 
 
-
   const [birth_types, setBirthTypes] = useState([]);
   const [calving_methods, setCalvingMethods] = useState([]);
   const [calving_types, setCalvingTypes] = useState([]);
@@ -129,7 +128,6 @@ const Edit = props => {
             let lookup_calving_status = [];
             let lookup_use_of_calf = [];
             let lookup_body_scores = [];          
-
 
             for (let i = 0; i< data.length; i++){ 
               //birth Types
@@ -1002,10 +1000,8 @@ const Edit = props => {
                       readOnly:true,
                       disabled: true              
                     }}
-                    
-                    required = {parseInt(values.calving_status) ===1 ? true: false}
+                   // required = {parseInt(values.calving_status) ===1 ? true: false}
                     type = "number"
-                   
                     label="Calf Weight(kg)"
                     name="Calf_weight"  
                     value = {values.Calf_weight}               
@@ -1284,7 +1280,6 @@ const Edit = props => {
                             value = {values.use_of_calf2}                      
                             onChange={handleChange}                                                
                             select
-                            // eslint-disable-next-line react/jsx-sort-props
                             SelectProps={{ native: true }}                    
                             variant="outlined"
                           >
@@ -1339,7 +1334,6 @@ const Edit = props => {
                               disabled: true               
                             }} 
                             required = {parseInt(values.calving_status2) ===1 ? true: false}                                      
-                           
                             label="Calf Body Condition"
                             name="calf_body_condition_score2"
                             value = {values.calf_body_condition_score2}
@@ -1375,7 +1369,6 @@ const Edit = props => {
                               readOnly:true,
                               disabled: true               
                             }} 
-                           
                             label="Calf Color"
                             name="calf_color2"
                             value = {values.calf_color2}
@@ -1506,8 +1499,6 @@ const Edit = props => {
                           InputLabelProps={{
                             shrink: true,
                           }}
-                         
-
                           inputProps={{                        
                             min: (calf_weight_limits_status)? calf_weight_limits_min_value : "any",
                             max: (calf_weight_limits_status)? calf_weight_limits_max_value : "any",
@@ -1515,12 +1506,8 @@ const Edit = props => {
                             readOnly:true,
                             disabled: true              
                           }}
-
-                          
-                        
-                          required = {parseInt(values.calving_status2) ===1 ? true: false}
+                          //required = {parseInt(values.calving_status2) ===1 ? true: false}
                           type = "number"
-                         
                           label="Calf Weight(kg)"
                           name="Calf_weight2"   
                           value = {values.Calf_weight2}                

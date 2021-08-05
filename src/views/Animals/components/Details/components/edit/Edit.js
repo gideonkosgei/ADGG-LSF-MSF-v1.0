@@ -94,6 +94,7 @@ const Edit = props => {
   const [deformaties, setDeformaties] = useState([]);
   const [readOnly, setReadOnly] = useState(true);
   const animal_id = parseInt(props.match.params.id);
+  const farm_selection_criteria = parseInt(props.match.params.option);
   const initial_farm_id = parseInt(props.match.params.farm);
   const [openMetadata, setMetadata] = useState(false);
   const [countries, setCountries] = useState([]);
@@ -110,7 +111,6 @@ const Edit = props => {
     [classes.buttonSuccess]: success,
   });
 
-  
   useEffect(() => {
     let mounted_lookup = true;
     let mounted_herds = true;
@@ -189,6 +189,7 @@ const Edit = props => {
         });
     })(endpoint_lookup, '8,14,62,3,83,13,11,69');
 
+   
     (async (endpoint, desc, option, id, user) => {
       await genericFunctionFiveParameters(endpoint, desc, option, id, user)
         .then(response => {
@@ -215,7 +216,7 @@ const Edit = props => {
             setFarms(response.payload[0]);
           }
         });
-    })(endpoint_farms, 'get all farms', 3, user_id);
+    })(endpoint_farms, 'get farms',farm_selection_criteria === 0 ? 3: 1, farm_selection_criteria === 0 ? user_id: initial_farm_id);
 
 
     (async (endpoint, desc, id, option) => {
@@ -223,9 +224,6 @@ const Edit = props => {
         .then(response => {
           if (mounted_animal_details) {
             const data = response.payload[0];
-
-            console.log(data.dam_id);
-            console.log(data.sire_id);
             setValues(data);
             sessionStorage.setItem('farm_id', data.farm_id);
             setSex(data.sex)
@@ -248,7 +246,7 @@ const Edit = props => {
       mounted_animal_details = false;
       mounted_countries = false;
     };
-  }, [organization_id, animal_id, user_id, initial_farm_id]);
+  }, [organization_id, animal_id, user_id, initial_farm_id,farm_selection_criteria]);
 
   if (!countries || !values || !animal_types || !main_breeds || !breed_composition || !gender || !colors || !sire_types || !entryTypes || !deformaties || !allHerds || !farms) {
     return null;

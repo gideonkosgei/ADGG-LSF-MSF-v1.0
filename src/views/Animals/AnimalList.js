@@ -52,6 +52,8 @@ const AnimalList = props => {
     id = herd_id;
   }
 
+  console.log(props.match.params.admin); // for admin > value = 1
+
   useEffect(() => {
     let mounted = true;
     (async (endpoint, desc, _option, _id) => {
@@ -123,7 +125,7 @@ const AnimalList = props => {
           return (
             <Link
               component={RouterLink}
-              to={`/management/details/edit/${tableMeta.rowData[0]}/${tableMeta.rowData[1]}`}
+              to={`/management/details/edit/${tableMeta.rowData[0]}/${tableMeta.rowData[1]}/${isNaN(parseInt(props.match.params.admin)) ? 0 : 1}`}
             >
               <OpenInNewIcon />
             </Link>
