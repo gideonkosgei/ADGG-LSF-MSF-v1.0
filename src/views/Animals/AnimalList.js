@@ -36,6 +36,7 @@ const AnimalList = props => {
   let animal_categ_id = null;
   let herd_id = null;
   let option = null;
+  let option2 = null;
   let id = null;
 
   if (typeof HerdIdProp === "undefined") {
@@ -44,15 +45,15 @@ const AnimalList = props => {
     herd_id = parseInt(props.match.params.herd);
     id = user_id;
     option = isNaN(parseInt(props.match.params.admin)) ? 5 : 6;
+    option2 = isNaN(parseInt(props.match.params.admin)) ? 0 : 1;
 
   } else {
     animal_categ_id = parseInt(null);
     herd_id = parseInt(HerdIdProp);
     option = 4;
+    option2 = 0;
     id = herd_id;
   }
-
-  console.log(props.match.params.admin); // for admin > value = 1
 
   useEffect(() => {
     let mounted = true;
@@ -125,7 +126,7 @@ const AnimalList = props => {
           return (
             <Link
               component={RouterLink}
-              to={`/management/details/edit/${tableMeta.rowData[0]}/${tableMeta.rowData[1]}/${isNaN(parseInt(props.match.params.admin)) ? 0 : 1}`}
+              to={`/management/details/edit/${tableMeta.rowData[0]}/${tableMeta.rowData[1]}/${option2}`}
             >
               <OpenInNewIcon />
             </Link>
