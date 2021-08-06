@@ -228,6 +228,8 @@ const Edit = props => {
             sessionStorage.setItem('farm_id', data.farm_id);
             setSex(data.sex)
             setIsLoading(false);
+            sessionStorage.setItem('animal_tag',data.tag_id);
+            sessionStorage.setItem('animal_type',data.animal_type);            
             sessionStorage.setItem('_sire_id',data.sire_id);
             sessionStorage.setItem('_dam_id', data.dam_id);
             sessionStorage.setItem('_sire_tag_id', data.sire_tag_id);

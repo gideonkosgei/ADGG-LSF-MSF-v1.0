@@ -40,7 +40,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const Edit = props => {
+const Edit = () => {
   const classes = useStyles();
   const [values, setValues] = useState([]);
   const animal_id = localStorage.getItem('animal_id');

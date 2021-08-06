@@ -72,18 +72,14 @@ const Edit = props => {
   const { className, ...rest } = props;
   const [{ user_id, organization_id }] = useContext(authContext);
   const classes = useStyles();
-
   const [values, setValues] = useState({});
   const [body_scores, setBodyScores] = useState([]);
   const [colors, setColors] = useState([]);
   const [deformaties, setDeformaties] = useState([]);
   const [genders, setGenders] = useState([]);
-
-
   const [birth_types, setBirthTypes] = useState([]);
   const [calving_methods, setCalvingMethods] = useState([]);
   const [calving_types, setCalvingTypes] = useState([]);
-
   const [calving_ease, setCalvingEase] = useState([]);
   const [calving_status, setCalvingStatus] = useState([]);
   const [uses_of_calf, setCalfUses] = useState([]);

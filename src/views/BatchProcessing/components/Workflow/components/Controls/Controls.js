@@ -19,7 +19,7 @@ const useStyles = makeStyles(theme => ({
 
 const Controls = (props) => {
     const classes = useStyles();
-    const { batchInfo } = props;
+    let { batchInfo } = props;
     const [batchStages, setBatchStages] = useState([]);
     const [batchStatuses, setBatchStatuses] = useState([]);
     const [required_stages, setRequiredStages] = useState([]);
@@ -105,7 +105,7 @@ const Controls = (props) => {
             let filtered_statuses = batchStatuses.filter(value => {
                 return parseInt(event.target.value) === 3 ? (value.id !== 0) : (value.id !== 4);
             });
-            setRequiredStatuses(filtered_statuses);
+            setRequiredStatuses(filtered_statuses);            
         }
 
         if (event.target.name === 'batch_stage') {
@@ -122,7 +122,6 @@ const Controls = (props) => {
     if (!batchTypes || !batchStages || !batchStatuses) {
         return null;
     }
-    console.log(batch_stage);
 
     return (
 
@@ -259,6 +258,7 @@ const Controls = (props) => {
                 {shouldOriginate &&
                     <Process
                         batchInfo={batchInfo}
+                        batchType={batch_type}
                     />
                 }
             </Grid>

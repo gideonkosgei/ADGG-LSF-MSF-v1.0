@@ -5,7 +5,7 @@ import { makeStyles } from '@material-ui/styles';
 import { Grid, Button, Card, CardActions, Input, Fab, CircularProgress } from '@material-ui/core';
 import authContext from '../../../../../../../../contexts/AuthContext';
 import { postBatchUpload } from '../../../../../../../../utils/API';
-import { endpoint_batch_animal_upload } from '../../../../../../../../configs/endpoints';
+import { endpoint_batch_upload } from '../../../../../../../../configs/endpoints';
 import uuid from 'uuid';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import MUIDataTable from "mui-datatables";
@@ -79,6 +79,7 @@ const getMuiTheme = () => createMuiTheme({
 
 const Upload = props => {
   const classes = useStyles();
+  const { batchType } = props;
   const [dataLoaded, setDataLoaded] = useState(false);
   const [isFormInvalid, setIsFormInvalid] = useState(false);
   const [rows, setRows] = useState(null);
@@ -89,7 +90,6 @@ const Upload = props => {
   const [success, setSuccess] = useState(false);
   const [output, setOutput] = useState({ status: null, message: "" });
   const batch_uuid = uuid();
-  const batch_type = 8;
 
   const timer = React.useRef();
   const buttonClassname = clsx({
@@ -103,26 +103,46 @@ const Upload = props => {
         console.log(err.message);
       }
       else {
+        const column_count = resp.rows[0].length;  
 
         for (let i = 0; i < resp.rows.length; i++) {
           for (let r = 0; r < resp.rows[i].length; r++) {
-
             /* Replace whitespaces with underscore on column headers */
             if (i === 0) {
               resp.rows[i][r] = resp.rows[i][r].split(" ").join("_").toUpperCase();
             }
             /* replace empty slots with null */
-            if (typeof resp.rows[i][r] === 'undefined') {
+            if (typeof resp.rows[i][r] === 'undefined' ||  resp.rows[i][r] === '') {
               resp.rows[i][r] = null;
             }
 
-            /* Convert numeric dates to normal date */
-            if ((r === 7 || r === 8 || r === 9)) {
+            /* Pedigree Batch : Convert numeric dates to normal date */
+            if (batchType === 8 && (r === 7 || r === 8 || r === 9)) {
+              if (resp.rows[i][r] && !isNaN(resp.rows[i][r])) {
+                resp.rows[i][r] = new Date(Math.round((resp.rows[i][r] - 25569) * 86400 * 1000)).toLocaleDateString()
+              }
+
+            }
+
+            /* Milk Batch : Convert numeric dates to normal date */
+            if (batchType === 1 && (r === 2 || r === 3 || r === 4)) {
               if (resp.rows[i][r] && !isNaN(resp.rows[i][r])) {
                 resp.rows[i][r] = new Date(Math.round((resp.rows[i][r] - 25569) * 86400 * 1000)).toLocaleDateString()
               }
             }
           }
+
+
+          /** this section is very important. It sorts the limitations of the excel renderer
+           * the array excludes empty cells after the last cell with a value
+           * The code below handles this
+           */
+
+          let diff = column_count - resp.rows[i].length;
+          for (let x = 0; x<diff; x++){
+            resp.rows[i].push(null);
+          }
+
         }
 
         /* remove the 1st row. it contains the column headers */
@@ -174,13 +194,12 @@ const Upload = props => {
           timer.current = window.setTimeout(() => {
             setSuccess(true);
             setLoading(false);
-
             if (parseInt(response.status) === 1) {
-              setOutput({ status: parseInt(response.status), message: response.message });           
+              setOutput({ status: parseInt(response.status), message: response.message });
             } else {
               setOutput({ status: parseInt(response.status), message: response.message })
             }
-            
+
           }, 500);
 
         }).catch((error) => {
@@ -188,7 +207,7 @@ const Upload = props => {
           setSuccess(false);
           setLoading(false);
         });
-    })(endpoint_batch_animal_upload, rows, cols, user_id, organization_id, batch_type, batch_uuid);
+    })(endpoint_batch_upload, rows, cols, user_id, organization_id, batchType, batch_uuid);
   };
 
   const options = {
@@ -250,10 +269,16 @@ const Upload = props => {
               xs={12}
             >
               <br />
-              <Button color="info" onClick={openFileBrowser}><i className="cui-file"></i> Browse</Button>
-              <input type="file" hidden onChange={fileHandler} ref={fileInput} onClick={(event) => { event.target.value = null }} />
-              <Input type="text" value={uploadedFileName} readOnly invalid={isFormInvalid} />
 
+              {
+                isNaN(batchType) ? null :
+                  <>
+
+                    <Button color="info" onClick={openFileBrowser}><i className="cui-file"></i> Browse</Button>
+                    <input type="file" hidden onChange={fileHandler} ref={fileInput} onClick={(event) => { event.target.value = null }} />
+                    <Input type="text" value={uploadedFileName} readOnly invalid={isFormInvalid} />
+                  </>
+              }
             </Grid>
 
             <Grid container >
@@ -314,6 +339,7 @@ const Upload = props => {
 };
 
 Upload.propTypes = {
-  className: PropTypes.string
+  className: PropTypes.string,
+  batchType: PropTypes.number.isRequired
 }
 export default Upload;

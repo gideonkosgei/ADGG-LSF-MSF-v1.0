@@ -27,10 +27,9 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const Chart = props => { 
+const Chart = () => { 
   const classes = useStyles();
   const animal_tag  = sessionStorage.getItem('animal_tag');
-  const animal_name  = sessionStorage.getItem('animal_name');
  
   return (
     <Page
@@ -42,7 +41,7 @@ const Chart = props => {
         gutterBottom
         variant="h3"
       >
-          {`ANIMAL LEVEL DASHBOARD  - ${animal_name}(${animal_tag}) `}
+          {`ANIMAL LEVEL DASHBOARD: ${animal_tag} `}
 
       </Typography> 
       <Divider />  

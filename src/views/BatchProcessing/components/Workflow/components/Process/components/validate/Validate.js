@@ -84,7 +84,7 @@ const Validate = props => {
   const [output, setOutput] = useState({ status: null, message: "" });
   const [batchStatus, setBatchStatus] = useState(UploadedRecords.length > 0 ? UploadedRecords[0].batch_status_id : null);
   const [batchStatusOther, setBatchStatusOther] = useState(UploadedRecords.length > 0 ? UploadedRecords[0].batch_status_id_other : null);
-
+  let columns = [];
 
   const uuid = batchInfo.uuid;
   const buttonClassname = clsx({
@@ -93,6 +93,7 @@ const Validate = props => {
 
   useEffect(() => {
   }, []);
+
 
   async function refresh(endpoint, desc, batch_uuid) {
     if (!loading) {
@@ -239,64 +240,127 @@ const Validate = props => {
     }
   };
 
-  const columns = [
-    { name: "record_id", label: "record_id", options: { filter: false, sort: false, display: false } },
-    { name: "uuid", label: "uuid", options: { filter: false, sort: false, display: false } },
-    { name: "farmer_name", label: "FARMER NAME", options: { filter: false, sort: true, display: true } },
-    { name: "tag_id", label: "TAG ID", options: { filter: false, sort: true, display: true } },
-    { name: "tag_prefix", label: "TAG PREFIX", options: { filter: false, sort: true, display: true } },
-    { name: "tag_sequence", label: "TAG SEQUENCE", options: { filter: false, sort: true, display: true } },
-    { name: "animal_name", label: "ANIMAL NAME", options: { filter: false, sort: true, display: true } },
-    { name: "color", label: "COLOR", options: { filter: false, sort: true, display: true } },
-    { name: "reg_date", label: "REGISTRATION DATE", options: { filter: false, sort: true, display: true } },
-    { name: "derived_birth_date", label: "DERIVED BIRTH DATE", options: { filter: false, sort: true, display: true } },
-    { name: "date_of_birth", label: "DATE OF BIRTH", options: { filter: false, sort: true, display: true } },
-    { name: "approx_age", label: "APPROXIMATE AGE", options: { filter: false, sort: true, display: true } },
-    { name: "deformaties", label: "DEFORMATIES", options: { filter: false, sort: true, display: true } },
-    { name: "sire_type", label: "SIRE TYPE", options: { filter: false, sort: true, display: true } },
-    { name: "sire_known", label: "SIRE KNOWN", options: { filter: false, sort: true, display: true } },
-    { name: "sire_tag_id", label: "SIRE TAG ID", options: { filter: false, sort: true, display: true } },
-    { name: "dam_known", label: "DAM KNOWN", options: { filter: false, sort: true, display: true } },
-    { name: "dam_tag_id", label: "DAM TAG ID", options: { filter: false, sort: true, display: true } },
-    { name: "main_breed", label: "Main Breed", options: { filter: false, sort: true, display: true } },
-    { name: "breed_composition", label: "BREED COMPOSITION", options: { filter: false, sort: true, display: true } },
-    { name: "secondary_breed", label: "SECONDARY BREED", options: { filter: false, sort: true, display: true } },
-    { name: "entry_type", label: "ENTRY TYPE", options: { filter: false, sort: true, display: true } },
-    { name: "entry_date", label: "ENTRY DATE", options: { filter: false, sort: true, display: true } },
-    { name: "Purchase_cost", label: "PURCHASE COST", options: { filter: false, sort: true, display: true } },
-    { name: "animal_photo", label: "ANIMAL PHOTO", options: { filter: false, sort: true, display: true } },
-    { name: "latitude", label: "LATITUDE", options: { filter: false, sort: true, display: true } },
-    { name: "longitute", label: "LONGITUDE", options: { filter: false, sort: true, display: true } },
-    { name: "altitude", label: "ALTITUDE", options: { filter: false, sort: true, display: true } },
-    { name: "grps_accuracy", label: "GPRS ACCURACY", options: { filter: false, sort: true, display: true } },
-    { name: "sex", label: "SEX", options: { filter: false, sort: true, display: true } },
-    { name: "hair_sample_id", label: "HAIR SAMPLE ID", options: { filter: false, sort: true, display: true } },
-    { name: "created_by", label: "CREATED BY", options: { filter: false, sort: true, display: true } },
-    { name: "created_date", label: "DATE CREATED", options: { filter: false, sort: true, display: true } },
-    { name: "created_time", label: "TIME CREATED", options: { filter: false, sort: true, display: true } },
-    { name: "record_status", label: "STATUS", options: { filter: false, sort: true, display: true } },
-    {
-      name: "",
-      options: {
-        filter: false,
-        sort: false,
-        empty: true,
-        display: true,
-        customBodyRender: (value, tableMeta, updateValue) => {
-          return (
-            <>
-              <Button onClick={() => handleDetailsOpen(tableMeta.rowData[0])}>
-                < OpenInNewIcon className={classes.buttonIcon} />
-              </Button>
-              <Button onClick={() => handleErrorLogOpen(tableMeta.rowData[0])}>
-                <ErrorOutlineIcon className={classes.buttonIcon} />
-              </Button>
-            </>
-          );
+
+  switch (batchInfo.batch_type) {
+    case 1:
+      columns = [
+        { name: "record_id", label: "record_id", options: { filter: false, sort: false, display: false } },
+        { name: "uuid", label: "uuid", options: { filter: false, sort: false, display: false } },
+        { name: "animal_id", label: "Tag ID", options: { filter: true, sort: true, display: true } },
+        { name: "cow_status", label: "Cow Status", options: { filter: true, sort: true, display: true } },
+        { name: "milk_date", label: "Milk Date", options: { filter: true, sort: true, display: true } },
+        { name: "dry_date", label: "Dry Date", options: { filter: true, sort: true, display: true } },
+        { name: "calving_date", label: "Calving Date", options: { filter: true, sort: true, display: true } },
+        { name: "amount_morning", label: "Morning Milk", options: { filter: true, sort: true, display: true } },
+        { name: "amount_noon", label: "Mid-day Milk", options: { filter: true, sort: true, display: true } },
+        { name: "amount_afternoon", label: "Evening Milk", options: { filter: true, sort: true, display: true } },
+
+
+
+        { name: "milk_quality", label: "Milk Quality", options: { filter: true, sort: true, display: true } },
+        { name: "milk_sample_type", label: "Milk Sample Type", options: { filter: true, sort: true, display: true } },
+        { name: "fat", label: "Milk Fat", options: { filter: true, sort: true, display: true } },
+        { name: "proteins", label: "Milk Proteins", options: { filter: true, sort: true, display: true } },
+        { name: "urea", label: "Milk Urea", options: { filter: true, sort: true, display: true } },
+        { name: "lactose", label: "Milk Lactose", options: { filter: true, sort: true, display: true } },
+        { name: "somatic_cell_count", label: "Somatic cell Count", options: { filter: true, sort: true, display: true } },
+
+
+
+
+        { name: "lactation_id", label: "Lact ID", options: { filter: true, sort: true, display: true } },
+        { name: "lactation_number", label: "Lact No", options: { filter: true, sort: true, display: true } },
+        { name: "days_in_milk", label: "Days in Milk", options: { filter: true, sort: true, display: true } },
+        { name: "test_day_no", label: "Test Day", options: { filter: true, sort: true, display: true } },
+        { name: "created_by", label: "CREATED BY", options: { filter: false, sort: true, display: true } },
+        { name: "created_date", label: "DATE CREATED", options: { filter: false, sort: true, display: true } },
+        { name: "created_time", label: "TIME CREATED", options: { filter: false, sort: true, display: true } },
+        { name: "record_status", label: "STATUS", options: { filter: false, sort: true, display: true } },
+        {
+          name: "",
+          options: {
+            filter: false,
+            sort: false,
+            empty: true,
+            display: true,
+            customBodyRender: (value, tableMeta, updateValue) => {
+              return (
+                <>
+                  <Button onClick={() => handleDetailsOpen(tableMeta.rowData[0])}>
+                    < OpenInNewIcon className={classes.buttonIcon} />
+                  </Button>
+                  <Button onClick={() => handleErrorLogOpen(tableMeta.rowData[0])}>
+                    <ErrorOutlineIcon className={classes.buttonIcon} />
+                  </Button>
+                </>
+              );
+            }
+          }
         }
-      }
-    }
-  ];
+      ];
+
+      break;
+    default:
+      columns = [
+        { name: "record_id", label: "record_id", options: { filter: false, sort: false, display: false } },
+        { name: "uuid", label: "uuid", options: { filter: false, sort: false, display: false } },
+        { name: "farmer_name", label: "FARMER NAME", options: { filter: false, sort: true, display: true } },
+        { name: "tag_id", label: "TAG ID", options: { filter: false, sort: true, display: true } },
+        { name: "tag_prefix", label: "TAG PREFIX", options: { filter: false, sort: true, display: true } },
+        { name: "tag_sequence", label: "TAG SEQUENCE", options: { filter: false, sort: true, display: true } },
+        { name: "animal_name", label: "ANIMAL NAME", options: { filter: false, sort: true, display: true } },
+        { name: "color", label: "COLOR", options: { filter: false, sort: true, display: true } },
+        { name: "reg_date", label: "REGISTRATION DATE", options: { filter: false, sort: true, display: true } },
+        { name: "derived_birth_date", label: "DERIVED BIRTH DATE", options: { filter: false, sort: true, display: true } },
+        { name: "date_of_birth", label: "DATE OF BIRTH", options: { filter: false, sort: true, display: true } },
+        { name: "approx_age", label: "APPROXIMATE AGE", options: { filter: false, sort: true, display: true } },
+        { name: "deformaties", label: "DEFORMATIES", options: { filter: false, sort: true, display: true } },
+        { name: "sire_type", label: "SIRE TYPE", options: { filter: false, sort: true, display: true } },
+        { name: "sire_known", label: "SIRE KNOWN", options: { filter: false, sort: true, display: true } },
+        { name: "sire_tag_id", label: "SIRE TAG ID", options: { filter: false, sort: true, display: true } },
+        { name: "dam_known", label: "DAM KNOWN", options: { filter: false, sort: true, display: true } },
+        { name: "dam_tag_id", label: "DAM TAG ID", options: { filter: false, sort: true, display: true } },
+        { name: "main_breed", label: "Main Breed", options: { filter: false, sort: true, display: true } },
+        { name: "breed_composition", label: "BREED COMPOSITION", options: { filter: false, sort: true, display: true } },
+        { name: "secondary_breed", label: "SECONDARY BREED", options: { filter: false, sort: true, display: true } },
+        { name: "entry_type", label: "ENTRY TYPE", options: { filter: false, sort: true, display: true } },
+        { name: "entry_date", label: "ENTRY DATE", options: { filter: false, sort: true, display: true } },
+        { name: "Purchase_cost", label: "PURCHASE COST", options: { filter: false, sort: true, display: true } },
+        { name: "animal_photo", label: "ANIMAL PHOTO", options: { filter: false, sort: true, display: true } },
+        { name: "latitude", label: "LATITUDE", options: { filter: false, sort: true, display: true } },
+        { name: "longitute", label: "LONGITUDE", options: { filter: false, sort: true, display: true } },
+        { name: "altitude", label: "ALTITUDE", options: { filter: false, sort: true, display: true } },
+        { name: "grps_accuracy", label: "GPRS ACCURACY", options: { filter: false, sort: true, display: true } },
+        { name: "sex", label: "SEX", options: { filter: false, sort: true, display: true } },
+        { name: "hair_sample_id", label: "HAIR SAMPLE ID", options: { filter: false, sort: true, display: true } },
+        { name: "created_by", label: "CREATED BY", options: { filter: false, sort: true, display: true } },
+        { name: "created_date", label: "DATE CREATED", options: { filter: false, sort: true, display: true } },
+        { name: "created_time", label: "TIME CREATED", options: { filter: false, sort: true, display: true } },
+        { name: "record_status", label: "STATUS", options: { filter: false, sort: true, display: true } },
+        {
+          name: "",
+          options: {
+            filter: false,
+            sort: false,
+            empty: true,
+            display: true,
+            customBodyRender: (value, tableMeta, updateValue) => {
+              return (
+                <>
+                  <Button onClick={() => handleDetailsOpen(tableMeta.rowData[0])}>
+                    < OpenInNewIcon className={classes.buttonIcon} />
+                  </Button>
+                  <Button onClick={() => handleErrorLogOpen(tableMeta.rowData[0])}>
+                    <ErrorOutlineIcon className={classes.buttonIcon} />
+                  </Button>
+                </>
+              );
+            }
+          }
+        }
+      ];
+  }
+  
 
   const options = {
     filter: false,

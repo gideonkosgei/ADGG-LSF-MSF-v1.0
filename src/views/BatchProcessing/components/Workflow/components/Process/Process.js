@@ -22,10 +22,10 @@ function getSteps() {
   return ['Upload Batch', 'Validate Batch', 'Post Batch'];
 }
 
-function getStepContent(step, records, batch_info) {
+function getStepContent(step, records, batch_info,batchType) {
   switch (step) {
     case 0:
-      return <Upload />;
+      return <Upload batchType = {batchType} />;
     case 1:
       return <Validate UploadedRecords={records} step={step} batchInfo={batch_info} />;
     case 2:
@@ -37,11 +37,21 @@ function getStepContent(step, records, batch_info) {
 
 const Process = props => {
   const classes = useStyles();
-  const { batchInfo } = props;
+  const { batchInfo,batchType } = props;
   const uuid = batchInfo.uuid;
   const [values, setValues] = useState([]);
   const [activeStep, setActiveStep] = useState(0);
   const steps = getSteps();
+
+  const title =  
+  batchType === 1 ? "WORKFLOW : MILK BATCH": 
+  batchType === 2 ? "WORKFLOW : WEIGHT BATCH":
+  batchType === 3 ? "WORKFLOW : PD BATCH":
+  batchType === 4 ? "WORKFLOW : EXIT BATCH":
+  batchType === 5 ? "WORKFLOW : AI BATCH":
+  batchType === 6 ? "WORKFLOW : SYNC BATCH":
+  batchType === 7 ? "WORKFLOW : CALVING BATCH":
+  batchType === 8 ? "WORKFLOW : PEDIGREE BATCH": "";
 
   useEffect(() => {
     let mounted = true;
@@ -68,7 +78,7 @@ const Process = props => {
   return (
     <Page
       className={classes.root}
-      title="workflow : pedigree"
+      title = {title}
     >
       <br />
       <Typography
@@ -76,7 +86,7 @@ const Process = props => {
         gutterBottom
         variant="h4"
       >
-        WORKFLOW : PEDIGREE BATCH
+        {title}
       </Typography>
       <br />
       <Card>
@@ -106,7 +116,7 @@ const Process = props => {
                     </div>
                   ) : (
                     <div>
-                      {getStepContent(activeStep, values, batchInfo)}
+                      {getStepContent(activeStep, values, batchInfo,batchType)}
                     </div>
                   )}
                 </div>
@@ -120,7 +130,8 @@ const Process = props => {
 };
 
 Process.propTypes = {
-  batchInfo: PropTypes.object.isRequired
+  batchInfo: PropTypes.object.isRequired,
+  batchType: PropTypes.number.isRequired
 };
 
 export default Process;
