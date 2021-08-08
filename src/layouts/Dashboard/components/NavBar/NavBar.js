@@ -9,8 +9,8 @@ import useRouter from 'utils/useRouter';
 import { Navigation } from 'components';
 import navigationConfig from './navigationConfig';
 import authContext from '../../../../contexts/AuthContext';
-import {genericFunctionFourParameters}   from '../../../../utils/API';
-import {endpoint_get_avatar} from '../../../../configs/endpoints';
+import {genericFunctionFourParameters,genericFunctionTwoParameters}   from '../../../../utils/API';
+import {endpoint_get_avatar,endpoint_image_dir} from '../../../../configs/endpoints';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -47,10 +47,12 @@ const NavBar = props => {
   const router = useRouter();
   const [ {name ,email,organization,user_id} ] = useContext(authContext);
   const [values, setValues] = useState({ });
+  const [imageDir, setImageDir] = useState('');
   const type = 1;
   
   useEffect(() => {
     let mounted = true;
+    let mounted_image_dir = true;
 
     if (openMobile) {
       onMobileClose && onMobileClose();
@@ -67,14 +69,23 @@ const NavBar = props => {
       });
     })(endpoint_get_avatar,'get avatar',user_id,type); 
 
+    
+    (async  (endpoint,desc) => {     
+      await  genericFunctionTwoParameters(endpoint,desc)
+      .then(response => {                         
+        if (mounted_image_dir) {  
+            setImageDir(response.payload[0].image_dir);  
+        }
+      });
+    })(endpoint_image_dir,'image ddir');
+
     return () => {
-      mounted = false;      
+      mounted = false; 
+      mounted_image_dir = false; 
     }; 
     
   }, [router.location.pathname,user_id,type,onMobileClose,openMobile]);
 
-
- 
 
   const navbarContent = (
     <div className={classes.content}>
@@ -83,7 +94,7 @@ const NavBar = props => {
           alt="Person"
           className={classes.avatar}
           component={RouterLink}
-          src={`/images/uploads/${values.filename}`}
+          src={`${imageDir}/${values.filename}`}
           to="/settings"
         />
         <Typography

@@ -1006,6 +1006,13 @@ export const endpoint_get_avatar = {
   headers: headers  
 };
 
+//image upload dir
+export const endpoint_image_dir = {
+  url: `${api}/image-upload-dir`,
+  method: 'GET',
+  headers: headers  
+};
+
 export const endpoint_milkRevalidate = {
   url: `${api}/batches/milking/modify-and-revalidate`,
   method: 'PUT',
