@@ -8,9 +8,6 @@ import {genericFunctionFiveParameters}  from '../../../../../../../../utils/API'
 import {endpoint_batch_details} from '../../../../../../../../configs/endpoints';
 import Paper from '@material-ui/core/Paper';
 
-
-
-
 const useStyles = makeStyles(theme => ({
   root: {
     position: 'absolute',
@@ -43,15 +40,13 @@ const useStyles = makeStyles(theme => ({
 }));
 
   const ErrorDetails = props => {
-  const { open, onClose, className,record_id, ...rest } = props;
+  const { open, onClose, className,record_id,batch_type, ...rest } = props;
   const [values, setValues] =  useState([]); 
   const classes = useStyles(); 
-  const batch_type  =  8;
   const option_errors = 0;
 
   useEffect(() => {     
     let mounted = true;     
-  
       (async (endpoint,desc,id,type,option) => {
         await genericFunctionFiveParameters(endpoint,desc,id,type,option)
           .then(response => {
@@ -60,13 +55,11 @@ const useStyles = makeStyles(theme => ({
             }
           });
       })(endpoint_batch_details,'error details',record_id,batch_type,option_errors);
-  
       
     return () => {
       mounted = false;
-           
     };
-  }, [record_id]); 
+  }, [record_id,batch_type]); 
 
   if (!values || !open) {
     return null;
@@ -132,6 +125,8 @@ ErrorDetails.displayName = 'ErrorDetails';
 
 ErrorDetails.propTypes = {
   className: PropTypes.string,
+  record_id: PropTypes.number.isRequired,
+  batch_type: PropTypes.number.isRequired,
   customer: PropTypes.any,
   onClose: PropTypes.func,
   open: PropTypes.bool

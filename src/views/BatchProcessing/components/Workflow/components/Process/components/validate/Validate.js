@@ -240,23 +240,19 @@ const Validate = props => {
     }
   };
 
-
   switch (batchInfo.batch_type) {
     case 1:
       columns = [
         { name: "record_id", label: "record_id", options: { filter: false, sort: false, display: false } },
         { name: "uuid", label: "uuid", options: { filter: false, sort: false, display: false } },
-        { name: "animal_id", label: "Tag ID", options: { filter: true, sort: true, display: true } },
+        { name: "animal_tag_id", label: "Tag ID", options: { filter: true, sort: true, display: true } },
         { name: "cow_status", label: "Cow Status", options: { filter: true, sort: true, display: true } },
         { name: "milk_date", label: "Milk Date", options: { filter: true, sort: true, display: true } },
         { name: "dry_date", label: "Dry Date", options: { filter: true, sort: true, display: true } },
         { name: "calving_date", label: "Calving Date", options: { filter: true, sort: true, display: true } },
         { name: "amount_morning", label: "Morning Milk", options: { filter: true, sort: true, display: true } },
-        { name: "amount_noon", label: "Mid-day Milk", options: { filter: true, sort: true, display: true } },
-        { name: "amount_afternoon", label: "Evening Milk", options: { filter: true, sort: true, display: true } },
-
-
-
+        { name: "amount_midday", label: "Mid-day Milk", options: { filter: true, sort: true, display: true } },
+        { name: "amount_evening", label: "Evening Milk", options: { filter: true, sort: true, display: true } },
         { name: "milk_quality", label: "Milk Quality", options: { filter: true, sort: true, display: true } },
         { name: "milk_sample_type", label: "Milk Sample Type", options: { filter: true, sort: true, display: true } },
         { name: "fat", label: "Milk Fat", options: { filter: true, sort: true, display: true } },
@@ -264,10 +260,6 @@ const Validate = props => {
         { name: "urea", label: "Milk Urea", options: { filter: true, sort: true, display: true } },
         { name: "lactose", label: "Milk Lactose", options: { filter: true, sort: true, display: true } },
         { name: "somatic_cell_count", label: "Somatic cell Count", options: { filter: true, sort: true, display: true } },
-
-
-
-
         { name: "lactation_id", label: "Lact ID", options: { filter: true, sort: true, display: true } },
         { name: "lactation_number", label: "Lact No", options: { filter: true, sort: true, display: true } },
         { name: "days_in_milk", label: "Days in Milk", options: { filter: true, sort: true, display: true } },
@@ -529,6 +521,7 @@ const Validate = props => {
           </CardActions>
           <ErrorDetails
             record_id={record_id}
+            batch_type = {batchInfo.batch_type}
             onClose={handleErrorLogClose}
             open={openErrorLog}
           />
