@@ -130,6 +130,14 @@ const Upload = props => {
                 resp.rows[i][r] = new Date(Math.round((resp.rows[i][r] - 25569) * 86400 * 1000)).toLocaleDateString()
               }
             }
+
+            /* Weight Batch : Convert numeric dates to normal date */
+            if (batchType === 2 && r === 1 ) {
+              if (resp.rows[i][r] && !isNaN(resp.rows[i][r])) {
+                resp.rows[i][r] = new Date(Math.round((resp.rows[i][r] - 25569) * 86400 * 1000)).toLocaleDateString()
+              }
+            }
+
           }
 
 

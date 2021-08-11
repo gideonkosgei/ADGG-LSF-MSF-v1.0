@@ -172,9 +172,6 @@ const Post = props => {
   const handleDetailsClose = () => {
     setDetails(false);
   };
-
-
-  
   switch (batchInfo.batch_type) {
     case 1:
       columns = [
@@ -215,8 +212,38 @@ const Post = props => {
                 <>
                   <Button onClick={() => handleDetailsOpen(tableMeta.rowData[0])}>
                     < OpenInNewIcon className={classes.buttonIcon} />
-                  </Button>                  
+                  </Button>
                 </>
+              );
+            }
+          }
+        }
+      ];
+
+      break;
+    case 2:
+      columns = [
+        { name: "record_id", label: "record_id", options: { filter: false, sort: false, display: false } },
+        { name: "uuid", label: "uuid", options: { filter: false, sort: false, display: false } },
+        { name: "animal_tag_id", label: "Animal Tag ID", options: { filter: true, sort: true, display: true } },
+        { name: "weight_date", label: "Weight Date", options: { filter: true, sort: true, display: true } },
+        { name: "body_length", label: "Body Length", options: { filter: true, sort: true, display: true } },
+        { name: "heart_girth", label: "Heart Girth", options: { filter: true, sort: true, display: true } },
+        { name: "body_weight", label: "Body Weight", options: { filter: true, sort: true, display: true } },
+        { name: "body_score", label: "Body Score", options: { filter: true, sort: true, display: true } },
+        { name: "record_status", label: "Status", options: { filter: true, sort: true, display: true } },
+        {
+          name: "",
+          options: {
+            filter: false,
+            sort: false,
+            empty: true,
+            display: true,
+            customBodyRender: (value, tableMeta, updateValue) => {
+              return (
+                <Button onClick={() => handleDetailsOpen(tableMeta.rowData[0])}>
+                  < OpenInNewIcon className={classes.buttonIcon} />
+                </Button>
               );
             }
           }
@@ -273,7 +300,7 @@ const Post = props => {
                 <>
                   <Button onClick={() => handleDetailsOpen(tableMeta.rowData[0])}>
                     < OpenInNewIcon className={classes.buttonIcon} />
-                  </Button>                 
+                  </Button>
                 </>
               );
             }
@@ -281,7 +308,7 @@ const Post = props => {
         }
       ];
   }
-  
+
   const options = {
     filter: true,
     rowsPerPage: 5,
