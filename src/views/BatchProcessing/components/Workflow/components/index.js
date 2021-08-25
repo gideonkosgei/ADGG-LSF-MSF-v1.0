@@ -1,4 +1,3 @@
-export { default  as Pedigree} from './Pedigree';
 export { default  as Notes} from './Notes';
 export { default  as Controls} from './Controls';
 export { default  as Process} from './Process';

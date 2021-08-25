@@ -304,6 +304,8 @@ const Edit = props => {
           setLoading(false);
         });
     })(endpoint_calving_add, animal_id, values, user_id, values.lactation_number);
+
+    
   };
 
 

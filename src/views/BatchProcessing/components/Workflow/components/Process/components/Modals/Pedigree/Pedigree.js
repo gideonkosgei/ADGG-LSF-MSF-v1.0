@@ -3,15 +3,16 @@ import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import { Modal, CircularProgress, Card, Fab, Box, Switch, Typography, CardContent, LinearProgress, CardHeader, Grid, Divider, TextField, colors, Button, CardActions } from '@material-ui/core';
-import authContext from '../../../../../../../../contexts/AuthContext';
-import { genericFunctionFiveParameters, batchProcessActions, animalBatchModifyRevalidate, getLookups } from '../../../../../../../../utils/API';
-import { endpoint_batch_details, endpoint_batch_actions, endpoint_animalRevalidate, endpoint_lookup } from '../../../../../../../../configs/endpoints';
+import authContext from '../../../../../../../../../contexts/AuthContext';
+import { genericFunctionFiveParameters, batchProcessActions, animalBatchModifyRevalidate, getLookups } from '../../../../../../../../../utils/API';
+import { endpoint_batch_details, endpoint_batch_actions, endpoint_animalRevalidate, endpoint_lookup } from '../../../../../../../../../configs/endpoints';
 import Alert from '@material-ui/lab/Alert';
 import { green } from '@material-ui/core/colors';
 import CheckIcon from '@material-ui/icons/Check';
 import SaveIcon from '@material-ui/icons/Save';
 import RefreshIcon from '@material-ui/icons/Refresh';
 import SettingsIcon from '@material-ui/icons/Settings';
+
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -63,7 +64,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const Details = props => {
-  const { open, onClose, className, record_id, ...rest } = props;
+  const { open, onClose, className,batch_type, record_id, ...rest } = props;
   const classes = useStyles();
   const [isLoading, setIsLoading] = useState(true);
   const [values, setValues] = useState({});
@@ -82,9 +83,9 @@ const Details = props => {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [action, setAction] = useState(1);
-  const batch_type = 8; // pedigree batch  
   const option_errors = 0;
   const option_details = 1;
+
 
   const timer = React.useRef();
   const buttonClassname = clsx({
@@ -259,7 +260,7 @@ const Details = props => {
       mounted = false;
       mounted_lookup = false;
     };
-  }, [record_id, organization_id]);
+  }, [record_id, organization_id,batch_type]);
 
   if (!errors || !animal_types || !main_breeds || !breed_composition || !gender || !colors || !sire_types || !entryTypes || !deformaties || !yesNo || !values) {
     return null;
@@ -1205,6 +1206,7 @@ Details.propTypes = {
   className: PropTypes.string,
   onClose: PropTypes.func,
   open: PropTypes.bool,
+  batch_type: PropTypes.number.isRequired,
   record_id: PropTypes.number.isRequired
 };
 

@@ -12,7 +12,7 @@ import CustomToolbar from "./CustomToolbar";
 import authContext from '../../../../../../../../contexts/AuthContext';
 import SuccessSnackbar from '../../../../../../../../components/SuccessSnackbar';
 import ErrorSnackbar from '../../../../../../../../components/ErrorSnackbar';
-import { Details } from '../DetailsModal';
+import {Pedigree } from '../Modals';
 import OpenInNewIcon from '@material-ui/icons/OpenInNew';
 import CheckIcon from '@material-ui/icons/Check';
 import SaveIcon from '@material-ui/icons/Save';
@@ -74,7 +74,7 @@ const Post = props => {
   const [openSnackbarSuccess, setopenSnackbarSuccess] = useState(false);
   const [openSnackbarError, setopenSnackbarError] = useState(false);
   const [record_id, setRecordID] = useState();
-  const [openDetails, setDetails] = useState(false);
+  const [modal_pedigree, set_modal_pedigree] = useState(false);
   const [success, setSuccess] = useState(false);
   const [loading, setLoading] = useState(false);
   const [values, setValues] = useState({});
@@ -162,16 +162,35 @@ const Post = props => {
 
   const handleSnackbarErrorClose = () => {
     setopenSnackbarError(false);
-  };
+  }; 
 
-  const handleDetailsOpen = (record_id) => {
+  
+  const handleDetailsOpen = (record_id,batch_type) => {
     setRecordID(record_id);
-    setDetails(true);
+
+    switch (batch_type) {
+      case 8: // pedigree Batch
+        set_modal_pedigree(true);
+        break;      
+      default:
+      // Do nothing: Invalid option
+    }
+
+    
   };
 
   const handleDetailsClose = () => {
-    setDetails(false);
+    switch (batchInfo.batch_type) {
+      case 8: // pedigree Batch
+        set_modal_pedigree(false);
+        break;      
+      default:
+      // Do nothing: Invalid option
+    }
   };
+
+
+
   switch (batchInfo.batch_type) {
     case 1:
       columns = [
@@ -449,13 +468,14 @@ const Post = props => {
           <ErrorSnackbar
             onClose={handleSnackbarErrorClose}
             open={openSnackbarError}
-          />
-          <Details
+          />          
+           <Pedigree
+            batch_type={batchInfo.batch_type}
             record_id={record_id}
-            data={data}
             onClose={handleDetailsClose}
-            open={openDetails}
+            open={modal_pedigree}
           />
+
         </Card>
       </Grid>
     </Grid>

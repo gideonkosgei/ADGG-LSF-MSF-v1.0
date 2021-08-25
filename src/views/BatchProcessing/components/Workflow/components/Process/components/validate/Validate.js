@@ -9,8 +9,7 @@ import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import OpenInNewIcon from '@material-ui/icons/OpenInNew';
 import authContext from '../../../../../../../../contexts/AuthContext';
-import { ErrorDetails } from '../errorDetailsModal';
-import { Details } from '../DetailsModal';
+import { ErrorDetails,Pedigree,Milking } from '../Modals';
 import ErrorOutlineIcon from '@material-ui/icons/ErrorOutline';
 import { green } from '@material-ui/core/colors';
 import clsx from 'clsx';
@@ -76,7 +75,9 @@ const Validate = props => {
   const [{ user_id }] = useContext(authContext);
   const [openErrorLog, setErrorLog] = useState(false);
   const [record_id, setRecordID] = useState();
-  const [openDetails, setDetails] = useState(false);
+  const [modal_pedigree, set_modal_pedigree] = useState(false);
+  const [modal_weight, set_modal_weight] = useState(false);
+  const [modal_milking, set_modal_milking] = useState(false);
   const [success, setSuccess] = useState(false);
   const [loading, setLoading] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -209,14 +210,42 @@ const Validate = props => {
     setErrorLog(false);
   };
 
-  const handleDetailsOpen = (record_id) => {
+  const handleDetailsOpen = (record_id,batch_type) => {
     setRecordID(record_id);
-    setDetails(true);
+
+    switch (batch_type) {
+      case 1: // milk Batch
+        set_modal_milking(true);
+        break;
+        case 2: // weight Batch
+        set_modal_weight(true);
+        break;
+      case 8: // pedigree Batch
+        set_modal_pedigree(true);
+        break;      
+      default:
+      // Do nothing: Invalid option
+    }
+    
   };
 
   const handleDetailsClose = () => {
-    setDetails(false);
+    switch (batchInfo.batch_type) {
+      case 1: // milk Batch
+        set_modal_milking(false);
+        break;
+        case 2: // weight Batch
+        set_modal_weight(false);
+        break;
+      case 8: // pedigree Batch
+        set_modal_pedigree(false);
+        break;      
+      default:
+      // Do nothing: Invalid option
+    }
   };
+
+
 
   const handleClickExecute = () => {
     setOutput({ status: null, message: '' });
@@ -237,6 +266,7 @@ const Validate = props => {
       default:
       // Do nothing: Invalid option
     }
+
   };
 
   switch (batchInfo.batch_type) {
@@ -277,7 +307,7 @@ const Validate = props => {
             customBodyRender: (value, tableMeta, updateValue) => {
               return (
                 <>
-                  <Button onClick={() => handleDetailsOpen(tableMeta.rowData[0])}>
+                  <Button onClick={() => handleDetailsOpen(tableMeta.rowData[0],batchInfo.batch_type)}>
                     < OpenInNewIcon className={classes.buttonIcon} />
                   </Button>
                   <Button onClick={() => handleErrorLogOpen(tableMeta.rowData[0])}>
@@ -311,7 +341,7 @@ const Validate = props => {
             customBodyRender: (value, tableMeta, updateValue) => {
               return (
                 <>
-                  <Button onClick={() => handleDetailsOpen(tableMeta.rowData[0])}>
+                  <Button onClick={() => handleDetailsOpen(tableMeta.rowData[0],batchInfo.batch_type)}>
                     < OpenInNewIcon className={classes.buttonIcon} />
                   </Button>
                   <Button onClick={() => handleErrorLogOpen(tableMeta.rowData[0])}>
@@ -372,7 +402,7 @@ const Validate = props => {
             customBodyRender: (value, tableMeta, updateValue) => {
               return (
                 <>
-                  <Button onClick={() => handleDetailsOpen(tableMeta.rowData[0])}>
+                  <Button onClick={() => handleDetailsOpen(tableMeta.rowData[0],batchInfo.batch_type)}>
                     < OpenInNewIcon className={classes.buttonIcon} />
                   </Button>
                   <Button onClick={() => handleErrorLogOpen(tableMeta.rowData[0])}>
@@ -558,10 +588,23 @@ const Validate = props => {
             onClose={handleErrorLogClose}
             open={openErrorLog}
           />
-          <Details
-            record_id={record_id}
-            onClose={handleDetailsClose}
-            open={openDetails}
+          <Pedigree
+            batch_type = {batchInfo.batch_type}
+            record_id = {record_id}
+            onClose = {handleDetailsClose}
+            open = {modal_pedigree}
+          />
+           <Milking
+            batch_type = {batchInfo.batch_type}
+            record_id = {record_id}
+            onClose = {handleDetailsClose}
+            open = {modal_milking}
+          />
+           <Pedigree
+            batch_type = {batchInfo.batch_type}
+            record_id = {record_id}
+            onClose = {handleDetailsClose}
+            open = {modal_weight}
           />
         </Card>
       </Grid>
