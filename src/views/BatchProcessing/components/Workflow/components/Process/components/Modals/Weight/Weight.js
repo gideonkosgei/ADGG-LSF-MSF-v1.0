@@ -2,9 +2,10 @@ import React, { useState, useEffect, useContext } from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
-import { Modal, Card, LinearProgress, CircularProgress, Fab, Box, Switch, Typography, CardContent, CardHeader, Grid, Divider, TextField, colors, Button, CardActions } from '@material-ui/core';
-import { batchProcessActions, genericFunctionFiveParameters, getParametersLimitAll, getParametersLocalSettingsOrgAll, milkBatchModifyRevalidate } from '../../../../../../../../../utils/API';
-import { endpoint_batch_details, endpoint_batch_actions, endpoint_parameter_limit_all, endpoint_parameter_local_settings_org_all, endpoint_milkRevalidate } from '../../../../../../../../../configs/endpoints';
+import PerfectScrollbar from 'react-perfect-scrollbar';
+import { Modal, Card, CircularProgress, LinearProgress, Fab, CardContent, Box, Switch, Typography, CardHeader, Grid, Divider, TextField, colors, Button, CardActions } from '@material-ui/core';
+import { batchProcessActions, getLookups, genericFunctionFiveParameters, getParametersLimitAll, weightBatchModifyRevalidate } from '../../../../../../../../../utils/API';
+import { endpoint_lookup, endpoint_batch_actions, endpoint_batch_details, endpoint_parameter_limit_all, endpoint_weightRevalidate } from '../../../../../../../../../configs/endpoints';
 import Alert from '@material-ui/lab/Alert';
 import authContext from '../../../../../../../../../contexts/AuthContext';
 import CheckIcon from '@material-ui/icons/Check';
@@ -62,22 +63,21 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const Milking = props => {
+const Weight = props => {
   const { open, onClose, className, batch_type, record_id, ...rest } = props;
   const classes = useStyles();
   const [values, setValues] = useState({});
   const [errors, setErrors] = useState([]);
   const [limitParameters, setBodyLimitParameters] = useState([]);
-  const [localSettings, setLocalSettings] = useState([]);
   const [{ organization_id, user_id }] = useContext(authContext);
   const [output, setOutput] = useState({ status: null, message: "" });
+  const [body_scores, setBodyScores] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [action, setAction] = useState(1);
   const option_errors = 0;
   const option_details = 1;
-
 
   const timer = React.useRef();
   const buttonClassname = clsx({
@@ -113,7 +113,7 @@ const Milking = props => {
       setLoading(true);
     }
     await batchProcessActions(_endpoint, _uuid, _action, _user_id)
-      .then((response) => {
+      .then(() => {
         setOutput({ status: null, message: '' });
         timer.current = window.setTimeout(() => {
           setSuccess(true);
@@ -138,7 +138,7 @@ const Milking = props => {
       setLoading(true);
     }
 
-    await milkBatchModifyRevalidate(endpoint, values, record_id, user_id, batch_type)
+    await weightBatchModifyRevalidate(endpoint, values, record_id, user_id, batch_type)
       .then((response) => {
         setOutput({ status: null, message: '' });
         timer.current = window.setTimeout(() => {
@@ -159,11 +159,12 @@ const Milking = props => {
       });
   }
 
+
+
   useEffect(() => {
     let mounted = true;
     let mounted_limit_parameters = true;
-    let mounted_settings = true;
-    setOutput({ status: null, message: '' });
+    let mounted_lookup = true;
 
     (async (endpoint, desc, id, type, option) => {
       await genericFunctionFiveParameters(endpoint, desc, id, type, option)
@@ -185,6 +186,7 @@ const Milking = props => {
         });
     })(endpoint_batch_details, 'Batch records details', record_id, batch_type, option_details);
 
+
     (async (endpoint) => {
       await getParametersLimitAll(endpoint)
         .then(response => {
@@ -196,40 +198,68 @@ const Milking = props => {
     })(endpoint_parameter_limit_all);
 
     (async (endpoint, id) => {
-      await getParametersLocalSettingsOrgAll(endpoint, id)
+      await getLookups(endpoint, id)
         .then(response => {
-          if (mounted_settings) {
-            setLocalSettings(response.payload);
+          if (mounted_lookup) {
+            const data = response.payload[0];
+            let lookup_body_scores = [];
+            for (let i = 0; i < data.length; i++) {
+              //Body Score
+              if (data[i].list_type_id === 71) {
+                lookup_body_scores.push(data[i]);
+              }
+            }
+            setBodyScores(lookup_body_scores);
           }
         });
-    })(endpoint_parameter_local_settings_org_all, organization_id);
+    })(endpoint_lookup, '71');
 
     return () => {
       mounted = false;
       mounted_limit_parameters = false;
-      mounted_settings = false;
+      mounted_lookup = false;
+
     };
   }, [record_id, organization_id, batch_type]);
 
-  if (!errors || !limitParameters || !localSettings) {
+  if (!errors || !limitParameters || !body_scores) {
     return null;
   }
 
-  // validate milk amount
-  let milk_amount_limits = limitParameters.filter(obj => obj.category === 'milk_amount_limits');
-  let milk_amount_limits_status = false;
-  let milk_amount_limits_min_value = 0;
-  let milk_amount_limits_max_value = 0;
-  if (milk_amount_limits.length > 0) {
-    milk_amount_limits_status = milk_amount_limits[0].is_active_id;
-    milk_amount_limits_min_value = milk_amount_limits[0].min_value;
-    milk_amount_limits_max_value = milk_amount_limits[0].max_value;
+
+
+  // validate weight
+  let mature_weight_limits = limitParameters.filter(obj => obj.category === 'mature_weight_limits');
+  let mature_weight_limits_status = false;
+  let mature_weight_limits_min_value = 0;
+  let mature_weight_limits_max_value = 0;
+  if (mature_weight_limits.length > 0) {
+    mature_weight_limits_status = mature_weight_limits[0].is_active_id;
+    mature_weight_limits_min_value = mature_weight_limits[0].min_value;
+    mature_weight_limits_max_value = mature_weight_limits[0].max_value;
   }
 
+  //validate heart Girth
+  let mature_heart_girth_limits = limitParameters.filter(obj => obj.category === 'mature_heart_girth_limits');
+  let mature_heart_girth_limits_status = false;
+  let mature_heart_girth_limits_min_value = 0;
+  let mature_heart_girth_limits_max_value = 0;
+  if (mature_heart_girth_limits.length > 0) {
+    mature_heart_girth_limits_status = mature_heart_girth_limits[0].is_active_id;
+    mature_heart_girth_limits_min_value = mature_heart_girth_limits[0].min_value;
+    mature_heart_girth_limits_max_value = mature_heart_girth_limits[0].max_value;
+  }
 
-  //local settings  
-  const milk_unit = localSettings.filter(obj => obj.name === 'MILK_UNIT');
-  const milk_unit_value = (milk_unit.length > 0) ? milk_unit[0].value : "ltrs";
+  //validate body length
+  let mature_body_length_limits = limitParameters.filter(obj => obj.category === 'mature_body_length');
+  let mature_body_length_limits_status = false;
+  let mature_body_length_limits_min_value = 0;
+  let mature_body_length_limits_max_value = 0;
+  if (mature_body_length_limits.length > 0) {
+    mature_body_length_limits_status = mature_body_length_limits[0].is_active_id;
+    mature_body_length_limits_min_value = mature_body_length_limits[0].min_value;
+    mature_body_length_limits_max_value = mature_body_length_limits[0].max_value;
+  }
 
   const handleChange = event => {
     event.persist();
@@ -257,12 +287,15 @@ const Milking = props => {
         validate(endpoint_batch_actions, values.uuid, 1, user_id);
         break;
       case 3: // save
-        save(endpoint_milkRevalidate, values, record_id, user_id, batch_type);
+        save(endpoint_weightRevalidate, values, record_id, user_id, batch_type);
         break;
       default:
       // Do nothing: Invalid option
     }
   };
+
+
+
 
 
   return (
@@ -274,20 +307,21 @@ const Milking = props => {
         {...rest}
         className={clsx(classes.root, className)}
       >
-       
-          <CardContent>
-            <CardHeader title="MILKING RECORD" />
-            <Divider />
-            {output.status === 0 ?
+        <CardContent>
+          <CardHeader title="Weight & Growth Record" />
+          <Divider />
+          {output.status === 0 ?
+            <>
+              <Alert severity="error" >{output.message}</Alert>
+            </>
+            : output.status === 1 ?
               <>
-                <Alert severity="error" >{output.message}</Alert>
+                <Alert severity="success" >{output.message}</Alert>
               </>
-              : output.status === 1 ?
-                <>
-                  <Alert severity="success" >{output.message}</Alert>
-                </>
-                : null
-            }
+              : null
+          }
+
+          <PerfectScrollbar>
             <div className={classes.inner}>
               <br />
               {errors.length > 0 ?
@@ -307,7 +341,6 @@ const Milking = props => {
                   <br />
                 </>
               }
-
               <Grid
                 container
                 spacing={4}
@@ -323,11 +356,10 @@ const Milking = props => {
                     InputLabelProps={{
                       shrink: true,
                     }}
-
-                    margin='dense'
                     onChange={handleChange}
+                    margin='dense'
                     label="Tag ID"
-                    name="animal_tag_id"
+                    name='animal_tag_id'
                     value={values.animal_tag_id}
                     variant="outlined"
                   />
@@ -343,15 +375,14 @@ const Milking = props => {
                     InputLabelProps={{
                       shrink: true,
                     }}
-
-                    margin='dense'
                     type="date"
+                    required
                     onChange={handleChange}
-                    label="Milk Date"
-                    name="milk_date"
-                    value={values.milk_date}
+                    margin='dense'
+                    label="Weight Date"
+                    name="weight_date"
+                    value={values.weight_date}
                     variant="outlined"
-
                   />
                 </Grid>
 
@@ -366,13 +397,19 @@ const Milking = props => {
                       shrink: true
                     }}
 
+                    inputProps={{
+                      min: (mature_body_length_limits_status) ? mature_body_length_limits_min_value : "any",
+                      max: (mature_body_length_limits_status) ? mature_body_length_limits_max_value : "any",
+                      step: "any"
+                    }}
+                    onChange={handleChange}
                     //required
                     margin='dense'
-                    onChange={handleChange}
-                    label="Lactation ID"
+                    label="Body Length (cm)"
+                    name="body_length"
+                    type="number"
                     variant="outlined"
-                    name="lactation_id"
-                    value={values.lactation_id}
+                    value={parseInt(values.body_length) === 0 ? '' : values.body_length}
                   />
                 </Grid>
                 <Grid
@@ -387,16 +424,18 @@ const Milking = props => {
                     }}
 
                     inputProps={{
-                      readOnly: true,
-                      disabled: true
+                      min: (mature_heart_girth_limits_status) ? mature_heart_girth_limits_min_value : "any",
+                      max: (mature_heart_girth_limits_status) ? mature_heart_girth_limits_max_value : "any",
+                      step: "any"
                     }}
+                    onChange={handleChange}
                     //required
                     margin='dense'
-                    onChange={handleChange}
-                    label="Lactation Number"
+                    label="Heart Girth (cm)"
+                    name="heart_girth"
                     variant="outlined"
-                    name="lactation_number"
-                    value={values.lactation_number}
+                    type="number"
+                    value={parseInt(values.heart_girth) === 0 ? '' : values.heart_girth}
                   />
                 </Grid>
                 <Grid
@@ -411,73 +450,18 @@ const Milking = props => {
                     }}
 
                     inputProps={{
-                      min: (milk_amount_limits_status) ? milk_amount_limits_min_value : "any",
-                      max: (milk_amount_limits_status) ? milk_amount_limits_max_value : "any",
+                      min: (mature_weight_limits_status) ? mature_weight_limits_min_value : "any",
+                      max: (mature_weight_limits_status) ? mature_weight_limits_max_value : "any",
                       step: "any"
                     }}
-                    margin='dense'
-                    type="number"
                     onChange={handleChange}
-                    label={`Amount Morning (${milk_unit_value})`}
-                    variant="outlined"
-                    name="amount_morning"
-                    value={values.amount_morning}
-                  />
-                </Grid>
-                <Grid
-                  item
-                  md={3}
-                  xs={12}
-                >
-                  <TextField
-                    fullWidth
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-
-                    inputProps={{
-                      min: (milk_amount_limits_status) ? milk_amount_limits_min_value : "any",
-                      max: (milk_amount_limits_status) ? milk_amount_limits_max_value : "any",
-                      step: "any"
-                    }}
-
                     margin='dense'
-                    type="number"
-                    onChange={handleChange}
-                    label={`Amount Noon (${milk_unit_value})`}
-                    name="amount_noon"
-                    value={values.amount_noon}
+                    label="Weight (kg)"
+                    name="body_weight"
                     variant="outlined"
-                  />
-
-                </Grid>
-
-
-                <Grid
-                  item
-                  md={3}
-                  xs={12}
-                >
-                  <TextField
-                    fullWidth
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-
-                    inputProps={{
-                      min: (milk_amount_limits_status) ? milk_amount_limits_min_value : "any",
-                      max: (milk_amount_limits_status) ? milk_amount_limits_max_value : "any",
-                      step: "any"
-                    }}
                     type="number"
-                    margin='dense'
-                    onChange={handleChange}
-                    label={`Amount Afternoon (${milk_unit_value})`}
-                    name="amount_afternoon"
-                    value={values.amount_afternoon}
-                    variant="outlined"
+                    value={parseInt(values.body_weight) === 0 ? '' : values.body_weight}
                   />
-
                 </Grid>
 
                 <Grid
@@ -490,65 +474,56 @@ const Milking = props => {
                     InputLabelProps={{
                       shrink: true,
                     }}
+                    onChange={handleChange}
+                    margin='dense'
+                    label="Body Score"
+                    name="body_score"
+                    value={values.body_score}
+                    //required
+                    default=""
+                    select
+                    // eslint-disable-next-line react/jsx-sort-props
+                    SelectProps={{ native: true }}
+                    variant="outlined"
+                  >
+                    <option value=""></option>
+                    {body_scores.map(score => (
+                      <option
+                        value={score.id}
+                      >
+                        {score.id}
+                      </option>
+                    ))
+                    }
+                  </TextField>
+                </Grid>
+
+                <Grid
+                  item
+                  md={3}
+                  xs={12}
+                >
+                  <TextField
+                    fullWidth
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+
                     inputProps={{
                       readOnly: true,
                       disabled: true
                     }}
-                    margin='dense'
-                    onChange={handleChange}
-                    label="Days In Milk"
-                    name="days_in_milk"
-                    value={values.days_in_milk}
-                    variant="outlined"
-                  />
-                </Grid>
 
-                <Grid
-                  item
-                  md={3}
-                  xs={12}
-                >
-                  <TextField
-                    fullWidth
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-                    inputProps={{
-                      readOnly: true,
-                      disabled: true
-                    }}
-                    margin='dense'
                     onChange={handleChange}
-                    label="Test Day No"
-                    name="test_day_no"
-                    value={values.test_day_no}
-                    variant="outlined"
-                  />
-                </Grid>
 
-                <Grid
-                  item
-                  md={3}
-                  xs={12}
-                >
-                  <TextField
-                    fullWidth
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-                    inputProps={{
-                      readOnly: true,
-                      disabled: true
-                    }}
                     margin='dense'
-                    onChange={handleChange}
                     label="Created By"
                     name="created_by"
                     value={values.created_by}
                     variant="outlined"
                   />
-                </Grid>
 
+                </Grid>
                 <Grid
                   item
                   md={3}
@@ -564,13 +539,14 @@ const Milking = props => {
                       readOnly: true,
                       disabled: true
                     }}
-                    margin='dense'
                     onChange={handleChange}
-                    label='Created Date'
+                    margin='dense'
                     name="created_date"
+                    label='Created Date'
                     value={values.created_date}
                     variant="outlined"
                   />
+
                 </Grid>
 
                 <Grid
@@ -588,14 +564,14 @@ const Milking = props => {
                       readOnly: true,
                       disabled: true
                     }}
+                    onChange={handleChange}
 
                     margin='dense'
-                    label="Time Created"
                     name="created_time"
+                    label="Time Created"
                     value={values.created_time}
                     variant="outlined"
                   />
-
                 </Grid>
                 <Grid
                   item
@@ -616,103 +592,103 @@ const Milking = props => {
                       edge="start"
                     />
                   </Box>
-
                 </Grid>
               </Grid>
             </div>
-          </CardContent>
-          <CardActions className={classes.actions}>
+          </PerfectScrollbar>
+        </CardContent>
+        <CardActions className={classes.actions}>
 
-            <Grid
-              container
-              spacing={2}
-              className={classes.wrapper}
-            >
-            </Grid>
+          <Grid
+            container
+            spacing={2}
+            className={classes.wrapper}
+          >
+          </Grid>
 
-            <Grid
-              item
-              md={3}
-              xs={12}
-            >
+          <Grid
+            item
+            md={3}
+            xs={12}
+          >
 
-              <TextField
-                fullWidth
-                InputLabelProps={{
-                  shrink: true,
-                }}
-                size="medium"
-                margin='normal'
-                label="ACTION"
-                name="action"
-                select
-                SelectProps={{ native: true }}
-                variant="outlined"
-                onChange={handleChangeAction}
-              >
-                <option value="1">Refresh</option>
-                <option value="2">Validate</option>
-                <option value="3">Save</option>
-              </TextField>
-            </Grid>
-            <Grid
-              item
-              md={1}
-              xs={12}
+            <TextField
+              fullWidth
+              InputLabelProps={{
+                shrink: true,
+              }}
+              size="medium"
+              margin='normal'
+              label="ACTION"
+              name="action"
+              select
+              SelectProps={{ native: true }}
+              variant="outlined"
+              onChange={handleChangeAction}
             >
-              <Fab
-                aria-label="save"
-                color="primary"
-                className={buttonClassname}
-              >
-                {
-                  success ? <CheckIcon /> :
-                    parseInt(action) === 1 ? <RefreshIcon /> :
-                      parseInt(action) === 2 ? <SettingsIcon /> :
-                        parseInt(action) === 3 ? <SaveIcon /> : null
-                }
-              </Fab>
-            </Grid>
+              <option value="1">Refresh</option>
+              <option value="2">Validate</option>
+              <option value="3">Save</option>
+            </TextField>
+          </Grid>
+          <Grid
+            item
+            md={1}
+            xs={12}
+          >
+            <Fab
+              aria-label="save"
+              color="primary"
+              className={buttonClassname}
+            >
+              {
+                success ? <CheckIcon /> :
+                  parseInt(action) === 1 ? <RefreshIcon /> :
+                    parseInt(action) === 2 ? <SettingsIcon /> :
+                      parseInt(action) === 3 ? <SaveIcon /> : null
+              }
+            </Fab>
+          </Grid>
 
-            <Grid
-              item
-              md={2}
-              xs={12}
+          <Grid
+            item
+            md={2}
+            xs={12}
+          >
+            <Button
+              variant="contained"
+              color="primary"
+              className={buttonClassname}
+              disabled={loading}
+              onClick={handleClickExecute}
             >
-              <Button
-                variant="contained"
-                color="primary"
-                className={buttonClassname}
-                disabled={loading}
-                onClick={handleClickExecute}
-              >
-                execute
-              </Button>
-              {loading && <CircularProgress size={24} className={classes.buttonProgress} />}
+              execute
+            </Button>
+            {loading && <CircularProgress size={24} className={classes.buttonProgress} />}
 
-            </Grid>
-            <Grid
-              item
-              md={2}
-              xs={12}
+          </Grid>
+          <Grid
+            item
+            md={2}
+            xs={12}
+          >
+            <Button
+              className={classes.saveButton}
+              onClick={onClose}
+              variant="contained"
             >
-              <Button
-                className={classes.saveButton}
-                onClick={onClose}
-                variant="contained"
-              >
-                Close
-              </Button>
-            </Grid>
-          </CardActions>      
+              Close
+            </Button>
+          </Grid>
+        </CardActions>
       </Card>
-
     </Modal>
   );
 };
 
-Milking.displayName = 'Details';
-Milking.propTypes = {
+Weight.displayName = 'Details';
+
+Weight.propTypes = {
   className: PropTypes.string,
   onClose: PropTypes.func,
   open: PropTypes.bool,
@@ -720,9 +696,8 @@ Milking.propTypes = {
   record_id: PropTypes.number.isRequired
 };
 
-Milking.defaultProps = {
+Weight.defaultProps = {
   open: false,
   onClose: () => { }
 };
-
-export default Milking;
+export default Weight;

@@ -43,7 +43,13 @@ const Controls = (props) => {
             await genericFunctionTwoParameters(endpoint, desc)
                 .then(response => {
                     if (mounted_batch_types) {
-                        setBatchTypes(response.payload);
+                        let batches = [];
+                        for (let i = 0; i < response.payload.length; i++) {
+                            if (response.payload[i].id === 1 || response.payload[i].id === 2 || response.payload[i].id === 8) {
+                                batches.push(response.payload[i]);
+                            }
+                        }
+                        setBatchTypes(batches);
                     }
                 });
         })(endpoint_batch_types, 'Batch Types');
@@ -105,7 +111,7 @@ const Controls = (props) => {
             let filtered_statuses = batchStatuses.filter(value => {
                 return parseInt(event.target.value) === 3 ? (value.id !== 0) : (value.id !== 4);
             });
-            setRequiredStatuses(filtered_statuses);            
+            setRequiredStatuses(filtered_statuses);
         }
 
         if (event.target.name === 'batch_stage') {

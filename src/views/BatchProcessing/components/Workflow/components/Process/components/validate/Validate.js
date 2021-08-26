@@ -9,7 +9,7 @@ import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import OpenInNewIcon from '@material-ui/icons/OpenInNew';
 import authContext from '../../../../../../../../contexts/AuthContext';
-import { ErrorDetails,Pedigree,Milking } from '../Modals';
+import { ErrorDetails,Pedigree,Milking,Weight } from '../Modals';
 import ErrorOutlineIcon from '@material-ui/icons/ErrorOutline';
 import { green } from '@material-ui/core/colors';
 import clsx from 'clsx';
@@ -600,7 +600,7 @@ const Validate = props => {
             onClose = {handleDetailsClose}
             open = {modal_milking}
           />
-           <Pedigree
+          <Weight
             batch_type = {batchInfo.batch_type}
             record_id = {record_id}
             onClose = {handleDetailsClose}
