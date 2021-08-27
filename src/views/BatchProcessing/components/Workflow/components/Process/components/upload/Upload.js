@@ -103,7 +103,9 @@ const Upload = props => {
         console.log(err.message);
       }
       else {
-        const column_count = resp.rows[0].length;  
+        const column_count = resp.rows[0].length;
+
+        let new_date = null;
 
         for (let i = 0; i < resp.rows.length; i++) {
           for (let r = 0; r < resp.rows[i].length; r++) {
@@ -112,14 +114,15 @@ const Upload = props => {
               resp.rows[i][r] = resp.rows[i][r].split(" ").join("_").toUpperCase();
             }
             /* replace empty slots with null */
-            if (typeof resp.rows[i][r] === 'undefined' ||  resp.rows[i][r] === '') {
+            if (typeof resp.rows[i][r] === 'undefined' || resp.rows[i][r] === '') {
               resp.rows[i][r] = null;
             }
 
             /* Pedigree Batch : Convert numeric dates to normal date */
             if (batchType === 8 && (r === 7 || r === 8 || r === 9)) {
               if (resp.rows[i][r] && !isNaN(resp.rows[i][r])) {
-                resp.rows[i][r] = new Date(Math.round((resp.rows[i][r] - 25569) * 86400 * 1000)).toLocaleDateString()
+                new_date = new Date(Math.round((resp.rows[i][r] - 25569) * 86400 * 1000));
+                resp.rows[i][r] = new_date.getDate() + '/' + (new_date.getMonth() + 1) + '/' + new_date.getFullYear();
               }
 
             }
@@ -127,19 +130,19 @@ const Upload = props => {
             /* Milk Batch : Convert numeric dates to normal date */
             if (batchType === 1 && (r === 2 || r === 3 || r === 4)) {
               if (resp.rows[i][r] && !isNaN(resp.rows[i][r])) {
-                resp.rows[i][r] = new Date(Math.round((resp.rows[i][r] - 25569) * 86400 * 1000)).toLocaleDateString()
+                new_date = new Date(Math.round((resp.rows[i][r] - 25569) * 86400 * 1000));
+                resp.rows[i][r] = new_date.getDate() + '/' + (new_date.getMonth() + 1) + '/' + new_date.getFullYear();
               }
             }
 
             /* Weight Batch : Convert numeric dates to normal date */
-            if (batchType === 2 && r === 1 ) {
+            if (batchType === 2 && r === 1) {
               if (resp.rows[i][r] && !isNaN(resp.rows[i][r])) {
-                resp.rows[i][r] = new Date(Math.round((resp.rows[i][r] - 25569) * 86400 * 1000)).toLocaleDateString()
+                new_date = new Date(Math.round((resp.rows[i][r] - 25569) * 86400 * 1000));
+                resp.rows[i][r] = new_date.getDate() + '/' + (new_date.getMonth() + 1) + '/' + new_date.getFullYear();
               }
             }
-
           }
-
 
           /** this section is very important. It sorts the limitations of the excel renderer
            * the array excludes empty cells after the last cell with a value
@@ -147,7 +150,7 @@ const Upload = props => {
            */
 
           let diff = column_count - resp.rows[i].length;
-          for (let x = 0; x<diff; x++){
+          for (let x = 0; x < diff; x++) {
             resp.rows[i].push(null);
           }
 
@@ -195,6 +198,7 @@ const Upload = props => {
       setSuccess(false);
       setLoading(true);
     }
+    console.log(rows);
     (async (endpoint, rows, cols, user_id, org_id, batch_type, uuid) => {
       await postBatchUpload(endpoint, rows, cols, user_id, org_id, batch_type, uuid)
         .then((response) => {

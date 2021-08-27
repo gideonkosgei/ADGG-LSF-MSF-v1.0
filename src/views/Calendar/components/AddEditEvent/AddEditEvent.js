@@ -62,8 +62,8 @@ const AddEditEvent = forwardRef((props, ref) => {
   const classes = useStyles();
 
   const defaultEvent = {
-    title: 'Event title',
-    desc: 'Event description',
+    title: '',
+    desc: '',
     allDay: false,
     start: moment().toDate(),
     end: moment().toDate()
@@ -138,25 +138,34 @@ const AddEditEvent = forwardRef((props, ref) => {
             gutterBottom
             variant="h3"
           >
-            {mode === 'add' ? 'Add Event' : 'Edit Event'}
+            {mode === 'add' ? 'ADD EVENT' : 'EDIT EVENT'}
           </Typography>
           <TextField
             className={classes.field}
             fullWidth
-            label="Title"
+            label="Event"
             name="title"
             onChange={handleFieldChange}
             value={values.title}
             variant="outlined"
+            InputLabelProps={{
+              shrink: true,
+            }}
           />
           <TextField
             className={classes.field}
             fullWidth
+            InputLabelProps={{
+              shrink: true,
+            }}
             label="Description"
             name="desc"
             onChange={handleFieldChange}
             value={values.desc}
             variant="outlined"
+            multiline      
+            rowsMax = {4}
+            rows={3}  
           />
           <FormControlLabel
             className={classes.field}
@@ -171,7 +180,9 @@ const AddEditEvent = forwardRef((props, ref) => {
           />
           <TextField
             className={classes.field}
-            defaultValue={moment(values.start).format('YYYY-MM-DDThh:mm:ss')}
+            InputLabelProps={{
+              shrink: true,
+            }}
             fullWidth
             label="Start date"
             name="start"
@@ -180,8 +191,10 @@ const AddEditEvent = forwardRef((props, ref) => {
             variant="outlined"
           />
           <TextField
+             InputLabelProps={{
+              shrink: true,
+            }}
             className={classes.field}
-            defaultValue={moment(values.end).format('YYYY-MM-DDThh:mm:ss')}
             disabled={values.allDay}
             fullWidth
             label="End date"
@@ -206,6 +219,7 @@ const AddEditEvent = forwardRef((props, ref) => {
           >
             Cancel
           </Button>
+
           {mode === 'add' ? (
             <Button
               className={classes.confirmButton}
