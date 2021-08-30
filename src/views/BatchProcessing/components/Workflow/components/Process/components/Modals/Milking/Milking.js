@@ -3,8 +3,8 @@ import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import { Modal, Card, LinearProgress, CircularProgress, Fab, Box, Switch, Typography, CardContent, CardHeader, Grid, Divider, TextField, colors, Button, CardActions } from '@material-ui/core';
-import { batchProcessActions, genericFunctionFiveParameters, getParametersLimitAll, getParametersLocalSettingsOrgAll, milkBatchModifyRevalidate } from '../../../../../../../../../utils/API';
-import { endpoint_batch_details, endpoint_batch_actions, endpoint_parameter_limit_all, endpoint_parameter_local_settings_org_all, endpoint_milkRevalidate } from '../../../../../../../../../configs/endpoints';
+import {getLookups, batchProcessActions, genericFunctionFiveParameters, getParametersLimitAll, getParametersLocalSettingsOrgAll, milkBatchModifyRevalidate } from '../../../../../../../../../utils/API';
+import {endpoint_lookup,endpoint_batch_details, endpoint_batch_actions, endpoint_parameter_limit_all, endpoint_parameter_local_settings_org_all, endpoint_milkRevalidate } from '../../../../../../../../../configs/endpoints';
 import Alert from '@material-ui/lab/Alert';
 import authContext from '../../../../../../../../../contexts/AuthContext';
 import CheckIcon from '@material-ui/icons/Check';
@@ -75,6 +75,8 @@ const Milking = props => {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [action, setAction] = useState(1);
+  const [quality_fields_view, setQualityFieldsView] = useState(false);
+  const [sample_types, setSampleTypes] = useState([]);
   const option_errors = 0;
   const option_details = 1;
 
@@ -163,7 +165,25 @@ const Milking = props => {
     let mounted = true;
     let mounted_limit_parameters = true;
     let mounted_settings = true;
+    let mounted_lookup = true;
     setOutput({ status: null, message: '' });
+
+    (async (endpoint, id) => {
+      await getLookups(endpoint, id)
+        .then(response => {
+          if (mounted_lookup) {
+            const data = response.payload[0];
+            let lookup_sample_types = [];
+            for (let i = 0; i < data.length; i++) {
+              //Sample Types
+              if (data[i].list_type_id === 70) {
+                lookup_sample_types.push(data[i]);
+              }
+            }
+            setSampleTypes(lookup_sample_types);
+          }
+        });
+    })(endpoint_lookup, '70');
 
     (async (endpoint, desc, id, type, option) => {
       await genericFunctionFiveParameters(endpoint, desc, id, type, option)
@@ -208,13 +228,15 @@ const Milking = props => {
       mounted = false;
       mounted_limit_parameters = false;
       mounted_settings = false;
+      mounted_lookup = false;
     };
   }, [record_id, organization_id, batch_type]);
 
-  if (!errors || !limitParameters || !localSettings) {
+  if (!errors || !limitParameters || !localSettings || !sample_types) {
     return null;
   }
 
+ 
   // validate milk amount
   let milk_amount_limits = limitParameters.filter(obj => obj.category === 'milk_amount_limits');
   let milk_amount_limits_status = false;
@@ -226,10 +248,74 @@ const Milking = props => {
     milk_amount_limits_max_value = milk_amount_limits[0].max_value;
   }
 
+  // validate milk lactose
+  let milk_lactose_limits = limitParameters.filter(obj => obj.category === 'milk_lactose_limits');
+  let milk_lactose_limits_status = false;
+  let milk_lactose_limits_min_value = 0;
+  let milk_lactose_limits_max_value = 0;
+  if (milk_lactose_limits.length > 0) {
+    milk_lactose_limits_status = milk_lactose_limits[0].is_active_id;
+    milk_lactose_limits_min_value = milk_lactose_limits[0].min_value;
+    milk_lactose_limits_max_value = milk_lactose_limits[0].max_value;
+  }
+
+  // validate milk fat
+  let milk_fat_limits = limitParameters.filter(obj => obj.category === 'milk_fat_limits');
+  let milk_fat_limits_status = false;
+  let milk_fat_limits_min_value = 0;
+  let milk_fat_limits_max_value = 0;
+  if (milk_fat_limits.length > 0) {
+    milk_fat_limits_status = milk_fat_limits[0].is_active_id;
+    milk_fat_limits_min_value = milk_fat_limits[0].min_value;
+    milk_fat_limits_max_value = milk_fat_limits[0].max_value;
+  }
+
+  // validate milk protein
+  let milk_protein_limits = limitParameters.filter(obj => obj.category === 'milk_protein_limits');
+  let milk_protein_limits_status = false;
+  let milk_protein_limits_min_value = 0;
+  let milk_protein_limits_max_value = 0;
+  if (milk_protein_limits.length > 0) {
+    milk_protein_limits_status = milk_protein_limits[0].is_active_id;
+    milk_protein_limits_min_value = milk_protein_limits[0].min_value;
+    milk_protein_limits_max_value = milk_protein_limits[0].max_value;
+  }
+
+  // validate milk urea
+  let milk_urea_limits = limitParameters.filter(obj => obj.category === 'milk_urea_limits');
+  let milk_urea_limits_status = false;
+  let milk_urea_limits_min_value = 0;
+  let milk_urea_limits_max_value = 0;
+  if (milk_urea_limits.length > 0) {
+    milk_urea_limits_status = milk_urea_limits[0].is_active_id;
+    milk_urea_limits_min_value = milk_urea_limits[0].min_value;
+    milk_urea_limits_max_value = milk_urea_limits[0].max_value;
+  }
+
+  // validate somatic cell count
+  let milk_somatic_cell_count_limits = limitParameters.filter(obj => obj.category === 'milk_somatic_cell_count_limits');
+  let milk_somatic_cell_count_limits_status = false;
+  let milk_somatic_cell_count_limits_min_value = 0;
+  let milk_somatic_cell_count_limits_max_value = 0;
+  if (milk_somatic_cell_count_limits.length > 0) {
+    milk_somatic_cell_count_limits_status = milk_somatic_cell_count_limits[0].is_active_id;
+    milk_somatic_cell_count_limits_min_value = milk_somatic_cell_count_limits[0].min_value;
+    milk_somatic_cell_count_limits_max_value = milk_somatic_cell_count_limits[0].max_value;
+  }
 
   //local settings  
   const milk_unit = localSettings.filter(obj => obj.name === 'MILK_UNIT');
   const milk_unit_value = (milk_unit.length > 0) ? milk_unit[0].value : "ltrs";
+
+  const weight_unit = localSettings.filter(obj => obj.name === 'WEIGHT_UNIT');
+  const weight_unit_value = (weight_unit.length > 0) ? weight_unit[0].value : "kg";
+
+  const urea_unit = localSettings.filter(obj => obj.name === 'UREA_UNIT');
+  const urea_unit_value = (urea_unit.length > 0) ? urea_unit[0].value : "mg/dl";
+
+  const somatic_cell_count = localSettings.filter(obj => obj.name === 'SOMATIC_CELL_COUNT');
+  const somatic_cell_count_value = (somatic_cell_count.length > 0) ? somatic_cell_count[0].value : "cells/ml";
+
 
   const handleChange = event => {
     event.persist();
@@ -263,6 +349,13 @@ const Milking = props => {
       // Do nothing: Invalid option
     }
   };
+
+  const handleQualitySwitchChange = event => {
+    event.persist();
+    setQualityFieldsView(!quality_fields_view);
+  };
+
+  console.log(values);
 
 
   return (
@@ -324,7 +417,7 @@ const Milking = props => {
                       shrink: true,
                     }}
 
-                    margin='dense'
+                  
                     onChange={handleChange}
                     label="Tag ID"
                     name="animal_tag_id"
@@ -344,7 +437,7 @@ const Milking = props => {
                       shrink: true,
                     }}
 
-                    margin='dense'
+                  
                     type="date"
                     onChange={handleChange}
                     label="Milk Date"
@@ -363,18 +456,19 @@ const Milking = props => {
                   <TextField
                     fullWidth
                     InputLabelProps={{
-                      shrink: true
+                      shrink: true,
                     }}
 
-                    //required
-                    margin='dense'
+                  
+                    type="date"
                     onChange={handleChange}
-                    label="Lactation ID"
+                    label="Dry Date"
+                    name="dry_date"
+                    value={values.dry_date}
                     variant="outlined"
-                    name="lactation_id"
-                    value={values.lactation_id}
                   />
                 </Grid>
+               
                 <Grid
                   item
                   md={3}
@@ -391,7 +485,7 @@ const Milking = props => {
                       disabled: true
                     }}
                     //required
-                    margin='dense'
+                  
                     onChange={handleChange}
                     label="Lactation Number"
                     variant="outlined"
@@ -415,7 +509,7 @@ const Milking = props => {
                       max: (milk_amount_limits_status) ? milk_amount_limits_max_value : "any",
                       step: "any"
                     }}
-                    margin='dense'
+                  
                     type="number"
                     onChange={handleChange}
                     label={`Amount Morning (${milk_unit_value})`}
@@ -441,7 +535,7 @@ const Milking = props => {
                       step: "any"
                     }}
 
-                    margin='dense'
+                  
                     type="number"
                     onChange={handleChange}
                     label={`Amount Noon (${milk_unit_value})`}
@@ -452,7 +546,6 @@ const Milking = props => {
 
                 </Grid>
 
-
                 <Grid
                   item
                   md={3}
@@ -463,23 +556,227 @@ const Milking = props => {
                     InputLabelProps={{
                       shrink: true,
                     }}
-
                     inputProps={{
                       min: (milk_amount_limits_status) ? milk_amount_limits_min_value : "any",
                       max: (milk_amount_limits_status) ? milk_amount_limits_max_value : "any",
                       step: "any"
                     }}
                     type="number"
-                    margin='dense'
+                  
                     onChange={handleChange}
                     label={`Amount Afternoon (${milk_unit_value})`}
                     name="amount_afternoon"
                     value={values.amount_afternoon}
                     variant="outlined"
                   />
-
                 </Grid>
 
+                <Grid
+                    item
+                    md={12}
+                    xs={12}
+                  >
+
+                    <Box>
+                      <Typography variant="h6">{quality_fields_view ? "Discard/Hide Milk Quality Attributes" : "Capture Milk Quality Attributes"} </Typography>
+                    </Box>
+                    <Box>
+                      <Switch
+                        className={classes.toggle}
+                        checked={quality_fields_view}
+                        color="secondary"
+                        edge="start"
+                        onChange={handleQualitySwitchChange}
+                      />
+                    </Box>
+                  </Grid>
+
+
+                <Grid item md={12} xs={12}>
+                    <Box>
+                      {quality_fields_view ?
+                        <Grid container spacing={3}>
+                          <Grid
+                            item
+                            md={3}
+                            xs={12}
+                          >
+                            <TextField
+                              fullWidth
+                              InputLabelProps={{
+                                shrink: true,
+                              }}
+                              label="Milk Sample Type"
+                              name="milk_sample_type"
+                              onChange={handleChange}
+                              default=""
+                              select
+                              // eslint-disable-next-line react/jsx-sort-props
+                              SelectProps={{ native: true }}
+                              variant="outlined"
+                              value={values.milk_sample_type}
+                            >
+                              <option value=""></option>
+                              {sample_types.map(sample_type => (
+                                <option
+                                  value={sample_type.id}
+                                >
+                                  {sample_type.value}
+                                </option>
+                              ))
+                              }
+                            </TextField>
+                          </Grid>
+                          <Grid
+                            item
+                            md={3}
+                            xs={12}
+                          >
+                            <TextField
+                              fullWidth
+                              InputLabelProps={{
+                                shrink: true,
+                              }}
+                              label={`Milk Weight (${weight_unit_value})`}
+                              name="milk_Weight"
+                              onChange={handleChange}
+                              variant="outlined"
+                              type="number"
+                              value={values.milk_Weight === 0 ? null : values.milk_Weight}
+                            />
+                          </Grid>
+
+                          <Grid
+                            item
+                            md={3}
+                            xs={12}
+                          >
+                            <TextField
+                              fullWidth
+                              InputLabelProps={{
+                                shrink: true,
+                              }}
+                              inputProps={{
+                                min: (milk_fat_limits_status) ? milk_fat_limits_min_value : "any",
+                                max: (milk_fat_limits_status) ? milk_fat_limits_max_value : "any",
+                                step: "any"
+                              }}
+
+                              label="Milk Butter Fat(%)"
+                              name="milk_butter_fat"
+                              onChange={handleChange}
+                              variant="outlined"
+                              type="number"
+                              value={values.milk_butter_fat === 0 ? null : values.milk_butter_fat}
+                            />
+                          </Grid>
+
+                          <Grid
+                            item
+                            md={3}
+                            xs={12}
+                          >
+                            <TextField
+                              fullWidth
+                              InputLabelProps={{
+                                shrink: true,
+                              }}
+                              inputProps={{
+                                min: (milk_lactose_limits_status) ? milk_lactose_limits_min_value : "any",
+                                max: (milk_lactose_limits_status) ? milk_lactose_limits_max_value : "any",
+                                step: "any"
+                              }}
+
+                              label="Milk Lactose(%)"
+                              name="milk_lactose"
+                              onChange={handleChange}
+                              variant="outlined"
+                              type="number"
+                              value={values.milk_lactose === 0 ? null : values.milk_lactose}
+                            />
+                          </Grid>
+
+                          <Grid
+                            item
+                            md={3}
+                            xs={12}
+                          >
+                            <TextField
+                              fullWidth
+                              InputLabelProps={{
+                                shrink: true,
+                              }}
+                              inputProps={{
+                                min: (milk_protein_limits_status) ? milk_protein_limits_min_value : "any",
+                                max: (milk_protein_limits_status) ? milk_protein_limits_max_value : "any",
+                                step: "any"
+                              }}
+
+                              label="Milk Protein(%)"
+                              name="milk_protein"
+                              onChange={handleChange}
+                              variant="outlined"
+                              type="number"
+                              value={values.milk_protein === 0 ? null : values.milk_protein}
+                            />
+                          </Grid>
+
+
+                          <Grid
+                            item
+                            md={3}
+                            xs={12}
+                          >
+                            <TextField
+                              fullWidth
+                              InputLabelProps={{
+                                shrink: true,
+                              }}
+                              inputProps={{
+                                min: (milk_urea_limits_status) ? milk_urea_limits_min_value : "any",
+                                max: (milk_urea_limits_status) ? milk_urea_limits_max_value : "any",
+                                step: "any"
+                              }}
+
+                              label={`Milk Urea (${urea_unit_value})`}
+                              name="milk_urea"
+                              onChange={handleChange}
+                              variant="outlined"
+                              type="number"
+                              value={values.milk_urea === 0 ? null : values.milk_urea}
+                            />
+                          </Grid>
+
+                          <Grid
+                            item
+                            md={6}
+                            xs={12}
+                          >
+                            <TextField
+                              fullWidth
+                              InputLabelProps={{
+                                shrink: true,
+                              }}
+                              inputProps={{
+                                min: (milk_somatic_cell_count_limits_status) ? milk_somatic_cell_count_limits_min_value : "any",
+                                max: (milk_somatic_cell_count_limits_status) ? milk_somatic_cell_count_limits_max_value : "any"
+                              }}
+
+                              label={`Somatic Cell Count(${somatic_cell_count_value})`}
+                              name="milk_somatic_cell_count"
+                              onChange={handleChange}
+                              variant="outlined"
+                              type="number"
+                              value={values.milk_somatic_cell_count === 0 ? null : values.milk_somatic_cell_count}
+                            />
+                          </Grid>
+
+                        </Grid>
+                        : null
+                      }
+                    </Box>
+                  </Grid>
+               
                 <Grid
                   item
                   md={3}
@@ -494,53 +791,7 @@ const Milking = props => {
                       readOnly: true,
                       disabled: true
                     }}
-                    margin='dense'
-                    onChange={handleChange}
-                    label="Days In Milk"
-                    name="days_in_milk"
-                    value={values.days_in_milk}
-                    variant="outlined"
-                  />
-                </Grid>
-
-                <Grid
-                  item
-                  md={3}
-                  xs={12}
-                >
-                  <TextField
-                    fullWidth
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-                    inputProps={{
-                      readOnly: true,
-                      disabled: true
-                    }}
-                    margin='dense'
-                    onChange={handleChange}
-                    label="Test Day No"
-                    name="test_day_no"
-                    value={values.test_day_no}
-                    variant="outlined"
-                  />
-                </Grid>
-
-                <Grid
-                  item
-                  md={3}
-                  xs={12}
-                >
-                  <TextField
-                    fullWidth
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-                    inputProps={{
-                      readOnly: true,
-                      disabled: true
-                    }}
-                    margin='dense'
+                  
                     onChange={handleChange}
                     label="Created By"
                     name="created_by"
@@ -564,7 +815,7 @@ const Milking = props => {
                       readOnly: true,
                       disabled: true
                     }}
-                    margin='dense'
+                  
                     onChange={handleChange}
                     label='Created Date'
                     name="created_date"
@@ -588,8 +839,6 @@ const Milking = props => {
                       readOnly: true,
                       disabled: true
                     }}
-
-                    margin='dense'
                     label="Time Created"
                     name="created_time"
                     value={values.created_time}

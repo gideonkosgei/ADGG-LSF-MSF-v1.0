@@ -138,6 +138,8 @@ export const authenticate = function (config, username, password) {
     params: data
   }
 
+  console.log(options);
+
 
   return new Promise((resolve, reject) => {
     axios(options)

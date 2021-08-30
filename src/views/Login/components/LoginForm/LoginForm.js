@@ -108,6 +108,7 @@ const LoginForm = props => {
 
     authenticate(endpoint_user_authentication,username,password)  
       .then((userData) => {
+        console.log(userData);
        let is_active = true; 
        let is_admin = false; 
        if (userData.payload[0].length ===1){
