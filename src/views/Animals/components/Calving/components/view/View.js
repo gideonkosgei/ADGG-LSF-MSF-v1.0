@@ -134,8 +134,6 @@ const Edit = () => {
     }
   };
 
-  console.log(values);
-
   return (
     <Page
       className={classes.root}

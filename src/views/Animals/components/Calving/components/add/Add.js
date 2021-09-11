@@ -3,8 +3,8 @@ import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import { Card, Box, Typography, Fab, CircularProgress, Switch, CardContent, CardHeader, Grid, Divider, TextField, colors, Button, CardActions } from '@material-ui/core';
-import { getLookups, postCalving, getAgents, getParametersLimitAll, getLactationNumber, genericFunctionFourParameters } from '../../../../../../utils/API';
-import { endpoint_lookup, endpoint_calving_add, endpoint_agent, endpoint_parameter_limit_all, endpoint_get_lactation_number, endpoint_dp_validations } from '../../../../../../configs/endpoints';
+import { getLookups, genericFunctionThreeParameters, postCalving, getAgents, getParametersLimitAll, getLactationNumber, genericFunctionFourParameters } from '../../../../../../utils/API';
+import { endpoint_lookup, endpoint_gen_tag_id, endpoint_calving_add, endpoint_agent, endpoint_parameter_limit_all, endpoint_get_lactation_number, endpoint_dp_validations } from '../../../../../../configs/endpoints';
 import authContext from '../../../../../../contexts/AuthContext';
 import { Sidebar } from '../index';
 import moment from 'moment';
@@ -85,6 +85,10 @@ const Edit = props => {
   const [uses_of_calf, setCalfUses] = useState([]);
   const [agents, setAgents] = useState([]);
   const [lactation_number, setLactationNo] = useState(null);
+  const [tag, setTag] = useState(null);
+  const [tag2, setTag2] = useState(null);
+  const [tagInputStatus, setTagInputStatus] = useState(false);
+  const [tagInputStatus2, setTagInputStatus2] = useState(false);
   const [validations, setValidations] = useState([]);
   const [override, setOverride] = useState(false);
   const [limitParameters, setBodyLimitParameters] = useState([]);
@@ -100,6 +104,7 @@ const Edit = props => {
   const buttonClassname = clsx({
     [classes.buttonSuccess]: success,
   });
+
 
   useEffect(() => {
     let mounted_lookup = true;
@@ -271,18 +276,73 @@ const Edit = props => {
     setValues({
       ...values,
       [event.target.name]: event.target.type === 'checkbox' ? event.target.checked : event.target.value
-
     });
+
+    if (event.target.name === 'tag_id_option') {
+
+      setTag('');
+
+      if (parseInt(event.target.value) === 1) {
+        setTagInputStatus(false); /** enable input on tag id field */
+      } else {
+        setTagInputStatus(true); /** disable input on tag id field */
+
+        if (parseInt(event.target.value) === 2) {
+          (async (endpoint, desc, org) => {
+            await genericFunctionThreeParameters(endpoint, desc, org)
+              .then(response => {
+                setTag(response.payload[0].tag_id);
+              });
+          })(endpoint_gen_tag_id, 'gen tag id', organization_id);
+
+        }
+
+      }
+
+    }
+
+    if (event.target.name === 'calf_tag_id_input') {
+      setTag(event.target.value);
+    }
+
+    if (event.target.name === 'tag_id_option2') {
+
+      setTag2('');
+
+      if (parseInt(event.target.value) === 1) {
+        setTagInputStatus2(false); /** enable input on tag id field */
+      } else {
+        setTagInputStatus2(true); /** disable input on tag id field */
+
+        if (parseInt(event.target.value) === 2) {
+          (async (endpoint, desc, org) => {
+            await genericFunctionThreeParameters(endpoint, desc, org)
+              .then(response => {
+                setTag2(response.payload[0].tag_id);
+              });
+          })(endpoint_gen_tag_id, 'gen tag id', organization_id);
+
+        }
+
+      }
+
+    }
+
+    if (event.target.name === 'calf_tag_id_input2') {
+      setTag2(event.target.value);
+    }
+
   };
 
   const handleSubmit = event => {
+
     event.preventDefault();
     if (!loading) {
       setSuccess(false);
       setLoading(true);
     }
-    (async (endpoint, id, values, user_id, lactation_number) => {
-      await postCalving(endpoint, id, values, user_id, lactation_number)
+    (async (endpoint, id, values, user_id, lactation_number, tag_id_1, tag_id_2) => {
+      await postCalving(endpoint, id, values, user_id, lactation_number, tag_id_1, tag_id_2)
         .then((response) => {
 
           setOutput({ status: null, message: '' });
@@ -303,9 +363,7 @@ const Edit = props => {
           setSuccess(false);
           setLoading(false);
         });
-    })(endpoint_calving_add, animal_id, values, user_id, values.lactation_number);
-
-    
+    })(endpoint_calving_add, animal_id, values, user_id, values.lactation_number, tag, tag2);
   };
 
 
@@ -369,7 +427,6 @@ const Edit = props => {
                               max: moment(new Date()).format('YYYY-MM-DD')
                             }}
                             required
-
                             label="Calving Date"
                             type="date"
                             name="calving_date"
@@ -643,24 +700,84 @@ const Edit = props => {
                                         )
                                         ?
                                         <>
+
                                           <Grid
                                             item
                                             md={3}
                                             xs={12}
                                           >
+
                                             <TextField
                                               fullWidth
                                               InputLabelProps={{
                                                 shrink: true,
                                               }}
                                               required={parseInt(values.calving_status) === 1 ? true : false}
-                                              label="Calf Tag ID"
-                                              name="calf_tag_id"
+                                              label="Tag Option"
+                                              name="tag_id_option"
                                               onChange={handleChange}
+                                              default=""
+                                              select
+                                              SelectProps={{ native: true }}
                                               variant="outlined"
-
-                                            />
+                                            >
+                                              <option value=""></option>
+                                              <option value="1">Input</option>
+                                              <option value="2">Auto-generate</option>
+                                            </TextField>
                                           </Grid>
+
+                                          {parseInt(values.tag_id_option) === 1 &&
+
+                                            <Grid
+                                              item
+                                              md={3}
+                                              xs={12}
+                                            >
+                                              <TextField
+                                                fullWidth
+                                                InputLabelProps={{
+                                                  shrink: true,
+                                                }}
+                                                inputProps={{
+                                                  readOnly: Boolean(tagInputStatus),
+                                                  disabled: Boolean(tagInputStatus)
+                                                }}
+                                                required={(parseInt(values.calving_status) === 1 && parseInt(values.tag_id_option) === 1) ? true : false}
+                                                label="Calf Tag ID"
+                                                name="calf_tag_id_input"
+                                                onChange={handleChange}
+                                                variant="outlined"
+                                              />
+                                            </Grid>
+                                          }
+
+
+                                          {parseInt(values.tag_id_option) === 2 &&
+                                            <Grid
+                                              item
+                                              md={3}
+                                              xs={12}
+                                            >
+                                              <TextField
+                                                fullWidth
+                                                InputLabelProps={{
+                                                  shrink: true,
+                                                }}
+                                                inputProps={{
+                                                  readOnly: Boolean(tagInputStatus),
+                                                  disabled: Boolean(tagInputStatus)
+                                                }}
+                                                required={(parseInt(values.calving_status) === 1 && parseInt(values.tag_id_option) === 2) ? true : false}
+                                                label="Calf Tag ID"
+                                                name="calf_tag_id_auto"
+                                                onChange={handleChange}
+                                                variant="outlined"
+                                                value={tag}
+
+                                              />
+                                            </Grid>
+                                          }
 
                                           <Grid
                                             item
@@ -1084,31 +1201,92 @@ const Edit = props => {
                                         )
                                         ?
                                         <>
+
                                           <Grid
                                             item
                                             md={3}
                                             xs={12}
                                           >
+
                                             <TextField
                                               fullWidth
                                               InputLabelProps={{
                                                 shrink: true,
                                               }}
                                               required={parseInt(values.calving_status2) === 1 ? true : false}
-
-                                              label="Calf Tag ID"
-                                              name="calf_tag_id2"
+                                              label="Tag Option"
+                                              name="tag_id_option2"
                                               onChange={handleChange}
+                                              default=""
+                                              select
+                                              SelectProps={{ native: true }}
                                               variant="outlined"
-                                            />
+                                            >
+                                              <option value=""></option>
+                                              <option value="1">Input</option>
+                                              <option value="2">Auto-generate</option>
+                                            </TextField>
                                           </Grid>
+
+                                          {parseInt(values.tag_id_option2) === 1 &&
+
+                                            <Grid
+                                              item
+                                              md={3}
+                                              xs={12}
+                                            >
+                                              <TextField
+                                                fullWidth
+                                                InputLabelProps={{
+                                                  shrink: true,
+                                                }}
+                                                inputProps={{
+                                                  readOnly: Boolean(tagInputStatus2),
+                                                  disabled: Boolean(tagInputStatus2)
+                                                }}
+                                                required={(parseInt(values.calving_status2) === 1 && parseInt(values.tag_id_option2) === 1) ? true : false}
+                                                label="Calf Tag ID"
+                                                name="calf_tag_id_input2"
+                                                onChange={handleChange}
+                                                variant="outlined"
+                                              />
+                                            </Grid>
+                                          }
+
+
+
+                                          {parseInt(values.tag_id_option2) === 2 &&
+                                            <Grid
+                                              item
+                                              md={3}
+                                              xs={12}
+                                            >
+                                              <TextField
+                                                fullWidth
+                                                InputLabelProps={{
+                                                  shrink: true,
+                                                }}
+                                                inputProps={{
+                                                  readOnly: Boolean(tagInputStatus2),
+                                                  disabled: Boolean(tagInputStatus2)
+                                                }}
+                                                required={(parseInt(values.calving_status2) === 1 && parseInt(values.tag_id_option2) === 2) ? true : false}
+                                                label="Calf Tag ID"
+                                                name="calf_tag_id_auto2"
+                                                onChange={handleChange}
+                                                variant="outlined"
+                                                value={tag2}
+
+                                              />
+                                            </Grid>
+                                          }
+
                                           <Grid
                                             item
                                             md={3}
                                             xs={12}
                                           >
                                             <TextField
-                                              fullWidth
                                               InputLabelProps={{
                                                 shrink: true,
                                               }}
@@ -1332,7 +1510,7 @@ const Edit = props => {
                                                 max: (calf_weight_limits_status) ? calf_weight_limits_max_value : "any",
                                                 step: "any"
                                               }}
-                                             // required={parseInt(values.calving_status2) === 1 ? true : false}
+                                              // required={parseInt(values.calving_status2) === 1 ? true : false}
                                               type="number"
                                               label="Calf Weight(kg)"
                                               name="Calf_weight2"

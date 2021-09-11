@@ -143,6 +143,13 @@ export const endpoint_lookup = {
   headers: headers   
 }; 
 
+//generate temporary tag id
+export const endpoint_gen_tag_id = {
+  url: `${api}/parameters/tag-id`,
+  method: 'GET',
+  headers: headers   
+}; 
+
 //get lookup to populate combo boxes
 export const endpoint_herd = {
   url: `${api}/herds`,
