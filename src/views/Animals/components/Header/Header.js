@@ -60,7 +60,7 @@ const Header = props => {
                 className={classes.button}
                 startIcon={<PermIdentityIcon />}
               >
-                <Link style={{ textDecoration: 'none',textTransform: 'none' }} component = {RouterLink} to = {`/management/details/edit/${animal_id}/${farm_id}`}>
+                <Link style={{ textDecoration: 'none',textTransform: 'none' }} component = {RouterLink} to = {`/management/details/edit/${animal_id}/${farm_id}/0`}>
                   Bio
                 </Link>
               </Button>
