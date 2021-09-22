@@ -75,6 +75,7 @@ const Edit = props => {
   const [exitTypes, setExitTypes] = useState([]);   
   const animal_id  = localStorage.getItem('animal_id');
   const animal_tag  = sessionStorage.getItem('animal_tag');
+  const  dob = sessionStorage.getItem('animal_dob'); 
   const [countries, setCountries] = useState([]);
   const [regions, setRegions] = useState([]);
   const [districts, setDistricts] = useState([]);
@@ -293,10 +294,10 @@ const Edit = props => {
                         shrink: true,
                       }}
                       inputProps={{                        
-                        max: moment(new Date()).format('YYYY-MM-DD')                 
+                        max: moment(new Date()).format('YYYY-MM-DD'),
+                        min : dob                 
                       }} 
                       required
-                      
                       label = "Exit / Disposal Date"
                       type = "date"
                       name = "exit_date"                      

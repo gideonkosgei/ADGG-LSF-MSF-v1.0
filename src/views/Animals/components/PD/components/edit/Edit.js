@@ -80,7 +80,8 @@ const Edit = props => {
   const [readOnly, setReadOnly] = useState(true);
   const [openMetadata, setMetadata] = useState(false);  
   const event_id  = localStorage.getItem('pd_event_id'); 
-  const animal_tag  = sessionStorage.getItem('animal_tag');  
+  const animal_tag  = sessionStorage.getItem('animal_tag');
+  const  dob = sessionStorage.getItem('animal_dob');   
   const [agents, setAgents] = useState([]);
   const option  =  0;
   const [isLoading, setIsLoading] = useState(true);
@@ -275,10 +276,10 @@ const Edit = props => {
                       inputProps={{
                         readOnly: Boolean(readOnly),
                         disabled: Boolean(readOnly),
-                        max: moment(new Date()).format('YYYY-MM-DD')               
+                        max: moment(new Date()).format('YYYY-MM-DD'),
+                        min : dob               
                       }}
                       required
-                      
                       label="Examination Date"
                       type="date"
                       name="exam_date"                      

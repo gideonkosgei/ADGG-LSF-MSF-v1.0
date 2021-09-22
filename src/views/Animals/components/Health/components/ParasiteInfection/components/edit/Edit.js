@@ -79,6 +79,7 @@ const Edit = props => {
   const [openMetadata, setMetadata] = useState(false);  
   const record_id  = localStorage.getItem('parasite_infection_record_id'); 
   const animal_tag  = sessionStorage.getItem('animal_tag');  
+  const  dob = sessionStorage.getItem('animal_dob'); 
   const [agents, setAgents] = useState([]);
   const [healthStatus, setHealthStatus] = useState([]);
   const [healthProvider, setHealthProvider] = useState([]);
@@ -265,9 +266,9 @@ const Edit = props => {
                       inputProps={{  
                         readOnly: true,
                         disabled: true,                      
-                        max: moment(new Date()).format('YYYY-MM-DD')                 
+                        max: moment(new Date()).format('YYYY-MM-DD'),
+                        min : dob                 
                       }}                   
-                      
                       required
                       label="Date Of Treatment"
                       type="date"

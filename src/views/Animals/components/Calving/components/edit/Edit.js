@@ -94,6 +94,7 @@ const Edit = props => {
   const [agents, setAgents] = useState([]); 
   const record_id  = localStorage.getItem('calving_event_id'); 
   const animal_tag  = sessionStorage.getItem('animal_tag');
+  const  dob = sessionStorage.getItem('animal_dob'); 
   const option  =  0;
   const [isLoading, setIsLoading] = useState(true);
   const [output, setOutput] = useState({status:null, message:""}); 
@@ -367,11 +368,11 @@ const Edit = props => {
                     }}
                     inputProps={{                        
                       max: moment(new Date()).format('YYYY-MM-DD'),
+                      min : dob,
                       readOnly: Boolean(readOnly),
                       disabled: Boolean(readOnly)                 
                     }}                      
-                    required
-                   
+                    required                   
                     label = "Calving Date"
                     type = "date"
                     name = "calving_date"                      

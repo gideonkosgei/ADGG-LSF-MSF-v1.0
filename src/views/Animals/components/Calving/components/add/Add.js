@@ -94,6 +94,7 @@ const Edit = props => {
   const [limitParameters, setBodyLimitParameters] = useState([]);
   const animal_id = localStorage.getItem('animal_id');
   const animal_tag = sessionStorage.getItem('animal_tag');
+  const  dob = sessionStorage.getItem('animal_dob'); 
   const option = 0;
 
   const [loading, setLoading] = useState(false);
@@ -424,7 +425,8 @@ const Edit = props => {
                               shrink: true,
                             }}
                             inputProps={{
-                              max: moment(new Date()).format('YYYY-MM-DD')
+                              max: moment(new Date()).format('YYYY-MM-DD'),
+                              min : dob
                             }}
                             required
                             label="Calving Date"

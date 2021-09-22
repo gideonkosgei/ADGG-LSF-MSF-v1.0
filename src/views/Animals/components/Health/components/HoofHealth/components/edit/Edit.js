@@ -82,6 +82,7 @@ const Edit = props => {
   const [openMetadata, setMetadata] = useState(false);  
   const record_id  = sessionStorage.getItem('hoof_health_record_id'); 
   const animal_tag  = sessionStorage.getItem('animal_tag'); 
+  const  dob = sessionStorage.getItem('animal_dob'); 
   const option  =  0;
   const [isLoading, setIsLoading] = useState(true);
   const [output, setOutput] = useState({status:null, message:""}); 
@@ -258,9 +259,9 @@ const Edit = props => {
                       inputProps={{
                         readOnly: true,
                         disabled: true,
-                        max: moment(new Date()).format('YYYY-MM-DD')               
-                      }}               
-                      
+                        max: moment(new Date()).format('YYYY-MM-DD'),
+                        min : dob               
+                      }}             
                       required
                       label="Examination Date"
                       type="date"

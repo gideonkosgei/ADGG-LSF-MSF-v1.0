@@ -91,6 +91,7 @@ const Edit = props => {
   
   const animal_id  = localStorage.getItem('animal_id');
   const animal_tag  = sessionStorage.getItem('animal_tag');  
+  const  dob = sessionStorage.getItem('animal_dob'); 
 
   useEffect(() => {   
     let mounted_lookup = true;
@@ -270,10 +271,10 @@ const Edit = props => {
                           shrink: true,
                         }}
                         inputProps={{                        
-                          max: moment(new Date()).format('YYYY-MM-DD')                 
+                          max: moment(new Date()).format('YYYY-MM-DD'),
+                          min : dob                
                         }}
                         required
-                        
                         label="Examination Date"
                         type="date"
                         name="exam_date"                      

@@ -79,6 +79,7 @@ const Edit = props => {
   const [limitParameters, setBodyLimitParameters] = useState([]);   
   const event_id  = localStorage.getItem('event_id');
   const animal_tag  = sessionStorage.getItem('animal_tag'); 
+  const  dob = sessionStorage.getItem('animal_dob'); 
   const is_calf = parseInt(sessionStorage.getItem('animal_type')) === 3 || parseInt(sessionStorage.getItem('animal_type')) === 4 ? true : false;
   const [isLoading, setIsLoading] = useState(true);
   const [loading, setLoading] = useState(false);
@@ -286,7 +287,8 @@ const Edit = props => {
                       inputProps={{
                         readOnly: Boolean(readOnly),
                         disabled: Boolean(readOnly) ,                         
-                        max: moment(new Date()).format('YYYY-MM-DD')     
+                        max: moment(new Date()).format('YYYY-MM-DD'),
+                        min : dob     
                       }}
                       required                     
                       label="Weight Date"

@@ -79,7 +79,8 @@ const Edit = props => {
   const [readOnly, setReadOnly] = useState(true);
   const [openMetadata, setMetadata] = useState(false);  
   const record_id  = sessionStorage.getItem('vaccination_record_id'); 
-  const animal_tag  = sessionStorage.getItem('animal_tag'); 
+  const animal_tag  = sessionStorage.getItem('animal_tag');
+  const  dob = sessionStorage.getItem('animal_dob');  
   const [agents, setAgents] = useState([]);
   const [healthStatus, setHealthStatus] = useState([]);
   const [healthProvider, setHealthProvider] = useState([]);
@@ -304,10 +305,9 @@ const Edit = props => {
                       inputProps={{ 
                         readOnly: true,
                         disabled: true,                      
-                        max: moment(new Date()).format('YYYY-MM-DD')                 
+                        max: moment(new Date()).format('YYYY-MM-DD'),
+                        min : dob                
                       }}  
-                                      
-                      
                       required
                       label="Vaccination Date"
                       type="date"

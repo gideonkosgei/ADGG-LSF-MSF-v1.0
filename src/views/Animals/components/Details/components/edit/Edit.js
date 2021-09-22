@@ -234,6 +234,8 @@ const Edit = props => {
             sessionStorage.setItem('_dam_id', data.dam_id);
             sessionStorage.setItem('_sire_tag_id', data.sire_tag_id);
             sessionStorage.setItem('_dam_tag_id', data.dam_tag_id);
+            sessionStorage.setItem('animal_dob', data.dob);
+            
           }
         });
     })(endpoint_animal, 'get animal details -> animal id', 3, animal_id); /* option 3 -> get specific animal details */

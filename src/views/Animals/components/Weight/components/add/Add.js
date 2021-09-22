@@ -86,7 +86,6 @@ const Edit = props => {
     [classes.buttonSuccess]: success,
   });
 
-
   useEffect(() => {   
     let mounted_lookup = true;
     let mounted_limit_parameters = true; 

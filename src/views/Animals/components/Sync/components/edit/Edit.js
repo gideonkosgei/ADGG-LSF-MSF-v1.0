@@ -84,6 +84,7 @@ const Edit = props => {
   const [openMetadata, setMetadata] = useState(false);   
   const event_id  = localStorage.getItem('sync_event_id'); 
   const animal_tag  = sessionStorage.getItem('animal_tag');   
+  const  dob = sessionStorage.getItem('animal_dob'); 
   const [service_providers, setServiceProviders] = useState([]);
   const [agents, setAgents] = useState([]);
   const option  =  0;
@@ -293,7 +294,8 @@ const Edit = props => {
                       inputProps={{
                         readOnly: Boolean(readOnly),
                         disabled: Boolean(readOnly),
-                        max: moment(new Date()).format('YYYY-MM-DD')                 
+                        max: moment(new Date()).format('YYYY-MM-DD'),
+                        min : dob                 
                       }}                     
                       defaultValue = {moment(new Date()).format('YYYY-MM-DD')}
                       required

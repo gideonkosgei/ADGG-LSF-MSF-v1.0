@@ -85,6 +85,7 @@ const Edit = props => {
   const option = 0;
   const animal_id = localStorage.getItem('animal_id');
   const animal_tag = sessionStorage.getItem('animal_tag');
+  const dob = sessionStorage.getItem('animal_dob');
   const [straws, setStraws] = useState([]);
   const [countries, setCountries] = useState([]);
   const [override, setOverride] = useState(false);
@@ -366,7 +367,8 @@ const Edit = props => {
                               shrink: true,
                             }}
                             inputProps={{
-                              max: moment(new Date()).format('YYYY-MM-DD')
+                              max: moment(new Date()).format('YYYY-MM-DD'),
+                              min: dob
                             }}
                             required
                             label="Event Date"
