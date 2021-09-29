@@ -181,7 +181,6 @@ const Edit = props => {
     });
   };
 
-  
   const handleSubmit = event => {
     event.preventDefault();
     if (!loading) {

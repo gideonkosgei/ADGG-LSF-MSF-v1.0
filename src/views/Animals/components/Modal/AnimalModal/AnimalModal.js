@@ -78,6 +78,8 @@ const AnimalModal = props => {
     return null;
   }
 
+  console.log(values);
+
   const columns = [
     { name: "animal_id", label: "ID", options: { filter: false, sort: true, display: true } },
     { name: "tag_id", label: "TAG ID", options: { filter: false, sort: true, display: true } },

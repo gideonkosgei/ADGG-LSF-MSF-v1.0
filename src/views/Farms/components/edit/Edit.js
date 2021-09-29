@@ -328,7 +328,6 @@ const Edit = props => {
     setMetadata(false);
   };
 
-
   return (
     <Page
       className={classes.root}
@@ -698,6 +697,58 @@ const Edit = props => {
                         shrink: true,
                       }}
                       inputProps={{
+                        readOnly: Boolean(readOnly),
+                        disabled: Boolean(readOnly),
+                        max: 90,
+                        min:-90,
+                        step: "any"
+                      }}
+                      label="Latitude"
+                      type="number"
+                      name="latitude"
+                      value={values.latitude}
+                      onChange={handleChange}
+                      variant="outlined"
+                    />
+                  </Grid>
+                  <Grid
+                    item
+                    md={2}
+                    xs={12}
+                  >
+                    <TextField
+                      fullWidth
+                      InputLabelProps={{
+                        shrink: true,
+                      }}
+                      inputProps={{
+                        readOnly: Boolean(readOnly),
+                        disabled: Boolean(readOnly),
+                        max: 180,
+                        min:-180,
+                        step: "any"
+                      }}
+
+                      label="Longitude"
+                      type="number"
+                      name="longitude"
+                      value={values.longitude}
+                      onChange={handleChange}
+                      variant="outlined"
+                    />
+                  </Grid>
+                
+                  <Grid
+                    item
+                    md={2}
+                    xs={12}
+                  >
+                    <TextField
+                      fullWidth
+                      InputLabelProps={{
+                        shrink: true,
+                      }}
+                      inputProps={{
                         readOnly: true,
                         disabled: true,
                         max: moment(new Date()).format('YYYY-MM-DD')
@@ -711,6 +762,8 @@ const Edit = props => {
                       variant="outlined"
                     />
                   </Grid>
+                
+                
                 </Grid>
               </CardContent>
               <CardActions>

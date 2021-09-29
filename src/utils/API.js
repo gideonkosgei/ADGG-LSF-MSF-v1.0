@@ -3672,8 +3672,6 @@ export const resetPassword = function (config, values) {
     data: body
   };
 
-
-
   return new Promise((resolve, reject) => {
     axios(options)
       .then(res => {
@@ -4023,7 +4021,7 @@ export const putHerd = function (config, values, user_id, org) {
 //post farm
 export const postFarm = function (config, values, user_id, org_id) {
 
-  let { country, district, email, farm_code, farm_type, farm_name, farmer_name, phone, region, village, ward } = values;
+  let { country, district, email, farm_code, farm_type, farm_name, farmer_name, phone, region, village, ward,longitude,latitude } = values;
 
   country = (typeof country === 'undefined' || country === '') ? null : country
   district = (typeof district === 'undefined' || district === '') ? null : district;
@@ -4036,6 +4034,8 @@ export const postFarm = function (config, values, user_id, org_id) {
   farm_name = (typeof farm_name === 'undefined' || farm_name === '') ? null : farm_name;
   farmer_name = (typeof farmer_name === 'undefined' || farmer_name === '') ? null : farmer_name;
   phone = (typeof phone === 'undefined' || phone === '') ? null : phone;
+  latitude = (typeof latitude === 'undefined' || latitude === '') ? null : latitude;
+  longitude = (typeof longitude === 'undefined' || longitude === '') ? null : longitude;
 
   const body = {
     "country": country,
@@ -4050,7 +4050,9 @@ export const postFarm = function (config, values, user_id, org_id) {
     "farm_type": farm_type,
     "farm_name": farm_name,
     "farmer_name": farmer_name,
-    "phone": phone
+    "phone": phone,
+    "longitude":longitude,
+    "latitude":latitude
   };
   const options = {
     url: `${config.url}`,
@@ -4071,7 +4073,7 @@ export const postFarm = function (config, values, user_id, org_id) {
 //update farm
 export const putFarm = function (config, values, user_id, org) {
 
-  let { country, district, email, farm_code, farm_type, farm_name, farmer_name, phone, region, village, ward, reg_date, id } = values;
+  let { country, district, email, farm_code, farm_type, farm_name, farmer_name, phone, region, village, ward, reg_date, id,latitude,longitude } = values;
 
   country = (typeof country === 'undefined' || country === '') ? null : country
   district = (typeof district === 'undefined' || district === '') ? null : district;
@@ -4086,6 +4088,8 @@ export const putFarm = function (config, values, user_id, org) {
   phone = (typeof phone === 'undefined' || phone === '') ? null : phone;
   reg_date = (typeof reg_date === 'undefined' || reg_date === '') ? null : reg_date;
   id = (typeof id === 'undefined' || id === '') ? null : id;
+  latitude = (typeof latitude === 'undefined' || latitude === '') ? null : latitude;
+  longitude = (typeof longitude === 'undefined' || longitude === '') ? null : longitude;
 
   const body = {
     "farm_id": id,
@@ -4102,7 +4106,9 @@ export const putFarm = function (config, values, user_id, org) {
     "farm_name": farm_name,
     "farmer_name": farmer_name,
     "phone": phone,
-    "reg_date": reg_date
+    "reg_date": reg_date,
+    "longitude":longitude,
+    "latitude":latitude
   };
 
   const options = {
