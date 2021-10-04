@@ -26,7 +26,7 @@ const Header = props => {
 
         <Tooltip title="Home">
           <IconButton aria-label="home" size="small" >
-            <Link component={RouterLink} to={`/management/farms`}>
+            <Link component={RouterLink} to={`/management/farms/view/0`}>
               <HomeIcon />
             </Link>
           </IconButton>
@@ -34,7 +34,7 @@ const Header = props => {
 
         <Tooltip title="view">
           <IconButton aria-label="view" size="small" >
-            <Link component={RouterLink} to={`/management/farms`}>
+            <Link component={RouterLink} to={`/management/farms/view/0`}>
               <ListIcon />
             </Link>
           </IconButton>

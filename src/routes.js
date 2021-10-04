@@ -353,8 +353,15 @@ const routes = [
         exact: true,
         component: lazy(() => import('views/Farms/components/add'))        
       },
+
       {
         path: '/management/farms/edit/:id',
+        exact: true,
+        component: lazy(() => import('views/Farms/components/edit'))        
+      },
+
+      {
+        path: '/management/farms/edit/:id/:farm_name/:tab',
         exact: true,
         component: lazy(() => import('views/Farms/components/edit'))        
       },

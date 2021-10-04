@@ -147,7 +147,7 @@ const Edit = props => {
           return (
             <Link
               component={RouterLink}
-              to={`/management/farms/edit/${tableMeta.rowData[0]}`}
+              to={`/management/farms/edit/${tableMeta.rowData[0]}/${tableMeta.rowData[1]}/details`}
             >
               <OpenInNewIcon />
             </Link>
