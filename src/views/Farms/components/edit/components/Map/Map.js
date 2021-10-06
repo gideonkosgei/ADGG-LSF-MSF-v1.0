@@ -72,8 +72,8 @@ const Map = props => {
 
   const defaultProps = {
     center: {
-      lat: 59.95,
-      lng: 30.33
+      lat: -1.28,
+      lng: 36.81
     },
     zoom: 11
   };

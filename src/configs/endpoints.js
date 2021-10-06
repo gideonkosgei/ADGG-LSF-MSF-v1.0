@@ -1138,6 +1138,20 @@ export const endpoint_delink_farm_unit = {
   headers: headers   
 }; 
 
+//fetch waether data
+export const endpoint_weather = {
+  url: `${api}/weather`,
+  method: 'GET',
+  headers: headers   
+};  
+
+//endpoint to nasa power api
+export const endpoint_nasa_power = {
+  url: `${api}/nasa-power`,
+  method: 'GET',
+  headers: headers   
+};  
+
 
 
 

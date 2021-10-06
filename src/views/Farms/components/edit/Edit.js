@@ -28,6 +28,7 @@ const Edit = props => {
   const classes = useStyles();
   const { tab,id,farm_name } = match.params; 
 
+
   const handleTabsChange = (event, value) => {
     history.push(value);
   };
@@ -77,9 +78,9 @@ const Edit = props => {
       </Tabs>
       <Divider className={classes.divider} />
       <div className={classes.content}>
-        {tab === 'details' && <Details farm_id = {id}/>}       
-        {tab === 'map' && <Map farm_id = {id}/>}
-        {tab === 'weather' && <Weather farm_id = {id} />}
+        {tab === 'details' && <Details farm_id = {parseInt(id)}/>}       
+        {tab === 'map' && <Map farm_id = {parseInt(id)}/>}
+        {tab === 'weather' && <Weather farm_id = {parseInt(id)} />}
       </div>
     </Page>
   );

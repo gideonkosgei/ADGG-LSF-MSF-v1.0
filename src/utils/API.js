@@ -30,13 +30,11 @@ export const genericFunctionTwoParameters = function (param1, param2) {
 
 /*  GENERIC 3 PARAMETERS  */
 export const genericFunctionThreeParameters = function (param1, param2, param3) {
-  // console.log(param2);  
   const options = {
     url: `${param1.url}/${param3}`,
     method: param1.method,
     headers: param1.headers
   }
-
   return new Promise((resolve, reject) => {
     axios(options)
       .then(res => {
@@ -69,7 +67,6 @@ export const genericFunctionFiveParameters = function (param1, param2, param3, p
     method: param1.method,
     headers: param1.headers
   }
-
   return new Promise((resolve, reject) => {
     axios(options)
       .then(res => {
