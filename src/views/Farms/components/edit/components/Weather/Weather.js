@@ -159,8 +159,9 @@ const Weather = props => {
               setIsLoading(false);
               setData(response.payload);
 
+
               if (parseInt(response.payload[0].period) === 0) {
-                setOutput({ status: 0, message: 'Data not found. Reasons for this may include: (1) Location details not set (2) Invalid location details (3) Outdated data - Invoke NASA POWER API  ' });
+                setOutput({ status: 0, message: 'Data not found. Reasons for this may include: (1) Location details not set (2) Invalid location details (3) Outdated data - Invoke NASA POWER API' });
               }
 
             }, 500);
@@ -222,7 +223,7 @@ const Weather = props => {
 
 
   const columns = [
-    { name: "period", label: "PERIOD/DATE", options: { filter: false, sort: false, display: true } },
+    { name: "period", label: "PERIOD/DATE", options: { filter: false, sort: true, display: true } },
     { name: "T2M", label: "AVERAGE TEMPERATURE", options: { filter: false, sort: true, display: true } },
     { name: "T2M_MAX", label: "MAXIMUM TEMPERATURE", options: { filter: false, sort: true, display: true } },
     { name: "T2M_MIN", label: "MINUMUM TEMPERATURE", options: { filter: false, sort: true, display: true } },
@@ -332,7 +333,7 @@ const Weather = props => {
               <option value=""></option>
               <option value="1">Daily</option>
               <option value="2">Monthly</option>
-              <option value="3">Anually</option>
+              <option value="3">Yearly</option>
 
             </TextField>
           </Grid>
@@ -491,7 +492,7 @@ const Weather = props => {
           >
 
             <Box>
-              <Typography variant="h6">{showDataTableSection ? "Hide Data Tables" : "View Data Tables"} </Typography>
+              <Typography variant="h6">{showDataTableSection ? "Hide Data Tables" : "Show Data Tables"} </Typography>
             </Box>
             <Box>
               <Switch
