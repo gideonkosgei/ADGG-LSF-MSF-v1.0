@@ -355,6 +355,7 @@ const Weather = props => {
               {loading && <CircularProgress size={68} className={classes.fabProgress} />}
             </div>
           </Grid>
+          
         </Grid>
       </form>
       <form onSubmit={handleSubmitApiCall} >

@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useContext } from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
+
 import { makeStyles } from '@material-ui/styles';
-import { Button, Typography, Fab, Card, CardActions, CircularProgress, CardContent, Grid, Divider, TextField, colors, IconButton } from '@material-ui/core';
+import { Chip, Button, Typography, Fab, Card, CardActions, CircularProgress, CardContent, Grid, Divider, TextField, colors, IconButton } from '@material-ui/core';
 import { getLookups, genericFunctionFourParameters, genericFunctionFiveParameters, postAnimalRegistration, genericFunctionTwoParameters } from '../../../../utils/API';
 import { endpoint_lookup, endpoint_farms, endpoint_herd, endpoint_animal_add, endpoint_countries_all } from '../../../../configs/endpoints';
 import authContext from '../../../../contexts/AuthContext';
@@ -15,6 +16,8 @@ import { Page } from 'components';
 import { green } from '@material-ui/core/colors';
 import CheckIcon from '@material-ui/icons/Check';
 import SaveIcon from '@material-ui/icons/Save';
+import { MultiSelect } from '../../../../components';
+import CloseIcon from '@material-ui/icons/Close';
 
 
 const useStyles = makeStyles(theme => ({
@@ -58,7 +61,24 @@ const useStyles = makeStyles(theme => ({
     left: '50%',
     marginTop: -12,
     marginLeft: -12,
-  }
+  },
+  chips: {
+    padding: theme.spacing(2),
+    display: 'flex',
+    alignItems: 'center',
+    flexWrap: 'wrap'
+  },
+  chip: {
+    margin: theme.spacing(1)
+  },
+  selects: {
+    display: 'flex',
+    alignItems: 'center',
+    flexWrap: 'wrap',
+    backgroundColor: colors.grey[50],
+    padding: theme.spacing(1)
+  },
+
 }));
 
 const AnimalDetails = props => {
@@ -84,7 +104,38 @@ const AnimalDetails = props => {
   const [parent, setParent] = useState(null);
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
-  const timer = React.useRef();
+
+  const [deformatiesValueAttribute, setDeformatiesValueAttribute] = useState([]);
+  const [colorsValueAttribute, setColorsValueAttribute] = useState([]);
+  const [chipsDeformaties, setChipsDeformaties] = useState([]);
+  const [chipsColor, setChipsColor] = useState([]);
+
+  function key_value_array_search (option,array_search_values, array_search_terms) {
+    /**
+     * option 1 > get keys based on values
+     * option 2 > get values based on keys
+     */
+    let results = [];
+    
+    if (option ===1){
+      if(array_search_values.length > 0){
+        if (array_search_terms.length > 0){
+          for (let i =0; i<array_search_terms.length; i++){
+            results.push(array_search_values.find(x => x.value === array_search_terms[i]).id)
+          }      
+        } 
+      } 
+    } else {
+      if(array_search_values.length > 0){
+        if (array_search_terms.length > 0){
+          for (let i =0; i<array_search_terms.length; i++){
+            results.push(array_search_values.find(x => x.value === array_search_terms[i]).id)
+          }      
+        } 
+      }
+    }
+    return results;   
+  }  
 
   let _sire_id = sessionStorage.getItem('_sire_id');
   let _dam_id = sessionStorage.getItem('_dam_id');
@@ -93,6 +144,8 @@ const AnimalDetails = props => {
     [classes.buttonSuccess]: success,
   });
 
+  const timer = React.useRef();
+
   useEffect(() => {
     let mounted_lookup = true;
     let mounted_herds = true;
@@ -100,7 +153,6 @@ const AnimalDetails = props => {
     let mounted_countries = true;
     sessionStorage.setItem('_sire_id', '');
     sessionStorage.setItem('_dam_id', '');
-
 
     (async (endpoint, desc, _option, _id) => {
       await genericFunctionFourParameters(endpoint, desc, _option, _id)
@@ -177,6 +229,17 @@ const AnimalDetails = props => {
             setSireTypes(lookup_sire_types);
             setEntryTypes(lookup_entry_types);
             setDeformaties(lookup_deformaties);
+
+            let arr_deformaties = [];
+            for (let r = 0; r < lookup_deformaties.length; r++) {
+              arr_deformaties.push(lookup_deformaties[r].value);
+            }
+            let arr_colors = [];
+            for (let r = 0; r < lookup_colors.length; r++) {
+              arr_colors.push(lookup_colors[r].value);
+            }
+            setDeformatiesValueAttribute(arr_deformaties);
+            setColorsValueAttribute(arr_colors);
           }
         });
     })(endpoint_lookup, '8,14,62,3,83,13,11,69');
@@ -211,9 +274,8 @@ const AnimalDetails = props => {
     setValues({
       ...values,
       [event.target.name]: event.target.type === 'checkbox' ? event.target.checked : event.target.value
-
     });
-
+   
     if (event.target.name === 'animal_type') {
       let selectedSex = (event.target.value === '1' || event.target.value === '2' || event.target.value === '4') ? 2 : 1;
       setSex(selectedSex);
@@ -236,8 +298,11 @@ const AnimalDetails = props => {
       setSuccess(false);
       setLoading(true);
     }
-    (async (endpoint, org_id, values, user_id, sire, dam) => {
-      await postAnimalRegistration(endpoint, org_id, values, user_id, sire, dam)
+    let color_array = key_value_array_search(1,colors,chipsColor);
+    let deformaties_array = key_value_array_search(1,deformaties,chipsDeformaties); 
+  
+    (async (endpoint, org_id, values, user_id, sire, dam,colors,deformaties) => {
+      await postAnimalRegistration(endpoint, org_id, values, user_id, sire, dam,colors,deformaties)
         .then((response) => {
 
           setOutput({ status: null, message: '' });
@@ -246,6 +311,8 @@ const AnimalDetails = props => {
             setLoading(false);
             if (parseInt(response.status) === 1) {
               setValues({});
+              setChipsDeformaties([]);
+              setChipsColor([]);
               document.forms["new_reg"].reset();
               setOutput({ status: parseInt(response.status), message: response.message })
             } else {
@@ -258,7 +325,7 @@ const AnimalDetails = props => {
           setSuccess(false);
           setLoading(false);
         });
-    })(endpoint_animal_add, organization_id, values, user_id, _sire_id, _dam_id);
+    })(endpoint_animal_add, organization_id, values, user_id, _sire_id, _dam_id, color_array,deformaties_array);
   };
 
   const handleClickSire = () => {
@@ -280,6 +347,20 @@ const AnimalDetails = props => {
 
   const handleClose = () => {
     setModalStatus(false);
+  };
+
+  const handleMultiSelectChangeColor = value => {
+    setChipsColor(value);
+  };
+  const handleMultiSelectChangeDeformaties = value => {
+    setChipsDeformaties(value);
+  };
+
+  const handleChipDeleteColor = chip => {
+    setChipsColor(chips => chips.filter(c => chip !== c));
+  };
+  const handleChipDeleteDeformaties = chip => {
+    setChipsDeformaties(chips => chips.filter(c => chip !== c));
   };
 
   return (
@@ -783,60 +864,6 @@ const AnimalDetails = props => {
                     shrink: true,
                   }}
 
-                  label="Color"
-                  name="color"
-                  onChange={handleChange}
-                  select
-                  // eslint-disable-next-line react/jsx-sort-props
-                  SelectProps={{ native: true }}
-                  //value={values.timezone}
-                  variant="outlined"
-                >
-                  <option value=""></option>
-                  {colors.map(color => (
-                    <option
-                      value={color.id}
-                    >
-                      {color.value}
-                    </option>
-                  ))
-                  }
-                </TextField>
-              </Grid>
-
-              {parseInt(values.color) === -66 ?
-                <Grid
-                  item
-                  md={2}
-                  xs={12}
-                >
-                  <TextField
-                    fullWidth
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-
-                    label="Color Other"
-                    name="color_other"
-                    onChange={handleChange}
-                    variant="outlined"
-                  />
-                </Grid>
-                : null}
-
-
-
-              <Grid
-                item
-                md={2}
-                xs={12}
-              >
-                <TextField
-                  fullWidth
-                  InputLabelProps={{
-                    shrink: true,
-                  }}
-
                   label="Sire Type"
                   name="sire_type"
                   onChange={handleChange}
@@ -929,39 +956,7 @@ const AnimalDetails = props => {
                   }}
                 />
               </Grid>
-
-              <Grid
-                item
-                md={2}
-                xs={12}
-              >
-                <TextField
-                  fullWidth
-                  InputLabelProps={{
-                    shrink: true,
-                  }}
-
-                  label="Deformaties"
-                  name="deformaties"
-                  onChange={handleChange}
-                  select
-                  // eslint-disable-next-line react/jsx-sort-props
-                  SelectProps={{ native: true }}
-                  //value={values.timezone}
-                  variant="outlined"
-                >
-                  <option value=""></option>
-                  {deformaties.map(deformaty => (
-                    <option
-                      value={deformaty.id}
-                    >
-                      {deformaty.value}
-                    </option>
-                  ))
-                  }
-                </TextField>
-              </Grid>
-
+              
               <Grid
                 item
                 md={2}
@@ -1018,6 +1013,85 @@ const AnimalDetails = props => {
                   onChange={handleChange}
                   variant="outlined"
                 />
+              </Grid>
+
+              <Grid
+                item
+                md={12}
+                xs={12}
+              >
+
+                <Grid
+                  container
+                  spacing={2}
+                >
+                  <Grid
+                    item
+                    md={6}
+                    xs={12}
+                  >
+                    <Card
+                      {...rest}
+                      className={clsx(classes.root, className)}
+                    >
+                      <div className={classes.chips}>
+                        {chipsDeformaties.map(chip => (
+                          <Chip
+                            className={classes.chip}
+                            deleteIcon={<CloseIcon />}
+                            key={chip}
+                            label={chip}
+                            onDelete={() => handleChipDeleteDeformaties(chip)}
+                          />
+                        ))}
+                      </div>
+                      <Divider />
+                      <div className={classes.selects}>
+                        <MultiSelect
+                          key='Deformaties'
+                          label="Deformaties"
+                          onChange={handleMultiSelectChangeDeformaties}
+                          options={deformatiesValueAttribute}                          
+                          value={chipsDeformaties}
+                        />
+                      </div>
+                    </Card>
+                  </Grid>
+
+                  <Grid
+                    item
+                    md={6}
+                    xs={12}
+                  >
+                    <Card
+                      {...rest}
+                      className={clsx(classes.root, className)}
+                    >
+                      <div className={classes.chips}>
+                        {chipsColor.map(chip => (
+                          <Chip
+                            className={classes.chip}
+                            deleteIcon={<CloseIcon />}
+                            key={chip}
+                            label={chip}
+                            onDelete={() => handleChipDeleteColor(chip)}
+                          />
+                        ))}
+                      </div>
+                      <Divider />
+                      <div className={classes.selects}>
+                        <MultiSelect
+                          key='colors'
+                          label="Colors"
+                          onChange={handleMultiSelectChangeColor}
+                          options={colorsValueAttribute}
+                          value={chipsColor}
+                        />
+                      </div>
+                    </Card>
+                  </Grid>
+
+                </Grid>
               </Grid>
 
 

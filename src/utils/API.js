@@ -1994,11 +1994,11 @@ export const putHealth = function (config, event_id, values, user_id) {
 
 
 // new animal registration
-export const postAnimalRegistration = function (config, org_id, values, user_id, sire, dam) {
+export const postAnimalRegistration = function (config, org_id, values, user_id, sire, dam,colors,deformaties) {
 
   let {
-    farm_id, herd_id, main_breed_other, animal_name, animal_type, breed_composition, breed_composition_details, color,
-    color_other, country_of_origin, deformaties, dob, entry_type, hair_sample_id, herd_book_number,
+    farm_id, herd_id, main_breed_other, animal_name, animal_type, breed_composition, breed_composition_details, 
+    color_other, country_of_origin, dob, entry_type, hair_sample_id, herd_book_number,
     main_breed, notes, purchase_cost, secondary_breed, secondary_breed_other, sire_type, tag_id
   } = values;
 
@@ -2009,10 +2009,8 @@ export const postAnimalRegistration = function (config, org_id, values, user_id,
   animal_type = (typeof animal_type === 'undefined' || animal_type === '') ? null : animal_type;
   breed_composition = (typeof breed_composition === 'undefined' || breed_composition === '') ? null : breed_composition;
   breed_composition_details = (typeof breed_composition_details === 'undefined' || breed_composition_details === '') ? null : breed_composition_details;
-  color = (typeof color === 'undefined' || color === '') ? null : color;
   color_other = (typeof color_other === 'undefined' || color_other === '') ? null : color_other;
   country_of_origin = (typeof country_of_origin === 'undefined' || country_of_origin === '') ? null : country_of_origin;
-  deformaties = (typeof deformaties === 'undefined' || deformaties === '') ? null : deformaties;
   dob = (typeof dob === 'undefined' || dob === '') ? moment(new Date()).format('YYYY-MM-DD') : dob;
   entry_type = (typeof entry_type === 'undefined' || entry_type === '') ? null : entry_type;
   hair_sample_id = (typeof hair_sample_id === 'undefined' || hair_sample_id === '') ? null : hair_sample_id;
@@ -2040,7 +2038,7 @@ export const postAnimalRegistration = function (config, org_id, values, user_id,
     "breed_combination": "",
     "notes": notes,
     "breed_composition_details": breed_composition_details,
-    "color": color,
+    "color": colors,
     "color_other": color_other,
     "country_of_origin": country_of_origin,
     "deformities": deformaties,
@@ -2057,7 +2055,6 @@ export const postAnimalRegistration = function (config, org_id, values, user_id,
     "org_id": org_id,
     "farm_id": farm_id
   };
-
 
   const options = {
     url: `${config.url}`,
