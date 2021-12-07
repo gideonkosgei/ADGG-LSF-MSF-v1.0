@@ -23,7 +23,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const MultiSelect = props => {
-  const { label, options, value, onChange } = props;
+  const { label, options, value, onChange,disable } = props;
 
   const classes = useStyles();
 
@@ -56,6 +56,7 @@ const MultiSelect = props => {
       <Button
         onClick={handleMenuOpen}
         ref={anchorRef}
+        disabled = {disable}
       >
         {label}
         <ArrowDropDownIcon />

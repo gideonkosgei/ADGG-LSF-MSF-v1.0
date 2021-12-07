@@ -1230,7 +1230,8 @@ const Edit = props => {
                       </div>
                       <Divider />
                       <div className={classes.selects}>
-                        <MultiSelect
+                        <MultiSelect                          
+                          disable = {Boolean(readOnly)}                        
                           key='Deformaties'
                           label="Deformaties"
                           onChange={handleMultiSelectChangeDeformaties}
@@ -1264,11 +1265,13 @@ const Edit = props => {
                       <Divider />
                       <div className={classes.selects}>
                         <MultiSelect
+                          disable = {Boolean(readOnly)}
                           key='colors'
                           label="Colors"
                           onChange={handleMultiSelectChangeColor}
                           options={colorsValueAttribute}
                           value={chipsColor}
+                          sisabled={loading}
                         />
                       </div>
                     </Card>
