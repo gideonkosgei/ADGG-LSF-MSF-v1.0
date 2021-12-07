@@ -2075,11 +2075,11 @@ export const postAnimalRegistration = function (config, org_id, values, user_id,
 
 
 // new animal registration
-export const putAnimalDetails = function (config, org_id, values, user_id, animal_id, sire, dam) {
+export const putAnimalDetails = function (config, org_id, values, user_id, animal_id, sire, dam,colors,deformaties) {
 
   let {
-    farm_id, herd_id, main_breed_other, animal_name, animal_type, breed_composition, breed_composition_details, color,
-    color_other, country_of_origin, deformaties, dob, entry_type, hair_sample_id, herd_book_number,
+    farm_id, herd_id, main_breed_other, animal_name, animal_type, breed_composition, breed_composition_details,
+    color_other, country_of_origin, dob, entry_type, hair_sample_id, herd_book_number,
     main_breed, notes, purchase_cost, secondary_breed, secondary_breed_other, sire_type, tag_id, reg_date, entry_date
   } = values;
 
@@ -2090,10 +2090,8 @@ export const putAnimalDetails = function (config, org_id, values, user_id, anima
   animal_type = (typeof animal_type === 'undefined' || animal_type === '' || animal_type === 'null') ? null : animal_type;
   breed_composition = (typeof breed_composition === 'undefined' || breed_composition === '' || breed_composition === 'null') ? null : breed_composition;
   breed_composition_details = (typeof breed_composition_details === 'undefined' || breed_composition_details === '' || breed_composition_details === 'null') ? null : breed_composition_details;
-  color = (typeof color === 'undefined' || color === '' || color === 'null' || color === "[\"\"]") ? null : color;
   color_other = (typeof color_other === 'undefined' || color_other === '' || color_other === 'null') ? null : color_other;
   country_of_origin = (typeof country_of_origin === 'undefined' || country_of_origin === '' || country_of_origin === 'null') ? null : country_of_origin;
-  deformaties = (typeof deformaties === 'undefined' || deformaties === '' || deformaties === 'null' || deformaties === "[\"\"]") ? null : deformaties;
   dob = (typeof dob === 'undefined' || dob === '' || dob === 'null') ? moment(new Date()).format('YYYY-MM-DD') : dob;
   reg_date = (typeof reg_date === 'undefined' || reg_date === '' || reg_date === 'null') ? moment(new Date()).format('YYYY-MM-DD') : reg_date;
   entry_date = (typeof entry_date === 'undefined' || entry_date === '' || entry_date === 'null') ? moment(new Date()).format('YYYY-MM-DD') : entry_date;
@@ -2125,7 +2123,7 @@ export const putAnimalDetails = function (config, org_id, values, user_id, anima
     "breed_combination": "",
     "notes": notes,
     "breed_composition_details": breed_composition_details,
-    "color": color,
+    "color": colors,
     "color_other": color_other,
     "country_of_origin": country_of_origin,
     "deformities": deformaties,

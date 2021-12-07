@@ -240,6 +240,7 @@ const AnimalDetails = props => {
             }
             setDeformatiesValueAttribute(arr_deformaties);
             setColorsValueAttribute(arr_colors);
+
           }
         });
     })(endpoint_lookup, '8,14,62,3,83,13,11,69');
@@ -352,6 +353,7 @@ const AnimalDetails = props => {
   const handleMultiSelectChangeColor = value => {
     setChipsColor(value);
   };
+
   const handleMultiSelectChangeDeformaties = value => {
     setChipsDeformaties(value);
   };
@@ -362,6 +364,8 @@ const AnimalDetails = props => {
   const handleChipDeleteDeformaties = chip => {
     setChipsDeformaties(chips => chips.filter(c => chip !== c));
   };
+
+  console.log(chipsColor);
 
   return (
     <Page
@@ -426,14 +430,10 @@ const AnimalDetails = props => {
                     </option>
                   ))
                   }
-
-
                 </TextField>
               </Grid>
 
               {(typeof values.farm_id === "undefined" || values.farm_id === "") ? null :
-
-
                 <Grid
                   item
                   md={2}
@@ -466,9 +466,6 @@ const AnimalDetails = props => {
                   </TextField>
                 </Grid>
               }
-
-
-
               <Grid
                 item
                 md={4}
@@ -514,7 +511,6 @@ const AnimalDetails = props => {
                     InputLabelProps={{
                       shrink: true,
                     }}
-
                     label="Purchase Cost"
                     name="purchase_cost"
                     onChange={handleChange}
@@ -523,7 +519,6 @@ const AnimalDetails = props => {
                   />
                 </Grid>
                 : null}
-
               <Grid
                 item
                 md={2}
@@ -534,7 +529,6 @@ const AnimalDetails = props => {
                   InputLabelProps={{
                     shrink: true,
                   }}
-
                   label="Origin Country "
                   name="country_of_origin"
                   onChange={handleChange}
@@ -553,8 +547,6 @@ const AnimalDetails = props => {
                   }
                 </TextField>
               </Grid>
-
-
               <Grid
                 item
                 md={2}
@@ -565,7 +557,6 @@ const AnimalDetails = props => {
                   InputLabelProps={{
                     shrink: true,
                   }}
-
                   label="Animal Type"
                   name="animal_type"
                   onChange={handleChange}
@@ -586,7 +577,6 @@ const AnimalDetails = props => {
                   }
                 </TextField>
               </Grid>
-
               <Grid
                 item
                 md={2}
@@ -601,7 +591,6 @@ const AnimalDetails = props => {
                   InputLabelProps={{
                     shrink: true,
                   }}
-
                   label="Sex"
                   name="sex"
                   onChange={handleChange}
@@ -622,9 +611,6 @@ const AnimalDetails = props => {
 
                 </TextField>
               </Grid>
-
-
-
               <Grid
                 item
                 md={2}
@@ -635,20 +621,14 @@ const AnimalDetails = props => {
                   InputLabelProps={{
                     shrink: true,
                   }}
-
                   label="Tag ID "
                   name="tag_id"
                   onChange={handleChange}
                   required
                   //value={values.name}
                   variant="outlined"
-
                 />
               </Grid>
-
-
-
-
               <Grid
                 item
                 md={2}
@@ -666,7 +646,6 @@ const AnimalDetails = props => {
                 />
               </Grid>
 
-
               <Grid
                 item
                 md={2}
@@ -680,7 +659,6 @@ const AnimalDetails = props => {
                   inputProps={{
                     max: moment(new Date()).format('YYYY-MM-DD')
                   }}
-
                   label="DOB"
                   type="date"
                   name="dob"
@@ -688,11 +666,8 @@ const AnimalDetails = props => {
                   onChange={handleChange}
                   variant="outlined"
                   required
-
                 />
               </Grid>
-
-
 
               <Grid
                 item
@@ -704,14 +679,11 @@ const AnimalDetails = props => {
                   InputLabelProps={{
                     shrink: true,
                   }}
-
                   label="Breed Composition"
                   name="breed_composition"
                   onChange={handleChange}
                   select
-                  // eslint-disable-next-line react/jsx-sort-props
                   SelectProps={{ native: true }}
-                  //value={values.timezone}
                   variant="outlined"
                 >
                   <option value=""></option>
@@ -726,7 +698,6 @@ const AnimalDetails = props => {
                 </TextField>
               </Grid>
 
-
               <Grid
                 item
                 md={2}
@@ -738,12 +709,10 @@ const AnimalDetails = props => {
                     shrink: true,
                   }}
                   required
-
                   label="Main Breed"
                   name="main_breed"
                   onChange={handleChange}
                   select
-                  // eslint-disable-next-line react/jsx-sort-props
                   SelectProps={{ native: true }}
                   variant="outlined"
                 >
@@ -758,6 +727,7 @@ const AnimalDetails = props => {
                   }
                 </TextField>
               </Grid>
+
               {parseInt(values.main_breed) === -66 ?
                 <Grid
                   item
@@ -769,7 +739,6 @@ const AnimalDetails = props => {
                     InputLabelProps={{
                       shrink: true,
                     }}
-
                     label="Main Breed Other"
                     name="main_breed_other"
                     onChange={handleChange}
@@ -822,7 +791,6 @@ const AnimalDetails = props => {
                     InputLabelProps={{
                       shrink: true,
                     }}
-
                     label="Sec Breed Other"
                     name="secondary_breed_other"
                     onChange={handleChange}
@@ -830,7 +798,6 @@ const AnimalDetails = props => {
                   />
                 </Grid>
                 : null}
-
               {parseInt(values.breed_composition) !== 1 ?
                 <Grid
                   item

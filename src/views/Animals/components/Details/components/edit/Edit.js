@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
-import { Button, Card, Fab, CardActions, CircularProgress, CardContent, LinearProgress, Tooltip, Grid, Divider, TextField, colors, Box, Switch, Typography, IconButton } from '@material-ui/core';
+import {Chip, Button, Card, Fab, CardActions, CircularProgress, CardContent, LinearProgress, Tooltip, Grid, Divider, TextField, colors, Box, Switch, Typography, IconButton } from '@material-ui/core';
 import { green } from '@material-ui/core/colors';
 import CheckIcon from '@material-ui/icons/Check';
 import SaveIcon from '@material-ui/icons/Save';
@@ -18,6 +18,8 @@ import { AnimalModal } from '../../../Modal';
 import { Page } from 'components';
 import { Header } from '../index';
 import Alert from '@material-ui/lab/Alert';
+import { MultiSelect } from '../../../../../../components';
+import CloseIcon from '@material-ui/icons/Close';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -71,7 +73,24 @@ const useStyles = makeStyles(theme => ({
     left: '50%',
     marginTop: -12,
     marginLeft: -12,
-  }
+  },
+  chips: {
+    padding: theme.spacing(2),
+    display: 'flex',
+    alignItems: 'center',
+    flexWrap: 'wrap'
+  },
+  chip: {
+    margin: theme.spacing(1)
+  },
+  selects: {
+    display: 'flex',
+    alignItems: 'center',
+    flexWrap: 'wrap',
+    backgroundColor: colors.grey[50],
+    padding: theme.spacing(1)
+  },
+
 }));
 
 const Edit = props => {
@@ -105,20 +124,47 @@ const Edit = props => {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [output, setOutput] = useState({ status: null, message: "" });
+  const [deformatiesValueAttribute, setDeformatiesValueAttribute] = useState([]);
+  const [colorsValueAttribute, setColorsValueAttribute] = useState([]);
+  const [chipsDeformaties, setChipsDeformaties] = useState([]);
+  const [chipsColor, setChipsColor] = useState([]);
   const timer = React.useRef();
-
   const buttonClassname = clsx({
     [classes.buttonSuccess]: success,
   });
+
+  function key_value_array_search (option,array_search_values, array_search_terms) {
+    /**
+     * option 1 > get keys based on values
+     * option 2 > get values based on keys
+    */
+    let results = [];
+    if (option ===1){
+      if(array_search_values.length > 0){
+        if (array_search_terms.length > 0){
+          for (let i =0; i<array_search_terms.length; i++){
+            results.push(array_search_values.find(x => x.value === array_search_terms[i]).id)
+          }      
+        } 
+      } 
+    } else {
+      if(array_search_values.length > 0){
+        if (array_search_terms.length > 0){
+          for (let i =0; i<array_search_terms.length; i++){
+            results.push(array_search_values.find(x => x.id === array_search_terms[i]))
+          }      
+        } 
+      }
+    }
+    return results;   
+  }  
 
   useEffect(() => {
     let mounted_lookup = true;
     let mounted_herds = true;
     let mounted_farms = true;
     let mounted_animal_details = true;
-    let mounted_countries = true; 
-    
-    
+    let mounted_countries = true;   
 
     (async (endpoint, desc) => {
       await genericFunctionTwoParameters(endpoint, desc)
@@ -185,10 +231,21 @@ const Edit = props => {
             setSireTypes(lookup_sire_types);
             setEntryTypes(lookup_entry_types);
             setDeformaties(lookup_deformaties);
+
+            let arr_deformaties = [];
+            for (let r = 0; r < lookup_deformaties.length; r++) {
+              arr_deformaties.push(lookup_deformaties[r].value);
+            }
+            let arr_colors = [];
+            for (let r = 0; r < lookup_colors.length; r++) {
+              arr_colors.push(lookup_colors[r].value);
+            }
+            setDeformatiesValueAttribute(arr_deformaties);
+            setColorsValueAttribute(arr_colors);
+
           }
         });
     })(endpoint_lookup, '8,14,62,3,83,13,11,69');
-
    
     (async (endpoint, desc, option, id, user) => {
       await genericFunctionFiveParameters(endpoint, desc, option, id, user)
@@ -208,7 +265,6 @@ const Edit = props => {
         });
     })(endpoint_herd, 'get all herds', 0, user_id, user_id);
 
-
     (async (endpoint, desc, _option, _id) => {
       await genericFunctionFourParameters(endpoint, desc, _option, _id)
         .then(response => {
@@ -218,7 +274,6 @@ const Edit = props => {
         });
     })(endpoint_farms, 'get farms',farm_selection_criteria === 0 ? 3: 1, farm_selection_criteria === 0 ? user_id: initial_farm_id);
 
-
     (async (endpoint, desc, id, option) => {
       await genericFunctionFourParameters(endpoint, desc, id, option)
         .then(response => {
@@ -227,7 +282,8 @@ const Edit = props => {
             setValues(data);
             sessionStorage.setItem('farm_id', data.farm_id);
             setSex(data.sex)
-            setIsLoading(false);
+            setIsLoading(false);                      
+
             sessionStorage.setItem('animal_tag',data.tag_id);
             sessionStorage.setItem('animal_type',data.animal_type);            
             sessionStorage.setItem('_sire_id',data.sire_id);
@@ -235,7 +291,24 @@ const Edit = props => {
             sessionStorage.setItem('_sire_tag_id', data.sire_tag_id);
             sessionStorage.setItem('_dam_tag_id', data.dam_tag_id);
             sessionStorage.setItem('animal_dob', data.dob);
-            
+
+            let color_array = [];
+            if (typeof data.color === 'string'){
+              let color_array_temp = data.color.replace("[",'').replace("]",'').split(",");
+              for(let i =0 ; i<color_array_temp.length; i++){
+                color_array.push(color_array_temp[i].split('"').join('').trim());
+              }                  
+            }         
+            setChipsColor(color_array);
+
+            let deformaties_array = [];
+            if (typeof data.deformaties === 'string'){
+              let deformaties_array_temp = data.deformaties.replace("[",'').replace("]",'').split(",");
+              for(let i =0 ; i<deformaties_array_temp.length; i++){
+                deformaties_array.push(deformaties_array_temp[i].split('"').join('').trim());
+              }   
+            }       
+            setChipsDeformaties(deformaties_array); 
           }
         });
     })(endpoint_animal, 'get animal details -> animal id', 3, animal_id); /* option 3 -> get specific animal details */
@@ -254,7 +327,7 @@ const Edit = props => {
 
   if (!countries || !values || !animal_types || !main_breeds || !breed_composition || !gender || !colors || !sire_types || !entryTypes || !deformaties || !allHerds || !farms) {
     return null;
-  }
+  } 
 
   const handleChange = event => {
     event.persist();
@@ -290,8 +363,11 @@ const Edit = props => {
       setSuccess(false);
       setLoading(true);
     }
-    (async (endpoint, org_id, values, user_id, animal_id, sire, dam) => {
-      await putAnimalDetails(endpoint, org_id, values, user_id, animal_id, sire, dam)
+    let color_values= key_value_array_search(1,colors,chipsColor);
+    let deformaties_values  = key_value_array_search(1,deformaties,chipsDeformaties); 
+
+    (async (endpoint, org_id, values, user_id, animal_id, sire, dam,colors,deformaties) => {
+      await putAnimalDetails(endpoint, org_id, values, user_id, animal_id, sire, dam,colors,deformaties)
         .then((response) => {
           setOutput({ status: null, message: '' })
           timer.current = window.setTimeout(() => {
@@ -303,18 +379,18 @@ const Edit = props => {
               setOutput({ status: parseInt(response.status), message: response.message })
             }
           }, 500);
-
         }).catch((error) => {
           setOutput({ status: 0, message: error.message })
           setSuccess(false);
           setLoading(false);
         });
-    })(endpoint_animal_update, organization_id, values, user_id, animal_id,sessionStorage.getItem('_sire_id'), sessionStorage.getItem('_dam_id'));
+    })(endpoint_animal_update, organization_id, values, user_id, animal_id,sessionStorage.getItem('_sire_id'), sessionStorage.getItem('_dam_id'),color_values,deformaties_values);
   };
 
   const handleMetadataOpen = () => {
     setMetadata(true);
   };
+  
   const handleMetadataClose = () => {
     setMetadata(false);
   };
@@ -334,6 +410,21 @@ const Edit = props => {
   };
   const handleClose = () => {
     setModalStatus(false);
+  };
+
+  const handleMultiSelectChangeColor = value => {
+    setChipsColor(value);
+  };
+
+  const handleMultiSelectChangeDeformaties = value => {
+    setChipsDeformaties(value);
+  };
+
+  const handleChipDeleteColor = chip => {
+    setChipsColor(chips => chips.filter(c => chip !== c));
+  };
+  const handleChipDeleteDeformaties = chip => {
+    setChipsDeformaties(chips => chips.filter(c => chip !== c));
   };
 
   return (
@@ -921,71 +1012,7 @@ const Edit = props => {
                     value={values.breed_composition_details}
                   />
                 </Grid>
-                : null}
-
-              <Grid
-                item
-                md={2}
-                xs={12}
-              >
-                <TextField
-                  fullWidth
-                  InputLabelProps={{
-                    shrink: true,
-                  }}
-
-                  inputProps={{
-                    readOnly: Boolean(readOnly),
-                    disabled: Boolean(readOnly)
-                  }}
-                  label="Color"
-                  name="color"
-                  onChange={handleChange}
-                  select
-                  // eslint-disable-next-line react/jsx-sort-props
-                  SelectProps={{ native: true }}
-                  value={values.color}
-                  variant="outlined"
-                >
-                  <option value=""></option>
-                  {colors.map(color => (
-                    <option
-                      value={color.id}
-                    >
-                      {color.value}
-                    </option>
-                  ))
-                  }
-                </TextField>
-              </Grid>
-
-              {parseInt(values.color) === -66 ?
-                <Grid
-                  item
-                  md={2}
-                  xs={12}
-                >
-                  <TextField
-                    fullWidth
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-
-                    inputProps={{
-                      readOnly: Boolean(readOnly),
-                      disabled: Boolean(readOnly)
-                    }}
-
-
-                    label="Color Other"
-                    name="color_other"
-                    onChange={handleChange}
-                    variant="outlined"
-                    value={values.color_other}
-                  />
-                </Grid>
-                : null}
-
+                : null}            
 
               <Grid
                 item
@@ -1095,45 +1122,7 @@ const Edit = props => {
                   value={sessionStorage.getItem('_dam_id')}
                 />
               </Grid>
-
-              <Grid
-                item
-                md={2}
-                xs={12}
-              >
-                <TextField
-                  fullWidth
-                  InputLabelProps={{
-                    shrink: true,
-                  }}
-
-                  label="Deformaties"
-                  name="deformaties"
-                  onChange={handleChange}
-                  select
-                  // eslint-disable-next-line react/jsx-sort-props
-                  SelectProps={{ native: true }}
-                  inputProps={{
-                    readOnly: Boolean(readOnly),
-                    disabled: Boolean(readOnly)
-                  }}
-
-                  value={values.deformaties}
-                  variant="outlined"
-                >
-                  <option value=""></option>
-                  {deformaties.map(deformaty => (
-                    <option
-                      value={deformaty.id}
-                    >
-                      {deformaty.value}
-                    </option>
-                  ))
-                  }
-                </TextField>
-              </Grid>
-
-
+           
               <Grid
                 item
                 md={2}
@@ -1209,6 +1198,84 @@ const Edit = props => {
                   value={values.notes}
                 />
               </Grid>
+              <Grid
+                item
+                md={12}
+                xs={12}
+              >
+
+                <Grid
+                  container
+                  spacing={2}
+                >
+                  <Grid
+                    item
+                    md={6}
+                    xs={12}
+                  >
+                    <Card
+                      {...rest}
+                      className={clsx(classes.root, className)}
+                    >
+                      <div className={classes.chips}>
+                        {chipsDeformaties.map(chip => (
+                          <Chip
+                            className={classes.chip}
+                            deleteIcon={<CloseIcon />}
+                            key={chip}
+                            label={chip}
+                            onDelete={() => handleChipDeleteDeformaties(chip)}
+                          />
+                        ))}
+                      </div>
+                      <Divider />
+                      <div className={classes.selects}>
+                        <MultiSelect
+                          key='Deformaties'
+                          label="Deformaties"
+                          onChange={handleMultiSelectChangeDeformaties}
+                          options={deformatiesValueAttribute}                          
+                          value={chipsDeformaties}
+                        />
+                      </div>
+                    </Card>
+                  </Grid>
+
+                  <Grid
+                    item
+                    md={6}
+                    xs={12}
+                  >
+                    <Card
+                      {...rest}
+                      className={clsx(classes.root, className)}
+                    >
+                      <div className={classes.chips}>
+                        {chipsColor.map(chip => (
+                          <Chip
+                            className={classes.chip}
+                            deleteIcon={<CloseIcon />}
+                            key={chip}
+                            label={chip}
+                            onDelete={() => handleChipDeleteColor(chip)}
+                          />
+                        ))}
+                      </div>
+                      <Divider />
+                      <div className={classes.selects}>
+                        <MultiSelect
+                          key='colors'
+                          label="Colors"
+                          onChange={handleMultiSelectChangeColor}
+                          options={colorsValueAttribute}
+                          value={chipsColor}
+                        />
+                      </div>
+                    </Card>
+                  </Grid>
+                </Grid>
+              </Grid>
+
             </Grid>
           </CardContent>
           <Divider />
