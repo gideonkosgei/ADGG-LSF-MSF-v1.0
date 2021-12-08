@@ -62,6 +62,7 @@ const TopCows = props => {
   
   useEffect(() => {
     let mounted = true;   
+    setLoading(true); 
     (async  (endpoint,option,org_id,year)=>{     
       await  getTopCows(endpoint,option,org_id,year)
        .then(response => {              
@@ -146,8 +147,6 @@ const TopCows = props => {
     }      
   };
 
-  console.log(v_option);
-  console.log(showCalender);
 
   const open = Boolean(selectEdge); 
   return (
