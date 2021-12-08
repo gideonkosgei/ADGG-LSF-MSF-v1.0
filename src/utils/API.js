@@ -2788,9 +2788,9 @@ export const putOrgAccessSwitch = function (config, org, user) {
 
 //Dashboard - Stats
 // to cows
-export const getTopCows = function (config, organisation_id, year) {
+export const getTopCows = function (config, option,organisation_id, year) {
   const options = {
-    url: `${config.url}${organisation_id}/${year}`,
+    url: `${config.url}${option}/${organisation_id}/${year}`,
     method: config.method,
     headers: config.headers
   }

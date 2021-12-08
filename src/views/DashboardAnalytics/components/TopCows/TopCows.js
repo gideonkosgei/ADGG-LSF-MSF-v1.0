@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
-import { Button,Card,LinearProgress, CardContent, CardHeader, Divider,Grid, ButtonGroup } from '@material-ui/core';
+import { Button,Card,LinearProgress,TextField, CardContent, CardHeader, Divider,Grid, ButtonGroup } from '@material-ui/core';
 import authContext from '../../../../contexts/AuthContext';
 import {endpoint_top_cows} from '../../../../configs/endpoints';
 import {getTopCows}   from '../../../../utils/API';
@@ -32,6 +32,9 @@ const useStyles = makeStyles(theme => ({
   actions: {
     justifyContent: 'flex-end'
   },
+  button: {
+    margin: 13,
+  },
   arrowForwardIcon: {
     marginLeft: theme.spacing(1)
   },
@@ -54,22 +57,24 @@ const TopCows = props => {
   const [selectEdge, setSelectEdge] = useState(null);
   const [calendarDate, setCalendarDate] = useState(moment());  
   const [loading, setLoading] = useState(true);
+  const [showCalender, setShowCalender] = useState(true);
+  const [v_option, setOption] = useState(0);
   
   useEffect(() => {
     let mounted = true;   
-    (async  (endpoint,org_id,year)=>{     
-      await  getTopCows(endpoint,org_id,year)
+    (async  (endpoint,option,org_id,year)=>{     
+      await  getTopCows(endpoint,option,org_id,year)
        .then(response => {              
          if (mounted) {
           setTopCows(response.payload);  
           setLoading(false);                          
          }
        });
-     })(endpoint_top_cows,organization_id,moment(startDate).format('YYYY'));
+     })(endpoint_top_cows,v_option,organization_id,moment(startDate).format('YYYY'));
     return () => {
       mounted = false;
     };
-  }, [organization_id,startDate]); 
+  }, [organization_id,startDate,v_option]); 
 
   if (!topCows) {
     return null;
@@ -129,6 +134,21 @@ const TopCows = props => {
     } 
     setSelectEdge(null);
   };
+  
+  const handleChange = event => {
+    event.persist(); 
+    if (event.target.name === 'view_option' && event.target.value === "0") {
+      setShowCalender(true);
+      setOption(0);      
+    } else {
+      setShowCalender(false);
+      setOption(1);
+    }      
+  };
+
+  console.log(v_option);
+  console.log(showCalender);
+
   const open = Boolean(selectEdge); 
   return (
     <Page> 
@@ -149,12 +169,34 @@ const TopCows = props => {
           lg={12}
           xs={12}
         >
-            <ButtonGroup variant="contained">
-              <Button onClick={() => handleCalendarOpen('start')}>
-                <CalendarTodayIcon className={classes.calendarTodayIcon} />
-                {startDate.format('YYYY')}
-              </Button>             
-            </ButtonGroup>
+           
+            <TextField
+              className={classes.button}
+              InputLabelProps={{
+                shrink: true,
+              }}
+              margin = 'dense'
+              label=""
+              name="view_option"
+              select
+              SelectProps={{ native: true }}                    
+              variant="outlined"
+              onChange={handleChange}
+            >
+              <option value="0">Production Year</option>
+              <option value="1">Lifetime</option>                               
+            </TextField>
+
+            { showCalender &&           
+
+              <ButtonGroup variant="contained">
+                <Button onClick={() => handleCalendarOpen('start')}>
+                  <CalendarTodayIcon className={classes.calendarTodayIcon} />
+                  {startDate.format('YYYY')}
+                </Button>             
+              </ButtonGroup>
+            }
+
           </Grid>
           <br/>      
         
