@@ -70,7 +70,7 @@ const LactationTable = props => {
     { name: "avg_daily_milk",label: "Avg Daily Milk",options: {filter: false,sort: true,display:true}},    
     { name: "max_milk_amount",label: "Max Milk",options: {filter: false,sort: true, display:true}},    
     { name: "min_milk_amount",label: "Min Milk",options: {filter: false,sort: true,display:true}},
-    { name: "calving_interval",label: "Calving Interval",options: {filter: false,sort: true,display:true}}         
+    { name: "calving_interval",label: "Calving Interval(Days)",options: {filter: false,sort: true,display:true}}         
   ];
 
   const options = {  
