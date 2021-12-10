@@ -9,6 +9,7 @@ import { Header } from '../Header';
 import { default as Statistics } from '../../../../../Overview/components/Statistics';
 import { default as AnimalCategorySegmentation } from '../../../../../DashboardAnalytics/components/AnimalCategorySegmentation';
 import { default as BreedDistribution } from '../../../../../DashboardAnalytics/components/BreedDistribution';
+import { default as EventsSummary } from '../../../../../DashboardAnalytics/components/EventsSummary';
 import { default as Animals } from '../../../../../Animals'
 import { Page } from 'components';
 import { green } from '@material-ui/core/colors';
@@ -346,6 +347,15 @@ const Edit = props => {
         <LinearProgress />
       }
       <Grid container spacing={1} justify="center">
+
+        <Grid
+          item
+          lg={12}
+          xl={12}
+          xs={12}
+        >
+          <EventsSummary org={organization_id} level={1} herd={herd_id} />
+        </Grid>
 
         <Grid item xs={12}>
           <Card>

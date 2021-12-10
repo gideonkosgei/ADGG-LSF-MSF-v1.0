@@ -763,6 +763,13 @@ export const endpoint_breeds_distribution = {
   headers: headers   
 }
 
+// Events Summary
+export const endpoint_events_summary = {
+  url: `${api}/stats/events-summary/`,
+  method: 'GET',
+  headers: headers   
+}
+
 // DASHBOARD OVERVIEW
 export const endpoint_dashboard_overview = {
   url: `${api}/stats/dashboard-overview/`,

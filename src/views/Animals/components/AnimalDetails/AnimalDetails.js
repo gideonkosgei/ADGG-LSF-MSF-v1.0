@@ -110,32 +110,32 @@ const AnimalDetails = props => {
   const [chipsDeformaties, setChipsDeformaties] = useState([]);
   const [chipsColor, setChipsColor] = useState([]);
 
-  function key_value_array_search (option,array_search_values, array_search_terms) {
+  function key_value_array_search(option, array_search_values, array_search_terms) {
     /**
      * option 1 > get keys based on values
      * option 2 > get values based on keys
      */
     let results = [];
-    
-    if (option ===1){
-      if(array_search_values.length > 0){
-        if (array_search_terms.length > 0){
-          for (let i =0; i<array_search_terms.length; i++){
+
+    if (option === 1) {
+      if (array_search_values.length > 0) {
+        if (array_search_terms.length > 0) {
+          for (let i = 0; i < array_search_terms.length; i++) {
             results.push(array_search_values.find(x => x.value === array_search_terms[i]).id)
-          }      
-        } 
-      } 
+          }
+        }
+      }
     } else {
-      if(array_search_values.length > 0){
-        if (array_search_terms.length > 0){
-          for (let i =0; i<array_search_terms.length; i++){
+      if (array_search_values.length > 0) {
+        if (array_search_terms.length > 0) {
+          for (let i = 0; i < array_search_terms.length; i++) {
             results.push(array_search_values.find(x => x.value === array_search_terms[i]).id)
-          }      
-        } 
+          }
+        }
       }
     }
-    return results;   
-  }  
+    return results;
+  }
 
   let _sire_id = sessionStorage.getItem('_sire_id');
   let _dam_id = sessionStorage.getItem('_dam_id');
@@ -276,7 +276,7 @@ const AnimalDetails = props => {
       ...values,
       [event.target.name]: event.target.type === 'checkbox' ? event.target.checked : event.target.value
     });
-   
+
     if (event.target.name === 'animal_type') {
       let selectedSex = (event.target.value === '1' || event.target.value === '2' || event.target.value === '4') ? 2 : 1;
       setSex(selectedSex);
@@ -299,11 +299,11 @@ const AnimalDetails = props => {
       setSuccess(false);
       setLoading(true);
     }
-    let color_array = key_value_array_search(1,colors,chipsColor);
-    let deformaties_array = key_value_array_search(1,deformaties,chipsDeformaties); 
-  
-    (async (endpoint, org_id, values, user_id, sire, dam,colors,deformaties) => {
-      await postAnimalRegistration(endpoint, org_id, values, user_id, sire, dam,colors,deformaties)
+    let color_array = key_value_array_search(1, colors, chipsColor);
+    let deformaties_array = key_value_array_search(1, deformaties, chipsDeformaties);
+
+    (async (endpoint, org_id, values, user_id, sire, dam, colors, deformaties) => {
+      await postAnimalRegistration(endpoint, org_id, values, user_id, sire, dam, colors, deformaties)
         .then((response) => {
 
           setOutput({ status: null, message: '' });
@@ -326,7 +326,7 @@ const AnimalDetails = props => {
           setSuccess(false);
           setLoading(false);
         });
-    })(endpoint_animal_add, organization_id, values, user_id, _sire_id, _dam_id, color_array,deformaties_array);
+    })(endpoint_animal_add, organization_id, values, user_id, _sire_id, _dam_id, color_array, deformaties_array);
   };
 
   const handleClickSire = () => {
@@ -923,7 +923,7 @@ const AnimalDetails = props => {
                   }}
                 />
               </Grid>
-              
+
               <Grid
                 item
                 md={2}
@@ -1018,7 +1018,7 @@ const AnimalDetails = props => {
                           key='Deformaties'
                           label="Deformaties"
                           onChange={handleMultiSelectChangeDeformaties}
-                          options={deformatiesValueAttribute}                          
+                          options={deformatiesValueAttribute}
                           value={chipsDeformaties}
                         />
                       </div>

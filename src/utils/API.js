@@ -2937,6 +2937,21 @@ export const getStatsBreedsDistribution = function (config, org, level, herd) {
   });
 }
 
+export const getStatsEventsSummary = function (config, org, level, herd) {
+  const options = {
+    url: `${config.url}${org}/${level}/${herd}`,
+    method: config.method,
+    headers: config.headers
+  }
+  return new Promise((resolve, reject) => {
+    axios(options)
+      .then(res => {
+        resolve(res.data);
+      })
+      .catch(err => reject(err));
+  });
+}
+
 export const getStatsDashboardOverview = function (config, organisation_id) {
   const options = {
     url: `${config.url}${organisation_id}`,
