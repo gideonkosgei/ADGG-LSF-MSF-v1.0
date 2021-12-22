@@ -5,7 +5,7 @@ import { Grid, Typography, Card, CardContent, TextField,LinearProgress } from '@
 import {genericFunctionThreeParameters } from '../../../../../../../../utils/API';
 import {endpoint_batch_validation_view } from '../../../../../../../../configs/endpoints';
 import MUIDataTable from "mui-datatables";
-import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
+import { MuiThemeProvider, createTheme } from '@material-ui/core/styles';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 
 const useStyles = makeStyles(theme => ({
@@ -18,7 +18,7 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-const getMuiTheme = () => createMuiTheme({
+const getMuiTheme = () => createTheme({
     overrides: {
         MUIDataTableBodyCell: {
             root: {

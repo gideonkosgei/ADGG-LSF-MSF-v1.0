@@ -6,7 +6,7 @@ import { batchProcessActions } from '../../../../../../../../utils/API';
 import clsx from 'clsx';
 import { endpoint_batch_actions } from '../../../../../../../../configs/endpoints';
 import MUIDataTable from "mui-datatables";
-import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
+import { MuiThemeProvider, createTheme } from '@material-ui/core/styles';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import CustomToolbar from "./CustomToolbar";
 import authContext from '../../../../../../../../contexts/AuthContext';
@@ -56,7 +56,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const getMuiTheme = () => createMuiTheme({
+const getMuiTheme = () => createTheme({
   overrides: {
     MUIDataTableBodyCell: {
       root: {

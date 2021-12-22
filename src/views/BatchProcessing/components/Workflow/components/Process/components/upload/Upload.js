@@ -9,7 +9,7 @@ import { endpoint_batch_upload } from '../../../../../../../../configs/endpoints
 import uuid from 'uuid';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import MUIDataTable from "mui-datatables";
-import { createMuiTheme, MuiThemeProvider } from '@material-ui/core/styles';
+import { createTheme, MuiThemeProvider } from '@material-ui/core/styles';
 import { green } from '@material-ui/core/colors';
 import CheckIcon from '@material-ui/icons/Check';
 import SaveIcon from '@material-ui/icons/Save';
@@ -66,7 +66,7 @@ const useStyles = makeStyles(theme => ({
 
 }));
 
-const getMuiTheme = () => createMuiTheme({
+const getMuiTheme = () => createTheme({
   overrides: {
     MUIDataTableBodyCell: {
       root: {

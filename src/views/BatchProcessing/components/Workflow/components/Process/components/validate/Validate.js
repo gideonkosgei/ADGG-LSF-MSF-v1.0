@@ -5,7 +5,7 @@ import { Card, Typography, CardContent, LinearProgress, Grid, colors, CardAction
 import { batchProcessActions, genericFunctionThreeParameters } from '../../../../../../../../utils/API';
 import { endpoint_batch_validation_view, endpoint_batch_actions } from '../../../../../../../../configs/endpoints';
 import MUIDataTable from "mui-datatables";
-import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
+import { MuiThemeProvider, createTheme } from '@material-ui/core/styles';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import OpenInNewIcon from '@material-ui/icons/OpenInNew';
 import authContext from '../../../../../../../../contexts/AuthContext';
@@ -56,7 +56,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const getMuiTheme = () => createMuiTheme({
+const getMuiTheme = () => createTheme({
   overrides: {
     MUIDataTableBodyCell: {
       root: {

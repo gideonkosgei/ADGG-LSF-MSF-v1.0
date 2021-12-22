@@ -13,7 +13,7 @@ import ErrorSnackbar from '../../../../../../../../components/ErrorSnackbar';
 import uuid from 'uuid';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import MUIDataTable from "mui-datatables";
-import {createMuiTheme, MuiThemeProvider} from '@material-ui/core/styles';
+import {createTheme, MuiThemeProvider} from '@material-ui/core/styles';
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -35,7 +35,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const getMuiTheme = () => createMuiTheme({
+const getMuiTheme = () => createTheme({
   overrides: {
     MUIDataTableBodyCell: {
       root: {
