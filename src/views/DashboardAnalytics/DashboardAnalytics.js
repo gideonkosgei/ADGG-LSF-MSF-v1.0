@@ -17,7 +17,6 @@ import authContext from '../../contexts/AuthContext';
 
 const useStyles = makeStyles(theme => ({
   root: {    
-    width: theme.breakpoints.values.lg,
     maxWidth: '100%',
     margin: '0 auto',
     padding: theme.spacing(3)

@@ -15,16 +15,9 @@ import OpenInNewIcon from '@material-ui/icons/OpenInNew';
 
 const useStyles = makeStyles(theme => ({
   root: {
-    width: theme.breakpoints.values.lg,
     maxWidth: '100%',
     margin: '0 auto',
-    paddingTop: theme.spacing(3)
-  },
-  inner: {
-    width: theme.breakpoints.values.lg,
-    maxWidth: '100%',
-    margin: '0 auto',
-    //padding: theme.spacing(3)
+    padding: theme.spacing(3)
   },
   divider: {
     backgroundColor: colors.grey[300]
@@ -61,7 +54,6 @@ const Edit = props => {
 
   useEffect(() => {     
     let mounted = true;
-
       (async  (endpoint,desc,option,id,user) => {     
         await  genericFunctionFiveParameters(endpoint,desc,option,id,user)
         .then(response => {                        
@@ -174,5 +166,4 @@ Edit.propTypes = {
   history: PropTypes.object.isRequired,
   match: PropTypes.object.isRequired
 };
-
 export default Edit;

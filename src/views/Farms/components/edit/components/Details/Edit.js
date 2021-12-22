@@ -20,7 +20,6 @@ import moment from 'moment';
 
 const useStyles = makeStyles(theme => ({
   root: {
-    width: theme.breakpoints.values.lg,
     maxWidth: '100%',
     margin: '0 auto',
     padding: theme.spacing(3)
@@ -32,12 +31,7 @@ const useStyles = makeStyles(theme => ({
       backgroundColor: colors.green[900]
     }
   },
-  inner: {
-    width: theme.breakpoints.values.lg,
-    maxWidth: '100%',
-    margin: '0 auto',
-    padding: theme.spacing(3)
-  },
+  
   divider: {
     backgroundColor: colors.grey[300]
   },
