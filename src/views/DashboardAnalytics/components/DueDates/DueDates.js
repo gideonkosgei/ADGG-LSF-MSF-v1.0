@@ -7,6 +7,7 @@ import {endpoint_due_date} from '../../../../configs/endpoints';
 import {getDueDateTable}   from '../../../../utils/API';
 import MUIDataTable from "mui-datatables";
 import {MuiThemeProvider } from '@material-ui/core/styles';
+import theme from '../../../../theme';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import authContext from '../../../../contexts/AuthContext';
 import { Page } from 'components';
@@ -68,13 +69,14 @@ const DueDates = props => {
     { name: "pd_date",label: "PD Date",options: {filter: false,sort: true,display:true}},   
     { name: "estimated_due_date",label: "Calving Date",options: {filter: false,sort: true,display:true}}           
   ];  
+  //["standard","vertical","verticalAlways","simple"].
 
   const options = {  
     rowsPerPage: 5,       
     rowsPerPageOptions :[5,10,20,50,100],
     selectableRows: 'none',      
     filterType: 'checkbox',
-    responsive: 'stacked',                
+    responsive: 'standard',                
     rowHover: true, 
     search: true,
     filter: false,  
@@ -109,7 +111,7 @@ const DueDates = props => {
         <PerfectScrollbar>
 
           <div className={classes.inner}>
-            <MuiThemeProvider>                
+            <MuiThemeProvider theme={theme}>                
               <MUIDataTable
                 title = ""
                 data={values}

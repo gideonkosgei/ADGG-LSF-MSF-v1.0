@@ -43,7 +43,7 @@ const Overview = () => {
       title="Overview"
     >
       <Header />
-      <Statistics className={classes.statistics} org = {organization_id} level = {level} herd = {null} /> 
+      <Statistics className={classes.statistics} org = {parseInt(organization_id)} level = {level} herd = {null} /> 
       <br/> <br/>
       <Todos/>
     </Page>

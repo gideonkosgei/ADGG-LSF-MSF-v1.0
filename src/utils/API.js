@@ -14,7 +14,6 @@ const axios = require('axios');
 
 /*  GENERIC 2 PARAMETERS  */
 export const genericFunctionTwoParameters = function (param1, param2) {
-  // console.log(param2);  
   const options = {
     url: `${param1.url}`,
     method: param1.method,
@@ -134,9 +133,6 @@ export const authenticate = function (config, username, password) {
     headers: config.headers,
     params: data
   }
-
-  console.log(options);
-
 
   return new Promise((resolve, reject) => {
     axios(options)

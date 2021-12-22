@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect,useContext,useState } from 'react';
+import React, { Fragment, useEffect, useContext, useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
@@ -9,8 +9,8 @@ import useRouter from 'utils/useRouter';
 import { Navigation } from 'components';
 import navigationConfig from './navigationConfig';
 import authContext from '../../../../contexts/AuthContext';
-import {genericFunctionFourParameters,genericFunctionTwoParameters}   from '../../../../utils/API';
-import {endpoint_get_avatar,endpoint_image_dir} from '../../../../configs/endpoints';
+import { genericFunctionFourParameters, genericFunctionTwoParameters } from '../../../../utils/API';
+import { endpoint_get_avatar, endpoint_image_dir } from '../../../../configs/endpoints';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -45,11 +45,11 @@ const NavBar = props => {
   const { openMobile, onMobileClose, className, ...rest } = props;
   const classes = useStyles();
   const router = useRouter();
-  const [ {name ,email,organization,user_id} ] = useContext(authContext);
-  const [values, setValues] = useState({ });
+  const [{ name, email, organization, user_id }] = useContext(authContext);
+  const [values, setValues] = useState({});
   const [imageDir, setImageDir] = useState('');
   const type = 1;
-  
+
   useEffect(() => {
     let mounted = true;
     let mounted_image_dir = true;
@@ -57,34 +57,34 @@ const NavBar = props => {
     if (openMobile) {
       onMobileClose && onMobileClose();
     }
-  
-    (async  (endpoint,desc,id,type) => {     
-      await  genericFunctionFourParameters(endpoint,desc,id,type)
-      .then(response => {                         
-        if (mounted) { 
-          if (response.payload[0].length !== 0 ) {   
-            setValues(response.payload[0][0]);             
-          }  
-        }
-      });
-    })(endpoint_get_avatar,'get avatar',user_id,type); 
 
-    
-    (async  (endpoint,desc) => {     
-      await  genericFunctionTwoParameters(endpoint,desc)
-      .then(response => {                         
-        if (mounted_image_dir) {  
-            setImageDir(response.payload[0].image_dir);  
-        }
-      });
-    })(endpoint_image_dir,'image ddir');
+    (async (endpoint, desc, id, type) => {
+      await genericFunctionFourParameters(endpoint, desc, id, type)
+        .then(response => {
+          if (mounted) {
+            if (response.payload[0].length !== 0) {
+              setValues(response.payload[0][0]);
+            }
+          }
+        });
+    })(endpoint_get_avatar, 'get avatar', user_id, type);
+
+
+    (async (endpoint, desc) => {
+      await genericFunctionTwoParameters(endpoint, desc)
+        .then(response => {
+          if (mounted_image_dir) {
+            setImageDir(response.payload[0].image_dir);
+          }
+        });
+    })(endpoint_image_dir, 'image ddir');
 
     return () => {
-      mounted = false; 
-      mounted_image_dir = false; 
-    }; 
-    
-  }, [router.location.pathname,user_id,type,onMobileClose,openMobile]);
+      mounted = false;
+      mounted_image_dir = false;
+    };
+
+  }, [router.location.pathname, user_id, type, onMobileClose, openMobile]);
 
 
   const navbarContent = (
@@ -101,11 +101,11 @@ const NavBar = props => {
           className={classes.name}
           variant="h4"
         >
-           {name}
-        </Typography> 
+          {name}
+        </Typography>
         <Typography variant="body2">{organization}</Typography>
         <Typography variant="body2">{email}</Typography>
-        
+
       </div>
       <Divider className={classes.divider} />
       <nav className={classes.navigation}>
@@ -114,7 +114,7 @@ const NavBar = props => {
             component="div"
             key={list.title}
             pages={list.pages}
-            title={list.title}            
+            title={list.title}
           />
         ))}
       </nav>

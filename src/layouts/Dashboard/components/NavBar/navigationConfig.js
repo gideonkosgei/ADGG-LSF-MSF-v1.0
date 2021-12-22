@@ -13,9 +13,9 @@ let p = [
       {
         title: 'Overview',
         href: '/overview',
-        icon: HomeIcon,
-        role: 'admin'
+        icon: HomeIcon        
       },
+
       {
         title: 'Dashboards',
         href: '/dashboards',
@@ -27,6 +27,7 @@ let p = [
           }
         ]
       },
+
       {
         title: 'Management',
         href: '/management',
@@ -78,49 +79,7 @@ let p = [
         href: '/calendar',
         icon: CalendarTodayIcon
       },
-      /*
-
-      {
-        title: 'Batch Processes',
-        href: '/batch-process',
-        icon: ListAltIcon,
-        children: [
-          {
-            title: 'Animal Reg',
-            href: '/batch-process/animal/home',
-          },
-          {
-            title: 'Milking ',
-            href: '/batch-process/milking-records/home',
-          },
-          {
-            title: 'Weight & Growth ',
-            href: '/batch-process/weight/home',
-          },
-          {
-            title: 'PD Batch',
-            href: '/batch-process/pd/home',
-          },
-          {
-            title: 'Insemination ',
-            href: '/batch-process/ai/home',
-          },
-          {
-            title: 'Exit/Disposal ',
-            href: '/batch-process/exit/home',
-          },
-          {
-            title: 'Synchronization ',
-            href: '/batch-process/sync/home',
-          },
-          {
-            title: 'Calving ',
-            href: '/batch-process/calving/home',
-          },
-        ]
-      },
-      */
-
+     
       {
         title: 'Batch Processing',
         href: '/batch-processing',
@@ -147,7 +106,6 @@ let p = [
             href: '/settings/security'
           }
         ]
-
       },
       {
         title: 'Reports',

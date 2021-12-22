@@ -59,7 +59,7 @@ const Header = props => {
       <Grid
         alignItems="center"
         container
-        justify="space-between"
+        justifyContent="space-between"
         spacing={3}
       >
         <Grid

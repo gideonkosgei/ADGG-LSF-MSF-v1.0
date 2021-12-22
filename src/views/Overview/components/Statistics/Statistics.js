@@ -80,7 +80,7 @@ const Statistics = props => {
       <Grid
         alignItems="center"
         container
-        justify="space-between"
+        justifyContent="space-between"
       >
         <Grid
           className={classes.item}

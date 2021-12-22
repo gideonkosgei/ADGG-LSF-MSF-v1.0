@@ -7,6 +7,7 @@ import {endpoint_service_action_list} from '../../../../configs/endpoints';
 import {getServiceActionList}   from '../../../../utils/API';
 import MUIDataTable from "mui-datatables";
 import {MuiThemeProvider } from '@material-ui/core/styles';
+import theme from '../../../../theme';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import authContext from '../../../../contexts/AuthContext';
 import { Page } from 'components';
@@ -78,7 +79,7 @@ const ServiceActionList = props => {
     rowsPerPageOptions :[5,10,20,50,100],
     selectableRows: 'none',      
     filterType: 'checkbox',
-    responsive: 'stacked',                
+    responsive: 'standard',                
     rowHover: true, 
     search: true,
     filter: true,  
@@ -111,7 +112,7 @@ const ServiceActionList = props => {
       <CardContent className={classes.content}>
         <PerfectScrollbar>
           <div className={classes.inner}>
-            <MuiThemeProvider>                
+            <MuiThemeProvider theme={theme}>                
               <MUIDataTable
                 title = ""
                 data={values}
