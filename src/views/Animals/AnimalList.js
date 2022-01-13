@@ -5,6 +5,7 @@ import { Page } from 'components';
 import { endpoint_animal } from '../../configs/endpoints';
 import { genericFunctionFourParameters } from '../../utils/API';
 import authContext from '../../contexts/AuthContext';
+import theme from '../../theme';
 import { LinearProgress, Typography, Link, Card, CardContent, Divider, } from '@material-ui/core';
 import { Link as RouterLink } from 'react-router-dom';
 import OpenInNewIcon from '@material-ui/icons/OpenInNew';
@@ -144,7 +145,7 @@ const AnimalList = props => {
     rowsPerPageOptions: [5, 10, 20, 50, 100],
     selectableRows: 'none',
     filterType: 'checkbox',
-    responsive: 'stacked',
+    responsive: 'standard',
     rowHover: true,
     setTableProps: () => {
       return {
@@ -186,7 +187,7 @@ const AnimalList = props => {
         <Divider />
         <CardContent className={classes.content}>
           <PerfectScrollbar>
-            <MuiThemeProvider>
+            <MuiThemeProvider theme={theme}>
               <MUIDataTable
                 title={caption}
                 data={animals}
@@ -201,9 +202,7 @@ const AnimalList = props => {
   );
 };
 AnimalList.propTypes = {
-  history: PropTypes.object.isRequired,
-  match: PropTypes.object.isRequired,
-  HerdIdProp: PropTypes.object
+   HerdIdProp: PropTypes.number
 };
 
 export default AnimalList;

@@ -193,7 +193,7 @@ const Edit = props => {
       await getCountries(endpoint)
         .then(response => {
           if (mounted_countries) {
-            setCountries(response.payload);
+            setCountries(response.payload);            
 
             if (country_id && country_id !== '') {
               let getUnits = response.payload.find(country => country.id === parseInt(country_id));
@@ -345,7 +345,7 @@ const Edit = props => {
       {isLoading &&
         <LinearProgress />
       }
-      <Grid container spacing={1} justify="center">
+      <Grid container spacing={1} justifyContent="center">
 
         <Grid
           item
@@ -353,7 +353,7 @@ const Edit = props => {
           xl={12}
           xs={12}
         >
-          <EventsSummary org={organization_id} level={1} herd={herd_id} />
+          <EventsSummary org={parseInt(organization_id)} level={1} herd={herd_id} />
         </Grid>
 
         <Grid item xs={12}>
@@ -694,7 +694,7 @@ const Edit = props => {
         {`HERD SUMMARY - ${values.herd_name}`}
       </Typography>
       <br />
-      <Statistics className={classes.statistics} org={organization_id} level={1} herd={herd_id} />
+      <Statistics className={classes.statistics} org={parseInt(organization_id)} level={1} herd={herd_id} />
       <br />
       <Grid
         container
@@ -706,7 +706,7 @@ const Edit = props => {
           xl={4}
           xs={12}
         >
-          <AnimalCategorySegmentation org={organization_id} level={1} herd={herd_id} />
+          <AnimalCategorySegmentation org={parseInt(organization_id)} level={1} herd={herd_id} />
         </Grid>
         <Grid
           item
@@ -714,7 +714,7 @@ const Edit = props => {
           xl={4}
           xs={12}
         >
-          <BreedDistribution org={organization_id} level={1} herd={herd_id} />
+          <BreedDistribution org={parseInt(organization_id)} level={1} herd={herd_id} />
         </Grid>
         <Grid
           item
