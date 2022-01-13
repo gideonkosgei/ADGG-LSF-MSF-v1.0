@@ -6,7 +6,6 @@ import AuthLayout from './layouts/Auth';
 import ErrorLayout from './layouts/Error';
 import DashboardLayout from './layouts/Dashboard';
 import DashboardAnalyticsView from './views/DashboardAnalytics';
-import DashboardDefaultView from './views/DashboardDefault';
 import OverviewView from './views/Overview';
 import PresentationView from './views/Presentation';
 
@@ -94,11 +93,6 @@ const routes = [
         path: '/dashboards/analytics',
         exact: true,
         component: DashboardAnalyticsView
-      },
-      {
-        path: '/dashboards/default',
-        exact: true,
-        component: DashboardDefaultView
       },
       {
         path: '/invoices/:id',
