@@ -7,7 +7,6 @@ import ErrorLayout from './layouts/Error';
 import DashboardLayout from './layouts/Dashboard';
 import DashboardAnalyticsView from './views/DashboardAnalytics';
 import OverviewView from './views/Overview';
-import PresentationView from './views/Presentation';
 
 
 
@@ -78,17 +77,7 @@ const routes = [
         path: '/changelog',
         exact: true,
         component: lazy(() => import('views/Changelog'))
-      },
-      {
-        path: '/chat',
-        exact: true,
-        component: lazy(() => import('views/Chat'))
-      },
-      {
-        path: '/chat/:id',
-        exact: true,
-        component: lazy(() => import('views/Chat'))
-      },
+      },      
       {
         path: '/dashboards/analytics',
         exact: true,
@@ -109,16 +98,8 @@ const routes = [
         exact: true,
         component: lazy(() => import('views/Mail'))
       },
-      {
-        path: '/management/customers',
-        exact: true,
-        component: lazy(() => import('views/CustomerManagementList'))
-      },
-      {
-        path: '/management/clients',
-        exact: true,
-        component: lazy(() => import('views/Clients'))
-      },
+      
+      
       {
         path: '/management/animals',
         exact: true,
@@ -445,32 +426,8 @@ const routes = [
         path: '/management/weight/edit/:id',
         exact: true,
         component: lazy(() => import('views/Animals/components/Weight/components/edit'))          
-      },      
-      {
-        path: '/management/customers/:id',
-        exact: true,
-        component: lazy(() => import('views/CustomerManagementDetails'))
       },     
-      {
-        path: '/management/customers/:id/:tab',
-        exact: true,
-        component: lazy(() => import('views/CustomerManagementDetails'))
-      },
-      {
-        path: '/management/projects',
-        exact: true,
-        component: lazy(() => import('views/ProjectManagementList'))
-      },
-      {
-        path: '/management/orders',
-        exact: true,
-        component: lazy(() => import('views/OrderManagementList'))
-      },
-      {
-        path: '/management/orders/:id',
-        exact: true,
-        component: lazy(() => import('views/OrderManagementDetails'))
-      },
+     
       // AI STRAWS
       {
         path: '/management/straws/view/:status',
@@ -508,12 +465,6 @@ const routes = [
         component: OverviewView
       },
       {
-        path: '/presentation',
-        //path: isLoggedIn? '/presentation': "/auth/login",
-        exact: true,
-        component: PresentationView
-      },
-      {
         path: '/profile/:id',
         exact: true,
         component: lazy(() => import('views/Profile'))
@@ -522,26 +473,6 @@ const routes = [
         path: '/profile/:id/:tab',
         exact: true,
         component: lazy(() => import('views/Profile'))
-      },
-      {
-        path: '/projects/create',
-        exact: true,
-        component: lazy(() => import('views/ProjectCreate'))
-      },
-      {
-        path: '/projects/:id',
-        exact: true,
-        component: lazy(() => import('views/ProjectDetails'))
-      },
-      {
-        path: '/projects/:id/:tab',
-        exact: true,
-        component: lazy(() => import('views/ProjectDetails'))
-      },
-      {
-        path: '/projects',
-        exact: true,
-        component: lazy(() => import('views/ProjectList'))
       },
       {
         path: '/settings',
