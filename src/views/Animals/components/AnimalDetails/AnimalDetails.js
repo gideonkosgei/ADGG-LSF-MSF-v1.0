@@ -365,7 +365,6 @@ const AnimalDetails = props => {
     setChipsDeformaties(chips => chips.filter(c => chip !== c));
   };
 
-  console.log(chipsColor);
 
   return (
     <Page
@@ -987,7 +986,6 @@ const AnimalDetails = props => {
                 md={12}
                 xs={12}
               >
-
                 <Grid
                   container
                   spacing={2}

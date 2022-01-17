@@ -2,10 +2,11 @@ import React, { useState, useEffect, useContext } from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
-import { Card, Box, Typography, Fab, CircularProgress, Switch, CardContent, CardHeader, Grid, Divider, TextField, colors, Button, CardActions } from '@material-ui/core';
+import { Chip, Card, Box, Typography, Fab, CircularProgress, Switch, CardContent, CardHeader, Grid, Divider, TextField, colors, Button, CardActions } from '@material-ui/core';
 import { getLookups, genericFunctionThreeParameters, postCalving, getAgents, getParametersLimitAll, getLactationNumber, genericFunctionFourParameters } from '../../../../../../utils/API';
 import { endpoint_lookup, endpoint_gen_tag_id, endpoint_calving_add, endpoint_agent, endpoint_parameter_limit_all, endpoint_get_lactation_number, endpoint_dp_validations } from '../../../../../../configs/endpoints';
 import authContext from '../../../../../../contexts/AuthContext';
+import { MultiSelect } from '../../../../../../components';
 import { Sidebar } from '../index';
 import moment from 'moment';
 import { EventValidation } from '../../../ValidationMessages';
@@ -15,6 +16,7 @@ import { green } from '@material-ui/core/colors';
 import CheckIcon from '@material-ui/icons/Check';
 import SaveIcon from '@material-ui/icons/Save';
 import Alert from '@material-ui/lab/Alert';
+import CloseIcon from '@material-ui/icons/Close';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -65,7 +67,23 @@ const useStyles = makeStyles(theme => ({
     left: '50%',
     marginTop: -12,
     marginLeft: -12,
-  }
+  },
+  chips: {
+    padding: theme.spacing(2),
+    display: 'flex',
+    alignItems: 'center',
+    flexWrap: 'wrap'
+  },
+  chip: {
+    margin: theme.spacing(1)
+  },
+  selects: {
+    display: 'flex',
+    alignItems: 'center',
+    flexWrap: 'wrap',
+    backgroundColor: colors.grey[50],
+    padding: theme.spacing(1)
+  },
 }));
 
 const Edit = props => {
@@ -94,7 +112,7 @@ const Edit = props => {
   const [limitParameters, setBodyLimitParameters] = useState([]);
   const animal_id = localStorage.getItem('animal_id');
   const animal_tag = sessionStorage.getItem('animal_tag');
-  const  dob = sessionStorage.getItem('animal_dob'); 
+  const dob = sessionStorage.getItem('animal_dob');
   const option = 0;
 
   const [loading, setLoading] = useState(false);
@@ -102,9 +120,50 @@ const Edit = props => {
   const [output, setOutput] = useState({ status: null, message: "" });
   const timer = React.useRef();
 
+  const [deformatiesValueAttribute, setDeformatiesValueAttribute] = useState([]);
+  const [colorsValueAttribute, setColorsValueAttribute] = useState([]);
+  const [chipsDeformaties, setChipsDeformaties] = useState([]);
+  const [chipsColor, setChipsColor] = useState([]);
+
+
+  const [deformatiesValueAttribute2, setDeformatiesValueAttribute2] = useState([]);
+  const [colorsValueAttribute2, setColorsValueAttribute2] = useState([]);
+  const [chipsDeformaties2, setChipsDeformaties2] = useState([]);
+  const [chipsColor2, setChipsColor2] = useState([]);
+
+ 
+
+  function key_value_array_search(option, array_search_values, array_search_terms) {
+    /**
+     * option 1 > get keys based on values
+     * option 2 > get values based on keys
+     */
+    let results = [];
+
+    if (option === 1) {
+      if (array_search_values.length > 0) {
+        if (array_search_terms.length > 0) {
+          for (let i = 0; i < array_search_terms.length; i++) {
+            results.push(array_search_values.find(x => x.value === array_search_terms[i]).id)
+          }
+        }
+      }
+    } else {
+      if (array_search_values.length > 0) {
+        if (array_search_terms.length > 0) {
+          for (let i = 0; i < array_search_terms.length; i++) {
+            results.push(array_search_values.find(x => x.value === array_search_terms[i]).id)
+          }
+        }
+      }
+    }
+    return results;
+  }
+
   const buttonClassname = clsx({
     [classes.buttonSuccess]: success,
   });
+
 
 
   useEffect(() => {
@@ -144,7 +203,6 @@ const Edit = props => {
             let lookup_calving_status = [];
             let lookup_use_of_calf = [];
             let lookup_body_scores = [];
-
 
 
             for (let i = 0; i < data.length; i++) {
@@ -203,6 +261,20 @@ const Edit = props => {
             setCalvingEase(lookup_ease_of_calving);
             setCalvingStatus(lookup_calving_status);
             setCalfUses(lookup_use_of_calf);
+
+            let arr_deformaties = [];
+            for (let r = 0; r < lookup_deformaties.length; r++) {
+              arr_deformaties.push(lookup_deformaties[r].value);
+            }
+            let arr_colors = [];
+            for (let r = 0; r < lookup_colors.length; r++) {
+              arr_colors.push(lookup_colors[r].value);
+            }
+            setDeformatiesValueAttribute(arr_deformaties);
+            setColorsValueAttribute(arr_colors);
+
+            setDeformatiesValueAttribute2(arr_deformaties);
+            setColorsValueAttribute2(arr_colors);
 
 
           }
@@ -342,8 +414,16 @@ const Edit = props => {
       setSuccess(false);
       setLoading(true);
     }
-    (async (endpoint, id, values, user_id, lactation_number, tag_id_1, tag_id_2) => {
-      await postCalving(endpoint, id, values, user_id, lactation_number, tag_id_1, tag_id_2)
+
+    let color_array1 = key_value_array_search(1, colors, chipsColor);
+    let deformaties_array1 = key_value_array_search(1, deformaties, chipsDeformaties);
+
+    let color_array2 = key_value_array_search(1, colors, chipsColor2);
+    let deformaties_array2 = key_value_array_search(1, deformaties, chipsDeformaties2);
+
+
+    (async (endpoint, id, values, user_id, lactation_number, tag_id_1, tag_id_2,colors1, deformaties1,colors2, deformaties2) => {
+      await postCalving(endpoint, id, values, user_id, lactation_number, tag_id_1, tag_id_2,colors1, deformaties1,colors2, deformaties2)
         .then((response) => {
 
           setOutput({ status: null, message: '' });
@@ -364,7 +444,7 @@ const Edit = props => {
           setSuccess(false);
           setLoading(false);
         });
-    })(endpoint_calving_add, animal_id, values, user_id, values.lactation_number, tag, tag2);
+    })(endpoint_calving_add, animal_id, values, user_id, values.lactation_number, tag, tag2,color_array1,deformaties_array1,color_array2,deformaties_array2);
   };
 
 
@@ -372,6 +452,41 @@ const Edit = props => {
     event.persist();
     setOverride(!override);
   };
+
+
+  const handleMultiSelectChangeColor = value => {
+    setChipsColor(value);
+  };
+
+  const handleMultiSelectChangeDeformaties = value => {
+    setChipsDeformaties(value);
+  };
+
+  const handleChipDeleteColor = chip => {
+    setChipsColor(chips => chips.filter(c => chip !== c));
+  };
+  const handleChipDeleteDeformaties = chip => {
+    setChipsDeformaties(chips => chips.filter(c => chip !== c));
+  };
+
+
+
+  const handleMultiSelectChangeColor2 = value => {
+    setChipsColor2(value);
+  };
+
+  const handleMultiSelectChangeDeformaties2 = value => {
+    setChipsDeformaties2(value);
+  };
+
+  const handleChipDeleteColor2 = chip => {
+    setChipsColor2(chips => chips.filter(c => chip !== c));
+  };
+  const handleChipDeleteDeformaties2 = chip => {
+    setChipsDeformaties2(chips => chips.filter(c => chip !== c));
+  };
+
+
 
   return (
     <Page
@@ -426,7 +541,7 @@ const Edit = props => {
                             }}
                             inputProps={{
                               max: moment(new Date()).format('YYYY-MM-DD'),
-                              min : dob
+                              min: dob
                             }}
                             required
                             label="Calving Date"
@@ -881,90 +996,8 @@ const Edit = props => {
                                             </TextField>
                                           </Grid>
 
-                                          <Grid
-                                            item
-                                            md={3}
-                                            xs={12}
-                                          >
-                                            <TextField
-                                              fullWidth
-                                              InputLabelProps={{
-                                                shrink: true,
-                                              }}
-
-                                              label="Calf Color"
-                                              name="calf_color"
-                                              onChange={handleChange}
-                                              default=""
-                                              select
-                                              // eslint-disable-next-line react/jsx-sort-props
-                                              SelectProps={{ native: true }}
-                                              variant="outlined"
-                                            >
-                                              <option value=""></option>
-                                              {colors.map(color => (
-                                                <option
-                                                  value={color.id}
-                                                >
-                                                  {color.value}
-                                                </option>
-                                              ))
-                                              }
-                                            </TextField>
-                                          </Grid>
-
-                                          <Grid
-                                            item
-                                            md={3}
-                                            xs={12}
-                                          >
-                                            <TextField
-                                              fullWidth
-                                              InputLabelProps={{
-                                                shrink: true
-                                              }}
-                                              required={parseInt(values.calving_status) === 1 ? true : false}
-
-                                              label="Calf Deformities"
-                                              name="calf_deformities"
-                                              onChange={handleChange}
-                                              select
-                                              // eslint-disable-next-line react/jsx-sort-props
-                                              SelectProps={{ native: true }}
-                                              variant="outlined"
-                                            >
-                                              <option value=""></option>
-                                              {deformaties.map(deformaty => (
-                                                <option
-                                                  value={deformaty.id}
-                                                >
-                                                  {deformaty.value}
-                                                </option>
-                                              ))
-                                              }
-                                            </TextField>
-                                          </Grid>
-                                          {parseInt(values.calf_deformities) === -66 ?
-                                            <Grid
-                                              item
-                                              md={3}
-                                              xs={12}
-                                            >
-                                              <TextField
-                                                fullWidth
-                                                InputLabelProps={{
-                                                  shrink: true,
-                                                }}
-
-                                                label="Other Calf Deformaties"
-                                                name="other_calf_deformities"
-                                                onChange={handleChange}
-                                                variant="outlined"
-                                              />
-                                            </Grid>
-                                            : null
-                                          }
-
+                                         
+                                       
                                           <Grid
                                             item
                                             md={3}
@@ -1044,6 +1077,86 @@ const Edit = props => {
                                               variant="outlined"
                                             />
                                           </Grid>
+
+                                          <Grid
+                                            item
+                                            md={12}
+                                            xs={12}
+                                          >
+                                            <Grid
+                                              container
+                                              spacing={2}
+                                            >
+                                              <Grid
+                                                item
+                                                md={6}
+                                                xs={12}
+                                              >
+                                                <Card
+                                                  {...rest}
+                                                  className={clsx(classes.root, className)}
+                                                >
+                                                  <div className={classes.chips}>
+                                                    {chipsDeformaties.map(chip => (
+                                                      <Chip
+                                                        className={classes.chip}
+                                                        deleteIcon={<CloseIcon />}
+                                                        key={chip}
+                                                        label={chip}
+                                                        onDelete={() => handleChipDeleteDeformaties(chip)}
+                                                      />
+                                                    ))}
+                                                  </div>
+                                                  <Divider />
+                                                  <div className={classes.selects}>
+                                                    <MultiSelect
+                                                      key='Deformaties'
+                                                      label="Deformaties"
+                                                      onChange={handleMultiSelectChangeDeformaties}
+                                                      options={deformatiesValueAttribute}
+                                                      value={chipsDeformaties}
+                                                    />
+                                                  </div>
+                                                </Card>
+                                              </Grid>
+
+                                              <Grid
+                                                item
+                                                md={6}
+                                                xs={12}
+                                              >
+                                                <Card
+                                                  {...rest}
+                                                  className={clsx(classes.root, className)}
+                                                >
+                                                  <div className={classes.chips}>
+                                                    {chipsColor.map(chip => (
+                                                      <Chip
+                                                        className={classes.chip}
+                                                        deleteIcon={<CloseIcon />}
+                                                        key={chip}
+                                                        label={chip}
+                                                        onDelete={() => handleChipDeleteColor(chip)}
+                                                      />
+                                                    ))}
+                                                  </div>
+                                                  <Divider />
+                                                  <div className={classes.selects}>
+                                                    <MultiSelect
+                                                      key='colors'
+                                                      label="Colors"
+                                                      onChange={handleMultiSelectChangeColor}
+                                                      options={colorsValueAttribute}
+                                                      value={chipsColor}
+                                                    />
+                                                  </div>
+                                                </Card>
+                                              </Grid>
+
+                                            </Grid>
+                                          </Grid>
+
+
                                         </>
                                         : null
                                     }
@@ -1381,89 +1494,7 @@ const Edit = props => {
                                             </TextField>
                                           </Grid>
 
-                                          <Grid
-                                            item
-                                            md={3}
-                                            xs={12}
-                                          >
-                                            <TextField
-                                              fullWidth
-                                              InputLabelProps={{
-                                                shrink: true,
-                                              }}
-
-                                              label="Calf Color"
-                                              name="calf_color2"
-                                              onChange={handleChange}
-                                              default=""
-                                              select
-                                              // eslint-disable-next-line react/jsx-sort-props
-                                              SelectProps={{ native: true }}
-                                              variant="outlined"
-                                            >
-                                              <option value=""></option>
-                                              {colors.map(color => (
-                                                <option
-                                                  value={color.id}
-                                                >
-                                                  {color.value}
-                                                </option>
-                                              ))
-                                              }
-                                            </TextField>
-                                          </Grid>
-                                          <Grid
-                                            item
-                                            md={3}
-                                            xs={12}
-                                          >
-                                            <TextField
-                                              fullWidth
-                                              InputLabelProps={{
-                                                shrink: true
-                                              }}
-                                              required={parseInt(values.calving_status2) === 1 ? true : false}
-
-                                              label="Calf Deformities"
-                                              name="calf_deformities2"
-                                              onChange={handleChange}
-                                              select
-                                              // eslint-disable-next-line react/jsx-sort-props
-                                              SelectProps={{ native: true }}
-                                              variant="outlined"
-                                            >
-                                              <option value=""></option>
-                                              {deformaties.map(deformaty => (
-                                                <option
-                                                  value={deformaty.id}
-                                                >
-                                                  {deformaty.value}
-                                                </option>
-                                              ))
-                                              }
-                                            </TextField>
-                                          </Grid>
-                                          {parseInt(values.calf_deformities2) === -66 ?
-                                            <Grid
-                                              item
-                                              md={3}
-                                              xs={12}
-                                            >
-                                              <TextField
-                                                fullWidth
-                                                InputLabelProps={{
-                                                  shrink: true,
-                                                }}
-
-                                                label="Other Calf Deformaties"
-                                                name="other_calf_deformities2"
-                                                onChange={handleChange}
-                                                variant="outlined"
-                                              />
-                                            </Grid>
-                                            : null
-                                          }
-
+                                          
                                           <Grid
                                             item
                                             md={3}
@@ -1545,6 +1576,85 @@ const Edit = props => {
 
                                             />
                                           </Grid>
+
+                                          <Grid
+                                            item
+                                            md={12}
+                                            xs={12}
+                                          >
+                                            <Grid
+                                              container
+                                              spacing={2}
+                                            >
+                                              <Grid
+                                                item
+                                                md={6}
+                                                xs={12}
+                                              >
+                                                <Card
+                                                  {...rest}
+                                                  className={clsx(classes.root, className)}
+                                                >
+                                                  <div className={classes.chips}>
+                                                    {chipsDeformaties2.map(chip => (
+                                                      <Chip
+                                                        className={classes.chip}
+                                                        deleteIcon={<CloseIcon />}
+                                                        key={chip}
+                                                        label={chip}
+                                                        onDelete={() => handleChipDeleteDeformaties2(chip)}
+                                                      />
+                                                    ))}
+                                                  </div>
+                                                  <Divider />
+                                                  <div className={classes.selects}>
+                                                    <MultiSelect
+                                                      key='Deformaties'
+                                                      label="Deformaties"
+                                                      onChange={handleMultiSelectChangeDeformaties2}
+                                                      options={deformatiesValueAttribute2}
+                                                      value={chipsDeformaties2}
+                                                    />
+                                                  </div>
+                                                </Card>
+                                              </Grid>
+
+                                              <Grid
+                                                item
+                                                md={6}
+                                                xs={12}
+                                              >
+                                                <Card
+                                                  {...rest}
+                                                  className={clsx(classes.root, className)}
+                                                >
+                                                  <div className={classes.chips}>
+                                                    {chipsColor2.map(chip => (
+                                                      <Chip
+                                                        className={classes.chip}
+                                                        deleteIcon={<CloseIcon />}
+                                                        key={chip}
+                                                        label={chip}
+                                                        onDelete={() => handleChipDeleteColor2(chip)}
+                                                      />
+                                                    ))}
+                                                  </div>
+                                                  <Divider />
+                                                  <div className={classes.selects}>
+                                                    <MultiSelect
+                                                      key='colors'
+                                                      label="Colors"
+                                                      onChange={handleMultiSelectChangeColor2}
+                                                      options={colorsValueAttribute2}
+                                                      value={chipsColor2}
+                                                    />
+                                                  </div>
+                                                </Card>
+                                              </Grid>
+
+                                            </Grid>
+                                          </Grid>
+
                                         </>
                                         : null
                                       }

@@ -1432,7 +1432,7 @@ export const getCalvingByEventId = function (config, id) {
 }
 
 // add new Calving event
-export const postCalving = function (config, animal_id, values, user_id, lactation_number,tag_1,tag_2) {
+export const postCalving = function (config, animal_id, values, user_id, lactation_number,tag_1,tag_2,color_array1,deformaties_array1,color_array2,deformaties_array2) {
   let {
     // calf 1
     calving_status,
@@ -1440,8 +1440,6 @@ export const postCalving = function (config, animal_id, values, user_id, lactati
     types_calving,
     Calf_weight,
     calf_body_condition_score,
-    calf_color,
-    calf_deformities,
     calf_heart_girth,
     calf_name,
     ease_of_calving,
@@ -1457,8 +1455,6 @@ export const postCalving = function (config, animal_id, values, user_id, lactati
     types_calving2,
     Calf_weight2,
     calf_body_condition_score2,
-    calf_color2,
-    calf_deformities2,
     calf_heart_girth2,
     calf_name2,
     ease_of_calving2,
@@ -1481,8 +1477,6 @@ export const postCalving = function (config, animal_id, values, user_id, lactati
   types_calving = (typeof types_calving === 'undefined' || types_calving === '') ? null : types_calving;
   Calf_weight = (typeof Calf_weight === 'undefined' || Calf_weight === '') ? null : Calf_weight;
   calf_body_condition_score = (typeof calf_body_condition_score === 'undefined' || calf_body_condition_score === '') ? null : calf_body_condition_score;
-  calf_color = (typeof calf_color === 'undefined' || calf_color === '') ? null : calf_color;
-  calf_deformities = (typeof calf_deformities === 'undefined' || calf_deformities === '') ? null : calf_deformities;
   calf_heart_girth = (typeof calf_heart_girth === 'undefined' || calf_heart_girth === '') ? null : calf_heart_girth;
   calf_name = (typeof calf_name === 'undefined' || calf_name === '') ? null : calf_name;
   ease_of_calving = (typeof ease_of_calving === 'undefined' || ease_of_calving === '') ? null : ease_of_calving;
@@ -1498,8 +1492,6 @@ export const postCalving = function (config, animal_id, values, user_id, lactati
   types_calving2 = (typeof types_calving2 === 'undefined' || types_calving2 === '') ? null : types_calving2;
   Calf_weight2 = (typeof Calf_weight2 === 'undefined' || Calf_weight2 === '') ? null : Calf_weight2;
   calf_body_condition_score2 = (typeof calf_body_condition_score2 === 'undefined' || calf_body_condition_score2 === '') ? null : calf_body_condition_score2;
-  calf_color2 = (typeof calf_color2 === 'undefined' || calf_color2 === '') ? null : calf_color2;
-  calf_deformities2 = (typeof calf_deformities2 === 'undefined' || calf_deformities2 === '') ? null : calf_deformities2;
   calf_heart_girth2 = (typeof calf_heart_girth2 === 'undefined' || calf_heart_girth2 === '') ? null : calf_heart_girth2;
   calf_name2 = (typeof calf_name2 === 'undefined' || calf_name2 === '') ? null : calf_name2;
   ease_of_calving2 = (typeof ease_of_calving2 === 'undefined' || ease_of_calving2 === '') ? null : ease_of_calving2;
@@ -1526,10 +1518,10 @@ export const postCalving = function (config, animal_id, values, user_id, lactati
     "field_agent_id": field_agent_id,
     "created_by": user_id,
 
-    //calf 1
+    //calf 1 
     "body_condition_score": calf_body_condition_score,
-    "calf_color": calf_color,
-    "calf_deformities": calf_deformities,
+    "calf_color1": color_array1,
+    "calf_deformities1": deformaties_array1,
     "other_calf_deformities": other_calf_deformities,
     "heart_girth": calf_heart_girth,
     "calf_name": calf_name,
@@ -1546,8 +1538,8 @@ export const postCalving = function (config, animal_id, values, user_id, lactati
 
     //calf 2
     "body_condition_score2": calf_body_condition_score2,
-    "calf_color2": calf_color2,
-    "calf_deformities2": calf_deformities2,
+    "calf_color2": color_array2,
+    "calf_deformities2": deformaties_array2,
     "other_calf_deformities2": other_calf_deformities2,
     "heart_girth2": calf_heart_girth2,
     "calf_name2": calf_name2,

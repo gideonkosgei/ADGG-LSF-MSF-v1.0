@@ -10,6 +10,8 @@ import PerfectScrollbar from 'react-perfect-scrollbar';
 import GetAppIcon from '@material-ui/icons/GetApp';
 import { Page } from 'components';
 
+import theme from '../../../../theme';
+
 const useStyles = makeStyles(theme => ({
   root: {},
   saveButton: {
@@ -58,13 +60,13 @@ const Downloads = props => {
   }, []);
  
   const data = [
-    [1,"Data Template", "Milking Data Template", "Milking Data Template", "templates/milk.xlsx"],
+    [1,"Data Template", "Milking Data Template", "Milking Data Template", "templates/3.milking.xlsx"],
     [2,"Data Template", "Weight & growth Data Template", "Weight & growth Data Template", "templates/weight.xlsx"],
-    [3,"Data Template", "Calving Data Template", "Calving Data Template", "templates/template-calving.csv"],
+    /*[3,"Data Template", "Calving Data Template", "Calving Data Template", "templates/template-calving.csv"],
     [4,"Data Template", "Pregnancy Diagnosis Data Template", "Pregnancy Diagnosis Data Template", "templates/template-pregnancy-diagnosis.csv"],
     [5,"Data Template", "Exit & Disposal Data Template", "Exit & Disposal Data Template", "templates/template-exit-and-disposal.csv"],
     [6,"Data Template", "Insemination Data Template", "Insemination Data Template", "templates/template-insemination.csv"],
-    [7,"Data Template", "Synchronization Data Template", "Synchronization Data Template", "templates/template-synchronization.csv"],
+    [7,"Data Template", "Synchronization Data Template", "Synchronization Data Template", "templates/template-synchronization.csv"],*/
     [8,"Data Template", "Pedigree Data Template", "Animal Registration Data Template", "templates/pedigree.xlsx"] 
    ];
 
@@ -99,7 +101,7 @@ const options = {
   rowsPerPageOptions :[5,10,20,50,100],
   selectableRows: 'none',      
   filterType: 'checkbox',
-  responsive: 'stacked',                
+  responsive: 'standard',                
   rowHover: true,       
   setTableProps: () => {
    return {
@@ -142,7 +144,7 @@ const options = {
           <Grid item xs={12}>
             <PerfectScrollbar>
               <div className={classes.inner}>
-                <MuiThemeProvider>                
+                <MuiThemeProvider theme={theme}>                
                   <MUIDataTable
                     title = ""
                     data={data}

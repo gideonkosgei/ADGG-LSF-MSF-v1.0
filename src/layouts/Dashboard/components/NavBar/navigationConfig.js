@@ -49,10 +49,10 @@ let p = [
             title: 'Exit List',
             href: '/management/exit-list'
           },
-          {
+          /*{
             title: 'AI Straws',
             href: '/management/straws/view/1'
-          },
+          },*/
           {
             title: 'Graduation',
             href: '/management/graduation/view/0'

@@ -4,6 +4,7 @@ import { makeStyles } from '@material-ui/styles';
 import { Card, CardContent, Grid, Divider, colors, Link, LinearProgress, Typography } from '@material-ui/core';
 import { genericFunctionFourParameters } from '../../../../../../utils/API';
 import { endpoint_calving } from '../../../../../../configs/endpoints';
+import theme from '../../../../../../theme';
 import { Sidebar } from '../index';
 import MUIDataTable from "mui-datatables";
 import { MuiThemeProvider } from '@material-ui/core/styles';
@@ -114,7 +115,7 @@ const Edit = () => {
     rowsPerPageOptions: [5, 10, 20, 50, 100],
     selectableRows: 'none',
     filterType: 'checkbox',
-    responsive: 'stacked',
+    responsive: 'standard',
     rowHover: true,
     setTableProps: () => {
       return {
@@ -154,7 +155,7 @@ const Edit = () => {
 
       <Header />
       <br />
-      <Grid container spacing={1} justify="center">
+      <Grid container spacing={1} justifyContent="center">
         <Grid item xs={1} >
           <Sidebar animal_id={animal_id} />
         </Grid>
@@ -162,7 +163,7 @@ const Edit = () => {
           <Card>
             <CardContent>
               <PerfectScrollbar>
-                <MuiThemeProvider>
+                <MuiThemeProvider theme={theme}>
                   <MUIDataTable
                     title=""
                     data={values}
