@@ -1574,7 +1574,7 @@ export const postCalving = function (config, animal_id, values, user_id, lactati
 };
 
 
-export const updateCalving = function (config, record_id, values, user_id) {
+export const updateCalving = function (config, record_id, values, user_id,color_array1,deformaties_array1,color_array2,deformaties_array2) {
   let {
     // calf 1
     calving_status,
@@ -1582,8 +1582,6 @@ export const updateCalving = function (config, record_id, values, user_id) {
     types_calving,
     Calf_weight,
     calf_body_condition_score,
-    calf_color,
-    calf_deformities,
     calf_heart_girth,
     calf_name,
     calf_tag_id,
@@ -1600,8 +1598,6 @@ export const updateCalving = function (config, record_id, values, user_id) {
     types_calving2,
     Calf_weight2,
     calf_body_condition_score2,
-    calf_color2,
-    calf_deformities2,
     calf_heart_girth2,
     calf_name2,
     calf_tag_id2,
@@ -1627,8 +1623,6 @@ export const updateCalving = function (config, record_id, values, user_id) {
   types_calving = (typeof types_calving === 'undefined' || types_calving === '') ? null : types_calving;
   Calf_weight = (typeof Calf_weight === 'undefined' || Calf_weight === '') ? null : Calf_weight;
   calf_body_condition_score = (typeof calf_body_condition_score === 'undefined' || calf_body_condition_score === '') ? null : calf_body_condition_score;
-  calf_color = (typeof calf_color === 'undefined' || calf_color === '') ? null : calf_color;
-  calf_deformities = (typeof calf_deformities === 'undefined' || calf_deformities === '') ? null : calf_deformities;
   calf_heart_girth = (typeof calf_heart_girth === 'undefined' || calf_heart_girth === '') ? null : calf_heart_girth;
   calf_name = (typeof calf_name === 'undefined' || calf_name === '') ? null : calf_name;
   calf_tag_id = (typeof calf_tag_id === 'undefined' || calf_tag_id === '') ? null : calf_tag_id;
@@ -1645,8 +1639,6 @@ export const updateCalving = function (config, record_id, values, user_id) {
   types_calving2 = (typeof types_calving2 === 'undefined' || types_calving2 === '') ? null : types_calving2;
   Calf_weight2 = (typeof Calf_weight2 === 'undefined' || Calf_weight2 === '') ? null : Calf_weight2;
   calf_body_condition_score2 = (typeof calf_body_condition_score2 === 'undefined' || calf_body_condition_score2 === '') ? null : calf_body_condition_score2;
-  calf_color2 = (typeof calf_color2 === 'undefined' || calf_color2 === '') ? null : calf_color2;
-  calf_deformities2 = (typeof calf_deformities2 === 'undefined' || calf_deformities2 === '') ? null : calf_deformities2;
   calf_heart_girth2 = (typeof calf_heart_girth2 === 'undefined' || calf_heart_girth2 === '') ? null : calf_heart_girth2;
   calf_name2 = (typeof calf_name2 === 'undefined' || calf_name2 === '') ? null : calf_name2;
   calf_tag_id2 = (typeof calf_tag_id2 === 'undefined' || calf_tag_id2 === '') ? null : calf_tag_id2;
@@ -1664,6 +1656,7 @@ export const updateCalving = function (config, record_id, values, user_id) {
   calving_date = (typeof calving_date === 'undefined' || calving_date === '') ? moment(new Date()).format('YYYY-MM-DD') : calving_date;
   lactation_number = (typeof lactation_number === 'undefined' || lactation_number === '') ? null : lactation_number;
 
+
   const body = {
     //global     
     "calving_date": calving_date,
@@ -1675,8 +1668,8 @@ export const updateCalving = function (config, record_id, values, user_id) {
 
     //calf 1
     "body_condition_score": calf_body_condition_score,
-    "calf_color": calf_color,
-    "calf_deformities": calf_deformities,
+    "calf_color": color_array1,
+    "calf_deformities": deformaties_array1,
     "other_calf_deformities": other_calf_deformities,
     "heart_girth": calf_heart_girth,
     "calf_name": calf_name,
@@ -1693,8 +1686,8 @@ export const updateCalving = function (config, record_id, values, user_id) {
 
     //calf 2
     "body_condition_score2": calf_body_condition_score2,
-    "calf_color2": calf_color2,
-    "calf_deformities2": calf_deformities2,
+    "calf_color2": color_array2,
+    "calf_deformities2": deformaties_array2,
     "other_calf_deformities2": other_calf_deformities2,
     "heart_girth2": calf_heart_girth2,
     "calf_name2": calf_name2,
@@ -1709,6 +1702,7 @@ export const updateCalving = function (config, record_id, values, user_id) {
     "use_of_calf_other2": use_of_calf_other2,
     "calf_tag_id2": calf_tag_id2,
   };
+
 
   const options = {
     url: `${config.url}${record_id}`,

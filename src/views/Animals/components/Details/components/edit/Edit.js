@@ -232,6 +232,7 @@ const Edit = props => {
             setEntryTypes(lookup_entry_types);
             setDeformaties(lookup_deformaties);
 
+
             let arr_deformaties = [];
             for (let r = 0; r < lookup_deformaties.length; r++) {
               arr_deformaties.push(lookup_deformaties[r].value);

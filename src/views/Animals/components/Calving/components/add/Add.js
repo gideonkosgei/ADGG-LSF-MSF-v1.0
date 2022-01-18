@@ -1402,6 +1402,7 @@ const Edit = props => {
                                             xs={12}
                                           >
                                             <TextField
+                                              fullWidth
                                               InputLabelProps={{
                                                 shrink: true,
                                               }}
