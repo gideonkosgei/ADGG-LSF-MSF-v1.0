@@ -9,7 +9,6 @@ import authContext from '../../../../../../contexts/AuthContext';
 import { Sidebar } from '../index';
 import OpenInNewIcon from '@material-ui/icons/OpenInNew';
 import { EventCalvingMetaData } from '../../../Modal';
-import { MultiSelect } from '../../../../../../components';
 import moment from 'moment';
 import { Page } from 'components';
 import { Header } from '../index';
@@ -121,14 +120,14 @@ const Edit = props => {
   const [success, setSuccess] = useState(false);
   const timer = React.useRef();
 
-  const [deformatiesValueAttribute, setDeformatiesValueAttribute] = useState([]);
-  const [colorsValueAttribute, setColorsValueAttribute] = useState([]);
+ // const [deformatiesValueAttribute, setDeformatiesValueAttribute] = useState([]);
+  //const [colorsValueAttribute, setColorsValueAttribute] = useState([]);
   const [chipsDeformaties, setChipsDeformaties] = useState([]);
   const [chipsColor, setChipsColor] = useState([]);
 
 
-  const [deformatiesValueAttribute2, setDeformatiesValueAttribute2] = useState([]);
-  const [colorsValueAttribute2, setColorsValueAttribute2] = useState([]);
+  //const [deformatiesValueAttribute2, setDeformatiesValueAttribute2] = useState([]);
+  //const [colorsValueAttribute2, setColorsValueAttribute2] = useState([]);
   const [chipsDeformaties2, setChipsDeformaties2] = useState([]);
   const [chipsColor2, setChipsColor2] = useState([]);
 
@@ -244,6 +243,9 @@ const Edit = props => {
             setCalvingEase(lookup_ease_of_calving);
             setCalvingStatus(lookup_calving_status);
             setCalfUses(lookup_use_of_calf);
+
+            console.log(lookup_colors);
+            console.log(lookup_deformaties);
 
             /*let arr_deformaties = [];
             for (let r = 0; r < lookup_deformaties.length; r++) {
@@ -434,7 +436,7 @@ const Edit = props => {
   };
   localStorage.setItem('calving_event_id', parseInt(props.match.params.id));
 
-
+/*
 
   const handleMultiSelectChangeColor = value => {
     setChipsColor(value);
@@ -453,8 +455,7 @@ const Edit = props => {
   const handleMultiSelectChangeDeformaties2 = value => {
     setChipsDeformaties2(value);
   };
-
-
+  */
 
 
   return (
@@ -1108,16 +1109,7 @@ const Edit = props => {
                                                 />
                                               ))}
                                             </div>
-                                            <Divider />
-                                            <div className={classes.selects}>
-                                              <MultiSelect
-                                                disable={Boolean(readOnly)}
-                                                key='Deformaties'
-                                                label="Deformaties"
-                                                onChange={handleMultiSelectChangeDeformaties}
-                                                options={deformatiesValueAttribute}
-                                              />
-                                            </div>
+                                            
                                           </Card>
                                         </Grid>
 
@@ -1140,18 +1132,7 @@ const Edit = props => {
                                                 />
                                               ))}
                                             </div>
-                                            <Divider />
-                                            <div className={classes.selects}>
-                                              <MultiSelect
-                                                disable={Boolean(readOnly)}
-                                                key='colors'
-                                                label="Colors"
-                                                onChange={handleMultiSelectChangeColor}
-                                                options={colorsValueAttribute}
-                                                value={chipsColor}
-                                                sisabled={loading}
-                                              />
-                                            </div>
+                                            
                                           </Card>
                                         </Grid>
                                       </Grid>
@@ -1604,17 +1585,7 @@ const Edit = props => {
                                           />
                                         ))}
                                       </div>
-                                      <Divider />
-                                      <div className={classes.selects}>
-                                        <MultiSelect
-                                          disable={Boolean(readOnly)}
-                                          key='Deformaties'
-                                          label="Deformaties"
-                                          onChange={handleMultiSelectChangeDeformaties2}
-                                          options={deformatiesValueAttribute2}
-                                          value={chipsDeformaties2}
-                                        />
-                                      </div>
+                                     
                                     </Card>
                                   </Grid>
 
@@ -1638,16 +1609,7 @@ const Edit = props => {
                                         ))}
                                       </div>
                                       <Divider />
-                                      <div className={classes.selects}>
-                                        <MultiSelect
-                                          disable={Boolean(readOnly)}
-                                          key='colors'
-                                          label="Colors"
-                                          onChange={handleMultiSelectChangeColor2}
-                                          options={colorsValueAttribute2}
-                                          value={chipsColor2}
-                                        />
-                                      </div>
+                                     
                                     </Card>
                                   </Grid>
 
