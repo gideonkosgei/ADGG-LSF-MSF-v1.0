@@ -20,7 +20,6 @@ import { MuiThemeProvider } from '@material-ui/core/styles';
 
 const useStyles = makeStyles(theme => ({
   root: {
-    width: theme.breakpoints.values.lg,
     maxWidth: '100%',
     margin: '0 auto',
     //padding: theme.spacing(3)

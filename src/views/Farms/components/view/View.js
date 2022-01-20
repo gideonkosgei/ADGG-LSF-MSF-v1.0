@@ -5,6 +5,7 @@ import { Grid, Divider, Button, colors, Link, Typography, Card, CardContent, Lin
 import { Page } from 'components';
 import { genericFunctionFourParameters, delinkFarmUnitsFromOrgUnit } from '../../../../utils/API';
 import { endpoint_farms, endpoint_delink_farm_unit } from '../../../../configs/endpoints';
+import theme from '../../../../theme';
 import authContext from '../../../../contexts/AuthContext';
 import MUIDataTable from "mui-datatables";
 import { MuiThemeProvider } from '@material-ui/core/styles';
@@ -167,7 +168,7 @@ const Edit = props => {
       SetSelectedRows(data);
     },
     filterType: 'checkbox',
-    responsive: 'stacked',
+    responsive: 'standard',
     rowHover: true,
     setTableProps: () => {
       return {
@@ -251,7 +252,7 @@ const Edit = props => {
                   : null
               }
               <PerfectScrollbar>
-                <MuiThemeProvider>
+                <MuiThemeProvider theme={theme}>
                   <MUIDataTable
                     title=""
                     data={values}
