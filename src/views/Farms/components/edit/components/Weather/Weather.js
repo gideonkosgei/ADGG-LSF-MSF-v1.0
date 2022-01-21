@@ -95,13 +95,13 @@ const Weather = props => {
     [classes.buttonSuccess]: successApi,
   });
 
-
   const defaults = {
     option: 2,
-    date_from: moment(new Date(new Date().getFullYear(), 0, 1)).format('YYYY-MM-DD'),
+    date_from: moment(new Date()).subtract(1, 'years').format('YYYY-MM-DD'),
     date_to: moment(new Date()).format('YYYY-MM-DD')
+    
   }
-
+  
   useEffect(() => {
     let mounted = true;
     (async (endpoint, desc, id, option, date_from, date_to) => {
