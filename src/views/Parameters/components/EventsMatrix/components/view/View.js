@@ -70,6 +70,7 @@ const Edit = props => {
     { name: "exit",label: "Exit",options: {filter: false,sort: true,display:true}}, 
     { name: "weight",label: "Weight",options: {filter: false,sort: true,display:true}},
     { name: "pd",label: "PD",options: {filter: false,sort: true,display:true}}, 
+    { name: "hair",label: "Hair Sampling",options: {filter: false,sort: true,display:true}},
     { name: "",
       options: {
       filter: false,

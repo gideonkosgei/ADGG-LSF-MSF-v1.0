@@ -406,7 +406,7 @@ const routes = [
       },
       
 
-
+     // Weight
       {
         path: '/management/weight/view/:id',
         exact: true,
@@ -426,7 +426,26 @@ const routes = [
         path: '/management/weight/edit/:id',
         exact: true,
         component: lazy(() => import('views/Animals/components/Weight/components/edit'))          
+      },  
+      
+      //hair sampling
+
+      {
+        path: '/management/hair-sampling/view/:id',
+        exact: true,
+        component: lazy(() => import('views/Animals/components/HairSampling'))        
+      }, 
+      {
+        path: '/management/hair-sampling/add/:id',
+        exact: true,
+        component: lazy(() => import('views/Animals/components/HairSampling/components/add'))          
+      },
+      {
+        path: '/management/hair-sampling/edit/:id',
+        exact: true,
+        component: lazy(() => import('views/Animals/components/HairSampling/components/edit'))          
       },     
+     
      
       // AI STRAWS
       {

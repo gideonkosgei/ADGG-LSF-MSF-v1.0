@@ -2642,7 +2642,7 @@ export const getEventSetupAll = function (config) {
 
 
 export const updateEventSetup = function (config, values, user_id, param_id) {
-  let { calving, milking, health, bio_data, insemination, sync, exit, weight, pd } = values;
+  let { calving, milking, health, bio_data, insemination, sync, exit, weight, pd,hair } = values;
 
   const body = {
     "calving": calving,
@@ -2654,6 +2654,7 @@ export const updateEventSetup = function (config, values, user_id, param_id) {
     "exit": exit,
     "weight": weight,
     "pd": pd,
+    "hair": hair,
     "updated_by": user_id
   };
   const options = {
@@ -4219,6 +4220,38 @@ export const delinkFarmUnitsFromOrgUnit = function (config, farm_id, user_id, or
     headers: config.headers,
     data: body
   };
+
+  return new Promise((resolve, reject) => {
+    axios(options)
+      .then(res => {
+        resolve(res.data);
+      })
+      .catch(err => reject(err));
+  });
+}
+
+
+// Hair Sampling Events
+export const postPutHairSample = function (config, id, values, user_id) {
+  let { barcode, event_date } = values;
+  barcode = (typeof barcode === 'undefined' || barcode === '') ? null : barcode; 
+  event_date = (typeof event_date === 'undefined' || event_date === '') ? moment(new Date()).format('YYYY-MM-DD') : event_date;
+
+  const body = {
+    "id": id,
+    "barcode": barcode,  
+    "event_date": event_date,
+    "field_agent_id": user_id,
+    "user": user_id
+  };
+
+  const options = {
+    url: `${config.url}`,
+    method: config.method,
+    headers: config.headers,
+    data: body
+  }
+
 
   return new Promise((resolve, reject) => {
     axios(options)

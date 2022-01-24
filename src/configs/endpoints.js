@@ -1160,6 +1160,32 @@ export const endpoint_nasa_power = {
 };  
 
 
+/** hair sampling endpoints */
+
+//get hair samples
+export const endpoint_hair_sample_get = {
+  url: `${api}/events/hair-sample`,
+  method: 'GET',
+  headers: headers   
+};
+
+//Update hair sample details
+export const endpoint_hair_sample_update = {
+  url: `${api}/events/hair-sample`,
+  method: 'PUT',
+  headers: headers   
+};
+
+
+//post new hair sample
+export const endpoint_hair_sample_add = {
+  url: `${api}/events/hair-sample`,
+  method: 'POST',
+  headers: headers   
+};
+
+
+
 
 
 

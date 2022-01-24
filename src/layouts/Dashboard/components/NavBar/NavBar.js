@@ -50,6 +50,8 @@ const NavBar = props => {
   const [imageDir, setImageDir] = useState('');
   const type = 1;
 
+  console.log(props);
+
   useEffect(() => {
     let mounted = true;
     let mounted_image_dir = true;
