@@ -7,6 +7,8 @@ import { genericFunctionFiveParameters } from '../../../../../../utils/API';
 import theme from '../../../../../../theme';
 import { endpoint_herd } from '../../../../../../configs/endpoints';
 import authContext from '../../../../../../contexts/AuthContext';
+import { default as DefaultHerd } from '../DefaultHerd';
+
 import MUIDataTable from "mui-datatables";
 import { MuiThemeProvider } from '@material-ui/core/styles';
 import PerfectScrollbar from 'react-perfect-scrollbar';
@@ -49,7 +51,7 @@ const View = props => {
     id = user_id;
     option = 0;
   } else {
-    id = farm;
+    id = farm.id;
     option = 2;
   }
 
@@ -142,8 +144,18 @@ const View = props => {
         <LinearProgress />
       }
       <Divider />
+
       <Grid container spacing={1} justifyContent="center">
         <Grid item xs={12}>
+
+          {
+            farm && Object.keys(values).length === 0 ?
+              <>
+                <DefaultHerd farm_id={farm.id} />
+              </>
+              : null
+          }
+
           <Card>
             <CardContent>
               <PerfectScrollbar>
@@ -166,6 +178,7 @@ const View = props => {
 
 View.propTypes = {
   history: PropTypes.object.isRequired,
-  match: PropTypes.object.isRequired
+  match: PropTypes.object.isRequired,
+  farm: PropTypes.object
 };
 export default View;

@@ -31,7 +31,7 @@ const useStyles = makeStyles(theme => ({
       backgroundColor: colors.green[900]
     }
   },
-  
+
   divider: {
     backgroundColor: colors.grey[300]
   },
@@ -806,7 +806,7 @@ const Edit = props => {
           </Card>
         </Grid>
       </Grid>
-      <Herds farm={values.id} />
+      <Herds farm={values} />
     </Page>
   );
 };

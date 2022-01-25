@@ -3962,6 +3962,32 @@ export const postHerd = function (config, values, user_id, org_id) {
   });
 }
 
+
+//create Default herd
+export const postDefaultHerd = function (config, farm_id, user_id) {
+
+  const body = {
+    "farm_id": farm_id,
+    "user_id": user_id    
+  };
+
+  const options = {
+    url: `${config.url}`,
+    method: config.method,
+    headers: config.headers,
+    data: body
+  };
+
+  return new Promise((resolve, reject) => {
+    axios(options)
+      .then(res => {
+        resolve(res.data);
+      })
+      .catch(err => reject(err));
+  });
+}
+
+
 //update herd
 export const putHerd = function (config, values, user_id, org) {
 

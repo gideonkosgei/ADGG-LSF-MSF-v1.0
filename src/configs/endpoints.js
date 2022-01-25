@@ -1100,6 +1100,13 @@ export const endpoint_herd_add= {
   headers: headers   
 };
 
+// add  default herd
+export const endpoint_default_herd_add= {
+  url: `${api}/default-herd`,
+  method: 'POST',
+  headers: headers   
+};
+
 // update herd
 export const endpoint_herd_update= {
   url: `${api}/herds`,
