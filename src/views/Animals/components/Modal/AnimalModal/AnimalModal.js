@@ -379,7 +379,7 @@ AnimalModal.propTypes = {
   className: PropTypes.string,
   option: PropTypes.number.isRequired,
   animal_id: PropTypes.number.isRequired,  
-  parentType: PropTypes.string.isRequired,
+  parentType: PropTypes.string,
   onClose: PropTypes.func,
   open: PropTypes.bool
 };

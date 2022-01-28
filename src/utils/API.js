@@ -2859,12 +2859,13 @@ export const getServiceActionList = function (config, org, option) {
 
 
 // Analytics Lactation curve 
-export const getlactationCurveData = function (config, animal_id) {
+export const getlactationCurveData = function (config,id,option) {
   const options = {
-    url: `${config.url}${animal_id}`,
+    url: `${config.url}${id}/${option}`,
     method: config.method,
     headers: config.headers
   }
+
   return new Promise((resolve, reject) => {
     axios(options)
       .then(res => {
@@ -2873,6 +2874,8 @@ export const getlactationCurveData = function (config, animal_id) {
       .catch(err => reject(err));
   });
 }
+
+
 
 
 export const getAnnualMilkPerformance = function (config, organisation_id) {

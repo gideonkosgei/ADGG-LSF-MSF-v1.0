@@ -30,7 +30,7 @@ const AnimalList = props => {
   const { HerdIdProp } = props;
   const classes = useStyles();
   const [animals, setAnimals] = useState([]);
-  const [caption, setCaption] = useState(null);
+  const [caption, setCaption] = useState('');
   const [{ user_id }] = useContext(authContext);
   const [isLoading, setIsLoading] = useState(true);
 

@@ -1007,7 +1007,7 @@ const Edit = props => {
                     label="Breed Composition Details"
                     name="breed_composition_details"
                     multiline
-                    rowsMax={4}
+                    maxRows={4}
                     onChange={handleChange}
                     variant="outlined"
                     value={values.breed_composition_details}
@@ -1193,7 +1193,7 @@ const Edit = props => {
                   label="Notes"
                   name="notes"
                   multiline
-                  rowsMax={4}
+                  maxRows={4}
                   onChange={handleChange}
                   variant="outlined"
                   value={values.notes}

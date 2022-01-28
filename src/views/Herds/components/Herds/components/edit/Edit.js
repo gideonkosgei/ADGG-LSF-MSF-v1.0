@@ -9,6 +9,7 @@ import { Header } from '../Header';
 import { default as Statistics } from '../../../../../Overview/components/Statistics';
 import { default as AnimalCategorySegmentation } from '../../../../../DashboardAnalytics/components/AnimalCategorySegmentation';
 import { default as BreedDistribution } from '../../../../../DashboardAnalytics/components/BreedDistribution';
+import { default as LactationCurve } from '../../../../../Animals/components/Analytics/components/LactationCurve';
 import { default as EventsSummary } from '../../../../../DashboardAnalytics/components/EventsSummary';
 import { default as Animals } from '../../../../../Animals'
 import { Page } from 'components';
@@ -193,7 +194,7 @@ const Edit = props => {
       await getCountries(endpoint)
         .then(response => {
           if (mounted_countries) {
-            setCountries(response.payload);            
+            setCountries(response.payload);
 
             if (country_id && country_id !== '') {
               let getUnits = response.payload.find(country => country.id === parseInt(country_id));
@@ -716,6 +717,16 @@ const Edit = props => {
         >
           <BreedDistribution org={parseInt(organization_id)} level={1} herd={herd_id} />
         </Grid>
+
+        <Grid
+          item
+          lg={12}
+          xl={12}
+          xs={12}
+        >
+          <LactationCurve option={1} id={herd_id} />
+        </Grid>
+
         <Grid
           item
           lg={12}

@@ -20,7 +20,7 @@ const ChartDetails = props => {
             <LactationTable />
           </Grid>                                    
           <Grid item  xs={12} >  
-            <LactationCurve/>
+            <LactationCurve option={0} id={localStorage.getItem('animal_id')}/>
           </Grid>
         </>
       : null

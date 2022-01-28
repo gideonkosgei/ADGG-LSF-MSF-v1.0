@@ -208,7 +208,7 @@ const Edit = props => {
       className={classes.root}
       title="farms"
     >
-      <Grid container spacing={1} justify="center">
+      <Grid container spacing={1} justifyContent="center">
         <Grid item xs={11}>
           <Typography
             component="h1"
@@ -235,7 +235,7 @@ const Edit = props => {
         <LinearProgress />
       }
       <Divider />
-      <Grid container spacing={1} justify="center">
+      <Grid container spacing={1} justifyContent="center">
         <Grid item xs={12}>
           <Card>
             <CardContent>
