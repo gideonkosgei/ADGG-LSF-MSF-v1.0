@@ -10,6 +10,7 @@ import { default as Statistics } from '../../../../../Overview/components/Statis
 import { default as AnimalCategorySegmentation } from '../../../../../DashboardAnalytics/components/AnimalCategorySegmentation';
 import { default as BreedDistribution } from '../../../../../DashboardAnalytics/components/BreedDistribution';
 import { default as LactationCurve } from '../../../../../Animals/components/Analytics/components/LactationCurve';
+import { default as LactationCurveCombined } from '../../../../../Animals/components/Analytics/components/LactationCurveCombined';
 import { default as EventsSummary } from '../../../../../DashboardAnalytics/components/EventsSummary';
 import { default as Animals } from '../../../../../Animals'
 import { Page } from 'components';
@@ -725,6 +726,16 @@ const Edit = props => {
           xs={12}
         >
           <LactationCurve option={1} id={herd_id} />
+        </Grid>
+
+
+        <Grid
+          item
+          lg={12}
+          xl={12}
+          xs={12}
+        >
+          <LactationCurveCombined option={1} id={herd_id} />
         </Grid>
 
         <Grid

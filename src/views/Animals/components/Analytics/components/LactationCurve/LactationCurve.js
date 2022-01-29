@@ -45,6 +45,7 @@ const LactationCurve = props => {
       await getlactationCurveData(endpoint, id, option)
         .then(response => {
           if (mounted) {
+
             setRecords(response.payload);
             let lactations = [];
             if (response.payload.length > 0) {
@@ -80,6 +81,7 @@ const LactationCurve = props => {
       labels: dimData
     }
   };
+  
   const handleChange = event => {
     setValues({ ...values });
     event.persist();
