@@ -298,7 +298,7 @@ const Post = props => {
         { name: "Purchase_cost", label: "PURCHASE COST", options: { filter: false, sort: true, display: true } },
         { name: "animal_photo", label: "ANIMAL PHOTO", options: { filter: false, sort: true, display: true } },
         { name: "latitude", label: "LATITUDE", options: { filter: false, sort: true, display: true } },
-        { name: "longitute", label: "LONGITUDE", options: { filter: false, sort: true, display: true } },
+        { name: "longitude", label: "LONGITUDE", options: { filter: false, sort: true, display: true } },
         { name: "altitude", label: "ALTITUDE", options: { filter: false, sort: true, display: true } },
         { name: "grps_accuracy", label: "GPRS ACCURACY", options: { filter: false, sort: true, display: true } },
         { name: "sex", label: "SEX", options: { filter: false, sort: true, display: true } },

@@ -119,7 +119,7 @@ const Upload = props => {
             }
 
             /* Pedigree Batch : Convert numeric dates to normal date */
-            if (batchType === 8 && (r === 7 || r === 8 || r === 9)) {
+            if (batchType === 8 && (r === 6 || r === 7 || r === 8 || r === 20)) {
               if (resp.rows[i][r] && !isNaN(resp.rows[i][r])) {
                 new_date = new Date(Math.round((resp.rows[i][r] - 25569) * 86400 * 1000));
                 resp.rows[i][r] = new_date.getDate() + '/' + (new_date.getMonth() + 1) + '/' + new_date.getFullYear();
@@ -228,7 +228,7 @@ const Upload = props => {
     rowsPerPageOptions: [5, 10, 20, 50, 100],
     selectableRows: 'none',
     filterType: 'checkbox',
-    responsive: 'stacked',
+    responsive: 'standard',
     rowHover: true,
     setTableProps: () => {
       return {
