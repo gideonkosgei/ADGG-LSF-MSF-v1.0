@@ -153,16 +153,24 @@ const Upload = props => {
           for (let x = 0; x < diff; x++) {
             resp.rows[i].push(null);
           }
-
         }
 
-        /* remove the 1st row. it contains the column headers */
+        /** function to check blank rows */
+        function checkBlankRow(row) {
+          return row === null;
+        }
+
+        /* remove the 1st row. it contains the column header &  skip blank rows */
         let file_rows = [];
-        for (let i = 0; i < resp.rows.length; i++) {
+        for (let i = 0; i < resp.rows.length; i++) {/* skip header */
           if (i !== 0) {
-            file_rows.push(resp.rows[i]);
+            if (!resp.rows[i].every(checkBlankRow)) { /* check blank rows & skip */
+              file_rows.push(resp.rows[i]);
+            }
           }
         }
+
+
         setCols(resp.rows[0]);
         setRows(file_rows);
         setDataLoaded(true);
@@ -198,7 +206,7 @@ const Upload = props => {
       setSuccess(false);
       setLoading(true);
     }
-    console.log(rows);
+
     (async (endpoint, rows, cols, user_id, org_id, batch_type, uuid) => {
       await postBatchUpload(endpoint, rows, cols, user_id, org_id, batch_type, uuid)
         .then((response) => {
