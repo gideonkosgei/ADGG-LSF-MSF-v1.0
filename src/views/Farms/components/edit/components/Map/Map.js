@@ -8,7 +8,30 @@ import { Page } from 'components';
 import { green } from '@material-ui/core/colors';
 import GoogleMapReact from 'google-map-react';
 
-const AnyReactComponent = ({ text }) => <div>{text}</div>;
+//const AnyReactComponent = ({ text }) => <div>{text}</div>;
+const K_WIDTH = 20;
+const K_HEIGHT = 20;
+
+const greatPlaceStyle = {
+  // initially any map object has left top corner at lat lng coordinates
+  // it's on you to set object origin to 0,0 coordinates
+  position: 'absolute',
+  width: K_WIDTH,
+  height: K_HEIGHT,
+  left: -K_WIDTH / 4,
+  top: -K_HEIGHT / 5,
+
+  border: '5px solid #f44336',
+  borderRadius: K_HEIGHT,
+  backgroundColor: 'white',
+  textAlign: 'center',
+  color: '#3f51b5',
+  fontSize: 12,
+  fontWeight: 'bold',
+  padding: 4
+};
+
+const AnyReactComponent = ({ text }) =>  <div style={greatPlaceStyle}>{text}</div>;
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -74,7 +97,7 @@ const Map = props => {
       lat: -1.28,
       lng: 36.81
     },
-    zoom: 11
+    zoom: 5
   };
 
   useEffect(() => {
@@ -98,6 +121,10 @@ const Map = props => {
   if (!values) {
     return null;
   }
+
+  console.log(typeof values.latitude);
+
+  
   return (
     <Page
       className={classes.root}
@@ -115,11 +142,11 @@ const Map = props => {
 
               <div style={{ height: '100vh', width: '100%' }}>
                 <GoogleMapReact
-                  bootstrapURLKeys={{ key: "AIzaSyDkziO3B7MEacsF1LLupXuFPdbntcpN_uU" }}
+                  bootstrapURLKeys={{ key: "AIzaSyAs3DUBpPBh91sn5SodQova9vHfMgEeu58" }}
                   defaultCenter={defaultProps.center}
                   defaultZoom={defaultProps.zoom}
                 >
-                  <AnyReactComponent
+                  <AnyReactComponent                  
                     lat={values.latitude}
                     lng={values.longitude}
                     text= {values.farm_name}
@@ -141,3 +168,5 @@ Map.propTypes = {
 };
 
 export default Map;
+
+
