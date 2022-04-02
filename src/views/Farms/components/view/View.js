@@ -115,23 +115,24 @@ const Edit = props => {
     return null;
   }
 
-
-
   const columns = [
-    { name: "id", label: "ID", options: { filter: false, sort: false, display: false } },
+    { name: "id", label: "ID", options: { filter: false, sort: true, display: false } },
     { name: "name", label: "FARM NAME", options: { filter: false, sort: true, display: true } },
     { name: "farmer_name", label: "FARMER NAME", options: { filter: false, sort: true, display: true } },
-    { name: "code", label: "FARM CODE", options: { filter: true, sort: false, display: true } },
+    { name: "code", label: "FARM CODE", options: { filter: true,filterType:'multiselect', sort: true, display: true } },
     { name: "farm_type", label: "FARM TYPE", options: { filter: true, sort: true, display: true } },
-    { name: "org_name", label: "ORG", options: { filter: true, sort: true, display: true } },
+    { name: "org_name", label: "ORG", options: { filter: true,filterType:'multiselect', sort: true, display: true } },
     { name: "phone",label: "PHONE",options: {filter: false,sort: true,display:true}},
     { name: "email",label: "EMAIL",options: {filter: false,sort: true,display:true}},
-    { name: "country", label: "COUNTRY", options: { filter: true, sort: true, display: true } },
-    { name: "region", label: "REGION", options: { filter: true, sort: true, display: true } },
-    { name: "district", label: "DISTRICT", options: { filter: false, sort: true, display: true } },
+    { name: "country", label: "COUNTRY", options: { filter: true,filterType:'multiselect', sort: true, display: true } },
+    { name: "region", label: "REGION", options: { filter: true,filterType:'multiselect', sort: true, display: true } },
+    { name: "district", label: "DISTRICT", options: { filter: true,filterType:'multiselect', sort: true, display: true } },
     { name: "ward", label: "WARD", options: { filter: true, sort: false, display: true } },
     { name: "village", label: "VILLAGE", options: { filter: true, sort: false, display: true } },
-    { name: "reg_date", label: "REG DATE", options: { filter: false, sort: false, display: true } },
+    { name: "reg_date", label: "REG DATE", options: { filter: false, sort: true, display: true } },
+    { name: "latitude", label: "LATITUDE", options: { filter: false, sort: true, display: false } },
+    { name: "longitude", label: "LONGITUDE", options: { filter: false, sort: true, display: false } },
+    { name: "created_by", label: "CREATED BY", options: { filter: true, sort: true, display: false,filterType:'multiselect' } },   
     {
       name: "",
       options: {

@@ -23,7 +23,7 @@ const useStyles = makeStyles(theme => ({
     transform: 'translate(-50%, -50%)',
     outline: 'none',
     boxShadow: theme.shadows[20],
-    width: '70%',
+    width: '80%',
     maxHeight: '100%',
     overflowY: 'auto',
     maxWidth: '100%'
@@ -114,18 +114,25 @@ const FarmModal = props => {
   if (!open || !values) {
     return null;
   }
+
+  console.log(values);
 const columns = [
-  { name: "id",label: "ID",options: {filter: false,sort: false,display:true}},   
+  { name: "id",label: "ID",options: {filter: false,sort: true,display:true}},   
   { name: "name",label: "FARM NAME",options: {filter: false,sort: true,display:true}},
   { name: "farmer_name",label: "FARMER NAME",options: {filter: false,sort: true,display:true}},
-  { name: "code",label: "FARM CODE",options: {filter: false,sort: false,display:true}},
-  { name: "org_name",label: "ORG NAME",options: {filter: true,sort: true,display:true}},
+  { name: "code",label: "FARM CODE",options: {filter: false,sort: false,display:false}},
+  { name: "org_name",label: "ORG NAME",options: {filter: true,filterType:'multiselect',sort: true,display:true}},
   { name: "farm_type",label: "FARM TYPE",options: {filter: true,sort: true,display:true}}, 
   { name: "phone",label: "PHONE",options: {filter: false,sort: true,display:true}},
   { name: "email",label: "EMAIL",options: {filter: false,sort: true,display:true}},
   { name: "country",label: "COUNTRY",options: {filter: true,sort: true,display:true}},    
-  { name: "reg_date",label: "REG DATE",options: {filter: false,sort: false,display:true}}, 
-  { name: "org_id",label: "ORG ID",options: {filter: false,sort: false,display:false}}, 
+  { name: "region",label: "REGION",options: {filter: true,filterType:'multiselect',sort: true,display:true}},
+  { name: "district",label: "DISTRICT",options: {filter: true,filterType:'multiselect',sort: true,display:false}},
+  { name: "ward",label: "WARD",options: {filter: true,filterType:'multiselect',sort: true,display:false}},
+  { name: "village",label: "VILLAGE",options: {filter: true,filterType:'multiselect',sort: true,display:false}},  
+  { name: "reg_date",label: "REG DATE",options: {filter: true,filterType:'multiselect',sort: true,display:true}}, 
+  { name: "field_agent_name",label: "CREATED BY",options: {filter: true,filterType:'multiselect',sort: true,display:true}}, 
+  { name: "org_id",label: "ORG ID",options: {filter: false,sort: true,display:false}}, 
 ];
 
 const options = {       

@@ -142,7 +142,7 @@ const FarmModal = props => {
     return null;
   }
 const columns = [
-    { name: "id",label: "ID",options: {filter: false,sort: false,display:true}},  
+    { name: "id",label: "ID",options: {filter: false,sort: true,display:true}},  
     { name: "farm_type",label: "FARM TYPE",options: {filter: true,sort: false,display:true}}, 
     { name: "name",label: "FARM NAME",options: {filter: false,sort: true,display:true}},  
     { name: "farmer_name",label: "FARMER NAME",options: {filter: false,sort: true,display:true}},  
