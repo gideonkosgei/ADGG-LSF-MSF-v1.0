@@ -700,20 +700,20 @@ const Details = props => {
 
 
                   margin='dense'
-                  label="Sex"
+                  label="Animal Type"
                   variant="outlined"
-                  value={values.sex_id}
-                  name="sex_id"
+                  value={values.animal_type_id}
+                  name="animal_type_id"
                   onChange={handleChange} select
                   SelectProps={{ native: true }}
 
                 >
                   <option value=""></option>
-                  {gender.map(sex => (
+                  {animal_types.map(animal_type => (
                     <option
-                      value={sex.id}
+                      value={animal_type.id}
                     >
-                      {sex.value}
+                      {animal_type.value}
                     </option>
                   ))
                   }
