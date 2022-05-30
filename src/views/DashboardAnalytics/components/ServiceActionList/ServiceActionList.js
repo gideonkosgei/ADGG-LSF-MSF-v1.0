@@ -36,25 +36,25 @@ const ServiceActionList = props => {
   const { className,option, ...rest } = props;
   const classes = useStyles();
   const [values, setValues] = useState([]);
-  const [ {organization_id}  ] = useContext(authContext);
+  const [ {user_id}  ] = useContext(authContext);
   const [loading, setLoading] = useState(true);
 
 
   useEffect(() => {
     let mounted = true;   
-    (async  (endpoint,org,option)=>{     
-      await  getServiceActionList(endpoint,org,option)
+    (async  (endpoint,user_id,option)=>{     
+      await  getServiceActionList(endpoint,user_id,option)
        .then(response => {              
          if (mounted) {
           setValues(response.payload); 
           setLoading(false);   
          }
        });
-     })(endpoint_service_action_list,organization_id,option);
+     })(endpoint_service_action_list,user_id,option);
     return () => {
       mounted = false;
     };
-  }, [organization_id,option]);
+  }, [user_id,option]);
 
   if (!values) {
     return null;

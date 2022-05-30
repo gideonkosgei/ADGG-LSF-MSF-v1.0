@@ -6,6 +6,7 @@ import AuthLayout from './layouts/Auth';
 import ErrorLayout from './layouts/Error';
 import DashboardLayout from './layouts/Dashboard';
 import DashboardAnalyticsView from './views/DashboardAnalytics';
+import DashboardAdmin from './views/DashboardAdmin';
 import OverviewView from './views/Overview';
 
 
@@ -77,7 +78,19 @@ const routes = [
         path: '/changelog',
         exact: true,
         component: lazy(() => import('views/Changelog'))
-      },      
+      }, 
+      
+      {
+        path: '/dashboards/admin/:country',
+        exact: true,
+        component: DashboardAdmin
+      },
+
+      {
+        path: '/dashboards/admin/:country/:tab',
+        exact: true,
+        component: DashboardAdmin
+      },
       {
         path: '/dashboards/analytics',
         exact: true,

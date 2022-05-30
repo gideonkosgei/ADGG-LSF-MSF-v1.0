@@ -355,7 +355,7 @@ const Edit = props => {
           xl={12}
           xs={12}
         >
-          <EventsSummary org={parseInt(organization_id)} level={1} herd={herd_id} />
+          <EventsSummary user={parseInt(user_id)} level={1} herd={herd_id} />
         </Grid>
 
         <Grid item xs={12}>
@@ -696,7 +696,7 @@ const Edit = props => {
         {`HERD SUMMARY - ${values.herd_name}`}
       </Typography>
       <br />
-      <Statistics className={classes.statistics} org={parseInt(organization_id)} level={1} herd={herd_id} />
+      <Statistics className={classes.statistics} user={parseInt(user_id)} level={1} herd={herd_id} />
       <br />
       <Grid
         container
@@ -708,7 +708,7 @@ const Edit = props => {
           xl={4}
           xs={12}
         >
-          <AnimalCategorySegmentation org={parseInt(organization_id)} level={1} herd={herd_id} />
+          <AnimalCategorySegmentation user={parseInt(user_id)} level={1} herd={herd_id} />
         </Grid>
         <Grid
           item
@@ -716,7 +716,7 @@ const Edit = props => {
           xl={4}
           xs={12}
         >
-          <BreedDistribution org={parseInt(organization_id)} level={1} herd={herd_id} />
+          <BreedDistribution user={parseInt(user_id)} level={1} herd={herd_id} />
         </Grid>
 
         <Grid

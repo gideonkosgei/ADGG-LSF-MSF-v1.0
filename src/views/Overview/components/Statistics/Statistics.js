@@ -40,24 +40,24 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const Statistics = props => {
-  const { className, org, level, herd, ...rest } = props;
+  const { className, user, level, herd, ...rest } = props;
   const classes = useStyles();
   const [statistics, setStatistics] = useState(null);
   useEffect(() => {
     let mounted = true;
-    (async (endpoint, org_id, level, herd) => {
-      await getAnimalStats(endpoint, org_id, level, herd)
+    (async (endpoint, user_id, level, herd) => {
+      await getAnimalStats(endpoint, user_id, level, herd)
         .then(response => {
           if (mounted) {
             setStatistics(response.payload);
           }
         });
-    })(endpoint_animal_statistics, org, level, herd);
+    })(endpoint_animal_statistics, user, level, herd);
 
     return () => {
       mounted = false;
     };
-  }, [org, level, herd]);
+  }, [user, level, herd]);
 
   if (!statistics) {
     return null;
@@ -222,7 +222,7 @@ const Statistics = props => {
 
 Statistics.propTypes = {
   className: PropTypes.string,
-  org: PropTypes.number,
+  user: PropTypes.number,
   level: PropTypes.number,
   herd: PropTypes.number
 };

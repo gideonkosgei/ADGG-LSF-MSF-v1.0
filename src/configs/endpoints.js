@@ -765,7 +765,7 @@ export const endpoint_breeds_distribution = {
 
 // Events Summary
 export const endpoint_events_summary = {
-  url: `${api}/stats/events-summary/`,
+  url: `${api}/stats/events-summary`,
   method: 'GET',
   headers: headers   
 }
@@ -1188,6 +1188,17 @@ export const endpoint_hair_sample_update = {
 export const endpoint_hair_sample_add = {
   url: `${api}/events/hair-sample`,
   method: 'POST',
+  headers: headers   
+};
+
+
+
+// admin dashboards & summaries
+
+/** general statistics & summaries*/
+export const endpoint_admin_summaries_general_stats = {
+  url: `${api}/stats/admin-dashboard/summary-statistics`,
+  method: 'GET',
   headers: headers   
 };
 

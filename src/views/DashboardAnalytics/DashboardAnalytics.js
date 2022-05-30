@@ -30,7 +30,7 @@ const useStyles = makeStyles(theme => ({
 
 const DashboardAnalytics = () => {
 const classes = useStyles();
-const [ {organization_id} ] = useContext(authContext);
+const [ {user_id} ] = useContext(authContext);
   return (
     <Page
       className={classes.root}
@@ -41,7 +41,7 @@ const [ {organization_id} ] = useContext(authContext);
         gutterBottom
         variant="h3"
       >
-        HERD LEVEL DASHBOARDS
+        FARM(S) LEVEL DASHBOARD
       </Typography> 
       <Divider />  
       <br/>  
@@ -113,7 +113,7 @@ const [ {organization_id} ] = useContext(authContext);
           xl={4}
           xs={12}
         >
-          <AnimalCategorySegmentation org = {organization_id} level = {0} herd = {null} />
+          <AnimalCategorySegmentation user = {user_id} level = {0} herd = {null} />
         </Grid>
         <Grid
           item
@@ -121,7 +121,7 @@ const [ {organization_id} ] = useContext(authContext);
           xl={4}
           xs={12}
         >
-          <BreedDistribution org = {organization_id} level = {0} herd = {null}/>
+          <BreedDistribution user = {user_id} level = {0} herd = {null}/>
         </Grid> 
         
         

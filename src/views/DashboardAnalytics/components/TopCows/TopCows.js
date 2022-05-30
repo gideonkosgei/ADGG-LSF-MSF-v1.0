@@ -52,7 +52,7 @@ const TopCows = props => {
   const { className, ...rest } = props;
   const classes = useStyles();
   const [topCows, setTopCows] = useState([]);
-  const [ { organization_id }  ] = useContext(authContext);   
+  const [ { user_id }  ] = useContext(authContext);   
   const [startDate, setStartDate] = useState(moment());  
   const [selectEdge, setSelectEdge] = useState(null);
   const [calendarDate, setCalendarDate] = useState(moment());  
@@ -63,19 +63,19 @@ const TopCows = props => {
   useEffect(() => {
     let mounted = true;   
     setLoading(true); 
-    (async  (endpoint,option,org_id,year)=>{     
-      await  getTopCows(endpoint,option,org_id,year)
+    (async  (endpoint,option,user_id,year)=>{     
+      await  getTopCows(endpoint,option,user_id,year)
        .then(response => {              
          if (mounted) {
           setTopCows(response.payload);  
           setLoading(false);                          
          }
        });
-     })(endpoint_top_cows,v_option,organization_id,moment(startDate).format('YYYY'));
+     })(endpoint_top_cows,v_option,user_id,moment(startDate).format('YYYY'));
     return () => {
       mounted = false;
     };
-  }, [organization_id,startDate,v_option]); 
+  }, [user_id,startDate,v_option]); 
 
   if (!topCows) {
     return null;

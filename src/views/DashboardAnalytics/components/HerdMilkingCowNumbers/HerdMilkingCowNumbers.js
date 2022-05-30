@@ -32,15 +32,15 @@ const HerdMilkingCowNumbers = props => {
   const classes = useStyles();
   const [data, setData] = useState([]);
   const [labels, setLabels] = useState([]);
-  const [ { organization_id }] = useContext(authContext);  
+  const [ { user_id }] = useContext(authContext);  
   const [loading, setLoading] = useState(true);
  
   useEffect(() => {
     let mounted = true; 
     let event_year = []; 
     let yearly_milking_cows_count = [];
-    (async  (endpoint,report_id,org_id)=>{     
-      await  getHerdMilkingSummary(endpoint,report_id,org_id)
+    (async  (endpoint,report_id,user_id)=>{     
+      await  getHerdMilkingSummary(endpoint,report_id,user_id)
        .then(response => {              
          if (mounted) { 
            for (let i = 0;  i<response.payload.length; i++){            
@@ -55,11 +55,11 @@ const HerdMilkingCowNumbers = props => {
             setLoading(false); 
          }
        });
-     })(endpoint_herd_milking_cow_summary,0,organization_id);
+     })(endpoint_herd_milking_cow_summary,0,user_id);
     return () => {
       mounted = false;
     };
-  }, [organization_id]);
+  }, [user_id]);
   return (
     <Page> 
     { loading  && <LinearProgress/>   }

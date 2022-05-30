@@ -40,27 +40,27 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const AnimalCategorySegmentation = props => {
-  const { className,org,level,herd, ...rest } = props;  
+  const { className,user,level,herd, ...rest } = props;  
   const classes = useStyles(); 
   const [stats, setStats] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     let mounted = true;
-    (async  (endpoint,org_id,level,herd)=>{     
-      await  getAnimalStats(endpoint,org_id,level,herd)
+    (async  (endpoint,user_id,level,herd)=>{     
+      await  getAnimalStats(endpoint,user_id,level,herd)
        .then(response => {              
          if (mounted) {
           setStats(response.payload);
           setLoading(false);  
          }
        });
-     })(endpoint_animal_statistics,org,level,herd);    
+     })(endpoint_animal_statistics,user,level,herd);    
        
     return () => {
       mounted = false;
     };
-  }, [org,level,herd]);
+  }, [user,level,herd]);
 
   return (
     <Page> 
@@ -115,7 +115,7 @@ const AnimalCategorySegmentation = props => {
 
 AnimalCategorySegmentation.propTypes = {
   className: PropTypes.string,
-  org: PropTypes.number,
+  user: PropTypes.number,
   level: PropTypes.number,
   herd: PropTypes.number
 };

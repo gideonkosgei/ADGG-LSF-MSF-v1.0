@@ -66,6 +66,7 @@ export const genericFunctionFiveParameters = function (param1, param2, param3, p
     method: param1.method,
     headers: param1.headers
   }
+  console.log(options);
   return new Promise((resolve, reject) => {
     axios(options)
       .then(res => {
@@ -243,12 +244,12 @@ export const getFarmDetails = function (config, farm_id) {
 }
 
 // get animal overview statistics
-export const getAnimalStats = function (config, organisation_id, level, herd) {
+export const getAnimalStats = function (config, user_id, level, herd) {
   const options = {
-    url: `${config.url}${organisation_id}/${level}/${herd}`,
+    url: `${config.url}${user_id}/${level}/${herd}`,
     method: config.method,
     headers: config.headers
-  }
+  }  
   return new Promise((resolve, reject) => {
     axios(options)
       .then(res => {

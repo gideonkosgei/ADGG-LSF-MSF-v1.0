@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import { Chip, Card, LinearProgress, CardContent } from '@material-ui/core';
 import { endpoint_events_summary } from '../../../../configs/endpoints';
-import { getStatsBreedsDistribution } from '../../../../utils/API';
+import { genericFunctionFiveParameters } from '../../../../utils/API';
 import { Page } from 'components';
 
 const useStyles = makeStyles(theme => ({
@@ -30,26 +30,26 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const EventsSummary = props => {
-  const { className, herd, level, org, ...rest } = props;
+  const { className, herd, level, user, ...rest } = props;
   const classes = useStyles();
   const [stats, setStats] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     let mounted = true;
-    (async (endpoint, org_id, level, herd_id) => {
-      await getStatsBreedsDistribution(endpoint, org_id, level, herd_id)
+    (async (endpoint,desc, user, level, herd_id) => {
+      await genericFunctionFiveParameters(endpoint,desc, user, level, herd_id)    
         .then(response => {
           if (mounted) {
             setStats(response.payload);
             setLoading(false);
           }
         });
-    })(endpoint_events_summary, org, level, herd);
+    })(endpoint_events_summary,'events summary', user, level, herd);
     return () => {
       mounted = false;
     };
-  }, [org, level, herd]);
+  }, [user, level, herd]);
 
   return (
     <Page>
@@ -75,7 +75,7 @@ const EventsSummary = props => {
 
 EventsSummary.propTypes = {
   className: PropTypes.string,
-  org: PropTypes.number,
+  user: PropTypes.number,
   level: PropTypes.number,
   herd: PropTypes.number
 };

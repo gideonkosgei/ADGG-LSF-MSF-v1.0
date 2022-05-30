@@ -40,26 +40,26 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const BreedDistribution = props => {
-  const { className,herd,level,org, ...rest } = props;
+  const { className,herd,level,user, ...rest } = props;
   const classes = useStyles(); 
   const [stats, setStats] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     let mounted = true;
-    (async  (endpoint,org_id,level,herd_id)=>{     
-      await  getStatsBreedsDistribution(endpoint,org_id,level,herd_id)
+    (async  (endpoint,user_id,level,herd_id)=>{     
+      await  getStatsBreedsDistribution(endpoint,user_id,level,herd_id)
        .then(response => {              
          if (mounted) {
           setStats(response.payload);
           setLoading(false);  
          }
        });
-     })(endpoint_breeds_distribution,org,level,herd);
+     })(endpoint_breeds_distribution,user,level,herd);
     return () => {
       mounted = false;
     };
-  }, [org,level,herd]);
+  }, [user,level,herd]);
 
 
   return (
@@ -115,7 +115,7 @@ const BreedDistribution = props => {
 
 BreedDistribution.propTypes = {
   className: PropTypes.string,
-  org: PropTypes.number,
+  user: PropTypes.number,
   level: PropTypes.number,
   herd: PropTypes.number
 };
