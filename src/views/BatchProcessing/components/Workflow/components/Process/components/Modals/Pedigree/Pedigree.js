@@ -5,7 +5,7 @@ import { makeStyles } from '@material-ui/styles';
 import { Modal, CircularProgress, Card, Fab, Box, Switch, Typography, CardContent, LinearProgress, CardHeader, Grid, Divider, TextField, colors, Button, CardActions } from '@material-ui/core';
 import authContext from '../../../../../../../../../contexts/AuthContext';
 import { genericFunctionFiveParameters, batchProcessActions, animalBatchModifyRevalidate, getLookups } from '../../../../../../../../../utils/API';
-import { endpoint_batch_details, endpoint_batch_actions, endpoint_animalRevalidate, endpoint_lookup } from '../../../../../../../../../configs/endpoints';
+import { endpoint_batch_details, endpoint_batch_actions, endpoint_animalRevalidate, endpoint_lookup,endpoint_herd } from '../../../../../../../../../configs/endpoints';
 import Alert from '@material-ui/lab/Alert';
 import { green } from '@material-ui/core/colors';
 import CheckIcon from '@material-ui/icons/Check';
@@ -80,6 +80,7 @@ const Details = props => {
   const [sire_types, setSireTypes] = useState([]);
   const [entryTypes, setEntryTypes] = useState([]);
   const [deformaties, setDeformaties] = useState([]);
+  const [herds, setHerds] = useState([]);
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [action, setAction] = useState(1);
@@ -146,11 +147,12 @@ const Details = props => {
     }
     await animalBatchModifyRevalidate(endpoint, values, record_id, user_id, batch_type)
       .then((response) => {
+        console.log(response);
         setOutput({ status: null, message: '' });
         timer.current = window.setTimeout(() => {
           setSuccess(true);
           setLoading(false);
-          setIsLoading(false);
+          setIsLoading(false);          
           if (parseInt(response.status) === 1) {
             setOutput({ status: parseInt(response.status), message: response.message })
           } else {
@@ -188,6 +190,16 @@ const Details = props => {
           }
         });
     })(endpoint_batch_details, 'Batch records details', record_id, batch_type, option_details);
+
+    (async (endpoint, desc, option, id, user) => {
+      await genericFunctionFiveParameters(endpoint, desc, option, id, user)
+        .then(response => {
+          if (mounted) {
+            setHerds(response.payload[0]);
+          }
+        });
+    })(endpoint_herd, 'Get herds', 3, record_id, user_id );
+
 
     (async (endpoint, id) => {
       await getLookups(endpoint, id)
@@ -260,11 +272,13 @@ const Details = props => {
       mounted = false;
       mounted_lookup = false;
     };
-  }, [record_id, organization_id,batch_type]);
+  }, [record_id, organization_id,batch_type,user_id]);
 
-  if (!errors || !animal_types || !main_breeds || !breed_composition || !gender || !colors || !sire_types || !entryTypes || !deformaties || !yesNo || !values) {
+  if (!errors || !animal_types || !main_breeds || !breed_composition || !gender || !colors || !sire_types || !entryTypes || !deformaties || !yesNo || !values || !herds) {
     return null;
   }
+
+  
 
 
   const handleChange = event => {
@@ -298,9 +312,6 @@ const Details = props => {
       // Do nothing: Invalid option
     }
   };
-
-
-
 
 
   return (
@@ -370,6 +381,40 @@ const Details = props => {
                   onChange={handleChange}
                   required
                 />
+              </Grid>
+
+              <Grid
+                item
+                md={2}
+                xs={12}
+              >
+                <TextField
+                  fullWidth
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+
+                  margin='dense'
+                  label="Herd"
+                  value={values.herd_id}
+                  variant="outlined"
+                  name="herd_id"
+                  onChange={handleChange}
+                  select
+                  SelectProps={{ native: true }}
+                >
+                  <option value=""></option>
+                  {herds.map(herd => (
+                    <option
+                      value={herd.herd_id}
+                    >
+                      {herd.herd_name}
+                    </option>
+                  ))
+                  }
+                </TextField>
+
+
               </Grid>
 
               <Grid

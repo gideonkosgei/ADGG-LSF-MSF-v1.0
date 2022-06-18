@@ -66,7 +66,6 @@ export const genericFunctionFiveParameters = function (param1, param2, param3, p
     method: param1.method,
     headers: param1.headers
   }
-  console.log(options);
   return new Promise((resolve, reject) => {
     axios(options)
       .then(res => {
@@ -3833,6 +3832,7 @@ export const animalBatchModifyRevalidate = function (config, values, record_id, 
     tag_prefix,
     tag_sequence,
     animal_type_id,
+    herd_id,
     remove
   } = values;
 
@@ -3868,6 +3868,7 @@ export const animalBatchModifyRevalidate = function (config, values, record_id, 
   sire_known_id = (typeof sire_known_id === 'undefined' || sire_known_id === '') ? null : sire_known_id;
   tag_prefix = (typeof tag_prefix === 'undefined' || tag_prefix === '') ? null : tag_prefix;
   tag_sequence = (typeof tag_sequence === 'undefined' || tag_sequence === '') ? null : tag_sequence;
+  herd_id = (typeof herd_id === 'undefined' || herd_id === '') ? null : herd_id;
 
   const body = {
     "Purchase_cost": Purchase_cost,
@@ -3903,6 +3904,7 @@ export const animalBatchModifyRevalidate = function (config, values, record_id, 
     "record_id": record_id,
     "user_id": user_id,
     "batch_type": batch_type,
+    "herd_id": herd_id,
     "remove": remove
   };
 

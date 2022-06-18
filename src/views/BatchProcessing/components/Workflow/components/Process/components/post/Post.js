@@ -134,7 +134,6 @@ const Post = props => {
     setIsLoading(true);
     await batchProcessActions(_endpoint, _uuid, _action, _user_id)
       .then((response) => {
-        console.log(response);
         setOutput({ status: null, message: '' });
         timer.current = window.setTimeout(() => {
           setSuccess(true);
@@ -275,6 +274,8 @@ const Post = props => {
         { name: "record_id", label: "record_id", options: { filter: false, sort: false, display: false } },
         { name: "uuid", label: "uuid", options: { filter: false, sort: false, display: false } },
         { name: "farmer_name", label: "FARMER NAME", options: { filter: false, sort: true, display: true } },
+        { name: "herd_name", label: "HERD", options: { filter: false, sort: true, display: true } },
+        { name: "herd_id", label: "HERD ID", options: { filter: false, sort: true, display: false } },
         { name: "tag_id", label: "TAG ID", options: { filter: false, sort: true, display: true } },
         { name: "tag_prefix", label: "TAG PREFIX", options: { filter: false, sort: true, display: false } },
         { name: "tag_sequence", label: "TAG SEQUENCE", options: { filter: false, sort: true, display: false } },

@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import { Card, Typography, CardContent, LinearProgress, Grid, colors, CardActions, Fab, Button, CircularProgress, TextField } from '@material-ui/core';
-import { batchProcessActions, genericFunctionThreeParameters } from '../../../../../../../../utils/API';
+import { batchProcessActions, genericFunctionThreeParameters} from '../../../../../../../../utils/API';
 import { endpoint_batch_validation_view, endpoint_batch_actions } from '../../../../../../../../configs/endpoints';
 import MUIDataTable from "mui-datatables";
 import { MuiThemeProvider, createTheme } from '@material-ui/core/styles';
@@ -74,7 +74,7 @@ const Validate = props => {
   const [values, setValues] = useState({});
   const [{ user_id }] = useContext(authContext);
   const [openErrorLog, setErrorLog] = useState(false);
-  const [record_id, setRecordID] = useState();
+  const [record_id, setRecordID] = useState();  
   const [modal_pedigree, set_modal_pedigree] = useState(false);
   const [modal_weight, set_modal_weight] = useState(false);
   const [modal_milking, set_modal_milking] = useState(false);
@@ -117,6 +117,8 @@ const Validate = props => {
         setIsLoading(true);
       })
   }
+
+
 
   async function validate(_endpoint, _uuid, _action, _user_id) {
     if (!loading) {
@@ -359,7 +361,9 @@ const Validate = props => {
       columns = [
         { name: "record_id", label: "record_id", options: { filter: false, sort: false, display: false } },
         { name: "uuid", label: "uuid", options: { filter: false, sort: false, display: false } },
-        { name: "farmer_name", label: "FARMER NAME", options: { filter: false, sort: true, display: true } },
+        { name: "farmer_name", label: "FARM", options: { filter: false, sort: true, display: true } },
+        { name: "herd_name", label: "HERD", options: { filter: false, sort: true, display: true } },
+        { name: "herd_id", label: "HERD ID", options: { filter: false, sort: true, display: false } },
         { name: "tag_id", label: "TAG ID", options: { filter: false, sort: true, display: true } },
         { name: "tag_prefix", label: "TAG PREFIX", options: { filter: false, sort: true, display: false } },
         { name: "tag_sequence", label: "TAG SEQUENCE", options: { filter: false, sort: true, display: false } },
@@ -458,6 +462,8 @@ const Validate = props => {
     }
     return actions;
   }
+
+  console.log(data);
 
   return (
     <Grid container spacing={2} justify="center">

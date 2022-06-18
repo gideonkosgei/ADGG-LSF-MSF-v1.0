@@ -355,9 +355,6 @@ const Milking = props => {
     setQualityFieldsView(!quality_fields_view);
   };
 
-  console.log(values);
-
-
   return (
     <Modal
       onClose={onClose}
