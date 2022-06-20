@@ -463,8 +463,7 @@ const Validate = props => {
     return actions;
   }
 
-  console.log(data);
-
+  
   return (
     <Grid container spacing={2} justify="center">
       <Grid

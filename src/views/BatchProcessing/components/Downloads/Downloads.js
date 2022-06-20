@@ -9,8 +9,9 @@ import {MuiThemeProvider } from '@material-ui/core/styles';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import GetAppIcon from '@material-ui/icons/GetApp';
 import { Page } from 'components';
-
 import theme from '../../../../theme';
+
+
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -59,17 +60,19 @@ const Downloads = props => {
     };
   }, []);
  
+  
   const data = [
-    [1,"Data Template", "Milking Data Template", "Milking Data Template", "templates/3.milking.xlsx"],
-    [2,"Data Template", "Weight & growth Data Template", "Weight & growth Data Template", "templates/weight.xlsx"],
+    [1,"Data Template", "Milking Data Template", "Milking Data Template", "../../../../templates/template-milking.csv"],  
+    [2,"Data Template", "Weight & growth Data Template", "Weight & growth Data Template", "../../../../templates/template-weight-and-growth.csv"],
     /*[3,"Data Template", "Calving Data Template", "Calving Data Template", "templates/template-calving.csv"],
     [4,"Data Template", "Pregnancy Diagnosis Data Template", "Pregnancy Diagnosis Data Template", "templates/template-pregnancy-diagnosis.csv"],
     [5,"Data Template", "Exit & Disposal Data Template", "Exit & Disposal Data Template", "templates/template-exit-and-disposal.csv"],
     [6,"Data Template", "Insemination Data Template", "Insemination Data Template", "templates/template-insemination.csv"],
     [7,"Data Template", "Synchronization Data Template", "Synchronization Data Template", "templates/template-synchronization.csv"],*/
-    [8,"Data Template", "Pedigree Data Template", "Animal Registration Data Template", "templates/pedigree.xlsx"] 
+    [8,"Data Template", "Animal Registration Template", "Animal Registration Data Template", "../../../../templates/template-animal-registration.csv"] 
    ];
 
+  
   const columns = [
     { name: "#",label: "#",options: {filter: false,sort: false,display:true}}, 
     { name: "event_date",label: "FILE TYPE",options: {filter: false,sort: true,display:true}},
