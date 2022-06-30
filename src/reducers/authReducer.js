@@ -1,5 +1,6 @@
 
 let is_admin = 0;
+
 export const initialAuthState = {
 	isLoggedIn: sessionStorage.getItem('isLoggedIn') ? sessionStorage.getItem('isLoggedIn') : false,
 	isLoading: sessionStorage.getItem('isLoading') ? sessionStorage.getItem('isLoading') : false,
@@ -22,7 +23,7 @@ export const initialAuthState = {
 
 export const authReducer = (state, action) => {
 	switch (action.type) {
-		case 'LOGIN':
+		case 'LOGIN':			
 			const data = action.payload.userData.payload[0][0];
 			const role_id = parseInt(data.role_id);
 			is_admin = (role_id === 7 || role_id === 9 || role_id === 10 || role_id === 14) ? 1 : 0;
@@ -57,6 +58,7 @@ export const authReducer = (state, action) => {
 				country_id: data.country_id,
 				error: ''
 			};
+
 		case 'LOGIN_ERROR':
 			return {
 				isLoggedIn: false,
@@ -75,6 +77,7 @@ export const authReducer = (state, action) => {
 				password: '',
 				error: action.payload.error
 			};
+
 		case 'LOGOUT':
 			sessionStorage.clear();
 			return {
@@ -93,6 +96,7 @@ export const authReducer = (state, action) => {
 				error: '',
 				country_id: ''
 			};
+
 		default:
 			return state;
 	}

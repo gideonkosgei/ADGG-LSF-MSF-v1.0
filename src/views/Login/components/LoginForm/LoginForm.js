@@ -1,18 +1,19 @@
 /* eslint-disable no-unused-vars */
-import React, { useState, useContext, Fragment ,useEffect} from 'react';
+import React, { useState, useContext, Fragment, useEffect } from 'react';
 import validate from 'validate.js';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
-import { Button, TextField,InputAdornment,IconButton,CircularProgress,Checkbox,Typography} from '@material-ui/core';
+import { Button, TextField, InputAdornment, IconButton, CircularProgress, Checkbox, Typography } from '@material-ui/core';
 import Spinner from '../../../../components/Spinner/Spinner';
 import authContext from '../../../../contexts/AuthContext';
+import countriesContext from '../../../../contexts/CountriesContext';
 import useRouter from 'utils/useRouter';
 import { Redirect } from 'react-router-dom';
 import Alert from '@material-ui/lab/Alert';
-import {Visibility,VisibilityOff,AccountCircle} from '@material-ui/icons';
-import {endpoint_user_authentication} from '../../../../configs/endpoints';
-import {authenticate}   from '../../../../utils/API';
+import { Visibility, VisibilityOff, AccountCircle } from '@material-ui/icons';
+import { endpoint_user_authentication, endpoint_countries } from '../../../../configs/endpoints';
+import { authenticate, getCountries } from '../../../../utils/API';
 
 
 const schema = {
@@ -60,20 +61,22 @@ const LoginForm = props => {
   const [formState, setformState] = useState({
     isValid: false,
     values: {},
-    touched: {},    
+    touched: {},
     errors: {},
-    showPassword: false ,
-    loading:false  
-  }); 
+    showPassword: false,
+    loading: false
+  });
 
-  const [ { isLoggedIn,isLoading, error }, dispatch ] = useContext(authContext);  
+  const [{ isLoggedIn, isLoading, error }, dispatch] = useContext(authContext); // auth context
+  const [{error1 }, dispatch1] = useContext(countriesContext); // countries context
+  
 
   useEffect(() => {
     const errors = validate(formState.values, schema);
     setformState(formState => ({
       ...formState,
       isValid: errors ? false : true,
-      errors: errors || {}             
+      errors: errors || {}
     }));
   }, [formState.values]);
 
@@ -83,9 +86,9 @@ const LoginForm = props => {
       ...formState,
       values: {
         ...formState.values,
-      [event.target.name]: event.target.type === 'checkbox'? event.target.checked : event.target.value
-    },
-    touched: {
+        [event.target.name]: event.target.type === 'checkbox' ? event.target.checked : event.target.value
+      },
+      touched: {
         ...formState.touched,
         [event.target.name]: true
       }
@@ -94,168 +97,197 @@ const LoginForm = props => {
 
   const handleClickShowPassword = () => {
     setformState({ ...formState, showPassword: !formState.showPassword });
-  };  
+  };
 
   const handleMouseDownPassword = (event) => {
     event.preventDefault();
   };
 
-  
-  const handleSubmit =  event => {  
-    event.preventDefault();    
+
+  const handleSubmit = event => {
+    event.preventDefault();
     const username = formState.values.email;
     const password = formState.values.password;
 
-    authenticate(endpoint_user_authentication,username,password)  
+
+    authenticate(endpoint_user_authentication, username, password)
       .then((userData) => {
-       let is_active = true; 
-       let is_admin = false; 
-       if (userData.payload[0].length ===1){
-        is_active = userData.payload[0][0].status === 1? true : false;
-        const role_id = parseInt(userData.payload[0][0].role_id);
-        is_admin = (role_id === 7 || role_id === 9 || role_id === 10 || role_id === 14) ? 1 : 0;       
-        sessionStorage.setItem("is_admin1", is_admin);
-        
-       }
-        if(userData.auth_status && is_active ){                
-            dispatch({
-              type: 'LOGIN',
-              payload: {
-                userData
-              }
-            });
-        } else {         
-            dispatch({
-              type: 'LOGIN_ERROR',
-              payload: {
-                error: !is_active ? 'This account is not active. Contact your local administrator' : userData.user_exist ? "Login failed. Password is incorrect!" : " This account is not registered!"
-              }
-            });
-          }
-       } 
+        let is_active = true;
+        let is_admin = false;
+
+        if (userData.payload[0].length === 1) {
+          is_active = userData.payload[0][0].status === 1 ? true : false;
+          const role_id = parseInt(userData.payload[0][0].role_id);
+          is_admin = (role_id === 7 || role_id === 9 || role_id === 10 || role_id === 14) ? 1 : 0;
+          sessionStorage.setItem("is_admin1", is_admin);
+
+        }
+
+        if (userData.auth_status && is_active) {
+          dispatch({
+            type: 'LOGIN',
+            payload: {
+              userData
+            }
+          });
+        } else {
+          dispatch({
+            type: 'LOGIN_ERROR',
+            payload: {
+              error: !is_active ? 'This account is not active. Contact your local administrator' : userData.user_exist ? "Login failed. Password is incorrect!" : " This account is not registered!"
+            }
+          });
+        }
+      }
       )
-			.catch((error) => {        
-				dispatch({
-					type: 'LOGIN_ERROR',
-					payload: {
-						error: error.message
-					}
-				});
-			})
-			.finally(() => {			
-			});
+      .catch((error) => {
+        dispatch({
+          type: 'LOGIN_ERROR',
+          payload: {
+            error: error.message
+          }
+        });
+      })
+      .finally(() => {
+      });
+
+
+
+    getCountries(endpoint_countries)
+      .then((response) => {
+        let data = response.payload;
+        dispatch1({
+          type: 'COUNTRIES',
+          payload: {
+            data
+          }
+        });
+      }
+      )
+      .catch((error) => {
+        console.log(error);
+        dispatch1({
+          type: 'COUNTRIES_ERROR',
+          payload: {
+            error1: error.message
+          }
+        });
+      })
+      .finally(() => {
+      });
+
     router.history.push('/');
   };
 
   const hasError = field =>
-    formState.touched[field] && formState.errors[field] ? true : false;    
+    formState.touched[field] && formState.errors[field] ? true : false;
 
- 
+
   return (
-    <Fragment>       
-			{isLoggedIn ? (
-				<Redirect to="/overview" />       
-			) : (
-    <Fragment>        
-      	{error && <Alert severity="error" >{error}</Alert>}
-    <form
-      {...rest}
-      className={clsx(classes.root, className)}
-      onSubmit={handleSubmit}
-    >
-      <div className={classes.fields}>
-        <TextField
-          error={hasError('email')}
-          fullWidth
-          helperText={hasError('email') ? formState.errors.email[0] : null}
-          label="Email address"
-          name="email"
-          onChange={handleChange}
-          value={formState.values.email || ''}
-          variant="outlined"
+    <Fragment>
+      {isLoggedIn ? (
+        <Redirect to="/overview" />
+      ) : (
+        <Fragment>
+          {error && <Alert severity="error" >{error}</Alert>}
+          <form
+            {...rest}
+            className={clsx(classes.root, className)}
+            onSubmit={handleSubmit}
+          >
+            <div className={classes.fields}>
+              <TextField
+                error={hasError('email')}
+                fullWidth
+                helperText={hasError('email') ? formState.errors.email[0] : null}
+                label="Email address"
+                name="email"
+                onChange={handleChange}
+                value={formState.values.email || ''}
+                variant="outlined"
 
-          InputProps={{
-            endAdornment: (
-              <InputAdornment position="end"  >
-                <IconButton  
-                  edge="end"
-                  variant="outlined"
-                  color="inherit"
-                >
-                     <AccountCircle /> 
-                </IconButton>
-              </InputAdornment>
-            ),
-          }}
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end"  >
+                      <IconButton
+                        edge="end"
+                        variant="outlined"
+                        color="inherit"
+                      >
+                        <AccountCircle />
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
 
-        />
-        <TextField
-          error={hasError('password')}
-          fullWidth
-          helperText={
-            hasError('password') ? formState.errors.password[0] : null
-          }
-          label="Password"
-          name="password"
-          onChange={handleChange}
-          type={formState.showPassword ? 'text' : 'password'}
-          value={formState.values.password || ''}
-          variant="outlined"
-          InputProps={{
-            endAdornment: (
-              <InputAdornment position="end"  >
-                <IconButton              
-                  aria-label="Toggle password visibility"
-                  onClick={handleClickShowPassword}
-                  onMouseDown={handleMouseDownPassword}
-                  edge="end"
-                  variant="outlined"
-                  color="inherit"
+              />
+              <TextField
+                error={hasError('password')}
+                fullWidth
+                helperText={
+                  hasError('password') ? formState.errors.password[0] : null
+                }
+                label="Password"
+                name="password"
+                onChange={handleChange}
+                type={formState.showPassword ? 'text' : 'password'}
+                value={formState.values.password || ''}
+                variant="outlined"
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end"  >
+                      <IconButton
+                        aria-label="Toggle password visibility"
+                        onClick={handleClickShowPassword}
+                        onMouseDown={handleMouseDownPassword}
+                        edge="end"
+                        variant="outlined"
+                        color="inherit"
+                      >
+                        {formState.showPassword ? <Visibility /> : <VisibilityOff />}
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
+
+              />
+            </div>
+            <div>
+              <div className={classes.rememberMe}>
+                <Checkbox
+                  checked={formState.values.rememberMe || false}
+                  className={classes.rememberMeCheckbox}
+                  color="primary"
+                  name="rememberMe"
+                  onChange={handleChange}
+                />
+                <Typography
+                  color="textSecondary"
+                  variant="body1"
                 >
-                    {formState.showPassword ? <Visibility/> : <VisibilityOff />}  
-                </IconButton>
-              </InputAdornment>
-            ),
-          }}
-          
-        />
-      </div>
-      <div>
-          <div className={classes.rememberMe}>
-            <Checkbox
-              checked={formState.values.rememberMe || false}
-              className={classes.rememberMeCheckbox}
-              color="primary"
-              name="rememberMe"
-              onChange={handleChange}
-            />
-            <Typography
-              color="textSecondary"
-              variant="body1"
+                  Remember me
+                </Typography>
+              </div>
+            </div>
+
+            <Button
+              className={classes.submitButton}
+              color="secondary"
+              disabled={!formState.isValid}
+              size="large"
+              type="submit"
+              variant="contained"
             >
-              Remember me              
-            </Typography>
-          </div>          
-        </div>
-      
-      <Button
-        className={classes.submitButton}
-        color="secondary"        
-        disabled={!formState.isValid}
-        size="large"
-        type="submit"
-        variant="contained"              
-      >    
-          {load ? (
+              {load ? (
                 "Loading..."
               ) : (
                 "Login"
-              )} 
-      </Button>
-    </form>
+              )}
+            </Button>
+          </form>
+        </Fragment>
+      )}
     </Fragment>
-    )}
-		</Fragment>
   );
 };
 
