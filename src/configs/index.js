@@ -1,6 +1,6 @@
 export const api = process.env.REACT_APP_API_URL;
+const  token = process.env.REACT_APP_API_TOKEN; 
 
-const  token = "Basic amFjazpzZWNyZXQ="; 
 export const headers = {
       'Accept': 'application/json',
       'Content-Type': 'application/json;charset=UTF-8',
