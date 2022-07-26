@@ -104,7 +104,7 @@ const Upload = props => {
       }
       else {
         const column_count = resp.rows[0].length;
-
+        
         let new_date = null;
 
         for (let i = 0; i < resp.rows.length; i++) {
@@ -112,19 +112,19 @@ const Upload = props => {
             /* Replace whitespaces with underscore on column headers */
             if (i === 0) {
               resp.rows[i][r] = resp.rows[i][r].split(" ").join("_").toUpperCase();
-            }
+            }             
+                     
             /* replace empty slots with null */
             if (typeof resp.rows[i][r] === 'undefined' || resp.rows[i][r] === '') {
               resp.rows[i][r] = null;
-            }
-
+            }       
+          
             /* Pedigree Batch : Convert numeric dates to normal date */
             if (batchType === 8 && (r === 6 || r === 7 || r === 8 || r === 20)) {
               if (resp.rows[i][r] && !isNaN(resp.rows[i][r])) {
                 new_date = new Date(Math.round((resp.rows[i][r] - 25569) * 86400 * 1000));
                 resp.rows[i][r] = new_date.getDate() + '/' + (new_date.getMonth() + 1) + '/' + new_date.getFullYear();
               }
-
             }
 
             /* Milk Batch : Convert numeric dates to normal date */
@@ -169,14 +169,14 @@ const Upload = props => {
             }
           }
         }
-
-
+        
         setCols(resp.rows[0]);
         setRows(file_rows);
         setDataLoaded(true);
       }
     });
   };
+
 
   const fileHandler = (event) => {
     if (event.target.files.length) {
@@ -195,6 +195,7 @@ const Upload = props => {
       }
     }
   };
+
   const openFileBrowser = () => {
     fileInput.current.click();
   }

@@ -7,13 +7,30 @@ import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import LibraryBooksIcon from '@material-ui/icons/LibraryBooks';
 import AccountTreeIcon from '@material-ui/icons/AccountTree';
 
+// let countries = JSON.parse(localStorage.getItem('countries_data'));
+// let admin_dashboard_children = [
+//   {
+//     title: 'All Countries',
+//     href: '/dashboards/admin/0/large'
+//   }
+// ];
+
+// if (countries) {
+//   for (let i = 0; i < countries.length; i++) {
+//     admin_dashboard_children.push({
+//       title: countries[i].name,
+//       href: `/dashboards/admin/${countries[i].id}`
+//     })
+//   }
+// }
+
 let p = [
   {
     pages: [
       {
         title: 'Overview',
         href: '/overview',
-        icon: HomeIcon        
+        icon: HomeIcon
       },
 
       {
@@ -27,6 +44,14 @@ let p = [
           }
         ]
       },
+
+      // {
+      //   title: 'Admin Dashboard',
+      //   href: '/dashboards/admin/0',
+      //   icon: DashboardIcon,
+      //   children: admin_dashboard_children
+      // },
+
 
       {
         title: 'Management',
@@ -53,10 +78,10 @@ let p = [
             title: 'AI Straws',
             href: '/management/straws/view/1'
           },*/
-          {
-            title: 'Graduation',
-            href: '/management/graduation/view/0'
-          },
+          // {
+          //   title: 'Graduation',
+          //   href: '/management/graduation/view/0'
+          // },
           {
             title: 'Partners',
             icon: AccountTreeIcon,
@@ -79,7 +104,7 @@ let p = [
         href: '/calendar',
         icon: CalendarTodayIcon
       },
-     
+
       {
         title: 'Batch Processing',
         href: '/batch-processing',
@@ -145,7 +170,7 @@ let p = [
                 href: '/reports/events/exit'
               },
             ]
-          },          
+          },
           {
             title: 'Batches',
             href: '/reports/batches'
