@@ -87,6 +87,8 @@ const Validate = props => {
   const [batchStatusOther, setBatchStatusOther] = useState(UploadedRecords.length > 0 ? UploadedRecords[0].batch_status_id_other : null);
   let columns = [];
 
+  console.log(UploadedRecords);
+
   const uuid = batchInfo.uuid;
   const buttonClassname = clsx({
     [classes.buttonSuccess]: success,
@@ -117,7 +119,6 @@ const Validate = props => {
         setIsLoading(true);
       })
   }
-
 
 
   async function validate(_endpoint, _uuid, _action, _user_id) {
@@ -247,8 +248,6 @@ const Validate = props => {
     }
   };
 
-
-
   const handleClickExecute = () => {
     setOutput({ status: null, message: '' });
     const action = parseInt(values.action);
@@ -357,6 +356,48 @@ const Validate = props => {
       ];
 
       break;
+      case 9:
+
+        columns = [
+          { name: "record_id", label: "record_id", options: { filter: false, sort: false, display: false } },
+          { name: "uuid", label: "uuid", options: { filter: false, sort: false, display: false } },
+          { name: "calf_animal_id", label: "Calf ID", options: { filter: true, sort: true, display: true } },
+          { name: "calf_tag_id", label: "Calf Tag ID", options: { filter: true, sort: true, display: true } },
+          { name: "calf_name", label: "Calf Name", options: { filter: true, sort: true, display: true } },
+          { name: "calf_dob", label: "Calf DOB", options: { filter: true, sort: true, display: true } },          
+          { name: "calf_registration_date", label: "Calf Reg Date", options: { filter: true, sort: true, display: true } },
+          { name: "dam_animal_id", label: "Dam ID", options: { filter: true, sort: true, display: true } },
+          { name: "dam_tag_id", label: "Dam Tag ID", options: { filter: true, sort: true, display: true } },
+          { name: "dam_name", label: "Dam Name", options: { filter: true, sort: true, display: true } },
+          { name: "record_status", label: "Status", options: { filter: true, sort: true, display: true } },
+          { name: "created_by", label: "CREATED BY", options: { filter: false, sort: true, display: true } },
+          { name: "created_date", label: "DATE CREATED", options: { filter: false, sort: true, display: true } },
+          { name: "created_time", label: "TIME CREATED", options: { filter: false, sort: true, display: true } },
+          { name: "record_status", label: "STATUS", options: { filter: false, sort: true, display: true } },
+          {
+            name: "",
+            options: {
+              filter: false,
+              sort: false,
+              empty: true,
+              display: true,
+              customBodyRender: (value, tableMeta, updateValue) => {
+                return (
+                  <>
+                    <Button onClick={() => handleDetailsOpen(tableMeta.rowData[0],batchInfo.batch_type)}>
+                      < OpenInNewIcon className={classes.buttonIcon} />
+                    </Button>
+                    <Button onClick={() => handleErrorLogOpen(tableMeta.rowData[0])}>
+                      <ErrorOutlineIcon className={classes.buttonIcon} />
+                    </Button>
+                  </>
+                );
+              }
+            }
+          }
+        ];
+  
+        break;
     default:
       columns = [
         { name: "record_id", label: "record_id", options: { filter: false, sort: false, display: false } },
@@ -462,6 +503,8 @@ const Validate = props => {
     }
     return actions;
   }
+
+
 
   
   return (

@@ -45,7 +45,7 @@ const Controls = (props) => {
                     if (mounted_batch_types) {
                         let batches = [];
                         for (let i = 0; i < response.payload.length; i++) {
-                            if (response.payload[i].id === 1 || response.payload[i].id === 2 || response.payload[i].id === 8) {
+                            if (response.payload[i].id === 1 || response.payload[i].id === 2 || response.payload[i].id === 8 || response.payload[i].id === 9|| response.payload[i].id === 10) {
                                 batches.push(response.payload[i]);
                             }
                         }

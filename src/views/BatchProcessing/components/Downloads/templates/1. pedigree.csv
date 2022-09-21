@@ -1,3 +1,0 @@
-farmername,tagid,tagprefix,tagsequence,name,color,reg_date,Derived Birthdate,Date of Birth,Approx Age,deformities,sire_type,sireknown,siretagid,damKnown,damtagid,main_breed,breedComposition,second_breed,entry_type,entry_date,purchase_cost,Animal Photo,latitude,longitude,altitude,gprs_accuracy ,sex,hair_sample_id
-Test,Test-1234,,,Animal one,,,2015-01-01,2015-01-01,2015-01-01,,,2,,2,,10,,,,,,,,,,,5,
-Test,Test-12345,,,Animal two,,,2015-05-26,226/05/2015,2015-05-26,,,1,MAK-NEHLS,1,MAK-FMT0141,10,,,,,,,,,,,5,

@@ -69,7 +69,9 @@ const Downloads = props => {
     [5,"Data Template", "Exit & Disposal Data Template", "Exit & Disposal Data Template", "templates/template-exit-and-disposal.csv"],
     [6,"Data Template", "Insemination Data Template", "Insemination Data Template", "templates/template-insemination.csv"],
     [7,"Data Template", "Synchronization Data Template", "Synchronization Data Template", "templates/template-synchronization.csv"],*/
-    [8,"Data Template", "Animal Registration Template", "Animal Registration Data Template", "../../../../templates/template-animal-registration.csv"] 
+    [8,"Data Template", "Animal Registration Template", "Animal Registration Data Template", "../../../../templates/template-animal-registration.csv"], 
+    [9,"Data Template", "Calving Data Template(Short)", "Calving Data Template(Short)", "../../../../templates/template-calving-record-short.csv"], 
+    [10,"Data Template", "Animal Movement Template", "Animal Movement Template", "../../../../templates/template-animal-movement.csv"], 
    ];
 
   

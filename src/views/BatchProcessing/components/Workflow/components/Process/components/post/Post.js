@@ -12,7 +12,7 @@ import CustomToolbar from "./CustomToolbar";
 import authContext from '../../../../../../../../contexts/AuthContext';
 import SuccessSnackbar from '../../../../../../../../components/SuccessSnackbar';
 import ErrorSnackbar from '../../../../../../../../components/ErrorSnackbar';
-import {Pedigree } from '../Modals';
+import { Pedigree } from '../Modals';
 import OpenInNewIcon from '@material-ui/icons/OpenInNew';
 import CheckIcon from '@material-ui/icons/Check';
 import SaveIcon from '@material-ui/icons/Save';
@@ -161,28 +161,28 @@ const Post = props => {
 
   const handleSnackbarErrorClose = () => {
     setopenSnackbarError(false);
-  }; 
+  };
 
-  
-  const handleDetailsOpen = (record_id,batch_type) => {
+
+  const handleDetailsOpen = (record_id, batch_type) => {
     setRecordID(record_id);
 
     switch (batch_type) {
       case 8: // pedigree Batch
         set_modal_pedigree(true);
-        break;      
+        break;
       default:
       // Do nothing: Invalid option
     }
 
-    
+
   };
 
   const handleDetailsClose = () => {
     switch (batchInfo.batch_type) {
       case 8: // pedigree Batch
         set_modal_pedigree(false);
-        break;      
+        break;
       default:
       // Do nothing: Invalid option
     }
@@ -269,6 +269,45 @@ const Post = props => {
       ];
 
       break;
+    case 9:
+      columns = [
+        { name: "record_id", label: "record_id", options: { filter: false, sort: false, display: false } },
+        { name: "uuid", label: "uuid", options: { filter: false, sort: false, display: false } },
+        { name: "calf_animal_id", label: "Calf ID", options: { filter: true, sort: true, display: true } },
+        { name: "calf_tag_id", label: "Calf Tag ID", options: { filter: true, sort: true, display: true } },
+        { name: "calf_name", label: "Calf Name", options: { filter: true, sort: true, display: true } },
+        { name: "calf_dob", label: "Calf DOB", options: { filter: true, sort: true, display: true } },
+        { name: "calf_registration_date", label: "Calf Reg Date", options: { filter: true, sort: true, display: true } },
+        { name: "dam_animal_id", label: "Dam ID", options: { filter: true, sort: true, display: true } },
+        { name: "dam_tag_id", label: "Dam Tag ID", options: { filter: true, sort: true, display: true } },
+        { name: "dam_name", label: "Dam Name", options: { filter: true, sort: true, display: true } },
+        { name: "record_status", label: "Status", options: { filter: true, sort: true, display: true } },
+        { name: "created_by", label: "CREATED BY", options: { filter: false, sort: true, display: true } },
+        { name: "created_date", label: "DATE CREATED", options: { filter: false, sort: true, display: true } },
+        { name: "created_time", label: "TIME CREATED", options: { filter: false, sort: true, display: true } },
+        { name: "record_status", label: "STATUS", options: { filter: false, sort: true, display: true } },
+        {
+          name: "",
+          options: {
+            filter: false,
+            sort: false,
+            empty: true,
+            display: true,
+            customBodyRender: (value, tableMeta, updateValue) => {
+              return (
+                <>
+                  <Button onClick={() => handleDetailsOpen(tableMeta.rowData[0], batchInfo.batch_type)}>
+                    < OpenInNewIcon className={classes.buttonIcon} />
+                  </Button>
+                </>
+              );
+            }
+          }
+        }
+      ];
+
+      break;
+
     default:
       columns = [
         { name: "record_id", label: "record_id", options: { filter: false, sort: false, display: false } },
@@ -292,7 +331,7 @@ const Post = props => {
         { name: "dam_known", label: "DAM KNOWN", options: { filter: false, sort: true, display: false } },
         { name: "dam_tag_id", label: "DAM TAG ID", options: { filter: false, sort: true, display: true } },
         { name: "animal_type", label: "Animal Type", options: { filter: false, sort: true, display: true } },
-        { name: "sex", label: "SEX", options: { filter: false, sort: true, display: true } },      
+        { name: "sex", label: "SEX", options: { filter: false, sort: true, display: true } },
         { name: "main_breed", label: "Main Breed", options: { filter: false, sort: true, display: true } },
         { name: "breed_composition", label: "BREED COMPOSITION", options: { filter: false, sort: true, display: false } },
         { name: "secondary_breed", label: "SECONDARY BREED", options: { filter: false, sort: true, display: false } },
@@ -303,7 +342,7 @@ const Post = props => {
         { name: "latitude", label: "LATITUDE", options: { filter: false, sort: true, display: false } },
         { name: "longitude", label: "LONGITUDE", options: { filter: false, sort: true, display: false } },
         { name: "altitude", label: "ALTITUDE", options: { filter: false, sort: true, display: false } },
-        { name: "grps_accuracy", label: "GPRS ACCURACY", options: { filter: false, sort: true, display: false } },        
+        { name: "grps_accuracy", label: "GPRS ACCURACY", options: { filter: false, sort: true, display: false } },
         { name: "hair_sample_id", label: "HAIR SAMPLE ID", options: { filter: false, sort: true, display: false } },
         { name: "created_by", label: "CREATED BY", options: { filter: false, sort: true, display: true } },
         { name: "created_date", label: "DATE CREATED", options: { filter: false, sort: true, display: true } },
@@ -372,7 +411,6 @@ const Post = props => {
     setValues({
       ...values,
       [event.target.name]: event.target.type === 'checkbox' ? event.target.checked : event.target.value
-
     });
   };
 
@@ -470,8 +508,8 @@ const Post = props => {
           <ErrorSnackbar
             onClose={handleSnackbarErrorClose}
             open={openSnackbarError}
-          />          
-           <Pedigree
+          />
+          <Pedigree
             batch_type={batchInfo.batch_type}
             record_id={record_id}
             onClose={handleDetailsClose}
