@@ -128,7 +128,7 @@ const Upload = props => {
             }
 
             /* Milk Batch : Convert numeric dates to normal date */
-            if (batchType === 1 && (r === 2 || r === 3 || r === 4)) {
+            if (batchType === 1 && (r === 1 || r === 2)) {
               if (resp.rows[i][r] && !isNaN(resp.rows[i][r])) {
                 new_date = new Date(Math.round((resp.rows[i][r] - 25569) * 86400 * 1000));
                 resp.rows[i][r] = new_date.getDate() + '/' + (new_date.getMonth() + 1) + '/' + new_date.getFullYear();

@@ -2406,6 +2406,8 @@ export const postBatchUpload = function (config, rows, cols, user_id, org_id, ba
     "batch_type": batch_type
   };
 
+  console.log(body);
+
   const options = {
     url: `${config.url}`,
     method: config.method,
