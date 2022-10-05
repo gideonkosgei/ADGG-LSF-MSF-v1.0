@@ -76,7 +76,6 @@
     "validate.js": "^0.12.0"
   },
   "devDependencies": {
-    "prettier": "^1.17.1",    
-    "typescript": "^3.5.1"
+    "prettier": "^1.17.1"
   }
 }
