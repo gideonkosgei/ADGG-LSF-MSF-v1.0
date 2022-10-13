@@ -400,6 +400,59 @@ const Validate = props => {
         ];
   
         break;
+        case 10:
+
+          columns = [
+            { name: "record_id", label: "record_id", options: { filter: false, sort: false, display: false } },
+            { name: "uuid", label: "uuid", options: { filter: false, sort: false, display: false } },
+
+            
+
+            { name: "event_date", label: "Date", options: { filter: true, sort: true, display: true } },
+            { name: "animal_id", label: "Animal ID", options: { filter: true, sort: true, display: true } },  
+            { name: "tag_id", label: "Tag ID", options: { filter: true, sort: true, display: true } },          
+            { name: "current_farmer_id", label: "Farm ID", options: { filter: true, sort: true, display: true } },
+            { name: "current_farmer_name", label: "Farmer Name", options: { filter: true, sort: true, display: true } },
+            { name: "current_farmer_country", label: "Farmer Country", options: { filter: true, sort: true, display: true } },          
+            { name: "new_farmer_id", label: "New Farm ID", options: { filter: true, sort: true, display: true } },
+
+            { name: "new_farmer_name", label: "New Farmer", options: { filter: true, sort: true, display: true } },
+            { name: "new_farmer_country", label: "New Country", options: { filter: true, sort: true, display: true } },
+            { name: "new_farmer_region", label: "New Region", options: { filter: true, sort: true, display: true } },
+            { name: "new_farmer_district", label: "New District", options: { filter: true, sort: true, display: true } },
+            { name: "new_farmer_ward", label: "New Ward", options: { filter: true, sort: true, display: true } },          
+            { name: "new_farmer_village", label: "New Village", options: { filter: true, sort: true, display: true } },
+
+
+            { name: "record_status", label: "Status", options: { filter: true, sort: true, display: true } },
+            { name: "created_by", label: "CREATED BY", options: { filter: false, sort: true, display: true } },
+            { name: "created_date", label: "DATE CREATED", options: { filter: false, sort: true, display: true } },
+            { name: "created_time", label: "TIME CREATED", options: { filter: false, sort: true, display: true } },
+            { name: "record_status", label: "STATUS", options: { filter: false, sort: true, display: true } },
+            {
+              name: "",
+              options: {
+                filter: false,
+                sort: false,
+                empty: true,
+                display: true,
+                customBodyRender: (value, tableMeta, updateValue) => {
+                  return (
+                    <>
+                      <Button onClick={() => handleDetailsOpen(tableMeta.rowData[0],batchInfo.batch_type)}>
+                        < OpenInNewIcon className={classes.buttonIcon} />
+                      </Button>
+                      <Button onClick={() => handleErrorLogOpen(tableMeta.rowData[0])}>
+                        <ErrorOutlineIcon className={classes.buttonIcon} />
+                      </Button>
+                    </>
+                  );
+                }
+              }
+            }
+          ];
+    
+          break;
     default:
       columns = [
         { name: "record_id", label: "record_id", options: { filter: false, sort: false, display: false } },
