@@ -244,6 +244,7 @@ const Post = props => {
         { name: "record_id", label: "record_id", options: { filter: false, sort: false, display: false } },
         { name: "uuid", label: "uuid", options: { filter: false, sort: false, display: false } },
         { name: "animal_tag_id", label: "Animal Tag ID", options: { filter: true, sort: true, display: true } },
+        { name: "animal_id", label: "Animal ID", options: { filter: true, sort: true, display: true } },
         { name: "weight_date", label: "Weight Date", options: { filter: true, sort: true, display: true } },
         { name: "body_length", label: "Body Length", options: { filter: true, sort: true, display: true } },
         { name: "heart_girth", label: "Heart Girth", options: { filter: true, sort: true, display: true } },
