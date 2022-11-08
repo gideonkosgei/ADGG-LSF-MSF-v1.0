@@ -136,7 +136,7 @@ const Upload = props => {
             }
 
             /* Weight Batch : Convert numeric dates to normal date */
-            if (batchType === 2 && r === 1) {
+            if (batchType === 2 && r === 0) {
               if (resp.rows[i][r] && !isNaN(resp.rows[i][r])) {
                 new_date = new Date(Math.round((resp.rows[i][r] - 25569) * 86400 * 1000));
                 resp.rows[i][r] = new_date.getDate() + '/' + (new_date.getMonth() + 1) + '/' + new_date.getFullYear();
