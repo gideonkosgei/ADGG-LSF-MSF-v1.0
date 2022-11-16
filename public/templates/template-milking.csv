@@ -1,3 +1,3 @@
-animalTagId,dry_date,event_date,milkmor,milkmid,milkeve,milk_quality,milk_sample_type,milkfat,milkprot,milksmc,milk_bodyscore,milkurea,milklact,milk_heartgirth,weight,milk_estimated_weight
+animal_id,dry_date,event_date,milkmor,milkmid,milkeve,milk_quality,milk_sample_type,milkfat,milkprot,milksmc,milk_bodyscore,milkurea,milklact,milk_heartgirth,weight,milk_estimated_weight
 TEST-0001,,01/03/04,13.2,,13.2,,,,,,,,,,,
 TEST-0002,,02/03/04,13.8,,13.9,,,,,,,,,,,

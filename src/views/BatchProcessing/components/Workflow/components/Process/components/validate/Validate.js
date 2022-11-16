@@ -275,6 +275,7 @@ const Validate = props => {
       columns = [
         { name: "record_id", label: "record_id", options: { filter: false, sort: false, display: false } },
         { name: "uuid", label: "uuid", options: { filter: false, sort: false, display: false } },
+        { name: "animal_id", label: "Animal ID", options: { filter: true, sort: true, display: true } }, 
         { name: "animal_tag_id", label: "Tag ID", options: { filter: true, sort: true, display: true } },    
         { name: "milk_date", label: "Milk Date", options: { filter: true, sort: true, display: true } },
         { name: "dry_date", label: "Dry Date", options: { filter: true, sort: true, display: true } },
