@@ -360,6 +360,46 @@ const Validate = props => {
       ];
 
       break;
+      case 5:
+
+      columns = [
+        { name: "record_id", label: "record_id", options: { filter: false, sort: false, display: false } },
+        { name: "uuid", label: "uuid", options: { filter: false, sort: false, display: false } },
+        { name: "tag_id", label: "Tag ID", options: { filter: true, sort: true, display: true } },
+        { name: "animal_id", label: "Animal ID", options: { filter: true, sort: true, display: true } },
+        { name: "service_date", label: "Service Date", options: { filter: true, sort: true, display: true } },
+        { name: "service_number", label: "Service Number", options: { filter: true, sort: true, display: true } },
+        { name: "body_condition_score", label: "Body Score", options: { filter: true, sort: true, display: true } },
+        { name: "semen_source", label: "Semen Source", options: { filter: true, sort: true, display: true } },       
+        { name: "straw_type", label: "Straw Type", options: { filter: true, sort: true, display: true } },        
+        { name: "semen_batch", label: "Semen Batch", options: { filter: true, sort: true, display: true } },
+        { name: "straw_or_bull_tag", label: "Straw/Bull Tag ID", options: { filter: true, sort: true, display: true } },       
+        { name: "record_status", label: "Status", options: { filter: true, sort: true, display: true } },
+        {
+          name: "",
+          options: {
+            filter: false,
+            sort: false,
+            empty: true,
+            display: true,
+            customBodyRender: (value, tableMeta, updateValue) => {
+              return (
+                <>
+                  {/* <Button onClick={() => handleDetailsOpen(tableMeta.rowData[0],batchInfo.batch_type)}>
+                    < OpenInNewIcon className={classes.buttonIcon} />
+                  </Button> */}
+                  <Button onClick={() => handleErrorLogOpen(tableMeta.rowData[0])}>
+                    <ErrorOutlineIcon className={classes.buttonIcon} />
+                  </Button>
+                </>
+              );
+            }
+          }
+        }
+      ];
+
+      break;
+    
       case 9:
 
         columns = [
@@ -406,9 +446,7 @@ const Validate = props => {
 
           columns = [
             { name: "record_id", label: "record_id", options: { filter: false, sort: false, display: false } },
-            { name: "uuid", label: "uuid", options: { filter: false, sort: false, display: false } },
-
-            
+            { name: "uuid", label: "uuid", options: { filter: false, sort: false, display: false } },            
 
             { name: "event_date", label: "Date", options: { filter: true, sort: true, display: true } },
             { name: "animal_id", label: "Animal ID", options: { filter: true, sort: true, display: true } },  

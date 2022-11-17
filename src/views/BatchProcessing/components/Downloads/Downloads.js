@@ -64,10 +64,11 @@ const Downloads = props => {
   const data = [
     [1,"Data Template", "Milking Data Template", "Milking Data Template", "../../../../templates/template-milking.csv"],  
     [2,"Data Template", "Weight & growth Data Template", "Weight & growth Data Template", "../../../../templates/template-weight-and-growth.csv"],
+    [5,"Data Template", "Insemination Data Template", "Insemination Data Template", "../../../../templates/template-insemination.csv"],
     /*[3,"Data Template", "Calving Data Template", "Calving Data Template", "templates/template-calving.csv"],
     [4,"Data Template", "Pregnancy Diagnosis Data Template", "Pregnancy Diagnosis Data Template", "templates/template-pregnancy-diagnosis.csv"],
     [5,"Data Template", "Exit & Disposal Data Template", "Exit & Disposal Data Template", "templates/template-exit-and-disposal.csv"],
-    [6,"Data Template", "Insemination Data Template", "Insemination Data Template", "templates/template-insemination.csv"],
+    
     [7,"Data Template", "Synchronization Data Template", "Synchronization Data Template", "templates/template-synchronization.csv"],*/
     [8,"Data Template", "Animal Registration Template", "Animal Registration Data Template", "../../../../templates/template-animal-registration.csv"], 
     [9,"Data Template", "Calving Data Template(Short)", "Calving Data Template(Short)", "../../../../templates/template-calving-record-short.csv"], 

@@ -271,6 +271,26 @@ const Post = props => {
       ];
 
       break;
+
+      case 5:
+
+      columns = [
+        { name: "record_id", label: "record_id", options: { filter: false, sort: false, display: false } },
+        { name: "uuid", label: "uuid", options: { filter: false, sort: false, display: false } },
+        { name: "tag_id", label: "Tag ID", options: { filter: true, sort: true, display: true } },
+        { name: "animal_id", label: "Animal ID", options: { filter: true, sort: true, display: true } },
+        { name: "service_date", label: "Service Date", options: { filter: true, sort: true, display: true } },
+        { name: "service_number", label: "Service Number", options: { filter: true, sort: true, display: true } },
+        { name: "body_condition_score", label: "Body Score", options: { filter: true, sort: true, display: true } },
+        { name: "semen_source", label: "Semen Source", options: { filter: true, sort: true, display: true } },       
+        { name: "straw_type", label: "Straw Type", options: { filter: true, sort: true, display: true } },        
+        { name: "semen_batch", label: "Semen Batch", options: { filter: true, sort: true, display: true } },
+        { name: "straw_or_bull_tag", label: "Straw/Bull Tag ID", options: { filter: true, sort: true, display: true } },       
+        { name: "record_status", label: "Status", options: { filter: true, sort: true, display: true } },
+        
+      ];
+
+      break;
     case 9:
       columns = [
         { name: "record_id", label: "record_id", options: { filter: false, sort: false, display: false } },

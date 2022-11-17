@@ -222,7 +222,7 @@ const Weight = props => {
     };
   }, [record_id, organization_id, batch_type]);
 
-  if (!errors || !limitParameters || !body_scores) {
+  if (!errors || !limitParameters || !body_scores || !values ) {
     return null;
   }
 

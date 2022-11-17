@@ -50,7 +50,7 @@ const useStyles = makeStyles(theme => ({
       (async (endpoint,desc,id,type,option) => {
         await genericFunctionFiveParameters(endpoint,desc,id,type,option)
           .then(response => {
-            if (mounted) {
+            if (mounted) {            
               setValues(response.payload);
             }
           });
@@ -65,6 +65,7 @@ const useStyles = makeStyles(theme => ({
     return null;
   } 
 
+  
   return (
     <Modal
       onClose={onClose}

@@ -232,7 +232,7 @@ const Milking = props => {
     };
   }, [record_id, organization_id, batch_type]);
 
-  if (!errors || !limitParameters || !localSettings || !sample_types) {
+  if (!errors || !limitParameters || !localSettings || !sample_types || !values ) {
     return null;
   }
 
@@ -354,6 +354,8 @@ const Milking = props => {
     event.persist();
     setQualityFieldsView(!quality_fields_view);
   };
+
+
 
   return (
     <Modal
