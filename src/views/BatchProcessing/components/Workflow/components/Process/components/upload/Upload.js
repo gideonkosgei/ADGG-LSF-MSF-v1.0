@@ -103,7 +103,7 @@ const Upload = props => {
         console.log(err.message);
       }
       else {
-        const column_count = resp.rows[0].length;
+        const column_count = resp.rows[0].length;        
         
         let new_date = null;
 
@@ -128,8 +128,17 @@ const Upload = props => {
             }
 
             /* Milk Batch : Convert numeric dates to normal date */
+            if (batchType === 1 && (r === 1 || r === 2)) {              
+              if (resp.rows[i][r] && !isNaN(resp.rows[i][r])) {               
+                new_date = new Date(Math.round((resp.rows[i][r] - 25569) * 86400 * 1000));
+                resp.rows[i][r] = new_date.getDate() + '/' + (new_date.getMonth() + 1) + '/' + new_date.getFullYear();
+              }
+            }
+
+            /* AI Batch : Convert numeric dates to normal date */
             if (batchType === 5 && (r === 1)) {
-              if (resp.rows[i][r] && !isNaN(resp.rows[i][r])) {
+              // console.log(resp.rows[i][r].toLocaleDateString("en-US"))              
+              if (resp.rows[i][r] && !isNaN(resp.rows[i][r])) {               
                 new_date = new Date(Math.round((resp.rows[i][r] - 25569) * 86400 * 1000));
                 resp.rows[i][r] = new_date.getDate() + '/' + (new_date.getMonth() + 1) + '/' + new_date.getFullYear();
               }
