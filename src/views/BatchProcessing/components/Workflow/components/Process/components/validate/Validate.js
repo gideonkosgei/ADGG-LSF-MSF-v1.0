@@ -301,6 +301,8 @@ const Validate = props => {
         { name: "created_date", label: "DATE CREATED", options: { filter: false, sort: true, display: true } },
         { name: "created_time", label: "TIME CREATED", options: { filter: false, sort: true, display: true } },
         { name: "record_status", label: "STATUS", options: { filter: false, sort: true, display: true } },
+        { name: "validation_error", label: "Error(s)", options: { filter: false, sort: true, display: true } },
+        
         {
           name: "",
           options: {
@@ -336,6 +338,7 @@ const Validate = props => {
         { name: "body_weight", label: "Body Weight", options: { filter: true, sort: true, display: true } },
         { name: "body_score", label: "Body Score", options: { filter: true, sort: true, display: true } },
         { name: "record_status", label: "Status", options: { filter: true, sort: true, display: true } },
+        { name: "validation_error", label: "Error(s)", options: { filter: false, sort: true, display: true } },
         {
           name: "",
           options: {
@@ -375,6 +378,7 @@ const Validate = props => {
         { name: "semen_batch", label: "Semen Batch", options: { filter: true, sort: true, display: true } },
         { name: "straw_or_bull_tag", label: "Straw/Bull Tag ID", options: { filter: true, sort: true, display: true } },       
         { name: "record_status", label: "Status", options: { filter: true, sort: true, display: true } },
+        { name: "validation_error", label: "Error(s)", options: { filter: false, sort: true, display: true } },
         {
           name: "",
           options: {
@@ -418,6 +422,7 @@ const Validate = props => {
           { name: "created_date", label: "DATE CREATED", options: { filter: false, sort: true, display: true } },
           { name: "created_time", label: "TIME CREATED", options: { filter: false, sort: true, display: true } },
           { name: "record_status", label: "STATUS", options: { filter: false, sort: true, display: true } },
+          { name: "validation_error", label: "Error(s)", options: { filter: false, sort: true, display: true } },          
           {
             name: "",
             options: {
@@ -469,6 +474,7 @@ const Validate = props => {
             { name: "created_date", label: "DATE CREATED", options: { filter: false, sort: true, display: true } },
             { name: "created_time", label: "TIME CREATED", options: { filter: false, sort: true, display: true } },
             { name: "record_status", label: "STATUS", options: { filter: false, sort: true, display: true } },
+            { name: "validation_error", label: "Error(s)", options: { filter: false, sort: true, display: true } },
             {
               name: "",
               options: {
@@ -533,6 +539,7 @@ const Validate = props => {
         { name: "created_date", label: "DATE CREATED", options: { filter: false, sort: true, display: true } },
         { name: "created_time", label: "TIME CREATED", options: { filter: false, sort: true, display: true } },
         { name: "record_status", label: "STATUS", options: { filter: false, sort: true, display: true } },
+        { name: "validation_error", label: "Error(s)", options: { filter: false, sort: true, display: true } },
         {
           name: "",
           options: {
